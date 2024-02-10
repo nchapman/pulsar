@@ -13,8 +13,8 @@
     "allowlist": {
       "all": false,
       "shell": {
-        "all": false,
-        "open": true
+        "sidecar": true,
+        "scope": [{ "name": "bin/llamafile", "sidecar": true, "args": true }]
       }
     },
     "bundle": {
@@ -27,7 +27,8 @@
         "icons/128x128@2x.png",
         "icons/icon.icns",
         "icons/icon.ico"
-      ]
+      ],
+      "externalBin": ["bin/llamafile"]
     },
     "security": {
       "csp": null

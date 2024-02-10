@@ -1,4 +1,4 @@
-# Pular
+# Pulsar
 
 This is a desktop app using Tauri, Preact and Typescript in Vite.
 

@@ -4,19 +4,23 @@ module.exports = {
     es2021: true,
     jest: true,
   },
-  extends: ['plugin:react/recommended', 'airbnb', "prettier"],
+  extends: ['plugin:react/recommended', 'airbnb', 'prettier'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['react', '@typescript-eslint', 'react-hooks', 'fsd-arch-validator'],
+  plugins: ['react', '@typescript-eslint', 'react-hooks', 'fsd-arch-validator', '@stylexjs'],
   rules: {
-    'max-len': ['error', {
-      ignoreComments: true,
-      code: 100,
-      ignoreStrings: true,
-    }],
+    '@stylexjs/valid-styles': 'error',
+    'max-len': [
+      'error',
+      {
+        ignoreComments: true,
+        code: 100,
+        ignoreStrings: true,
+      },
+    ],
     'no-shadow': 'off',
     'no-unused-vars': 'off',
     'no-underscore-dangle': 'off',
@@ -24,9 +28,12 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'import/no-extraneous-dependencies': 'warn',
     'import/extensions': 'off',
-    'react/jsx-filename-extension': ['error', {
-      extensions: ['.jsx', '.tsx'],
-    }],
+    'react/jsx-filename-extension': [
+      'error',
+      {
+        extensions: ['.jsx', '.tsx'],
+      },
+    ],
     'assignment-to-function-param': 'off',
     'react/no-array-index-key': 'off',
     'react/require-default-props': 'off',
@@ -39,9 +46,12 @@ module.exports = {
     'jsx-a11y/no-autofocus': 'off',
     'jsx-a11y/no-static-element-interactions': 'off',
     'jsx-a11y/click-events-have-key-events': 'off',
-    '@typescript-eslint/no-unused-vars': ['error', {
-      argsIgnorePattern: '^_',
-    }],
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      {
+        argsIgnorePattern: '^_',
+      },
+    ],
     'fsd-arch-validator/relative-imports-within-module': 2,
   },
   settings: {
@@ -87,5 +97,7 @@ module.exports = {
       rules: {
         'import/no-extraneous-dependencies': 'off',
       },
-    }],
+    },
+  ],
 };
+

@@ -1,7 +1,7 @@
 import OpenAI from 'openai';
 import { useState } from 'preact/hooks';
-import preactLogo from '@/shared/assets/preact.svg';
-import './App.css';
+import PreactLogo from '@/shared/assets/preact.svg';
+import s from './App.module.scss';
 
 function App() {
   const [output, setOutput] = useState('');
@@ -42,7 +42,7 @@ function App() {
     <div className="container">
       <h1>Welcome to Pulsar!</h1>
 
-      <p>{text}</p>
+      <p className={s.broDc}>{text}</p>
 
       <div className="row">
         <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
@@ -51,9 +51,7 @@ function App() {
         <a href="https://tauri.app" target="_blank" rel="noreferrer">
           <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
         </a>
-        <a href="https://preactjs.com" target="_blank" rel="noreferrer">
-          <img src={preactLogo} className="logo preact" alt="Preact logo" />
-        </a>
+        <img src={PreactLogo} alt="de" />
       </div>
 
       <p>This is a Tauri app with llamafile running as a sidecar.</p>

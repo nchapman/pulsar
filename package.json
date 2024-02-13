@@ -8,6 +8,7 @@
     "build": "tsc && vite build",
     "lint:ts": "eslint \"**/*.{ts,tsx}\" --fix",
     "prettier": "npx prettier \"**/*.{ts,tsx}\" --write",
+    "prepare": "husky install",
     "dev": "vite",
     "preview": "vite preview",
     "tauri": "tauri"
@@ -33,6 +34,7 @@
     "eslint-plugin-react-hooks": "4.6.0",
     "eslint-plugin-react-refresh": "0.3.4",
     "eslint-plugin-storybook": "0.6.11",
+    "husky": "8.0.0",
     "lint-staged": "13.2.2",
     "prettier": "2.8.8",
     "typescript": "^5.0.2",

@@ -1,6 +1,6 @@
 import { render } from "preact";
-import App from "./App";
-import "./styles.css";
+import App from "./app/App";
+import "./shared/styles/styles.css";
 import Llamafile from "./llamafile";
 
 // Start the llamafile server

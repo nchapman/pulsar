@@ -28,7 +28,7 @@ curl -L -o src-tauri/models/dolphin-2.6-mistral-7b.Q4_K_M.gguf https://huggingfa
 
 ```bash
 bun install
-bun run tauri dev
+bun start
 ```
 
 ## Recommended IDE Setup

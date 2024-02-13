@@ -1,5 +1,5 @@
 import { useState } from "preact/hooks";
-import preactLogo from "./assets/preact.svg";
+import preactLogo from "@/shared/assets/preact.svg";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 import OpenAI from "openai";

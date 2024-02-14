@@ -1,21 +1,25 @@
-import { defineConfig } from "vite";
-import preact from "@preact/preset-vite";
+import { defineConfig } from 'vite';
+import preact from '@preact/preset-vite';
+import path from 'path';
+import svgr from 'vite-plugin-svgr';
 
-// https://vitejs.dev/config/
+const localsConvention = 'camelCaseOnly' as const;
+
 export default defineConfig(async () => ({
-  plugins: [preact()],
-
-  // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
-  //
-  // 1. prevent vite from obscuring rust errors
+  plugins: [preact(), svgr({ svgrOptions: { exportType: 'default' } })],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+    },
+  },
+  cacheDir: 'node_modules/.cache/.vite',
   clearScreen: false,
-  // 2. tauri expects a fixed port, fail if that port is not available
   server: {
     port: 1420,
     strictPort: true,
     watch: {
-      // 3. tell vite to ignore watching `src-tauri`
-      ignored: ["**/src-tauri/**"],
+      ignored: ['**/src-tauri/**'],
     },
   },
+  css: { modules: { localsConvention } },
 }));

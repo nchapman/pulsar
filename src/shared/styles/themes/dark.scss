@@ -1,0 +1,51 @@
+.app-dark-theme {
+  // Redesign
+  // Primary
+  --color-primary-400: #688816;
+  --color-primary-500: #86a923;
+  --color-primary-600: #a6ca33;
+
+  // Elevation
+  --color-el-0: #040f1f;
+  --color-el-100: #0b1e2f;
+  --color-el-300: #102838;
+  --color-el-400: #132d3c;
+  --color-el-500: #163342;
+  --color-el-600: #173241;
+  --color-el-700: #1b3343;
+  --color-el-900: #223a4a;
+
+  // Gray
+  --color-gray-50: #071626;
+  --color-gray-500: #132d3c;
+  --color-gray-600: #7d919d;
+  --color-gray-700: #91a1ac;
+  --color-gray-800: #dddfe0;
+  --color-gray-900: #f0f1f1;
+
+  // Secondary
+  --color-secondary-50: #05123a;
+  --color-secondary-200: #102693;
+  --color-secondary-500: #5076ff;
+  --color-secondary-600: #6690ff;
+  --color-secondary-700: #84a9ff;
+
+  // Semantic
+  --color-semantic-success: #12b76a;
+  --color-semantic-warning: #f79009;
+  --color-semantic-error: #f04438;
+
+  // Pink
+  --color-pink-500: #ac35a4;
+
+  // Orange
+  --color-orange-500: #b75e47;
+  --color-orange-600: #db8667;
+
+  // Button Colors
+  --color-button-active: #5076ff;
+  --color-button-hover: #003ea933;
+  --color-button-default: #003ea914;
+  --color-button-inactive: #f2f4f5;
+  --color-button-inactive-selected: #b8b9bb80;
+}

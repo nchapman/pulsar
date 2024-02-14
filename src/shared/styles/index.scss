@@ -1,0 +1,29 @@
+@import './reset';
+@import './variables/global';
+@import './themes/light';
+@import './themes/dark';
+@import './mixins';
+@import './fonts';
+
+body {
+  font-family: var(--font-family-inter);
+  font-size: var(--font-body-2);
+  color: var(--color-gray-600);
+  background: var(--color-el-0);
+}
+
+.app {
+  position: relative;
+}
+
+.page-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.control-dots {
+  top: -10px !important;
+  bottom: auto !important;
+}

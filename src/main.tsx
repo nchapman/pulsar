@@ -1,9 +1,16 @@
 import { render } from 'preact';
 import App from './app/App';
-import './shared/styles/styles.css';
+import '@/shared/styles/index.scss';
 import Llamafile from './llamafile';
-
+import { ThemeProvider, ErrorBoundary } from '@/app/providers';
 // Start the llamafile server
 new Llamafile().spawn();
 
-render(<App />, document.getElementById('root')!);
+render(
+  <ErrorBoundary>
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
+  </ErrorBoundary>,
+  document.getElementById('root')!
+);

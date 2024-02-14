@@ -1,6 +1,26 @@
 # Pulsar
 
-This is a desktop app using Tauri, Preact and Typescript in Vite.
+### This is a desktop app using the following technologies.
+
+#### Tools:
+
+- Desktop framework: Tauri
+- Bundler: Vite
+- Package manager: Bun
+
+#### Front-End:
+
+- UI framework: Preact
+- Language: TypeScript
+- State manager: Effector
+- Styles: CSS modules & Sass
+- UI library: Headless UI
+- Architecture: Feature Sliced Design
+- Database: WatermelonDB
+
+#### Back-End:
+
+- Language: Rust
 
 ## Requirements
 
@@ -34,3 +54,4 @@ bun start
 ## Recommended IDE Setup
 
 - [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+

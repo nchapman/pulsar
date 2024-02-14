@@ -1,0 +1,31 @@
+$desktop-width: 1080px;
+
+@mixin desktop-only {
+  @media (min-width: $desktop-width) {
+    @content;
+  }
+}
+
+@mixin mobile-only {
+  @media (max-width: ($desktop-width - 1px)) {
+    @content;
+  }
+}
+
+@mixin line-clamp($lines) {
+  overflow: hidden;
+  display: -webkit-box;
+
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lines;
+}
+
+@mixin hide-scrollbar {
+  scrollbar-width: none;
+
+  -ms-overflow-style: none; /* IE and Edge */
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

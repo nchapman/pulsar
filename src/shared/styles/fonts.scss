@@ -1,0 +1,89 @@
+// Font-face References
+
+// Thin 200
+@font-face {
+  font-family: AmbitWeb;
+  font-weight: 200;
+  src: url('/src/shared/styles/fonts/ambit/Ambit-Thin.woff2') format('woff2'),
+    url('/src/shared/styles/fonts/ambit/Ambit-Thin.woff') format('woff');
+}
+
+@font-face {
+  font-family: AmbitWeb;
+  font-weight: 200;
+  font-style: italic;
+  src: url('/src/shared/styles/fonts/ambit/Ambit-ThinItalic.woff2') format('woff2'),
+    url('/src/shared/styles/fonts/ambit/Ambit-ThinItalic.woff') format('woff');
+}
+
+// Light 300
+@font-face {
+  font-family: AmbitWeb;
+  font-weight: 300;
+  src: url('/src/shared/styles/fonts/ambit/Ambit-Light.woff2') format('woff2'),
+    url('/src/shared/styles/fonts/ambit/Ambit-Light.woff') format('woff');
+}
+
+@font-face {
+  font-family: AmbitWeb;
+  font-weight: 300;
+  font-style: italic;
+  src: url('/src/shared/styles/fonts/ambit/Ambit-LightItalic.woff2') format('woff2'),
+    url('/src/shared/styles/fonts/ambit/Ambit-LightItalic.woff') format('woff');
+}
+
+// Regular 400
+@font-face {
+  font-family: AmbitWeb;
+  font-weight: 400;
+  src: url('/src/shared/styles/fonts/ambit/Ambit-Regular.woff2') format('woff2'),
+    url('/src/shared/styles/fonts/ambit/Ambit-Regular.woff') format('woff');
+}
+
+// Semi-Bold 600
+@font-face {
+  font-family: AmbitWeb;
+  font-weight: 600;
+  src: url('/src/shared/styles/fonts/ambit/Ambit-SemiBold.woff2') format('woff2'),
+    url('/src/shared/styles/fonts/ambit/Ambit-SemiBold.woff') format('woff');
+}
+
+@font-face {
+  font-family: AmbitWeb;
+  font-weight: 600;
+  font-style: italic;
+  src: url('/src/shared/styles/fonts/ambit/Ambit-SemiBoldItalic.woff2') format('woff2'),
+    url('/src/shared/styles/fonts/ambit/Ambit-SemiBoldItalic.woff') format('woff');
+}
+
+// Bold 700
+@font-face {
+  font-family: AmbitWeb;
+  font-weight: 700;
+  src: url('/src/shared/styles/fonts/ambit/Ambit-Bold.woff2') format('woff2'),
+    url('/src/shared/styles/fonts/ambit/Ambit-Bold.woff') format('woff');
+}
+
+@font-face {
+  font-family: AmbitWeb;
+  font-weight: 700;
+  font-style: italic;
+  src: url('/src/shared/styles/fonts/ambit/Ambit-BoldItalic.woff2') format('woff2'),
+    url('/src/shared/styles/fonts/ambit/Ambit-BoldItalic.woff') format('woff');
+}
+
+// Black 900
+@font-face {
+  font-family: AmbitWeb;
+  font-weight: 900;
+  src: url('/src/shared/styles/fonts/ambit/Ambit-Black.woff2') format('woff2'),
+    url('/src/shared/styles/fonts/ambit/Ambit-Black.woff') format('woff');
+}
+
+@font-face {
+  font-family: AmbitWeb;
+  font-weight: 900;
+  font-style: italic;
+  src: url('/src/shared/styles/fonts/ambit/Ambit-BlackItalic.woff2') format('woff2'),
+    url('/src/shared/styles/fonts/ambit/Ambit-BlackItalic.woff') format('woff');
+}

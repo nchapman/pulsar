@@ -10,9 +10,8 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['react', '@typescript-eslint', 'react-hooks', 'fsd-arch-validator', '@stylexjs'],
+  plugins: ['react', '@typescript-eslint', 'react-hooks', 'fsd-arch-validator'],
   rules: {
-    '@stylexjs/valid-styles': 'error',
     'max-len': [
       'error',
       {

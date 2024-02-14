@@ -1,11 +1,26 @@
 import OpenAI from 'openai';
 import { useState } from 'preact/hooks';
+import { createEvent, createStore, combine } from 'effector';
+import { useUnit } from 'effector-react';
 import PreactLogo from '@/shared/assets/preact.svg';
 import s from './App.module.scss';
+
+const plus = createEvent();
+
+const $counter = createStore(1);
+
+const $counterText = $counter.map((count) => `current value = ${count}`);
+const $counterCombined = combine({ counter: $counter, text: $counterText });
+
+$counter.on(plus, (count) => count + 1);
 
 function App() {
   const [output, setOutput] = useState('');
   const [input, setInput] = useState('');
+
+  const counter = useUnit($counter);
+  const counterText = useUnit($counterText);
+  const counterCombined = useUnit($counterCombined);
 
   async function send() {
     // Reset output
@@ -40,6 +55,16 @@ function App() {
 
   return (
     <div className="container">
+      <div>
+        <button type="button" onClick={() => plus()}>
+          Plus
+        </button>
+        <div>counter: {counter}</div>
+        <div>counterText: ${counterText}</div>
+        <div>
+          counterCombined: {counterCombined.counter}, {counterCombined.text}
+        </div>
+      </div>
       <h1>Welcome to Pulsar!</h1>
 
       <p className={s.broDc}>{text}</p>

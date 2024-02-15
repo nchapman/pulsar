@@ -1,4 +1,28 @@
 .chat-message {
-  color: var(--gray-50);
+  display: flex;
+  gap: 12px;
+  padding: 8px 20px;
+  line-height: 24px;
+  color: var(--gray-100);
+}
+
+.author-name {
+  font-weight: 600;
+}
+
+.author-icon {
+  width: 24px;
+  height: 24px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.text {
+  opacity: 0.9;
+}
+
+.actions {
+  margin-top: 4px;
+  height: 26px;
 }
 

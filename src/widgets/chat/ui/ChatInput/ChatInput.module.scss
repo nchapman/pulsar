@@ -4,6 +4,11 @@
   overflow: hidden;
   border: 1px solid rgba(217, 217, 227, 0.2);
   position: relative;
+
+  &:focus-within {
+    border-color: rgba(217, 217, 227, 0.3);
+
+  }
 }
 
 .chat-input {

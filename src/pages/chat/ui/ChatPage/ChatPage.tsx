@@ -5,7 +5,7 @@ import { Navbar } from '@/widgets/navbar';
 
 export const ChatPage = () => (
   <Page className={s.chatPage}>
-    <Navbar />
+    <Navbar className={s.navbar} />
     <Chat />
   </Page>
 );

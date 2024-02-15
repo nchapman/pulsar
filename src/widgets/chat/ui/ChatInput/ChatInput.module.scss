@@ -14,23 +14,25 @@
   background: none;
   border: none;
   color: #fff;
-  height: 52px;
   padding: 14px 48px 14px 16px;
+  line-height: 24px;
 }
 
 .submit-btn {
   position: absolute;
-  display: block;
   right: 12px;
+  bottom: 12px;
   border: 1px solid #fff;
   background: #fff;
   color: #000;
-  top: 50%;
-  transform: translateY(-50%);
   outline: transparent;
   border-radius: 8px;
   padding: 2px;
   display: flex;
   cursor: pointer;
+
+  &:disabled {
+    opacity: 0.1;
+  }
 }
 

@@ -6,7 +6,7 @@ import svgr from 'vite-plugin-svgr';
 const localsConvention = 'camelCaseOnly' as const;
 
 export default defineConfig(async () => ({
-  plugins: [preact(), svgr({ svgrOptions: { exportType: 'default' } })],
+  plugins: [preact(), svgr({ svgrOptions: { exportType: 'default', typescript: true } })],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),

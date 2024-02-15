@@ -1,3 +1,15 @@
 .chat {
   width: 766px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+}
+
+.chat-input {
+  flex: 0 1 auto;
+}
+
+.msg-list {
+  flex: 1 1 auto;
 }

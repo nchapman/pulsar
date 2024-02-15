@@ -1,1 +1,1 @@
-// architecture placeholder
+export { Chat } from './ui/Chat/Chat';

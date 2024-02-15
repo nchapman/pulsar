@@ -1,0 +1,36 @@
+.chat-form {
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(217, 217, 227, 0.2);
+  position: relative;
+}
+
+.chat-input {
+  display: block;
+  width: 100%;
+  resize: none;
+  outline: transparent;
+  background: none;
+  border: none;
+  color: #fff;
+  height: 52px;
+  padding: 14px 48px 14px 16px;
+}
+
+.submit-btn {
+  position: absolute;
+  display: block;
+  right: 12px;
+  border: 1px solid #fff;
+  background: #fff;
+  color: #000;
+  top: 50%;
+  transform: translateY(-50%);
+  outline: transparent;
+  border-radius: 8px;
+  padding: 2px;
+  display: flex;
+  cursor: pointer;
+}
+

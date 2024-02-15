@@ -1,1 +1,1 @@
-// architecture placeholder
+export { ChatMessage } from './ui/ChatMessage/ChatMessage';

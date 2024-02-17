@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
+import { useUnit } from 'effector-react';
 import { classNames } from '@/shared/lib/func';
 import s from './ChatInput.module.scss';
 import { SendIcon } from '@/widgets/chat/assets/SendIcon.tsx';
+import { $isInputDisabled, askQuestion } from '@/widgets/chat/model/chat.ts';
 
 interface Props {
   className?: string;
@@ -9,12 +11,21 @@ interface Props {
 
 export const ChatInput = (props: Props) => {
   const { className } = props;
-  const [input, setInput] = useState('');
+
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const [input, setInput] = useState('');
+
+  const disabled = useUnit($isInputDisabled);
 
   const handleInputChange = (e: Event) => {
     setInput((e.target as HTMLInputElement).value);
   };
+
+  function handleSubmit(e: Event) {
+    e.preventDefault();
+    askQuestion(input);
+    setInput('');
+  }
 
   useEffect(() => {
     const inputEl = inputRef.current;
@@ -30,7 +41,7 @@ export const ChatInput = (props: Props) => {
   }, [input]);
 
   return (
-    <form className={classNames(s.chatForm, [className])}>
+    <form onSubmit={handleSubmit} className={classNames(s.chatForm, [className])}>
       <textarea
         ref={inputRef}
         placeholder="Message Pulsar..."
@@ -39,7 +50,7 @@ export const ChatInput = (props: Props) => {
         className={s.chatInput}
         rows={1}
       />
-      <button disabled={!input} type="submit" className={s.submitBtn} aria-label="submit">
+      <button disabled={disabled} type="submit" className={s.submitBtn} aria-label="submit">
         <SendIcon />
       </button>
     </form>

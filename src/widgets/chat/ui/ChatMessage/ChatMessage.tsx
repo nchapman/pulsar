@@ -1,16 +1,25 @@
+import { useStoreMap } from 'effector-react';
 import { classNames } from '@/shared/lib/func';
 import s from './ChatMessage.module.scss';
 import userImg from '../../assets/user.jpeg';
 import pulsarImg from '../../assets/pulsar.jpeg';
+import { $msgMap } from '@/widgets/chat/model/chat.ts';
 
 interface Props {
   className?: string;
-  text: string;
-  isUser: boolean;
+  id: Id;
 }
 
 export const ChatMessage = (props: Props) => {
-  const { className, text, isUser } = props;
+  const { className, id } = props;
+
+  const msg = useStoreMap({
+    store: $msgMap,
+    keys: [id],
+    fn: (msgMap, [msgId]) => msgMap[msgId],
+  });
+
+  const { text, isUser } = msg;
 
   return (
     <div className={classNames(s.chatMessage, [className])}>

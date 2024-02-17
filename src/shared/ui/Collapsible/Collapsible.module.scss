@@ -1,0 +1,28 @@
+.collapsible {
+  width: 100%;
+}
+
+.whole-clickable {
+  cursor: pointer;
+}
+
+.head {
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+}
+
+.content {
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.icon {
+  transition: transform 0.3s ease-in-out;
+}
+
+.expanded {
+  .icon {
+    transform: rotateZ(-180deg);
+  }
+}

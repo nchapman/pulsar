@@ -1,0 +1,55 @@
+@import './src/shared/styles/mixins';
+
+.modal {
+  position: absolute;
+  z-index: var(--z-index-modal);
+  top: 50%;
+  left: 50%;
+  transform: translateY(50vh) translateX(-50%);
+
+  overflow: hidden;
+
+  width: 500px;
+
+  color: var(--color-gray-700);
+
+  opacity: 0;
+  background: var(--color-el-0);
+  border-radius: var(--border-radius-lg);
+
+  transition: transform 250ms cubic-bezier(1, 0.01, 0.03, 1),
+    opacity 250ms cubic-bezier(1, 0.01, 0.03, 1);
+
+  &.open {
+    transform: translateY(-50%) translateX(-50%);
+    opacity: 1;
+  }
+}
+
+.body {
+  padding: var(--spacing-xl);
+}
+
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: var(--spacing-xl);
+}
+
+.no-styles {
+  .body {
+    padding: 0;
+  }
+}
+
+.white {
+  .close-btn {
+    color: var(--color-el-0);
+  }
+}
+
+@include mobile-only {
+  .modal {
+    width: 100vw;
+  }
+}

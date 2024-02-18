@@ -4,6 +4,7 @@ import { classNames } from '@/shared/lib/func';
 import s from './ChatInput.module.scss';
 import { SendIcon } from '@/widgets/chat/assets/SendIcon.tsx';
 import { $isInputDisabled, askQuestion } from '@/widgets/chat/model/chat.ts';
+import { useKeyboardListener } from '@/shared/lib/hooks';
 
 interface Props {
   className?: string;
@@ -21,8 +22,8 @@ export const ChatInput = (props: Props) => {
     setInput((e.target as HTMLInputElement).value);
   };
 
-  function handleSubmit(e: Event) {
-    e.preventDefault();
+  function handleSubmit(e?: Event) {
+    e?.preventDefault();
     askQuestion(input);
     setInput('');
   }
@@ -39,6 +40,8 @@ export const ChatInput = (props: Props) => {
     inputEl?.addEventListener('input', autoResize);
     return () => inputEl?.removeEventListener('input', autoResize);
   }, [input]);
+
+  useKeyboardListener(() => handleSubmit(), 'Enter');
 
   return (
     <form onSubmit={handleSubmit} className={classNames(s.chatForm, [className])}>

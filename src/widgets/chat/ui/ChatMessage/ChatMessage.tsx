@@ -2,7 +2,7 @@ import { useStoreMap } from 'effector-react';
 import { classNames } from '@/shared/lib/func';
 import s from './ChatMessage.module.scss';
 import userImg from '../../assets/user.jpeg';
-import pulsarImg from '../../assets/pulsar.jpeg';
+import pulsarImg from '../../assets/pulsar.png';
 import { $msgMap } from '@/widgets/chat/model/chat.ts';
 
 interface Props {

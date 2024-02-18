@@ -1,3 +1,5 @@
-.chat-msg-list {
+@import './src/shared/styles/mixins';
 
+.chat-msg-list {
+  @include hide-scrollbar
 }

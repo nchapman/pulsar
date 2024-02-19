@@ -16,7 +16,7 @@ export const ChatInput = (props: Props) => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [input, setInput] = useState('');
 
-  const disabled = useUnit($isInputDisabled);
+  const disabled = useUnit($isInputDisabled) || !input;
 
   const handleInputChange = (e: Event) => {
     setInput((e.target as HTMLInputElement).value);
@@ -24,6 +24,7 @@ export const ChatInput = (props: Props) => {
 
   function handleSubmit(e?: Event) {
     e?.preventDefault();
+    if (disabled) return;
     askQuestion(input);
     setInput('');
   }

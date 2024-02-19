@@ -1,16 +1,27 @@
 import { combine, createEffect, createEvent, createStore, sample } from 'effector';
 import { ChatMsg } from '../types/ChatMsg';
 import { mockPromise, suid } from '@/shared/lib/func';
-import { mockMessages, mockMessages2 } from '../mocks/chat-messages.ts';
+import { chats } from '../mocks/chat-messages.ts';
 import { streamFx } from '../mocks/streamFx.ts';
 import { assistantResponse } from '../mocks/assistantResponse.ts';
 
 export const switchChat = createEvent<Id>();
+
+export const startNewChat = () => switchChat(suid());
+
 export const askQuestion = createEvent<string>();
+
+const streamEvent = {
+  start: createEvent<{ msgId: Id }>(),
+  finish: createEvent(),
+  addTextChunk: createEvent<{ chunk: string; streamedMsgId: Id }>(),
+};
 
 const $chatId = createStore<Id | null>(null).on(switchChat, (_, chatId) => chatId);
 
-export const $streamedMsgId = createStore<Id | null>(null);
+export const $streamedMsgId = createStore<Id | null>(null)
+  .on(streamEvent.start, (_, { msgId }) => msgId)
+  .reset(streamEvent.finish);
 
 // Create msg: question + id = add to item to map, push id to list
 
@@ -19,7 +30,7 @@ export const $msgIdsList = createStore<Id[]>([]);
 
 const getNewChatMessages = createEffect<Id | null, ChatMsg[]>((chatId) =>
   // TODO
-  mockPromise(500, chatId === '1' ? mockMessages : mockMessages2)
+  mockPromise(500, chatId ? chats[chatId] || [] : [])
 );
 
 export const $isFetchingMessages = getNewChatMessages.pending;
@@ -53,21 +64,15 @@ const createAssistantMsg = createEffect<ChatMsg, ChatMsg>((userMessage) => ({
   assistant: { userMsgId: userMessage.id },
 }));
 
-// Streaming
-// const getStreamedMsgChunk = createEvent<string>();
-const addTextChunkToMsg = createEvent<{ chunk: string; streamedMsgId: Id }>();
-
 const streamMsg = createEffect<Id, void>(async (msgId) => {
   streamFx({
     text: assistantResponse,
-    onTextChunkReceived: (chunk) => addTextChunkToMsg({ chunk, streamedMsgId: msgId }),
-    onStreamStart: () => {},
-    onStreamEnd: () => {},
-    delay: 500,
+    onTextChunkReceived: (chunk) => streamEvent.addTextChunk({ chunk, streamedMsgId: msgId }),
+    onStreamStart: () => streamEvent.start({ msgId }),
+    onStreamEnd: streamEvent.finish,
+    delay: 100,
   });
 });
-
-export const $isStreamingResponse = streamMsg.pending;
 
 sample({
   source: $streamedMsgId,
@@ -98,14 +103,7 @@ sample({
   target: streamMsg,
 });
 
-// sample({
-//   source: $streamedMsgId,
-//   clock: getStreamedMsgChunk,
-//   fn: (streamedMsgId, chunk) => ({ streamedMsgId, chunk }),
-//   target: addTextChunkToMsg,
-// });
-
-$msgMap.on(addTextChunkToMsg, (state, { streamedMsgId, chunk }) => ({
+$msgMap.on(streamEvent.addTextChunk, (state, { streamedMsgId, chunk }) => ({
   ...state,
   [streamedMsgId]: {
     ...state[streamedMsgId],
@@ -113,11 +111,11 @@ $msgMap.on(addTextChunkToMsg, (state, { streamedMsgId, chunk }) => ({
   },
 }));
 
-// $msgMap.watch(console.log);
-
 // Auxiliary
 export const $isInputDisabled = combine(
   $isFetchingMessages,
-  $isStreamingResponse,
-  (fetching, streaming) => fetching || streaming
+  $streamedMsgId,
+  (fetching, streamedMsgId) => fetching || !!streamedMsgId
 );
+
+$streamedMsgId.watch(console.log);

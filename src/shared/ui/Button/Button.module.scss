@@ -5,16 +5,19 @@
   gap: 6px;
   align-items: center;
 
-  padding: 16px var(--spacing-md);
+  padding: 8px 4px;
 
   font-size: 15px;
   font-weight: 500;
   color: inherit;
 
   background: none;
-  border: 0;
-  border-radius: 100px;
+  border: 1px solid hsla(0,0%,100%,.15);
+  border-radius: 8px;
   outline-color: transparent;
+  width: 36px;
+  height: 36px;
+  justify-content: center;
 
   &:disabled {
     opacity: 0.5;
@@ -50,9 +53,9 @@
   background: var(--color-el-400);
 }
 
-.outlined {
-  border: 1px solid;
-}
+//.outlined {
+//  border: 1px solid;
+//}
 
 .clear {
   border: 0;

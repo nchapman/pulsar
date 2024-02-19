@@ -13,9 +13,11 @@ export function streamFx(config: {
 
   onStreamStart();
   function stream() {
-    setInterval(() => {
+    setTimeout(() => {
       const curChunkSize = i + chunkSize <= textLength ? chunkSize : textLength - i;
       const nextChunk = text.slice(i, i + curChunkSize);
+
+      console.log(curChunkSize);
 
       onTextChunkReceived(nextChunk);
       i += curChunkSize;

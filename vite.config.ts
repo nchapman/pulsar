@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import preact from '@preact/preset-vite';
 import path from 'path';
 import svgr from 'vite-plugin-svgr';
+import styleXPlugin from '@stylexjs/babel-plugin';
 
 const localsConvention = 'camelCaseOnly' as const;
 
@@ -17,6 +18,23 @@ export default defineConfig(async () => ({
             {
               helpers: true,
               regenerator: true,
+            },
+          ],
+          [
+            styleXPlugin,
+            {
+              dev: true,
+              // Set this to true for snapshot testing
+              // default: false
+              test: false,
+              // Required for CSS variable support
+              unstable_moduleResolution: {
+                // type: 'commonJS' | 'haste'
+                // default: 'commonJS'
+                type: 'commonJS',
+                // The absolute path to the root directory of your project
+                rootDir: __dirname,
+              },
             },
           ],
         ],

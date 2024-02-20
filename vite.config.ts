@@ -6,7 +6,24 @@ import svgr from 'vite-plugin-svgr';
 const localsConvention = 'camelCaseOnly' as const;
 
 export default defineConfig(async () => ({
-  plugins: [preact(), svgr({ svgrOptions: { exportType: 'default', typescript: true } })],
+  plugins: [
+    preact({
+      babel: {
+        plugins: [
+          ['@babel/plugin-proposal-decorators', { legacy: true }],
+          ['@babel/plugin-proposal-class-properties', { loose: true }],
+          [
+            '@babel/plugin-transform-runtime',
+            {
+              helpers: true,
+              regenerator: true,
+            },
+          ],
+        ],
+      },
+    }),
+    svgr({ svgrOptions: { exportType: 'default', typescript: true } }),
+  ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),

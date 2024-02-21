@@ -1,0 +1,43 @@
+.chat-form {
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(217, 217, 227, 0.2);
+  position: relative;
+
+  &:focus-within {
+    border-color: rgba(217, 217, 227, 0.3);
+
+  }
+}
+
+.chat-input {
+  display: block;
+  width: 100%;
+  resize: none;
+  outline: transparent;
+  background: none;
+  border: none;
+  color: #fff;
+  padding: 14px 48px 14px 16px;
+  line-height: 24px;
+}
+
+.submit-btn {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  border: 1px solid #fff;
+  background: #fff;
+  color: #000;
+  outline: transparent;
+  border-radius: 8px;
+  padding: 2px;
+  display: flex;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.1;
+  }
+}
+

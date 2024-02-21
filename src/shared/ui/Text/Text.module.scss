@@ -1,0 +1,93 @@
+@import './src/shared/styles/typography';
+
+.left {
+  text-align: left;
+}
+
+.right {
+  text-align: right;
+}
+
+.center {
+  text-align: center;
+}
+
+.body-1 {
+  @include font-body-1;
+}
+
+.body-2 {
+  @include font-body-2;
+}
+
+.body-3 {
+  @include font-body-3;
+}
+
+.body-4 {
+  @include font-body-4;
+}
+
+.subtitle-1 {
+  @include font-subtitle-1;
+}
+
+.subtitle-2 {
+  @include font-subtitle-2;
+}
+
+.subtitle-3 {
+  @include font-subtitle-3;
+}
+
+.subtitle-4 {
+  @include font-subtitle-4;
+}
+
+.subtitle-5 {
+  @include font-subtitle-5;
+}
+
+.heading-1 {
+  @include font-heading-1;
+}
+
+.heading-2 {
+  @include font-heading-2;
+}
+
+.heading-3 {
+  @include font-heading-3;
+}
+
+.heading-4 {
+  @include font-heading-4;
+}
+
+.heading-5 {
+  @include font-heading-5;
+}
+
+.heading-6 {
+  @include font-heading-6;
+}
+
+.link-1 {
+  @include font-link-1;
+}
+
+.link-2 {
+  @include font-link-2;
+}
+
+.link-3 {
+  @include font-link-3;
+}
+
+.title {
+  color: var(--color-text-title);
+}
+
+.brand {
+  color: var(--color-text-brand);
+}

@@ -4,14 +4,15 @@ module.exports = {
     es2021: true,
     jest: true,
   },
-  extends: ['plugin:react/recommended', 'airbnb', 'prettier'],
+  extends: ['plugin:react/recommended', 'airbnb', 'prettier', 'plugin:effector/react'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['react', '@typescript-eslint', 'react-hooks', 'fsd-arch-validator'],
+  plugins: ['react', '@typescript-eslint', 'react-hooks', 'fsd-arch-validator', 'effector'],
   rules: {
+    'react/no-unstable-nested-components': 'off',
     'max-len': [
       'error',
       {

@@ -1,0 +1,13 @@
+.chat-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  gap: 6px;
+}
+
+.navbar {
+  height: 56px;
+  flex-shrink: 0;
+}
+

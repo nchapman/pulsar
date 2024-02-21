@@ -1,0 +1,14 @@
+.copy-snack {
+  position: absolute;
+  z-index: 100000;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  padding: var(--spacing-md);
+
+  color: var(--color-other-background-el1);
+
+  background: var(--color-gray-800);
+  border-radius: var(--border-radius-sm);
+}

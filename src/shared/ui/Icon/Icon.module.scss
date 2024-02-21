@@ -1,0 +1,7 @@
+.icon {
+  flex-shrink: 0;
+
+  &:not(.no-fill) {
+    fill: currentcolor;
+  }
+}

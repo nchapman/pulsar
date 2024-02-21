@@ -1,0 +1,12 @@
+.list {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.horizontal {
+  align-items: center;
+}
+
+.vertical {
+  flex-direction: column;
+}

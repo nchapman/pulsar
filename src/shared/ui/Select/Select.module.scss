@@ -1,0 +1,22 @@
+.wrapper {
+  width: 124px;
+  padding: 4.5px var(--spacing-xs) 4.5px var(--spacing-md);
+  border: var(--border-width-xs) solid var(--color-other-stroke);
+  border-radius: var(--spacing-sm);
+}
+
+.select {
+  display: flex;
+  justify-content: space-between;
+
+  width: 100%;
+
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 175%;
+  color: var(--color-text-content);
+  letter-spacing: 0.02em;
+
+  border: 0;
+  outline-color: transparent;
+}

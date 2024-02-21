@@ -3,11 +3,13 @@ import { useEffect } from 'preact/hooks';
 export const useKeyboardListener = (
   cb: () => void,
   code: string,
-  combination: Array<keyof KeyboardEvent>
+  combination?: Array<keyof KeyboardEvent>
 ) => {
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
-      const validCombination = combination.every((key) => event[key]);
+      let validCombination = combination?.every((key) => event[key]);
+
+      if (!combination) validCombination = true;
 
       if (event.code === code && validCombination) {
         event.preventDefault();

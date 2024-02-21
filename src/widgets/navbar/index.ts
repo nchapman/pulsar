@@ -1,1 +1,1 @@
-// architecture placeholder
+export { Navbar } from './ui/Navbar/Navbar';

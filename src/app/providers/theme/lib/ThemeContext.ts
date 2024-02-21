@@ -1,7 +1,7 @@
 import { createContext } from 'preact';
 
 export enum Theme {
-  LIGHT = 'app-light-theme',
+  LIGHT = 'app-dark-theme',
   DARK = 'app-dark-theme',
 }
 

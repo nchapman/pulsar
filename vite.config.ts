@@ -2,11 +2,46 @@ import { defineConfig } from 'vite';
 import preact from '@preact/preset-vite';
 import path from 'path';
 import svgr from 'vite-plugin-svgr';
+import styleXPlugin from '@stylexjs/babel-plugin';
 
 const localsConvention = 'camelCaseOnly' as const;
 
 export default defineConfig(async () => ({
-  plugins: [preact(), svgr({ svgrOptions: { exportType: 'default' } })],
+  plugins: [
+    preact({
+      babel: {
+        plugins: [
+          ['@babel/plugin-proposal-decorators', { legacy: true }],
+          ['@babel/plugin-proposal-class-properties', { loose: true }],
+          [
+            '@babel/plugin-transform-runtime',
+            {
+              helpers: true,
+              regenerator: true,
+            },
+          ],
+          [
+            styleXPlugin,
+            {
+              dev: true,
+              // Set this to true for snapshot testing
+              // default: false
+              test: false,
+              // Required for CSS variable support
+              unstable_moduleResolution: {
+                // type: 'commonJS' | 'haste'
+                // default: 'commonJS'
+                type: 'commonJS',
+                // The absolute path to the root directory of your project
+                rootDir: __dirname,
+              },
+            },
+          ],
+        ],
+      },
+    }),
+    svgr({ svgrOptions: { exportType: 'default', typescript: true } }),
+  ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),

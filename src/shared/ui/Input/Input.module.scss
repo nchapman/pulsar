@@ -1,0 +1,22 @@
+.input {
+  width: 100%;
+  padding: 12px 14px;
+
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 125%;
+  letter-spacing: 0.3px;
+
+  background: transparent;
+  border: var(--border-width-sm) solid var(--color-el-600);
+  border-radius: var(--border-radius-sm);
+  outline: 0;
+
+  &::placeholder {
+    color: var(--color-gray-600);
+  }
+
+  &:focus {
+    border-color: var(--color-secondary-500);
+  }
+}

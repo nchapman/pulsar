@@ -7,3 +7,5 @@ export { groupDataByDays } from './groupDataByDays/groupDataByDays.ts';
 export { getTimeFromDate } from './getTimeFromDate/getTimeFromDate.ts';
 export { formatDateWithOffset } from './formatDateWithOffset/formatDateWithOffset';
 export { capitalize } from './capitalize/capitalize.ts';
+export { mockPromise } from './mockPromise/mockPromise.ts';
+export { suid } from './suid/suid.ts';

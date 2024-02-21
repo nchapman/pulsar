@@ -1,0 +1,42 @@
+@import './src/shared/styles/typography';
+
+.tabs {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.header {
+  display: flex;
+
+  // gap: var(--spacing-xl);
+  justify-content: space-between;
+  margin-bottom: var(--spacing-md);
+  border-bottom: var(--border-width-xs) solid var(--color-other-stroke);
+}
+
+.label {
+  @include font-subtitle-3;
+
+  cursor: pointer;
+
+  padding: var(--spacing-xs) 0;
+
+  color: var(--color-text-content);
+
+  background: transparent;
+  border: 0;
+  border-bottom: var(--border-width-xs) solid transparent;
+  outline: transparent;
+
+  transition: color var(--transition-base), border-bottom-color var(--transition-base);
+
+  &:hover {
+    color: var(--color-text-link);
+  }
+}
+
+.active-label {
+  color: var(--color-text-link);
+  border-color: var(--color-text-link);
+}

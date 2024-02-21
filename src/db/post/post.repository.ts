@@ -1,28 +1,28 @@
 import { Collection, Database } from '@nozbe/watermelondb';
-import { Post } from './post.model.ts';
+import { PostModel } from './post.model.ts';
 import { assignValues, serialize } from '@/shared/lib/func';
 
-interface IPost {
+interface Post {
   id: Id;
   title: string;
   body: string;
 }
 export class PostsRepository {
-  postsCollection: Collection<Post>;
+  postsCollection: Collection<PostModel>;
 
   constructor(private db: Database) {
     this.postsCollection = this.db.get('posts');
   }
 
-  async getById(id: Id): Promise<IPost> {
+  async getById(id: Id): Promise<Post> {
     return this.serialize(await this.postsCollection.find(id));
   }
 
-  async getAll(): Promise<IPost[]> {
+  async getAll(): Promise<Post[]> {
     return this.mapSerialize(await this.postsCollection.query().fetch());
   }
 
-  async create(data: Dto<IPost>): Promise<IPost> {
+  async create(data: Dto<Post>): Promise<Post> {
     const newPost = await this.db.write(() =>
       this.postsCollection.create((post) => assignValues(post, data))
     );
@@ -30,7 +30,7 @@ export class PostsRepository {
     return this.serialize(newPost);
   }
 
-  async update(id: Id, data: UpdateDto<IPost>): Promise<IPost> {
+  async update(id: Id, data: UpdateDto<Post>): Promise<Post> {
     const post = await this.postsCollection.find(id);
 
     const updatedPost = await this.db.write(() => post.update((post) => assignValues(post, data)));
@@ -38,11 +38,11 @@ export class PostsRepository {
     return this.serialize(updatedPost);
   }
 
-  serialize(post: Post): IPost {
+  private serialize(post: PostModel): Post {
     return serialize(post, ['id', 'title', 'body']);
   }
 
-  mapSerialize(posts: Post[]): IPost[] {
+  private mapSerialize(posts: PostModel[]): Post[] {
     return posts.map(this.serialize);
   }
 }

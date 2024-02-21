@@ -1,5 +1,5 @@
 import { combine, createEffect, createEvent, createStore, sample } from 'effector';
-import { ChatMsg } from '../types/ChatMsg';
+import { ChatMsg } from '@/db/chat';
 import { mockPromise, suid } from '@/shared/lib/func';
 import { chats } from '../mocks/chat-messages.ts';
 import { streamFx } from '../mocks/streamFx.ts';

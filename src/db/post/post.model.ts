@@ -1,18 +1,14 @@
 // @ts-nocheck
 import { Model } from '@nozbe/watermelondb';
 import { field, text } from '@nozbe/watermelondb/decorators';
-import { Associations } from '@nozbe/watermelondb/Model';
+import { postsTable } from './post.schema.ts';
 
-export class Post extends Model {
-  static table = 'posts';
+export class PostModel extends Model {
+  static table = postsTable.name;
 
-  static associations = {
-    comments: { type: 'has_many', foreignKey: 'post_id' },
-  } as Associations;
+  @text(postsTable.cols.title) title;
 
-  @text('title') title;
+  @text(postsTable.cols.body) body;
 
-  @text('body') body;
-
-  @field('is_pinned') isPinned;
+  @field(postsTable.cols.isPinned) isPinned;
 }

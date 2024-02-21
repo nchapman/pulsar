@@ -1,13 +1,14 @@
 import { Database, Model } from '@nozbe/watermelondb';
 import { Class } from '@nozbe/watermelondb/types';
-import { PostsRepository } from './post/post.repository.ts';
-import { Post } from './post/post.model.ts';
 import { adapter } from './adapter.ts';
+import { PostsRepository, PostModel } from './post';
+import { ChatModel, ChatsRepository } from './chat';
 
 const database = new Database({
   adapter,
-  modelClasses: [Post] as Class<Model>[],
+  modelClasses: [PostModel, ChatModel] as Class<Model>[],
 });
 
 // Repositories
 export const postsRepository = new PostsRepository(database);
+export const chatsRepository = new ChatsRepository(database);

@@ -17,8 +17,6 @@ export function streamFx(config: {
       const curChunkSize = i + chunkSize <= textLength ? chunkSize : textLength - i;
       const nextChunk = text.slice(i, i + curChunkSize);
 
-      console.log(curChunkSize);
-
       onTextChunkReceived(nextChunk);
       i += curChunkSize;
 

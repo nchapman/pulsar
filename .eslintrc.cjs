@@ -65,12 +65,16 @@ module.exports = {
     OptionalRecord: true,
     JSX: true,
     Id: true,
+    IdObj: true,
+    Dto: true,
+    UpdateDto: true,
   },
   overrides: [
     {
-      files: ['src/**/*Slice.ts'],
+      files: ['src/**/*.repository.ts'],
       rules: {
-        'no-param-reassign': ['error', { props: false }],
+        'class-methods-use-this': 'off',
+        'no-param-reassign': 'off',
       },
     },
     {

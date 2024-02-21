@@ -30,7 +30,7 @@ export const $msgIdsList = createStore<Id[]>([]);
 
 const getNewChatMessages = createEffect<Id | null, ChatMsg[]>((chatId) =>
   // TODO
-  mockPromise(500, chatId ? chats[chatId] || [] : [])
+  mockPromise(300, chatId ? chats[chatId] || [] : [])
 );
 
 export const $isFetchingMessages = getNewChatMessages.pending;
@@ -70,7 +70,7 @@ const streamMsg = createEffect<Id, void>(async (msgId) => {
     onTextChunkReceived: (chunk) => streamEvent.addTextChunk({ chunk, streamedMsgId: msgId }),
     onStreamStart: () => streamEvent.start({ msgId }),
     onStreamEnd: streamEvent.finish,
-    delay: 100,
+    delay: 50,
   });
 });
 
@@ -117,5 +117,3 @@ export const $isInputDisabled = combine(
   $streamedMsgId,
   (fetching, streamedMsgId) => fetching || !!streamedMsgId
 );
-
-$streamedMsgId.watch(console.log);

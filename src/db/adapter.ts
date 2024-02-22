@@ -1,11 +1,10 @@
 import LokiJSAdapter from '@nozbe/watermelondb/adapters/lokijs';
 import { schema } from '@/db/schema.ts';
-import migrations from '@/db/migrations.ts';
 
 export const adapter = new LokiJSAdapter({
   schema,
   // (You might want to comment out migrations for development purposes -- see Migrations documentation)
-  migrations,
+  // migrations,
   useWebWorker: false,
   useIncrementalIndexedDB: true,
   dbName: 'pulsar', // optional db name

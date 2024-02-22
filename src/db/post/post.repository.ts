@@ -1,6 +1,7 @@
 import { Collection, Database } from '@nozbe/watermelondb';
 import { PostModel } from './post.model.ts';
 import { assignValues, serialize } from '@/shared/lib/func';
+import { postsTable } from './post.schema.ts';
 
 interface Post {
   id: Id;
@@ -11,7 +12,7 @@ export class PostsRepository {
   postsCollection: Collection<PostModel>;
 
   constructor(private db: Database) {
-    this.postsCollection = this.db.get('posts');
+    this.postsCollection = this.db.get(postsTable.name);
   }
 
   async getById(id: Id): Promise<Post> {

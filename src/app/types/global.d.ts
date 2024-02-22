@@ -22,5 +22,5 @@ type Id = string;
 interface IdObj {
   id: Id;
 }
-type Dto<T extends IdObj> = Omit<T, 'id'>;
+type Dto<T extends IdObj> = Omit<T, 'id' | 'createdAt' | 'updatedAt'>;
 type UpdateDto<T extends IdObj> = Partial<Dto<T>>;

@@ -1,6 +1,7 @@
 import { Collection, Database } from '@nozbe/watermelondb';
 import { ChatModel } from './chat.model.ts';
 import { assignValues, serialize } from '@/shared/lib/func';
+import { chatsTable } from './chat.schema.ts';
 
 export interface ChatMsg {
   id: Id;
@@ -12,7 +13,7 @@ export interface ChatMsg {
   };
 }
 
-interface Chat {
+export interface Chat {
   id: Id;
   title: string;
   messages: ChatMsg[];
@@ -24,7 +25,7 @@ export class ChatsRepository {
   chatsCollection: Collection<ChatModel>;
 
   constructor(private db: Database) {
-    this.chatsCollection = this.db.get('posts');
+    this.chatsCollection = this.db.get(chatsTable.name);
   }
 
   async getById(id: Id): Promise<Chat> {

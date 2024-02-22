@@ -1,17 +1,18 @@
 // @ts-nocheck
 import { Model } from '@nozbe/watermelondb';
 import { date, json, text } from '@nozbe/watermelondb/decorators';
+import { chatsTable } from './chat.schema.ts';
 
 export class ChatModel extends Model {
-  static table = 'chats';
+  static table = chatsTable.name;
 
-  @text('title') title;
+  @text(chatsTable.cols.title) title;
 
-  @json('messages') messages;
+  @json(chatsTable.cols.messages, (json) => json) messages;
 
-  @text('model') model;
+  @text(chatsTable.cols.model) model;
 
-  @date('created_at') createdAt;
+  @date(chatsTable.cols.createdAt) createdAt;
 
-  @date('updated_at') updatedAt;
+  @date(chatsTable.cols.updatedAt) updatedAt;
 }

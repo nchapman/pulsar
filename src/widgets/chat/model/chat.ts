@@ -1,15 +1,14 @@
 import { combine, createEffect, createEvent, createStore, sample } from 'effector';
-import { ChatMsg } from '@/db/chat';
-import { mockPromise, suid } from '@/shared/lib/func';
-import { chats } from '../mocks/chat-messages.ts';
+import { Chat, ChatMsg } from '@/db/chat';
+import { suid } from '@/shared/lib/func';
 import { streamFx } from '../mocks/streamFx.ts';
 import { assistantResponse } from '../mocks/assistantResponse.ts';
+import { chatsRepository } from '@/db';
 
 export const switchChat = createEvent<Id>();
 
-export const startNewChat = () => switchChat(suid());
-
 export const askQuestion = createEvent<string>();
+const replaceChatData = createEvent<Chat>();
 
 const streamEvent = {
   start: createEvent<{ msgId: Id }>(),
@@ -17,21 +16,43 @@ const streamEvent = {
   addTextChunk: createEvent<{ chunk: string; streamedMsgId: Id }>(),
 };
 
-const $chatId = createStore<Id | null>(null).on(switchChat, (_, chatId) => chatId);
+export const $chatId = createStore<Id | null>(null).on(switchChat, (_, s) => s);
+const $chat = createStore<Chat | null>(null).on(replaceChatData, (_, newChat) => newChat);
 
 export const $streamedMsgId = createStore<Id | null>(null)
   .on(streamEvent.start, (_, { msgId }) => msgId)
   .reset(streamEvent.finish);
 
-// Create msg: question + id = add to item to map, push id to list
-
 export const $msgMap = createStore<Record<Id, ChatMsg>>({});
 export const $msgIdsList = createStore<Id[]>([]);
 
-const getNewChatMessages = createEffect<Id | null, ChatMsg[]>((chatId) =>
-  // TODO
-  mockPromise(300, chatId ? chats[chatId] || [] : [])
-);
+export const startNewChat = async () => {
+  // skip if no messages for a chat
+  const chatId = $chatId.getState();
+  const msgList = $msgIdsList.getState();
+  if (chatId && !msgList.length) return;
+
+  try {
+    const newChat = await chatsRepository.create({
+      messages: [],
+      model: 'pulsar',
+      title: 'New chat',
+    });
+
+    switchChat(newChat.id);
+    replaceChatData(newChat);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const getNewChatMessages = createEffect<Chat | null, ChatMsg[]>((chat) => {
+  if (!chat) {
+    throw new Error('missing chat');
+  }
+
+  return chat.messages;
+});
 
 export const $isFetchingMessages = getNewChatMessages.pending;
 
@@ -42,7 +63,7 @@ $msgMap.on(getNewChatMessages.doneData, (_, newMessages) =>
 
 // get messages on chatId change
 sample({
-  source: $chatId,
+  source: $chat,
   filter: (chatId) => chatId !== null,
   clock: $chatId,
   target: getNewChatMessages,

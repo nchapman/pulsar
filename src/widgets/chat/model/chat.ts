@@ -5,45 +5,47 @@ import { streamFx } from '../mocks/streamFx.ts';
 import { assistantResponse } from '../mocks/assistantResponse.ts';
 import { chatsRepository } from '@/db';
 
-export const switchChat = createEvent<Id>();
+const NEW_CHAT_ID = 'new-chat';
 
+export const switchChat = createEvent<Id>();
 export const askQuestion = createEvent<string>();
 const replaceChatData = createEvent<Chat>();
-
 const streamEvent = {
   start: createEvent<{ msgId: Id }>(),
   finish: createEvent(),
   addTextChunk: createEvent<{ chunk: string; streamedMsgId: Id }>(),
 };
 
-export const $chatId = createStore<Id | null>(null).on(switchChat, (_, s) => s);
-const $chat = createStore<Chat | null>(null).on(replaceChatData, (_, newChat) => newChat);
+export const $chatId = createStore<Id>(NEW_CHAT_ID);
+$chatId.on(switchChat, (_, newChatId) => newChatId);
 
-export const $streamedMsgId = createStore<Id | null>(null)
-  .on(streamEvent.start, (_, { msgId }) => msgId)
-  .reset(streamEvent.finish);
+// Chat
+const $chat = createStore<Chat | null>(null);
+$chat.on(replaceChatData, (_, newChat) => newChat);
+
+export const $streamedMsgId = createStore<Id | null>(null);
+$streamedMsgId.on(streamEvent.start, (_, { msgId }) => msgId);
+$streamedMsgId.reset(streamEvent.finish);
 
 export const $msgMap = createStore<Record<Id, ChatMsg>>({});
 export const $msgIdsList = createStore<Id[]>([]);
 
 export const startNewChat = async () => {
-  // skip if no messages for a chat
+  // skip if already new chat
   const chatId = $chatId.getState();
-  const msgList = $msgIdsList.getState();
-  if (chatId && !msgList.length) return;
+  if (chatId === NEW_CHAT_ID) return;
 
-  try {
-    const newChat = await chatsRepository.create({
-      messages: [],
-      model: 'pulsar',
-      title: 'New chat',
-    });
+  const newChat: Chat = {
+    id: 'tempId',
+    messages: [],
+    model: 'pulsar',
+    title: 'New chat',
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  };
 
-    switchChat(newChat.id);
-    replaceChatData(newChat);
-  } catch (err) {
-    console.error(err);
-  }
+  switchChat(newChat.id);
+  replaceChatData(newChat);
 };
 
 const getNewChatMessages = createEffect<Chat | null, ChatMsg[]>((chat) => {
@@ -69,9 +71,7 @@ sample({
   target: getNewChatMessages,
 });
 
-// On ask question: createMsg => setStreamedMsg => updateMsgMap
-
-const createUserMsg = createEffect<{ text: string }, ChatMsg>(({ text }) => ({
+const createUserMsg = createEffect<{ text: string }, ChatMsg>(async ({ text }) => ({
   text,
   isUser: true,
   id: suid(),
@@ -91,15 +91,41 @@ const streamMsg = createEffect<Id, void>(async (msgId) => {
     onTextChunkReceived: (chunk) => streamEvent.addTextChunk({ chunk, streamedMsgId: msgId }),
     onStreamStart: () => streamEvent.start({ msgId }),
     onStreamEnd: streamEvent.finish,
-    delay: 50,
+    delay: 1,
   });
 });
 
+const askQuestionMiddleware = createEffect<{ isNew: boolean; text: string }, { text: string }>(
+  async ({ isNew, text }) => {
+    if (isNew) {
+      const newChat = await chatsRepository.create({
+        title: 'New chat',
+        messages: [],
+        model: 'pulsar',
+      });
+
+      switchChat(newChat.id);
+      replaceChatData(newChat);
+    }
+
+    return { text };
+  }
+);
+
 sample({
-  source: $streamedMsgId,
-  filter: (streamedMsgId, text) => text !== '' && streamedMsgId === null,
+  source: {
+    chatId: $chatId,
+    streamedMsgId: $streamedMsgId,
+  },
   clock: askQuestion,
-  fn: (_, text) => ({ text }),
+  fn: ({ chatId }, text) => ({ text, isNew: chatId === NEW_CHAT_ID }),
+  filter: ({ streamedMsgId }, text) => text.trim() !== '' && streamedMsgId === null,
+  target: askQuestionMiddleware,
+});
+
+sample({
+  clock: askQuestionMiddleware.doneData,
+  fn: ({ text }) => ({ text }),
   target: createUserMsg,
 });
 
@@ -111,6 +137,30 @@ $msgIdsList.on([createUserMsg.doneData, createAssistantMsg.doneData], (state, ms
   ...state,
   msg.id,
 ]);
+
+const updateDBChatMessages = createEffect<{ chatId: Id | null; newMessages: ChatMsg[] }, void>(
+  async ({ chatId, newMessages }) => {
+    if (!chatId || chatId === NEW_CHAT_ID) return;
+    const updatedChat = await chatsRepository.update(chatId, { messages: newMessages });
+
+    replaceChatData(updatedChat);
+  }
+);
+
+// update DB on message
+sample({
+  source: {
+    msgIdsList: $msgIdsList,
+    msgMap: $msgMap,
+    chatId: $chatId,
+  },
+  clock: [streamEvent.finish],
+  fn: ({ msgIdsList, msgMap, chatId }) => {
+    const newMessages = msgIdsList.map((id) => msgMap[id]);
+    return { chatId, newMessages };
+  },
+  target: updateDBChatMessages,
+});
 
 sample({
   clock: createUserMsg.done,

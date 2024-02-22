@@ -47,9 +47,17 @@ export class ChatsRepository {
   async update(id: Id, data: UpdateDto<Chat>): Promise<Chat> {
     const post = await this.chatsCollection.find(id);
 
-    const updatedPost = await this.db.write(() => post.update((post) => assignValues(post, data)));
+    try {
+      const updatedPost = await this.db.write(() =>
+        post.update((post) => {
+          assignValues(post, data);
+        })
+      );
 
-    return this.serialize(updatedPost);
+      return this.serialize(updatedPost);
+    } catch (e) {
+      return post;
+    }
   }
 
   private serialize(post: ChatModel): Chat {

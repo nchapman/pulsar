@@ -7,7 +7,7 @@ export const chatsTable = {
     messages: 'messages',
     model: 'model',
     createdAt: 'created_at',
-    updatedAt: 'created_at',
+    updatedAt: 'updated_at',
   },
 };
 

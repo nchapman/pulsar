@@ -3,7 +3,7 @@ import { classNames } from '@/shared/lib/func';
 import s from './ChatMessage.module.scss';
 import userImg from '../../assets/user.jpeg';
 import pulsarImg from '../../assets/mozilla.svg';
-import { $msgMap } from '@/widgets/chat/model/chat.ts';
+import { $messages } from '@/widgets/chat/model/chat.ts';
 
 interface Props {
   className?: string;
@@ -14,7 +14,7 @@ export const ChatMessage = (props: Props) => {
   const { className, id } = props;
 
   const msg = useStoreMap({
-    store: $msgMap,
+    store: $messages.data,
     keys: [id],
     fn: (msgMap, [msgId]) => msgMap[msgId],
   });

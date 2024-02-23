@@ -16,26 +16,29 @@ const streamEvent = {
   addTextChunk: createEvent<{ chunk: string; streamedMsgId: Id }>(),
 };
 
-export const $chatId = createStore<Id>(NEW_CHAT_ID);
+export const $chat = {
+  id: createStore<Id>(NEW_CHAT_ID),
+  data: createStore<Chat | null>(null),
+};
 
 // Change chatId on switchChat
-$chatId.on(switchChat, (_, newChatId) => newChatId);
-
-const $chat = createStore<Chat | null>(null);
+$chat.id.on(switchChat, (_, newChatId) => newChatId);
 
 // Replace chat data on replaceChatData
-$chat.on(replaceChatData, (_, newChat) => newChat);
+$chat.data.on(replaceChatData, (_, newChat) => newChat);
 
 export const $streamedMsgId = createStore<Id | null>(null);
 $streamedMsgId.on(streamEvent.start, (_, { msgId }) => msgId);
 $streamedMsgId.reset(streamEvent.finish);
 
-export const $msgMap = createStore<Record<Id, ChatMsg>>({});
-export const $msgIdsList = createStore<Id[]>([]);
+export const $messages = {
+  data: createStore<Record<Id, ChatMsg>>({}),
+  idsList: createStore<Id[]>([]),
+};
 
 export const startNewChat = async () => {
   // skip if already new chat
-  const chatId = $chatId.getState();
+  const chatId = $chat.id.getState();
   if (chatId === NEW_CHAT_ID) return;
 
   const newChat: Chat = {
@@ -112,33 +115,35 @@ const updateDBChatMessages = createEffect<{ chatId: Id | null; newMessages: Chat
 );
 
 // add new messages to store on chat switch
-$msgIdsList.on(getNewChatMessages.doneData, (_, newMessages) => newMessages.map((msg) => msg.id));
-$msgMap.on(getNewChatMessages.doneData, (_, newMessages) =>
+$messages.data.on(getNewChatMessages.doneData, (_, newMessages) =>
   newMessages.reduce((acc, msg) => ({ ...acc, [msg.id]: msg }), {})
+);
+$messages.idsList.on(getNewChatMessages.doneData, (_, newMessages) =>
+  newMessages.map((msg) => msg.id)
 );
 
 // add new messages to store on user/assistant message creation
-$msgMap.on([createUserMsg.doneData, createAssistantMsg.doneData], (state, msg) => ({
+$messages.data.on([createUserMsg.doneData, createAssistantMsg.doneData], (state, msg) => ({
   ...state,
   [msg.id]: msg,
 }));
-$msgIdsList.on([createUserMsg.doneData, createAssistantMsg.doneData], (state, msg) => [
+$messages.idsList.on([createUserMsg.doneData, createAssistantMsg.doneData], (state, msg) => [
   ...state,
   msg.id,
 ]);
 
 // get messages on chatId change
 sample({
-  source: $chat,
+  source: $chat.data,
   filter: (chatId) => chatId !== null,
-  clock: $chatId,
+  clock: $chat.id,
   target: getNewChatMessages,
 });
 
 // on askQuestion init askQuestionMiddleware
 sample({
   source: {
-    chatId: $chatId,
+    chatId: $chat.id,
     streamedMsgId: $streamedMsgId,
   },
   clock: askQuestion,
@@ -157,9 +162,9 @@ sample({
 // update db chat on assistant response
 sample({
   source: {
-    msgIdsList: $msgIdsList,
-    msgMap: $msgMap,
-    chatId: $chatId,
+    msgIdsList: $messages.idsList,
+    msgMap: $messages.data,
+    chatId: $chat.id,
   },
   clock: [streamEvent.finish],
   fn: ({ msgIdsList, msgMap, chatId }) => {
@@ -184,7 +189,7 @@ sample({
 });
 
 // change msg data on stream events
-$msgMap.on(streamEvent.addTextChunk, (state, { streamedMsgId, chunk }) => ({
+$messages.data.on(streamEvent.addTextChunk, (state, { streamedMsgId, chunk }) => ({
   ...state,
   [streamedMsgId]: {
     ...state[streamedMsgId],

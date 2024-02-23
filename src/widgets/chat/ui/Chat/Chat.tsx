@@ -6,7 +6,7 @@ import { ChatMsgList } from '../ChatMsgList/ChatMsgList';
 import { ChatInput } from '../ChatInput/ChatInput';
 import { Precaution } from '../Precaution/Precaution';
 import { chatsRepository } from '@/db';
-import { $chatId, startNewChat } from '../../model/chat';
+import { $chat, startNewChat } from '../../model/chat';
 
 interface Props {
   className?: string;
@@ -14,7 +14,7 @@ interface Props {
 
 export const Chat = (props: Props) => {
   const { className } = props;
-  const chatId = useUnit($chatId);
+  const chatId = useUnit($chat.id);
 
   useEffect(() => {
     chatsRepository.getAll().then(console.log);

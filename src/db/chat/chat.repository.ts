@@ -1,4 +1,4 @@
-import { Collection, Database } from '@nozbe/watermelondb';
+import { Collection, Database, Q } from '@nozbe/watermelondb';
 import { ChatModel } from './chat.model.ts';
 import { assignValues, serialize } from '@/shared/lib/func';
 import { chatsTable } from './chat.schema.ts';
@@ -21,6 +21,13 @@ export interface Chat {
   createdAt: number;
   updatedAt: number;
 }
+
+interface ListParams {
+  limit?: number;
+  offset?: number;
+  order?: 'asc' | 'desc';
+}
+
 export class ChatsRepository {
   chatsCollection: Collection<ChatModel>;
 
@@ -32,8 +39,12 @@ export class ChatsRepository {
     return this.serialize(await this.chatsCollection.find(id));
   }
 
-  async getAll(): Promise<Chat[]> {
-    return this.mapSerialize(await this.chatsCollection.query().fetch());
+  async getAll(params?: ListParams): Promise<Chat[]> {
+    const { limit = 10, offset = 0, order = 'desc' } = params || {};
+
+    const query = [Q.sortBy(chatsTable.cols.updatedAt, Q[order]), Q.skip(offset), Q.take(limit)];
+
+    return this.mapSerialize(await this.chatsCollection.query(...query).fetch());
   }
 
   async create(data: Dto<Chat>): Promise<Chat> {

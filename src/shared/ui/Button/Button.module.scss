@@ -2,63 +2,34 @@
   cursor: pointer;
 
   display: flex;
-  gap: 6px;
+
   align-items: center;
-
-  padding: 8px 4px;
-
-  font-size: 15px;
-  font-weight: 500;
-  color: inherit;
-
   background: none;
-  border: 1px solid hsla(0,0%,100%,.15);
+  border: none;
+  padding: 8px;
   border-radius: 8px;
-  outline-color: transparent;
-  width: 36px;
-  height: 36px;
-  justify-content: center;
-
-  &:disabled {
-    opacity: 0.5;
-  }
+  color: var(--color-text);
+  font-size: 14px;
 }
 
 .full {
-  justify-content: center;
   width: 100%;
+  justify-content: center;
 }
-
-.primary,
-.secondary {
-  padding: 14px 28px;
-}
-
-.primary {
-  color: var(--color-el-0);
-  background: var(--color-gray-900);
-
-  &:hover {
-    background: var(--color-gray-800);
-  }
-
-  &.inverted {
-    color: var(--color-gray-900);
-    background: var(--color-el-0);
-  }
-}
-
-.secondary {
-  color: var(--color-gray-900);
-  background: var(--color-el-400);
-}
-
-//.outlined {
-//  border: 1px solid;
-//}
 
 .clear {
-  border: 0;
+  &:hover {
+    background: var(--gray-800);
+  }
+}
+
+
+.primary {
+
+}
+
+.secondary {
+  // styles
 }
 
 .icon {

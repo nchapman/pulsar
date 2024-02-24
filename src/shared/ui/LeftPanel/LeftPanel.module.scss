@@ -1,4 +1,4 @@
-.sidebar {
+.left-panel {
   width: 0;
   height: 100vh;
   position: relative;
@@ -23,6 +23,7 @@
   width: 260px;
   height: 100%;
   background: rgb(23, 23, 23);
+  padding: 0 12px 14px;
 }
 
 .button-icon {
@@ -40,7 +41,7 @@
   padding: 0;
   border: 0;
   width: 32px;
-  z-index: 2000;
+  justify-content: center;
 
   &:hover {
     .button-icon {

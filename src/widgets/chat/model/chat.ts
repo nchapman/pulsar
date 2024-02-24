@@ -35,24 +35,16 @@ export const $messages = {
   data: createStore<Record<Id, ChatMsg>>({}),
   idsList: createStore<Id[]>([]),
 };
-
-export const startNewChat = async () => {
-  // skip if already new chat
-  const chatId = $chat.id.getState();
-  if (chatId === NEW_CHAT_ID) return;
-
-  const newChat: Chat = {
-    id: 'tempId',
+async function createChat() {
+  const newChat = await chatsRepository.create({
+    title: 'What is love',
     messages: [],
     model: 'pulsar',
-    title: 'New chat',
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
-  };
+  });
 
   switchChat(newChat.id);
   replaceChatData(newChat);
-};
+}
 
 const getNewChatMessages = createEffect<Chat | null, ChatMsg[]>((chat) => {
   if (!chat) {
@@ -90,16 +82,7 @@ const streamMsg = createEffect<Id, void>(async (msgId) => {
 
 const askQuestionMiddleware = createEffect<{ isNew: boolean; text: string }, { text: string }>(
   async ({ isNew, text }) => {
-    if (isNew) {
-      const newChat = await chatsRepository.create({
-        title: 'New chat',
-        messages: [],
-        model: 'pulsar',
-      });
-
-      switchChat(newChat.id);
-      replaceChatData(newChat);
-    }
+    if (isNew) await createChat();
 
     return { text };
   }
@@ -197,9 +180,17 @@ $messages.data.on(streamEvent.addTextChunk, (state, { streamedMsgId, chunk }) =>
   },
 }));
 
-// Auxiliary
+// UI Auxiliary
 export const $isInputDisabled = combine(
   $isFetchingMessages,
   $streamedMsgId,
   (fetching, streamedMsgId) => fetching || !!streamedMsgId
 );
+
+export const startNewChat = async () => {
+  // skip if already new chat
+  const chatId = $chat.id.getState();
+  if (chatId === NEW_CHAT_ID) return;
+
+  await createChat();
+};

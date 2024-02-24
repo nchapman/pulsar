@@ -7,18 +7,15 @@ import { Icon } from '@/shared/ui';
 import cls from './Button.module.scss';
 
 // @ts-ignore
-// eslint-disable-next-line no-undef
-interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'type'> {
+interface ButtonProps {
   icon?: FC<SVGProps<SVGSVGElement>>;
   className?: string;
   children?: ComponentChild | any;
   type?: 'clear' | 'outlined' | 'primary' | 'secondary';
   iconSize?: number;
-  // @ts-ignore
-  // eslint-disable-next-line no-undef
-  htmlType?: ButtonHTMLAttributes<HTMLButtonElement>['type'];
+  htmlType?: 'button' | 'submit' | 'reset';
   full?: boolean;
-  inverted?: boolean;
+  onClick?: () => void;
 }
 
 export const Button = memo((props: ButtonProps) => {
@@ -29,20 +26,17 @@ export const Button = memo((props: ButtonProps) => {
     children,
     htmlType = 'button',
     type = 'outlined',
-    inverted,
     full,
     ...otherProps
   } = props;
 
   return (
-    // @ts-ignore
     <button
       type={htmlType}
       {...otherProps}
       className={classNames(cls.button, [cls[type], className], {
         [cls.icon]: !!icon,
         [cls.full]: full,
-        [cls.inverted]: inverted,
       })}
     >
       {icon ? <Icon Svg={icon} size={iconSize} /> : children}

@@ -1,5 +1,6 @@
 .chat-form {
-  width: 100%;
+  width: var(--chat-container-width);
+  margin: 0 auto;
   border-radius: 16px;
   overflow: hidden;
   border: 1px solid rgba(217, 217, 227, 0.2);
@@ -7,7 +8,6 @@
 
   &:focus-within {
     border-color: rgba(217, 217, 227, 0.3);
-
   }
 }
 

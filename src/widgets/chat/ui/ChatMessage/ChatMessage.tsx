@@ -22,15 +22,17 @@ export const ChatMessage = (props: Props) => {
   const { text, isUser } = msg;
 
   return (
-    <div className={classNames(s.chatMessage, [className])}>
-      <div className={s.authorIcon}>
-        <img src={isUser ? userImg : pulsarImg} alt="author" />
-      </div>
+    <div className={classNames(s.chatMessageWrapper, [className])}>
+      <div className={s.chatMessage}>
+        <div className={s.authorIcon}>
+          <img src={isUser ? userImg : pulsarImg} alt="author" />
+        </div>
 
-      <div>
-        <div className={s.authorName}>{isUser ? 'You' : 'Pulsar'}</div>
-        <div className={s.text}>{text}</div>
-        <div className={s.actions}></div>
+        <div>
+          <div className={s.authorName}>{isUser ? 'You' : 'Pulsar'}</div>
+          <div className={s.text}>{text}</div>
+          <div className={s.actions}></div>
+        </div>
       </div>
     </div>
   );

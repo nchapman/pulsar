@@ -25,8 +25,8 @@ const ChatHistory = memo((props: Props) => {
   const chatsList = useMemo(
     () =>
       groupChats(chats).map(({ chats, period }) => (
-        <div>
-          <div className={s.date}>{period}</div>
+        <div className={s.group}>
+          <div className={s.period}>{period}</div>
           <div className={s.chats}>
             {chats.map((chat) => (
               <ChatHistoryItem key={chat.id} id={chat.id} />

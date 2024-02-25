@@ -8,25 +8,26 @@ import { chatsRepository } from '@/db';
 
 interface Props {
   className?: string;
-  id: string;
   chat?: ChatModel;
+  // eslint-disable-next-line react/no-unused-prop-types
+  id: string;
 }
 
-const ChatHistoryItem = memo((props: Props) => {
+const ChatHistoryItem = (props: Props) => {
   const { className, chat } = props;
-  console.log('I change');
+  // console.log('I change');
 
   return (
     <Button type="clear" className={classNames(s.chatHistoryItem, [className])}>
       {chat?.title}
     </Button>
   );
-});
+};
 
 const enhance = withObservables(['id'], ({ id }: Props) => ({
   chat: chatsRepository.chatsCollection.findAndObserve(id),
 }));
 
-const EnhancedChatHistoryItem = enhance(ChatHistoryItem);
+const EnhancedChatHistoryItem = memo(enhance(ChatHistoryItem));
 
 export { EnhancedChatHistoryItem as ChatHistoryItem };

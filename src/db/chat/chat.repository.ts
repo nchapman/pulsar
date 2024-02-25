@@ -10,6 +10,7 @@ export interface ChatMsg {
   user?: { name: string };
   assistant?: {
     userMsgId: Id;
+    input: string;
   };
 }
 

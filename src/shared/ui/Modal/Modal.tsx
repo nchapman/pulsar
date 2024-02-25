@@ -3,7 +3,7 @@ import { useCallback, useState } from 'preact/hooks';
 import { classNames } from '@/shared/lib/func';
 import { Button, Overlay, Portal } from '@/shared/ui';
 import CloseIcon from '@/shared/assets/icons/close.svg';
-import cls from './Modal.module.scss';
+import s from './Modal.module.scss';
 
 interface ModalProps {
   open: boolean;
@@ -30,15 +30,15 @@ export const Modal = memo((props: ModalProps) => {
   return (
     <Portal>
       <div
-        className={classNames(cls.modal, [className], {
-          [cls.open]: open && !closing,
-          [cls.noStyles]: noStyles,
-          [cls.white]: white,
+        className={classNames(s.modal, [className], {
+          [s.open]: open && !closing,
+          [s.noStyles]: noStyles,
+          [s.white]: white,
         })}
       >
-        <div className={cls.body}>{children}</div>
+        <div className={s.body}>{children}</div>
 
-        <Button icon={CloseIcon as any} className={cls.closeBtn} onClick={handleClose} />
+        <Button icon={CloseIcon as any} className={s.closeBtn} onClick={handleClose} />
         <Overlay onClick={handleClose} visible={open && !closing} modal />
       </div>
     </Portal>

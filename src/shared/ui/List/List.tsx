@@ -1,7 +1,7 @@
 import { memo, ReactNode } from 'preact/compat';
 import { useMemo } from 'preact/hooks';
 import { classNames } from '@/shared/lib/func';
-import cls from './List.module.scss';
+import s from './List.module.scss';
 
 interface ListProps {
   listClassName?: string;
@@ -23,5 +23,5 @@ export const List = memo((props: ListProps) => {
     [itemClassName, items]
   );
 
-  return <ul className={classNames(cls.list, [listClassName, cls[direction]])}>{itemsList}</ul>;
+  return <ul className={classNames(s.list, [listClassName, s[direction]])}>{itemsList}</ul>;
 });

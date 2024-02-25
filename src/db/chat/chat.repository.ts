@@ -72,6 +72,11 @@ export class ChatsRepository {
     }
   }
 
+  async remove(id: Id): Promise<void> {
+    const post = await this.chatsCollection.find(id);
+    await this.db.write(() => post.destroyPermanently());
+  }
+
   private serialize(post: ChatModel): Chat {
     return serialize(post, ['id', 'title', 'messages', 'model', 'createdAt', 'updatedAt']);
   }

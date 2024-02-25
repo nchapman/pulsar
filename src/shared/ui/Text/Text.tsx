@@ -1,6 +1,6 @@
 import { CSSProperties, createElement, memo, ReactNode } from 'preact/compat';
 import { classNames } from '@/shared/lib/func';
-import cls from './Text.module.scss';
+import s from './Text.module.scss';
 
 type textType =
   | 'body-1'
@@ -35,13 +35,13 @@ interface TextProps {
 export const Text = memo((props: TextProps) => {
   const { className, children, type, align = 'left', style, isTitle, brand } = props;
 
-  const textClass = classNames('text', [className, cls[align], cls[type]]);
+  const textClass = classNames('text', [className, s[align], s[type]]);
 
   if (children === undefined || children === null) return null;
 
   return createElement(
     'span',
-    { className: classNames(textClass, [], { [cls.title]: isTitle, [cls.brand]: brand }), style },
+    { className: classNames(textClass, [], { [s.title]: isTitle, [s.brand]: brand }), style },
     children
   );
 });

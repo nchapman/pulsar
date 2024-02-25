@@ -56,15 +56,18 @@ async function createDBChat() {
   chatEvt.replaceData(newChat);
 }
 
-const getNewChatMessages = createEffect<Chat | null, ChatMsg[]>((chat) => {
-  if (!chat) {
-    throw new Error('missing chat');
+const fetchDbChatWithMessages = createEffect<{ chatId: Id | null }, ChatMsg[]>(
+  async ({ chatId }) => {
+    if (!chatId) return [];
+
+    const chat = await chatsRepository.getById(chatId);
+    chatEvt.replaceData(chat);
+
+    return chat.messages;
   }
+);
 
-  return chat.messages;
-});
-
-export const $isFetchingMessages = getNewChatMessages.pending;
+export const $isFetchingMessages = fetchDbChatWithMessages.pending;
 
 const createUserMsg = createEffect<{ text: string }, ChatMsg>(async ({ text }) => ({
   text,
@@ -120,10 +123,10 @@ const updateDBChatTitle = createEffect<{ title: string; chatId: Id }, void>(
 );
 
 // add new messages to store on chat switch
-$messages.data.on(getNewChatMessages.doneData, (_, newMessages) =>
+$messages.data.on(fetchDbChatWithMessages.doneData, (_, newMessages) =>
   newMessages.reduce((acc, msg) => ({ ...acc, [msg.id]: msg }), {})
 );
-$messages.idsList.on(getNewChatMessages.doneData, (_, newMessages) =>
+$messages.idsList.on(fetchDbChatWithMessages.doneData, (_, newMessages) =>
   newMessages.map((msg) => msg.id)
 );
 
@@ -145,9 +148,10 @@ sample({
 // get messages on chatId change
 sample({
   source: $chat.data,
-  filter: (chatId) => chatId !== null,
+  filter: (_, chatId) => chatId !== null,
+  fn: (_, chatId) => ({ chatId }),
   clock: $chat.id,
-  target: getNewChatMessages,
+  target: fetchDbChatWithMessages,
 });
 
 // on askQuestion init askQuestionMiddleware
@@ -215,5 +219,4 @@ export const $isInputDisabled = combine(
   (fetching, streamedMsgId) => fetching || !!streamedMsgId
 );
 
-export const startNewChat = chatEvt.startNew;
-export const { askQuestion } = chatEvt;
+export const { askQuestion, startNew: startNewChat, switch: switchChat } = chatEvt;

@@ -1,7 +1,7 @@
 import { memo } from 'preact/compat';
 import { classNames } from '@/shared/lib/func';
 import { Portal } from '@/shared/ui';
-import cls from './Overlay.module.scss';
+import s from './Overlay.module.scss';
 
 interface OverlayProps {
   className?: string;
@@ -17,9 +17,9 @@ export const Overlay = memo((props: OverlayProps) => {
     <Portal>
       <div
         onClick={onClick}
-        className={classNames(cls.overlay, [className], {
-          [cls.visible]: visible,
-          [cls.modal]: modal,
+        className={classNames(s.overlay, [className], {
+          [s.visible]: visible,
+          [s.modal]: modal,
         })}
       ></div>
     </Portal>

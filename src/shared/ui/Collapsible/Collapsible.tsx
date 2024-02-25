@@ -4,7 +4,7 @@ import { useRef, useState } from 'preact/hooks';
 import { Icon } from '@/shared/ui';
 import ExpandIcon from '@/shared/assets/icons/expand.svg';
 import { classNames } from '@/shared/lib/func';
-import cls from './Collapsible.module.scss';
+import s from './Collapsible.module.scss';
 
 interface CollapsibleProps {
   head: ReactNode;
@@ -51,27 +51,27 @@ export const Collapsible: FC<CollapsibleProps> = ({
   return (
     <div
       onClick={wholeClickable ? toggleCollapse : undefined}
-      className={classNames(cls.collapsible, [], {
-        [cls.expanded]: !finalCollapsed,
-        [cls.wholeClickable]: wholeClickable,
+      className={classNames(s.collapsible, [], {
+        [s.expanded]: !finalCollapsed,
+        [s.wholeClickable]: wholeClickable,
       })}
     >
       <div
-        className={classNames(cls.head, [headClassName], {
+        className={classNames(s.head, [headClassName], {
           [expandedHeadClassName || '']: !finalCollapsed && expandedHeadClassName,
         })}
         onClick={!wholeClickable ? toggleCollapse : undefined}
       >
         {typeof head === 'string' ? <h2>{head}</h2> : head}
         {/* @ts-ignore */}
-        {withIcon && <Icon className={cls.icon} Svg={ExpandIcon} />}
+        {withIcon && <Icon className={s.icon} Svg={ExpandIcon} />}
       </div>
       <div
-        className={cls.content}
+        className={s.content}
         style={{ maxHeight: finalCollapsed ? 0 : contentHeight }}
         ref={contentRef}
       >
-        <div className={cls.contentWrapper}>{children}</div>
+        <div className={s.contentWrapper}>{children}</div>
       </div>
     </div>
   );

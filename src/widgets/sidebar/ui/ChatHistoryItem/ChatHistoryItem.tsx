@@ -5,20 +5,33 @@ import s from './ChatHistoryItem.module.scss';
 import { ChatModel } from '@/db/chat';
 import { Button } from '@/shared/ui';
 import { chatsRepository } from '@/db';
+import { switchChat } from '@/widgets/chat';
+import { DeleteChatIcon } from '@/widgets/sidebar/assets/DeleteChatIcon.tsx';
 
 interface Props {
   className?: string;
   chat?: ChatModel;
-  // eslint-disable-next-line react/no-unused-prop-types
+  isCurrent: boolean;
   id: string;
 }
 
 const ChatHistoryItem = (props: Props) => {
-  const { className, chat } = props;
-  // console.log('I change');
+  const { className, chat, id, isCurrent } = props;
+
+  const handleChatClick = () => switchChat(id);
+
+  const handleDeleteChat = () => chatsRepository.remove(id);
 
   return (
-    <Button type="clear" className={classNames(s.chatHistoryItem, [className])}>
+    <Button
+      type="clear"
+      active={isCurrent}
+      onClick={handleChatClick}
+      className={classNames(s.chatHistoryItem, [className])}
+      activeSuffix={
+        <Button onClick={handleDeleteChat} type="clear" icon={DeleteChatIcon} iconSize={18} />
+      }
+    >
       {chat?.title}
     </Button>
   );

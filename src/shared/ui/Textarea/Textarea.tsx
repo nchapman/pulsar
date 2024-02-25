@@ -1,7 +1,7 @@
 import { ChangeEvent, ForwardedRef, forwardRef, memo } from 'preact/compat';
 import { Ref } from 'preact';
 import { classNames } from '@/shared/lib/func';
-import cls from './Textarea.module.scss';
+import s from './Textarea.module.scss';
 
 // @ts-ignore
 // eslint-disable-next-line no-undef
@@ -30,7 +30,7 @@ const Textarea = forwardRef((props: TextareaProps, ref?: ForwardedRef<HTMLInputE
       {...otherProps}
       value={value ?? ''}
       onChange={handleChange}
-      className={classNames(cls.textarea, [className])}
+      className={classNames(s.textarea, [className])}
     />
   );
 });

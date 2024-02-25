@@ -1,6 +1,7 @@
 import { memo } from 'preact/compat';
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import { withObservables } from '@nozbe/watermelondb/react';
+import { useUnit } from 'effector-react/effector-react.mjs';
 import { chatsRepository } from '@/db';
 import { Chat } from '@/db/chat';
 import { classNames } from '@/shared/lib/func';
@@ -8,6 +9,7 @@ import s from './ChatHistory.module.scss';
 import { ChatHistoryItem } from '../ChatHistoryItem/ChatHistoryItem';
 import { NewChatBtn } from '../NewChatBtn/NewChatBtn.tsx';
 import { groupChats } from '@/widgets/sidebar/lib/groupChats.ts';
+import { $chat } from '@/widgets/chat';
 
 interface Props {
   className?: string;
@@ -16,7 +18,9 @@ interface Props {
 
 const ChatHistory = memo((props: Props) => {
   const { className, chatsCount } = props;
+
   const [chats, setChats] = useState<Chat[]>([]);
+  const currChatId = useUnit($chat.id);
 
   useEffect(() => {
     chatsRepository.getAll({ limit: 28 }).then(setChats);
@@ -29,12 +33,12 @@ const ChatHistory = memo((props: Props) => {
           <div className={s.period}>{period}</div>
           <div className={s.chats}>
             {chats.map((chat) => (
-              <ChatHistoryItem key={chat.id} id={chat.id} />
+              <ChatHistoryItem key={chat.id} id={chat.id} isCurrent={currChatId === chat.id} />
             ))}
           </div>
         </div>
       )),
-    [chats]
+    [chats, currChatId]
   );
 
   return (

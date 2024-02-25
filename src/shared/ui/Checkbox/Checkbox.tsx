@@ -2,7 +2,7 @@ import { memo } from 'preact/compat';
 import { classNames } from '@/shared/lib/func';
 import { Text } from '@/shared/ui';
 import CheckIcon from '@/shared/assets/icons/check.svg';
-import cls from './Checkbox.module.scss';
+import s from './Checkbox.module.scss';
 
 interface CheckboxProps {
   className?: string;
@@ -17,18 +17,18 @@ export const Checkbox = memo((props: CheckboxProps) => {
 
   return (
     // eslint-disable-next-line
-    <label className={classNames(cls.container, [className])}>
+    <label className={classNames(s.container, [className])}>
       <Text type="body-2">{label}</Text>
       <input
         checked={checked}
         // @ts-ignore
         onChange={(e) => onChange(value, e.target.checked)}
         type="checkbox"
-        className={cls.checkbox}
+        className={s.checkbox}
       />
-      <span className={cls.checkmark}>
+      <span className={s.checkmark}>
         {/* @ts-ignore */}
-        <CheckIcon className={cls.icon} />
+        <CheckIcon className={s.icon} />
       </span>
     </label>
   );

@@ -6,8 +6,8 @@ import { ChatModel } from '@/db/chat';
 import { classNames } from '@/shared/lib/func';
 import { Button } from '@/shared/ui';
 import { switchChat } from '@/widgets/chat';
-import { DeleteChatIcon } from '@/widgets/sidebar/assets/DeleteChatIcon.tsx';
 
+import { DeleteChatIcon } from '../../assets/DeleteChatIcon.tsx';
 import s from './ChatHistoryItem.module.scss';
 
 interface Props {

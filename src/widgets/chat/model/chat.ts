@@ -6,6 +6,7 @@ import { assistantResponse } from '../mocks/assistantResponse.ts';
 import { chatsRepository } from '@/db';
 
 const chatEvt = {
+  setChatId: createEvent<Id>(),
   switch: createEvent<Id>(),
   startNew: createEvent(),
   askQuestion: createEvent<string>(),
@@ -26,6 +27,7 @@ export const $chat = {
 
 // Change chatId on switchChat
 $chat.id.on(chatEvt.switch, (_, newChatId) => newChatId);
+$chat.id.on(chatEvt.setChatId, (_, newChatId) => newChatId);
 
 // Replace chat data on replaceChatData
 $chat.data.on(chatEvt.replaceData, (_, newChat) => newChat);
@@ -52,7 +54,7 @@ async function createDBChat() {
     model: 'pulsar',
   });
 
-  chatEvt.switch(newChat.id);
+  chatEvt.setChatId(newChat.id);
   chatEvt.replaceData(newChat);
 }
 
@@ -135,6 +137,7 @@ $messages.data.on([createUserMsg.doneData, createAssistantMsg.doneData], (state,
   ...state,
   [msg.id]: msg,
 }));
+
 $messages.idsList.on([createUserMsg.doneData, createAssistantMsg.doneData], (state, msg) => [
   ...state,
   msg.id,
@@ -150,7 +153,7 @@ sample({
   source: $chat.data,
   filter: (_, chatId) => chatId !== null,
   fn: (_, chatId) => ({ chatId }),
-  clock: $chat.id,
+  clock: chatEvt.switch,
   target: fetchDbChatWithMessages,
 });
 

@@ -1,12 +1,14 @@
-import { memo } from 'preact/compat';
 import { withObservables } from '@nozbe/watermelondb/react';
-import { classNames } from '@/shared/lib/func';
-import s from './ChatHistoryItem.module.scss';
-import { ChatModel } from '@/db/chat';
-import { Button } from '@/shared/ui';
+import { memo } from 'preact/compat';
+
 import { chatsRepository } from '@/db';
+import { ChatModel } from '@/db/chat';
+import { classNames } from '@/shared/lib/func';
+import { Button } from '@/shared/ui';
 import { switchChat } from '@/widgets/chat';
 import { DeleteChatIcon } from '@/widgets/sidebar/assets/DeleteChatIcon.tsx';
+
+import s from './ChatHistoryItem.module.scss';
 
 interface Props {
   className?: string;

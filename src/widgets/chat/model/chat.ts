@@ -1,9 +1,11 @@
 import { combine, createEffect, createEvent, createStore, sample } from 'effector';
+
+import { chatsRepository } from '@/db';
 import { Chat, ChatMsg } from '@/db/chat';
 import { suid } from '@/shared/lib/func';
-import { streamFx } from '../mocks/streamFx.ts';
+
 import { assistantResponse } from '../mocks/assistantResponse.ts';
-import { chatsRepository } from '@/db';
+import { streamFx } from '../mocks/streamFx.ts';
 
 const chatEvt = {
   setChatId: createEvent<Id>(),

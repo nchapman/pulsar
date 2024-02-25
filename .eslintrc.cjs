@@ -10,8 +10,10 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['react', '@typescript-eslint', 'react-hooks', 'fsd-arch-validator', 'effector'],
+  plugins: ['react', '@typescript-eslint', 'react-hooks', 'fsd-arch-validator', 'effector', '@typescript-eslint', 'simple-import-sort'],
   rules: {
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
     'react/no-unstable-nested-components': 'off',
     'max-len': [
       'error',

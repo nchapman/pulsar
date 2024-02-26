@@ -13,6 +13,7 @@ export * from './PageError/PageError';
 export * from './Page/Page';
 export * from './Portal/Portal';
 export * from './Select/Select';
+export * from '@/shared/ui/LeftPanel/LeftPanel.tsx';
 export * from './Skeleton/Skeleton';
 export * from './Tabs/Tabs';
 export * from './Text/Text';

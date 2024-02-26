@@ -1,9 +1,15 @@
 .chat-message {
+  width: var(--chat-container-width);
   display: flex;
   gap: 12px;
   padding: 8px 20px;
   line-height: 24px;
   color: var(--gray-100);
+}
+
+.chat-message-wrapper {
+  display: flex;
+  justify-content: center;
 }
 
 .author-name {

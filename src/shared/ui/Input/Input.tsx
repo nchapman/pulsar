@@ -1,7 +1,7 @@
 import { ChangeEvent, ForwardedRef, forwardRef, memo } from 'preact/compat';
 import { Ref } from 'preact';
 import { classNames } from '@/shared/lib/func';
-import cls from './Input.module.scss';
+import s from './Input.module.scss';
 
 // @ts-ignore
 // eslint-disable-next-line no-undef
@@ -34,7 +34,7 @@ const Input = forwardRef((props: InputProps, ref?: ForwardedRef<HTMLInputElement
       {...otherProps}
       value={value ?? ''}
       onChange={handleChange}
-      className={classNames(cls.input, [className])}
+      className={classNames(s.input, [className])}
     />
   );
 });

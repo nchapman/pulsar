@@ -29,3 +29,29 @@ $desktop-width: 1080px;
     display: none;
   }
 }
+
+@mixin scrollbar {
+  /* Firefox */
+  & {
+    scrollbar-width: auto;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+  }
+
+  /* Chrome, Edge, and Safari */
+  &::-webkit-scrollbar {
+    width: 16px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+
+    &:hover {
+      background-color: rgba(255, 255, 255);
+    }
+  }
+}

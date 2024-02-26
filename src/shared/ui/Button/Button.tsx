@@ -1,24 +1,23 @@
 /* eslint-disable react/button-has-type */
-import { FC, memo, SVGProps } from 'preact/compat';
+import { FC, memo, ReactNode, SVGProps } from 'preact/compat';
 
 import { ComponentChild } from 'preact';
 import { classNames } from '@/shared/lib/func';
 import { Icon } from '@/shared/ui';
-import cls from './Button.module.scss';
+import s from './Button.module.scss';
 
 // @ts-ignore
-// eslint-disable-next-line no-undef
-interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'type'> {
+interface ButtonProps {
   icon?: FC<SVGProps<SVGSVGElement>>;
   className?: string;
   children?: ComponentChild | any;
   type?: 'clear' | 'outlined' | 'primary' | 'secondary';
   iconSize?: number;
-  // @ts-ignore
-  // eslint-disable-next-line no-undef
-  htmlType?: ButtonHTMLAttributes<HTMLButtonElement>['type'];
+  htmlType?: 'button' | 'submit' | 'reset';
+  active?: boolean;
   full?: boolean;
-  inverted?: boolean;
+  activeSuffix?: ReactNode;
+  onClick?: () => void;
 }
 
 export const Button = memo((props: ButtonProps) => {
@@ -29,23 +28,28 @@ export const Button = memo((props: ButtonProps) => {
     children,
     htmlType = 'button',
     type = 'outlined',
-    inverted,
+    active,
     full,
+    activeSuffix,
     ...otherProps
   } = props;
 
   return (
-    // @ts-ignore
     <button
       type={htmlType}
       {...otherProps}
-      className={classNames(cls.button, [cls[type], className], {
-        [cls.icon]: !!icon,
-        [cls.full]: full,
-        [cls.inverted]: inverted,
+      className={classNames(s.button, [s[type], className], {
+        [s.icon]: !!icon,
+        [s.full]: full,
+        [s.active]: active,
       })}
     >
       {icon ? <Icon Svg={icon} size={iconSize} /> : children}
+      {activeSuffix && (
+        <div onClick={(e) => e.stopPropagation()} className={s.suffix}>
+          {activeSuffix}
+        </div>
+      )}
     </button>
   );
 });

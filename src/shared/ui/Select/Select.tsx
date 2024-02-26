@@ -1,7 +1,7 @@
 import { ChangeEvent, memo } from 'preact/compat';
 import { useCallback } from 'preact/hooks';
 import { classNames } from '@/shared/lib/func';
-import cls from './Select.module.scss';
+import s from './Select.module.scss';
 
 interface SelectProps {
   className?: string;
@@ -24,12 +24,12 @@ export const Select = memo((props: SelectProps) => {
   );
 
   return (
-    <div className={classNames(cls.wrapper, [className])}>
+    <div className={classNames(s.wrapper, [className])}>
       <select
         value={value}
         onChange={handleChange}
         defaultValue={defaultValue}
-        className={cls.select}
+        className={s.select}
       >
         {options.map((option, idx) => (
           <option disabled={idx === 0 && firstDisabled} key={option.value} value={option.value}>

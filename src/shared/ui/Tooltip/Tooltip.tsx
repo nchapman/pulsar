@@ -2,7 +2,7 @@ import { memo, ReactNode } from 'preact/compat';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { classNames } from '@/shared/lib/func';
 import { Portal, Text } from '@/shared/ui';
-import cls from './Tooltip.module.scss';
+import s from './Tooltip.module.scss';
 
 interface TooltipProps {
   className?: string;
@@ -67,15 +67,15 @@ export const Tooltip = memo((props: TooltipProps) => {
       onMouseOver={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       ref={ref}
-      className={classNames(cls.wrapper, [className])}
+      className={classNames(s.wrapper, [className])}
     >
       {children}
       {visible && pos && (
         <Portal>
-          <div style={pos} className={cls.tooltip}>
+          <div style={pos} className={s.tooltip}>
             {text ? (
               <Text
-                className={classNames(cls.tooltipText, [], { [cls.success]: success })}
+                className={classNames(s.tooltipText, [], { [s.success]: success })}
                 type="subtitle-4"
               >
                 {text}

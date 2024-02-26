@@ -1,4 +1,4 @@
-import { ChatMsg } from '../types/ChatMsg';
+import { ChatMsg } from '@/db/chat';
 
 export const mockMessages: ChatMsg[] = [
   { text: 'My Question', isUser: true, id: '1' },

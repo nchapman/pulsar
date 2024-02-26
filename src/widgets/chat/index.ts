@@ -1,2 +1,2 @@
 export { Chat } from './ui/Chat/Chat';
-export { switchChat, startNewChat } from './model/chat';
+export { askQuestion, startNewChat, switchChat, $chat } from './model/chat';

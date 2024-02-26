@@ -18,3 +18,9 @@ type OptionalRecord<R extends keyof any, T> = {
 };
 
 type Id = string;
+
+interface IdObj {
+  id: Id;
+}
+type Dto<T extends IdObj> = Omit<T, 'id' | 'createdAt' | 'updatedAt'>;
+type UpdateDto<T extends IdObj> = Partial<Dto<T>>;

@@ -2,86 +2,85 @@
   cursor: pointer;
 
   display: flex;
-  gap: 6px;
+
   align-items: center;
-
-  padding: 8px 4px;
-
-  font-size: 15px;
-  font-weight: 500;
-  color: inherit;
-
   background: none;
-  border: 1px solid hsla(0,0%,100%,.15);
+  border: none;
+  padding: 8px;
   border-radius: 8px;
-  outline-color: transparent;
-  width: 36px;
-  height: 36px;
-  justify-content: center;
+  color: var(--color-text);
+  font-size: 14px;
+  line-height: 20px;
 
-  &:disabled {
-    opacity: 0.5;
-  }
+  position: relative;
 }
 
 .full {
-  justify-content: center;
   width: 100%;
+  justify-content: center;
 }
 
-.primary,
-.secondary {
-  padding: 14px 28px;
+.clear {
+  &:hover {
+    background: var(--gray-800);
+  }
+
+  &.active {
+    background: var(--gray-700);
+  }
+
+  &.icon {
+    padding: 0;
+
+    &:hover {
+      color: var(--gray-300);
+    }
+  }
 }
 
 .primary {
-  color: var(--color-el-0);
-  background: var(--color-gray-900);
 
-  &:hover {
-    background: var(--color-gray-800);
-  }
-
-  &.inverted {
-    color: var(--color-gray-900);
-    background: var(--color-el-0);
-  }
 }
 
 .secondary {
-  color: var(--color-gray-900);
-  background: var(--color-el-400);
+  // styles
 }
 
-//.outlined {
-//  border: 1px solid;
+//.icon {
+//  display: flex;
+//  align-items: center;
+//  justify-content: center;
+//
+//  width: 36px;
+//  height: 36px;
+//  padding: 0;
+//
+//  color: var(--color-gray-600);
+//
+//  border: 0;
+//  border-radius: 50%;
+//
+//  transition: background-color var(--transition-base);
+//
+//  &:hover {
+//    background: var(--color-el-400);
+//  }
+//
+//  &:active {
+//    background: rgb(28 30 41 / 20%);
+//  }
 //}
 
-.clear {
-  border: 0;
+.suffix {
+  display: none;
+  position: absolute;
+  right: 8px;
+  height: 20px;
 }
 
-.icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 36px;
-  height: 36px;
-  padding: 0;
-
-  color: var(--color-gray-600);
-
-  border: 0;
-  border-radius: 50%;
-
-  transition: background-color var(--transition-base);
-
-  &:hover {
-    background: var(--color-el-400);
-  }
-
-  &:active {
-    background: rgb(28 30 41 / 20%);
+button:hover,
+.active {
+  .suffix {
+    display: block;
   }
 }

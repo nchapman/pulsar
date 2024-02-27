@@ -1,13 +1,9 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-mod downloads;
-
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![
-            downloads::download_center::download_file
-        ])
+        .plugin(tauri_plugin_upload::init())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

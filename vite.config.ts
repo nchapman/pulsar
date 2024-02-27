@@ -1,8 +1,8 @@
-import { defineConfig } from 'vite';
 import preact from '@preact/preset-vite';
-import path from 'path';
-import svgr from 'vite-plugin-svgr';
 import styleXPlugin from '@stylexjs/babel-plugin';
+import path from 'path';
+import { defineConfig } from 'vite';
+import svgr from 'vite-plugin-svgr';
 
 const localsConvention = 'camelCaseOnly' as const;
 
@@ -57,4 +57,7 @@ export default defineConfig(async () => ({
     },
   },
   css: { modules: { localsConvention } },
+  test: {
+    environment: 'jsdom',
+  },
 }));

@@ -1,7 +1,8 @@
-import { Command, Child } from '@tauri-apps/api/shell';
+import { Child, Command } from '@tauri-apps/plugin-shell';
 
 export default class Llamafile {
   private command: Command;
+
   private process: Child | null;
 
   constructor(model = 'dolphin-2.6-mistral-7b.Q4_K_M.gguf') {

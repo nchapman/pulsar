@@ -1,0 +1,14 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+}
+
+.chat-history {
+  flex: 1 1 auto;
+}
+
+.sidebar-footer {
+  flex: 0 1 auto;
+  flex-shrink: 0;
+}

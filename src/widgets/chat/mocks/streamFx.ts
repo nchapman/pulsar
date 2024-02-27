@@ -1,11 +1,14 @@
 export function streamFx(config: {
+  question: string;
   text: string;
   onStreamStart: () => void;
   onTextChunkReceived: (chunk: string) => void;
   onStreamEnd: () => void;
+  onTitleUpdate: (title: string) => void;
   delay?: number;
 }) {
-  const { text, onStreamStart, onTextChunkReceived, onStreamEnd, delay } = config;
+  const { text, question, onStreamStart, onTextChunkReceived, onTitleUpdate, onStreamEnd, delay } =
+    config;
 
   let i = 0;
   const chunkSize = 5;
@@ -17,8 +20,6 @@ export function streamFx(config: {
       const curChunkSize = i + chunkSize <= textLength ? chunkSize : textLength - i;
       const nextChunk = text.slice(i, i + curChunkSize);
 
-      console.log(curChunkSize);
-
       onTextChunkReceived(nextChunk);
       i += curChunkSize;
 
@@ -29,6 +30,8 @@ export function streamFx(config: {
       }
     }, delay || 100);
   }
+
+  setTimeout(() => onTitleUpdate(question), 1000);
 
   stream();
 }

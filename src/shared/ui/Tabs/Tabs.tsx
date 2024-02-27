@@ -1,7 +1,7 @@
 import { memo, ReactNode } from 'preact/compat';
 import { useCallback, useMemo, useState } from 'preact/hooks';
 import { classNames } from '@/shared/lib/func';
-import cls from './Tabs.module.scss';
+import s from './Tabs.module.scss';
 
 export interface TabItem {
   key: string;
@@ -42,7 +42,7 @@ export const Tabs = memo((props: TabsProps) => {
       items.map((i) => (
         <li key={i.key}>
           <button
-            className={classNames(cls.label, [], { [cls.activeLabel]: i.key === active })}
+            className={classNames(s.label, [], { [s.activeLabel]: i.key === active })}
             type="button"
             onClick={() => handleChange(i.key)}
           >
@@ -54,8 +54,8 @@ export const Tabs = memo((props: TabsProps) => {
   );
 
   return (
-    <div className={classNames(cls.tabs, [className])}>
-      <ul className={classNames(cls.header, [headerClassName])}>{labels}</ul>
+    <div className={classNames(s.tabs, [className])}>
+      <ul className={classNames(s.header, [headerClassName])}>{labels}</ul>
       {itemsMap[active].children}
     </div>
   );

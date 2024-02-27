@@ -1,31 +1,24 @@
-import { Database, Model } from '@nozbe/watermelondb';
 import LokiJSAdapter from '@nozbe/watermelondb/adapters/lokijs';
+import { schema } from '@/db/schema.ts';
 
-import { Class } from '@nozbe/watermelondb/types';
-
-import migrations from './model/migrations.ts';
-import { Post, Comment } from './model/Post.ts';
-import { schema } from './model/schema.ts';
-// import Post from './model/Post' // ⬅️ You'll import your Models here
-
-// First, create the adapter to the underlying database:
-
-const adapter = new LokiJSAdapter({
+export const adapter = new LokiJSAdapter({
   schema,
   // (You might want to comment out migrations for development purposes -- see Migrations documentation)
-  migrations,
+  // migrations,
   useWebWorker: false,
   useIncrementalIndexedDB: true,
-  // dbName: 'myapp', // optional db name
+  dbName: 'pulsar', // optional db name
 
   // --- Optional, but recommended event handlers:
 
   // eslint-disable-next-line
   onQuotaExceededError: (error) => {
+    console.error(error);
     // Browser ran out of disk space -- offer the user to reload the app or log out
   },
   // eslint-disable-next-line
   onSetUpError: (error) => {
+    console.error(error);
     // Database failed to load -- offer the user to reload the app or log out
   },
   extraIncrementalIDBOptions: {
@@ -43,10 +36,4 @@ const adapter = new LokiJSAdapter({
       // }
     },
   },
-});
-
-// Then, make a Watermelon database from it!
-export const database = new Database({
-  adapter,
-  modelClasses: [Post, Comment] as Class<Model>[],
 });

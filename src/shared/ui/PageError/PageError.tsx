@@ -1,5 +1,5 @@
 import { classNames } from '@/shared/lib/func';
-import cls from './PageError.module.scss';
+import s from './PageError.module.scss';
 
 interface PageErrorProps {
   className?: string;
@@ -13,7 +13,7 @@ export const PageError = (props: PageErrorProps) => {
   };
 
   return (
-    <div className={classNames(cls.pageError, [className])}>
+    <div className={classNames(s.pageError, [className])}>
       <p>Unexpected error occurred</p>
       <button type="button" onClick={reloadPage}>
         Reload page

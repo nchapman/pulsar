@@ -55,17 +55,7 @@
   --delay-panel-open: 0.5s;
 
   // Sizes
-  --sidebar-width: 600px;
-  --panel-width: 530px;
-  --main-content-shift: calc(
-    50vw - var(--sidebar-width) - (var(--container-main-width) / 2) - 16px
-  );
-  --main-content-panel-shift: calc(
-    var(--panel-width) + var(--navbar-width) - (var(--container-main-width) / 2) + 32px
-  );
-  --sidebar-collapsed-width: 80px;
-  --container-main-width: 810px;
-  --navbar-width: 80px;
+  --chat-container-width: 768px;
 
   // z-indexes
   --z-index-overlay-sidebar: 100000;
@@ -96,7 +86,7 @@
     --main-content-shift: 0;
   }
 
-  // Sidebar sizes
+  // LeftPanel sizes
   @media screen and (width >= 1366px) {
     --container-main-width: 750px;
     --sidebar-width: 544px;

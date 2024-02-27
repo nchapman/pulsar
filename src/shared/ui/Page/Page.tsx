@@ -1,6 +1,6 @@
 import { ReactNode } from 'preact/compat';
 import { classNames } from '@/shared/lib/func';
-import cls from './Page.module.scss';
+import s from './Page.module.scss';
 
 interface PageProps {
   className?: string;
@@ -10,5 +10,5 @@ interface PageProps {
 export const Page = (props: PageProps) => {
   const { className, children } = props;
 
-  return <div className={classNames(cls.page, [className])}>{children}</div>;
+  return <div className={classNames(s.page, [className])}>{children}</div>;
 };

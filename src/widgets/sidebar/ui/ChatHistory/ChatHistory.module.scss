@@ -1,0 +1,40 @@
+@import './src/shared/styles/mixins';
+
+.chat-history {
+  height: 100%;
+  position: relative;
+}
+
+.list {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: calc(100% + 12px);
+  padding-right: 8px;
+
+  @include scrollbar;
+  overflow-y: auto;
+}
+
+.period {
+  font-size: 12px;
+  padding: 12px 8px 8px;
+  color: var(--gray-500);
+}
+
+.group {
+  margin-top: 20px;
+}
+
+.new-chat-btn {
+  position: sticky;
+  top: 14px;
+  z-index: 10;
+  height: 40px;
+  width: calc(100% - 8px);
+}
+
+.white-space {
+  height: 40px;
+}

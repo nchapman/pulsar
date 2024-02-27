@@ -1,6 +1,6 @@
 import { memo } from 'preact/compat';
 import { classNames } from '@/shared/lib/func';
-import cls from './Skeleton.module.scss';
+import s from './Skeleton.module.scss';
 
 interface SkeletonProps {
   className?: string;
@@ -11,5 +11,5 @@ interface SkeletonProps {
 export const Skeleton = memo((props: SkeletonProps) => {
   const { className, width, height } = props;
 
-  return <div style={{ width, height }} className={classNames(cls.skeleton, [className])} />;
+  return <div style={{ width, height }} className={classNames(s.skeleton, [className])} />;
 });

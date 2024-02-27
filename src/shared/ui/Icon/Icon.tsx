@@ -1,6 +1,6 @@
 import { FC, memo, SVGProps } from 'preact/compat';
 import { classNames } from '@/shared/lib/func';
-import cls from './Icon.module.scss';
+import s from './Icon.module.scss';
 
 interface IconProps {
   className?: string;
@@ -19,7 +19,7 @@ export const Icon = memo((props: IconProps) => {
   return (
     <Svg
       style={{ width: width || size, height: height || size }}
-      className={classNames(cls.icon, [className], { [cls.noFill]: noFill })}
+      className={classNames(s.icon, [className], { [s.noFill]: noFill })}
     />
   );
 });

@@ -1,4 +1,3 @@
-import { DatabaseProvider } from '@nozbe/watermelondb/react';
 import { render } from 'preact';
 import App from './app/App';
 import '@/shared/styles/index.scss';
@@ -12,9 +11,7 @@ new Llamafile().spawn();
 render(
   <ErrorBoundary>
     <ThemeProvider>
-      <DatabaseProvider database={database}>
-        <App />
-      </DatabaseProvider>
+      <App />
     </ThemeProvider>
   </ErrorBoundary>,
   document.getElementById('root')!

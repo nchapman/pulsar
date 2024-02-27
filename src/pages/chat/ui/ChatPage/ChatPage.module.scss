@@ -1,13 +1,23 @@
 .chat-page {
   display: flex;
+  height: 100vh;
+}
+
+.main {
+  display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100vh;
+  height: 100%;
   gap: 6px;
+  width: 100%;
 }
 
 .navbar {
   height: 56px;
+  flex-shrink: 0;
+}
+
+.sidebar {
   flex-shrink: 0;
 }
 

@@ -57,7 +57,4 @@ export default defineConfig(async () => ({
     },
   },
   css: { modules: { localsConvention } },
-  test: {
-    environment: 'jsdom',
-  },
 }));

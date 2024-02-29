@@ -25,5 +25,4 @@ dist-ssr
 
 # llamafile
 llama.log
-src-tauri/bin/*
 src-tauri/models/*

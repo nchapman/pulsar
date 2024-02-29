@@ -31,14 +31,9 @@ brew install bun
 
 ## Setup llamafile
 
-This is a temporary development integration for macOS. This will be a more permanent solution soon!
+This is a temporary development integration. llamafile is now integrated into the GitHub repo but manually downloading the model is still required to run the app. This shouldn't interfere with the build process even those builds won't actually work without the model.
 
 ```bash
-# Download the llamafile binary
-mkdir -p src-tauri/bin
-curl -L -o src-tauri/bin/llamafile-aarch64-apple-darwin https://github.com/Mozilla-Ocho/llamafile/releases/download/0.6.2/llamafile-0.6.2
-chmod +x src-tauri/bin/llamafile-aarch64-apple-darwin
-
 # Download the Dolphin Mistral model
 mkdir -p src-tauri/models
 curl -L -o src-tauri/models/dolphin-2.6-mistral-7b.Q4_K_M.gguf https://huggingface.co/TheBloke/dolphin-2.6-mistral-7B-GGUF/resolve/main/dolphin-2.6-mistral-7b.Q4_K_M.gguf

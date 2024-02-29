@@ -1,8 +1,12 @@
-import { render } from 'preact';
-import App from './app/App';
 import '@/shared/styles/index.scss';
+
+import { render } from 'preact';
+
+import { ErrorBoundary, ThemeProvider } from '@/app/providers';
+
+import App from './app/App';
 import Llamafile from './llamafile';
-import { ThemeProvider, ErrorBoundary } from '@/app/providers';
+
 // Start the llamafile server
 new Llamafile().spawn();
 

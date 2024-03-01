@@ -19,6 +19,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: enable corepack
+        run: corepack enable
+
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
 

@@ -16,6 +16,7 @@ jobs:
 
       - name: Typecheck files
         run: yarn typecheck
+
   frontend_tests:
     runs-on: ubuntu-latest
     steps:
@@ -27,4 +28,17 @@ jobs:
 
       - name: Test
         run: yarn test:frontend
+
+  rust:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Test
+        working-directory: src-tauri
+        run: cargo test
 

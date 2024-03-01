@@ -26,3 +26,11 @@ dist-ssr
 # llamafile
 llama.log
 src-tauri/models/*
+
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

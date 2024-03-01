@@ -11,7 +11,8 @@
     "prepare": "husky install",
     "dev": "vite",
     "preview": "vite preview",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "test:frontend": "vitest"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.18",
@@ -52,12 +53,14 @@
     "sass": "^1.70.0",
     "typescript": "^5.0.2",
     "vite": "^5.0.0",
-    "vite-plugin-svgr": "^4.2.0"
+    "vite-plugin-svgr": "^4.2.0",
+    "vitest": "^1.3.1"
   },
   "lint-staged": {
     "**/*.{ts,tsx}": [
       "eslint --fix",
       "prettier --write --ignore-unknown"
     ]
-  }
+  },
+  "packageManager": "yarn@4.1.0"
 }

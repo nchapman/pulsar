@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "tauri dev",
+    "typecheck": "tsc --noEmit",
     "build": "tsc && vite build",
     "lint:ts": "eslint \"**/*.{ts,tsx}\" --fix",
     "prettier": "npx prettier \"**/*.{ts,tsx}\" --write",
@@ -12,7 +13,7 @@
     "dev": "vite",
     "preview": "vite preview",
     "tauri": "tauri",
-    "test:frontend": "vitest"
+    "test:frontend": "vitest run"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.18",

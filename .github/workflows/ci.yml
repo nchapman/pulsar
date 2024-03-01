@@ -16,7 +16,7 @@ jobs:
 
       - name: Typecheck files
         run: yarn typecheck
-  test:
+  frontend_tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -26,5 +26,5 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Test
-        run: yarn test
+        run: yarn test:frontend
 

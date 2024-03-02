@@ -24,6 +24,7 @@
     "effector-react": "^23.2.0",
     "openai": "^4.27.0",
     "preact": "^10.16.0",
+    "tauri-plugin-sql": "https://github.com/tauri-apps/tauri-plugin-sql#v1",
     "tauri-plugin-upload-api": "https://github.com/tauri-apps/tauri-plugin-upload#v1"
   },
   "devDependencies": {

@@ -20,11 +20,10 @@ export const ChatMsgList = (props: Props) => {
 
   const list = useList($messages.idsList, (msgId) => (<ChatMessage id={msgId} />) as any);
 
-  if (!(list as any).length)
-    return <ChatFirstScreen className={classNames(s.chatMsgList, [className])} />;
+  if (!(list as any).length) return <ChatFirstScreen className={classNames('', [className])} />;
 
   return (
-    <div ref={listRef} className={classNames('', [className])} onScroll={onStackScroll}>
+    <div ref={listRef} className={classNames(s.chatMsgList, [className])} onScroll={onStackScroll}>
       {list}
 
       <Button

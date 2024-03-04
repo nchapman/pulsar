@@ -43,6 +43,7 @@ const enhance = withObservables(['id'], ({ id }: Props) => ({
   chat: chatsRepository.chatsCollection.findAndObserve(id),
 }));
 
+// @ts-ignore
 const EnhancedChatHistoryItem = memo(enhance(ChatHistoryItem));
 
 export { EnhancedChatHistoryItem as ChatHistoryItem };

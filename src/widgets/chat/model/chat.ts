@@ -1,11 +1,10 @@
 import { combine, createEffect, createEvent, createStore, sample } from 'effector';
 
 import { chatsRepository } from '@/db';
-import { Chat, ChatMsg } from '@/db/chat';
+import type { Chat, ChatMsg } from '@/db/chat';
 import { suid } from '@/shared/lib/func';
 
-import { assistantResponse } from '../mocks/assistantResponse.ts';
-import { streamFx } from '../mocks/streamFx.ts';
+import { stream } from '../api/chatApi.ts';
 
 const chatEvt = {
   setChatId: createEvent<Id>(),
@@ -89,14 +88,12 @@ const createAssistantMsg = createEffect<ChatMsg, ChatMsg>((userMessage) => ({
 
 const streamMsg = createEffect<{ chatId: Id; msgId: Id; question: string }, void>(
   async ({ msgId, chatId, question }) => {
-    streamFx({
+    stream({
       question,
-      text: assistantResponse,
       onTextChunkReceived: (chunk) => streamEvt.addTextChunk({ chunk, msgId }),
       onStreamStart: () => streamEvt.start({ msgId }),
       onTitleUpdate: (title) => streamEvt.updateTitle({ title, chatId }),
       onStreamEnd: streamEvt.finish,
-      delay: 1,
     });
   }
 );

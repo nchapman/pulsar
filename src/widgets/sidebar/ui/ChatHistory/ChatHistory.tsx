@@ -1,15 +1,17 @@
-import { memo } from 'preact/compat';
-import { useEffect, useMemo, useState } from 'preact/hooks';
 import { withObservables } from '@nozbe/watermelondb/react';
 import { useUnit } from 'effector-react/effector-react.mjs';
+import { memo } from 'preact/compat';
+import { useEffect, useMemo, useState } from 'preact/hooks';
+
 import { chatsRepository } from '@/db';
 import { Chat } from '@/db/chat';
 import { classNames } from '@/shared/lib/func';
-import s from './ChatHistory.module.scss';
+import { $chat } from '@/widgets/chat';
+import { groupChats } from '@/widgets/sidebar/lib/groupChats.ts';
+
 import { ChatHistoryItem } from '../ChatHistoryItem/ChatHistoryItem';
 import { NewChatBtn } from '../NewChatBtn/NewChatBtn.tsx';
-import { groupChats } from '@/widgets/sidebar/lib/groupChats.ts';
-import { $chat } from '@/widgets/chat';
+import s from './ChatHistory.module.scss';
 
 interface Props {
   className?: string;
@@ -58,6 +60,7 @@ const enhance = withObservables([], () => ({
   chatsCount: chatsRepository.chatsCollection.query().observeCount(),
 }));
 
+// @ts-ignore
 const EnhancedChatHistory = enhance(ChatHistory);
 
 export { EnhancedChatHistory as ChatHistory };

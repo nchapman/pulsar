@@ -1,4 +1,13 @@
 .new-chat-btn {
-  justify-content: space-between;
+  gap: 8px;
   background: rgb(23, 23, 23);
+}
+
+.logo {
+  width: 28px;
+  height: 28px;
+}
+
+.text {
+  margin-right: auto;
 }

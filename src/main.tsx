@@ -8,6 +8,7 @@ import App from './app/App';
 import Llamafile from './llamafile';
 
 // Start the llamafile server
+
 new Llamafile().spawn();
 
 render(

@@ -1,9 +1,13 @@
 import { useStoreMap } from 'effector-react';
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+
 import { classNames } from '@/shared/lib/func';
-import s from './ChatMessage.module.scss';
+import { Logo } from '@/shared/ui';
+
 import userImg from '../../assets/user.jpeg';
-import pulsarImg from '../../assets/mozilla.svg';
-import { $messages } from '@/widgets/chat/model/chat.ts';
+import { $messages } from '../../model/chat.ts';
+import s from './ChatMessage.module.scss';
 
 interface Props {
   className?: string;
@@ -25,12 +29,16 @@ export const ChatMessage = (props: Props) => {
     <div className={classNames(s.chatMessageWrapper, [className])}>
       <div className={s.chatMessage}>
         <div className={s.authorIcon}>
-          <img src={isUser ? userImg : pulsarImg} alt="author" />
+          {isUser ? <img src={userImg} alt="author" /> : <Logo className={s.logo} />}
         </div>
 
         <div>
           <div className={s.authorName}>{isUser ? 'You' : 'Pulsar'}</div>
-          <div className={s.text}>{text}</div>
+          <div className={s.text}>
+            <Markdown className={s.markdown} remarkPlugins={[remarkGfm]}>
+              {text}
+            </Markdown>
+          </div>
           <div className={s.actions}></div>
         </div>
       </div>

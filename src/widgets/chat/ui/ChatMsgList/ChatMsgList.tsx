@@ -1,8 +1,14 @@
 import { useList } from 'effector-react';
+
+import ArrowDownIcon from '@/shared/assets/icons/arrow-down.svg';
 import { classNames } from '@/shared/lib/func';
-import s from './ChatMsgList.module.scss';
-import { ChatMessage } from '../ChatMessage/ChatMessage';
+import { Button } from '@/shared/ui';
+import { useListScroll } from '@/widgets/chat/hooks/useListScroll.ts';
+import { ChatFirstScreen } from '@/widgets/chat/ui/ChatFirstScreen/ChatFirstScreen.tsx';
+
 import { $messages } from '../../model/chat.ts';
+import { ChatMessage } from '../ChatMessage/ChatMessage';
+import s from './ChatMsgList.module.scss';
 
 interface Props {
   className?: string;
@@ -10,8 +16,25 @@ interface Props {
 
 export const ChatMsgList = (props: Props) => {
   const { className } = props;
+  const { listRef, scrollToBottom, showScrollBtn, onStackScroll } = useListScroll();
 
-  const list = useList($messages.idsList, (msgId) => <ChatMessage id={msgId} />);
+  const list = useList($messages.idsList, (msgId) => (<ChatMessage id={msgId} />) as any);
 
-  return <div className={classNames(s.chatMsgList, [className])}>{list}</div>;
+  if (!(list as any).length)
+    return <ChatFirstScreen className={classNames(s.chatMsgList, [className])} />;
+
+  return (
+    <div ref={listRef} className={classNames('', [className])} onScroll={onStackScroll}>
+      {list}
+
+      <Button
+        icon={ArrowDownIcon}
+        onClick={() => scrollToBottom()}
+        className={classNames(s.scrollBtn, [], {
+          [s.hidden]: !showScrollBtn,
+          // [s.loading]: isQuerying,
+        })}
+      />
+    </div>
+  );
 };

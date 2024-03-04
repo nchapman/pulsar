@@ -1,14 +1,15 @@
 /* eslint-disable react/button-has-type */
+import { ComponentChild } from 'preact';
 import { FC, memo, ReactNode, SVGProps } from 'preact/compat';
 
-import { ComponentChild } from 'preact';
 import { classNames } from '@/shared/lib/func';
 import { Icon } from '@/shared/ui';
+
 import s from './Button.module.scss';
 
 // @ts-ignore
 interface ButtonProps {
-  icon?: FC<SVGProps<SVGSVGElement>>;
+  icon?: FC<SVGProps<SVGSVGElement>> | any;
   className?: string;
   children?: ComponentChild | any;
   type?: 'clear' | 'outlined' | 'primary' | 'secondary';

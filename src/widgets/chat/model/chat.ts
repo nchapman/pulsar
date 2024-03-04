@@ -1,11 +1,10 @@
 import { combine, createEffect, createEvent, createStore, sample } from 'effector';
 
 import { chatsRepository } from '@/db';
-import { Chat, ChatMsg } from '@/db/chat';
+import type { Chat, ChatMsg } from '@/db/chat';
 import { suid } from '@/shared/lib/func';
 
-import { assistantResponse } from '../mocks/assistantResponse.ts';
-import { streamFx } from '../mocks/streamFx.ts';
+import { stream } from '../api/chatApi.ts';
 
 const chatEvt = {
   setChatId: createEvent<Id>(),
@@ -49,9 +48,11 @@ $chat.data.reset(chatEvt.startNew);
 $messages.data.reset(chatEvt.startNew);
 $messages.idsList.reset(chatEvt.startNew);
 
+const NEW_CHAT_TITLE = 'New chat';
+
 async function createDBChat() {
   const newChat = await chatsRepository.create({
-    title: 'New chat',
+    title: NEW_CHAT_TITLE,
     messages: [],
     model: 'pulsar',
   });
@@ -89,14 +90,12 @@ const createAssistantMsg = createEffect<ChatMsg, ChatMsg>((userMessage) => ({
 
 const streamMsg = createEffect<{ chatId: Id; msgId: Id; question: string }, void>(
   async ({ msgId, chatId, question }) => {
-    streamFx({
+    stream({
       question,
-      text: assistantResponse,
       onTextChunkReceived: (chunk) => streamEvt.addTextChunk({ chunk, msgId }),
       onStreamStart: () => streamEvt.start({ msgId }),
       onTitleUpdate: (title) => streamEvt.updateTitle({ title, chatId }),
       onStreamEnd: streamEvt.finish,
-      delay: 1,
     });
   }
 );
@@ -146,8 +145,11 @@ $messages.idsList.on([createUserMsg.doneData, createAssistantMsg.doneData], (sta
 ]);
 
 sample({
+  source: $chat.data,
   clock: streamEvt.updateTitle,
   target: updateDBChatTitle,
+  fn: (_, data) => data,
+  filter: (chat) => chat?.title === NEW_CHAT_TITLE,
 });
 
 // get messages on chatId change
@@ -223,5 +225,10 @@ export const $isInputDisabled = combine(
   $streamedMsgId,
   (fetching, streamedMsgId) => fetching || !!streamedMsgId
 );
+
+export const $streamedText = combine($streamedMsgId, $messages.data, (msgId, data) => {
+  const msg = data[msgId!];
+  return msg?.text || '';
+});
 
 export const { askQuestion, startNew: startNewChat, switch: switchChat } = chatEvt;

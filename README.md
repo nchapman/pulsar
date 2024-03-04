@@ -61,6 +61,20 @@ yarn start
 bun test
 ```
 
+## Commits
+
+Please, use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary) for naming your commits
+
+type(where): action description
+
+example:
+
+feat(chat): add initial screen
+
+See more examples in commits history.
+
+```bash
+
 ## Recommended IDE Setup
 
 - [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)

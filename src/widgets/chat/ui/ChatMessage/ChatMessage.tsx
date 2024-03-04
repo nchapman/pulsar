@@ -3,8 +3,8 @@ import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
 import { classNames } from '@/shared/lib/func';
+import { Logo } from '@/shared/ui';
 
-import pulsarImg from '../../assets/mozilla.svg';
 import userImg from '../../assets/user.jpeg';
 import { $messages } from '../../model/chat.ts';
 import s from './ChatMessage.module.scss';
@@ -29,7 +29,7 @@ export const ChatMessage = (props: Props) => {
     <div className={classNames(s.chatMessageWrapper, [className])}>
       <div className={s.chatMessage}>
         <div className={s.authorIcon}>
-          <img src={isUser ? userImg : pulsarImg} alt="author" />
+          {isUser ? <img src={userImg} alt="author" /> : <Logo className={s.logo} />}
         </div>
 
         <div>

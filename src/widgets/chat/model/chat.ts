@@ -48,9 +48,11 @@ $chat.data.reset(chatEvt.startNew);
 $messages.data.reset(chatEvt.startNew);
 $messages.idsList.reset(chatEvt.startNew);
 
+const NEW_CHAT_TITLE = 'New chat';
+
 async function createDBChat() {
   const newChat = await chatsRepository.create({
-    title: 'New chat',
+    title: NEW_CHAT_TITLE,
     messages: [],
     model: 'pulsar',
   });
@@ -143,8 +145,11 @@ $messages.idsList.on([createUserMsg.doneData, createAssistantMsg.doneData], (sta
 ]);
 
 sample({
+  source: $chat.data,
   clock: streamEvt.updateTitle,
   target: updateDBChatTitle,
+  fn: (_, data) => data,
+  filter: (chat) => chat?.title === NEW_CHAT_TITLE,
 });
 
 // get messages on chatId change
@@ -220,5 +225,10 @@ export const $isInputDisabled = combine(
   $streamedMsgId,
   (fetching, streamedMsgId) => fetching || !!streamedMsgId
 );
+
+export const $streamedText = combine($streamedMsgId, $messages.data, (msgId, data) => {
+  const msg = data[msgId!];
+  return msg?.text || '';
+});
 
 export const { askQuestion, startNew: startNewChat, switch: switchChat } = chatEvt;

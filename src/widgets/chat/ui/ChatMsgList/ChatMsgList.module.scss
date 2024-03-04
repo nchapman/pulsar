@@ -3,4 +3,97 @@
 .chat-msg-list {
   @include scrollbar;
   scroll-behavior: smooth;
+  position: relative;
+}
+
+.scroll-btn {
+  position: sticky;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 32px;
+  height: 32px;
+
+  color: initial;
+
+  background: var(--gray-800);
+  border-radius: 50%;
+
+  transition: opacity 0.2s;
+  border: 1px solid var(--gray-300);
+
+  &.hidden {
+    opacity: 0;
+  }
+}
+
+.scroll-btn.loading {
+  background: transparent;
+  animation: linear 1s infinite color-animation;
+
+  &::after {
+    content: '';
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    border: 2px solid transparent;
+    border-radius: 50%;
+
+    animation: linear 1s infinite border-animation;
+  }
+
+  @keyframes border-animation {
+    0% {
+      transform: rotate(0deg);
+      border-bottom-color: var(--color-pink-500);
+    }
+
+    25% {
+      transform: rotate(90deg);
+      border-bottom-color: var(--color-orange-500);
+    }
+
+    50% {
+      transform: rotate(180deg);
+      border-bottom-color: var(--color-primary-500);
+    }
+
+    75% {
+      transform: rotate(270deg);
+      border-bottom-color: var(--color-secondary-500);
+    }
+
+    100% {
+      transform: rotate(360deg);
+      border-bottom-color: var(--color-pink-500);
+    }
+  }
+
+  @keyframes color-animation {
+    0% {
+      color: var(--color-pink-500);
+    }
+
+    25% {
+      color: var(--color-orange-500);
+    }
+
+    50% {
+      color: var(--color-primary-500);
+    }
+
+    75% {
+      color: var(--color-secondary-500);
+    }
+
+    100% {
+      color: var(--color-pink-500);
+    }
+  }
 }

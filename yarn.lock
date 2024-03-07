@@ -6337,6 +6337,7 @@ __metadata:
     react-markdown: "npm:^9.0.1"
     remark-gfm: "npm:^4.0.0"
     sass: "npm:^1.70.0"
+    tauri-plugin-sql: "https://github.com/tauri-apps/tauri-plugin-sql#v1"
     tauri-plugin-upload-api: "https://github.com/tauri-apps/tauri-plugin-upload#v1"
     typescript: "npm:^5.0.2"
     vite: "npm:^5.0.0"
@@ -7133,6 +7134,15 @@ __metadata:
     mkdirp: "npm:^1.0.3"
     yallist: "npm:^4.0.0"
   checksum: 10c0/02ca064a1a6b4521fef88c07d389ac0936730091f8c02d30ea60d472e0378768e870769ab9e986d87807bfee5654359cf29ff4372746cc65e30cbddc352660d8
+  languageName: node
+  linkType: hard
+
+"tauri-plugin-sql@https://github.com/tauri-apps/tauri-plugin-sql#v1":
+  version: 0.0.0
+  resolution: "tauri-plugin-sql@https://github.com/tauri-apps/tauri-plugin-sql.git#commit=a31253b6a3da1f97a8a815747761f7ab6c21420a"
+  dependencies:
+    "@tauri-apps/api": "npm:1.5.3"
+  checksum: 10c0/5fb79202afe99f490513f2bc6be6de15ca2bc75013f16ec99daf098dcd6df0f6eeac0c23a0f8b9d5a6af73d92e3f329d39f4876eded1c136565e5417a87b0300
   languageName: node
   linkType: hard
 

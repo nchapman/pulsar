@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { Model } from '@nozbe/watermelondb';
-import { field, text } from '@nozbe/watermelondb/decorators';
+import { Model } from '../../WatermelonDB';
+import { field, text } from '../../WatermelonDB/decorators';
 import { postsTable } from './post.schema.ts';
 
 export class PostModel extends Model {

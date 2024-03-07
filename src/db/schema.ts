@@ -1,4 +1,4 @@
-import { appSchema } from '@nozbe/watermelondb';
+import { appSchema } from '../WatermelonDB';
 import { postSchema } from './post';
 import { chatSchema } from './chat';
 

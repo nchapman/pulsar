@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { Model } from '@nozbe/watermelondb';
-import { date, json, text } from '@nozbe/watermelondb/decorators';
+import { Model } from '../../WatermelonDB';
+import { date, json, text } from '../../WatermelonDB/decorators';
 import { chatsTable } from './chat.schema.ts';
 
 export class ChatModel extends Model {

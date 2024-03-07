@@ -1,6 +1,6 @@
 import { memo } from 'preact/compat';
 import { useEffect, useMemo, useState } from 'preact/hooks';
-import { withObservables } from '@nozbe/watermelondb/react';
+import { withObservables } from '../../../../WatermelonDB/react';
 import { useUnit } from 'effector-react/effector-react.mjs';
 import { chatsRepository } from '@/db';
 import { Chat } from '@/db/chat';

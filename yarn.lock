@@ -436,12 +436,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:7.21.0":
-  version: 7.21.0
-  resolution: "@babel/runtime@npm:7.21.0"
+"@babel/runtime@npm:^7.24.0":
+  version: 7.24.0
+  resolution: "@babel/runtime@npm:7.24.0"
   dependencies:
-    regenerator-runtime: "npm:^0.13.11"
-  checksum: 10c0/8fc28acf3b353390a8188a63d443719847b24b66028fdc8bb301c08e2ee013b52aaeb9d0e9783fa5dcd72bb3c0172fb647419db32392101001738356bdc1f4ab
+    regenerator-runtime: "npm:^0.14.0"
+  checksum: 10c0/3495eed727bf4a4f84c35bb51ab53317ae38f4bbc3b1d0a8303751f9dfa0ce6f5fb2afced72b76c3dd0d8bb2ccb84787559a4dee9886291a36b26f02f0f759b4
   languageName: node
   linkType: hard
 
@@ -855,35 +855,6 @@ __metadata:
     "@nodelib/fs.scandir": "npm:2.1.5"
     fastq: "npm:^1.6.0"
   checksum: 10c0/db9de047c3bb9b51f9335a7bb46f4fcfb6829fb628318c12115fbaf7d369bfce71c15b103d1fc3b464812d936220ee9bc1c8f762d032c9f6be9acc99249095b1
-  languageName: node
-  linkType: hard
-
-"@nozbe/simdjson@npm:3.1.0-wmelon1":
-  version: 3.1.0-wmelon1
-  resolution: "@nozbe/simdjson@npm:3.1.0-wmelon1"
-  checksum: 10c0/324a97857ad008c34007e895f270ebee5bc5e9ad56c63864a677b3a4958415b4f954cd17d02630b4665fb8e7464059e5a9bef3f590e1ee2145fe62158dc2a108
-  languageName: node
-  linkType: hard
-
-"@nozbe/sqlite@npm:3.40.1":
-  version: 3.40.1
-  resolution: "@nozbe/sqlite@npm:3.40.1"
-  checksum: 10c0/035444ae438e86185e93f0735b09514b2c1e78470c61345750fe4f26f051e8889b6e1c2a4c66851b36b2f2fce643fbbc244d5799dd734991cf4dd32fba5e0eea
-  languageName: node
-  linkType: hard
-
-"@nozbe/watermelondb@npm:^0.27.1":
-  version: 0.27.1
-  resolution: "@nozbe/watermelondb@npm:0.27.1"
-  dependencies:
-    "@babel/runtime": "npm:7.21.0"
-    "@nozbe/simdjson": "npm:3.1.0-wmelon1"
-    "@nozbe/sqlite": "npm:3.40.1"
-    hoist-non-react-statics: "npm:^3.3.2"
-    lokijs: "npm:@nozbe/lokijs@1.5.12-wmelon6"
-    rxjs: "npm:^7.8.0"
-    sql-escape-string: "npm:^1.1.0"
-  checksum: 10c0/f7d0693b340ef5f728ec7e7b5e6af11e66dbf2c955c3979c69e4098bfc36fe3777e591fa602bfcc6aa1f1f8737ce063a4d14c4d2e775ee08489eaf47c3141e83
   languageName: node
   linkType: hard
 
@@ -3829,15 +3800,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hoist-non-react-statics@npm:^3.3.2":
-  version: 3.3.2
-  resolution: "hoist-non-react-statics@npm:3.3.2"
-  dependencies:
-    react-is: "npm:^16.7.0"
-  checksum: 10c0/fe0889169e845d738b59b64badf5e55fa3cf20454f9203d1eb088df322d49d4318df774828e789898dcb280e8a5521bb59b3203385662ca5e9218a6ca5820e74
-  languageName: node
-  linkType: hard
-
 "http-cache-semantics@npm:^4.1.1":
   version: 4.1.1
   resolution: "http-cache-semantics@npm:4.1.1"
@@ -4479,13 +4441,6 @@ __metadata:
     slice-ansi: "npm:^4.0.0"
     wrap-ansi: "npm:^6.2.0"
   checksum: 10c0/18b299e230432a156f2535660776406d15ba8bb7817dd3eaadd58004b363756d4ecaabcd658f9949f90b62ea7d3354423be3fdeb7a201ab951ec0e8d6139af86
-  languageName: node
-  linkType: hard
-
-"lokijs@npm:@nozbe/lokijs@1.5.12-wmelon6":
-  version: 1.5.12-wmelon6
-  resolution: "@nozbe/lokijs@npm:1.5.12-wmelon6"
-  checksum: 10c0/2915bbcc5642e878d0df0e5cd5ce94a4b6453f655bc8d4132e39055b576dce57d9db039040c0d8a7ba4e6aca35daf73dbe7877867883ea9ea9dd102f44d27839
   languageName: node
   linkType: hard
 
@@ -5303,8 +5258,8 @@ __metadata:
     "@babel/plugin-proposal-class-properties": "npm:^7.18.6"
     "@babel/plugin-proposal-decorators": "npm:^7.23.9"
     "@babel/plugin-transform-runtime": "npm:^7.23.9"
+    "@babel/runtime": "npm:^7.24.0"
     "@headlessui/react": "npm:^1.7.18"
-    "@nozbe/watermelondb": "npm:^0.27.1"
     "@preact/preset-vite": "npm:^2.5.0"
     "@stylexjs/babel-plugin": "npm:^0.5.1"
     "@stylexjs/stylex": "npm:^0.5.1"
@@ -5356,7 +5311,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-is@npm:^16.13.1, react-is@npm:^16.7.0":
+"react-is@npm:^16.13.1":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
   checksum: 10c0/33977da7a5f1a287936a0c85639fec6ca74f4f15ef1e59a6bc20338fc73dc69555381e211f7a3529b8150a1f71e4225525b41b60b52965bda53ce7d47377ada1
@@ -5379,10 +5334,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"regenerator-runtime@npm:^0.13.11":
-  version: 0.13.11
-  resolution: "regenerator-runtime@npm:0.13.11"
-  checksum: 10c0/12b069dc774001fbb0014f6a28f11c09ebfe3c0d984d88c9bced77fdb6fedbacbca434d24da9ae9371bfbf23f754869307fb51a4c98a8b8b18e5ef748677ca24
+"regenerator-runtime@npm:^0.14.0":
+  version: 0.14.1
+  resolution: "regenerator-runtime@npm:0.14.1"
+  checksum: 10c0/1b16eb2c4bceb1665c89de70dcb64126a22bc8eb958feef3cd68fe11ac6d2a4899b5cd1b80b0774c7c03591dc57d16631a7f69d2daa2ec98100e2f29f7ec4cc4
   languageName: node
   linkType: hard
 
@@ -5810,13 +5765,6 @@ __metadata:
   version: 1.1.3
   resolution: "sprintf-js@npm:1.1.3"
   checksum: 10c0/09270dc4f30d479e666aee820eacd9e464215cdff53848b443964202bf4051490538e5dd1b42e1a65cf7296916ca17640aebf63dae9812749c7542ee5f288dec
-  languageName: node
-  linkType: hard
-
-"sql-escape-string@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "sql-escape-string@npm:1.1.0"
-  checksum: 10c0/89fa6b7adbd550ea2372fc556047ac64703a130593c2fae597e9ab258172908121ac03ac83ae79134f0a7e38c93a8b07ea708c3257f9abcf6452a6a038186f05
   languageName: node
   linkType: hard
 

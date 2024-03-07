@@ -1,8 +1,8 @@
-import { Database, Model } from '@nozbe/watermelondb';
-import { Class } from '@nozbe/watermelondb/types';
-import { adapter } from './adapter.ts';
+import { Database, Model } from '../WatermelonDB';
+import { type Class } from '../WatermelonDB/types';
 import { PostsRepository, PostModel } from './post';
 import { ChatModel, ChatsRepository } from './chat';
+import { adapter } from './adapter';
 
 const database = new Database({
   adapter,

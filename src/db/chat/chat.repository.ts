@@ -1,4 +1,4 @@
-import { Collection, Database, Q } from '@nozbe/watermelondb';
+import { Collection, Database, Q } from '../../WatermelonDB';
 import { ChatModel } from './chat.model.ts';
 import { assignValues, serialize } from '@/shared/lib/func';
 import { chatsTable } from './chat.schema.ts';

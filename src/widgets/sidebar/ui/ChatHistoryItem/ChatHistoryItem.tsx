@@ -1,4 +1,4 @@
-import { withObservables } from '@nozbe/watermelondb/react';
+import { withObservables } from '../../../../WatermelonDB/react';
 import { memo } from 'preact/compat';
 
 import { chatsRepository } from '@/db';

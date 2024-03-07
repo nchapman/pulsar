@@ -1,4 +1,4 @@
-import { Collection, Database } from '@nozbe/watermelondb';
+import { Collection, Database } from '../../WatermelonDB';
 import { PostModel } from './post.model.ts';
 import { assignValues, serialize } from '@/shared/lib/func';
 import { postsTable } from './post.schema.ts';

@@ -1,4 +1,4 @@
-import { tableSchema } from '@nozbe/watermelondb';
+import { tableSchema } from '../../WatermelonDB';
 
 export const chatsTable = {
   name: 'chat',

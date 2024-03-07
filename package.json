@@ -15,8 +15,8 @@
     "test:frontend": "vitest"
   },
   "dependencies": {
+    "@babel/runtime": "^7.24.0",
     "@headlessui/react": "^1.7.18",
-    "@nozbe/watermelondb": "../WatermelonDB",
     "@stylexjs/babel-plugin": "^0.5.1",
     "@stylexjs/stylex": "^0.5.1",
     "@tauri-apps/api": "^1.5.2",

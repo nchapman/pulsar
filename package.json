@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.7.18",
-    "@nozbe/watermelondb": "^0.27.1",
+    "@nozbe/watermelondb": "../WatermelonDB",
     "@stylexjs/babel-plugin": "^0.5.1",
     "@stylexjs/stylex": "^0.5.1",
     "@tauri-apps/api": "^1.5.2",
@@ -63,5 +63,5 @@
       "prettier --write --ignore-unknown"
     ]
   },
-  "packageManager": "yarn@4.1.0"
+  "packageManager": "yarn@4.1.1"
 }

@@ -6,8 +6,6 @@ import { ErrorBoundary, ThemeProvider } from '@/app/providers';
 
 import App from './app/App';
 import Llamafile from './llamafile';
-import { setupDB } from './sqltest';
-setupDB();
 
 // Start the llamafile server
 new Llamafile().spawn();

@@ -5,7 +5,7 @@ export default class Llamafile {
 
   private process: Child | null;
 
-  constructor(model = 'dolphin-2.6-mistral-7b.Q4_K_M.gguf') {
+  constructor(model = 'llava-v1.6-mistral-7b.Q5_K_M.gguf') {
     this.command = Command.sidecar('bin/llamafile', [
       '-m',
       `models/${model}`,

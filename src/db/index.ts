@@ -1,6 +1,7 @@
 import { Database, Model } from '@nozbe/watermelondb';
 import { Class } from '@nozbe/watermelondb/types';
-import { adapter } from './adapter.ts';
+// import { adapter } from './adapter.ts';
+import { adapter } from './nativeAdapter';
 import { PostsRepository, PostModel } from './post';
 import { ChatModel, ChatsRepository } from './chat';
 

@@ -15,6 +15,15 @@
       "shell": {
         "sidecar": true,
         "scope": [{ "name": "bin/llamafile", "sidecar": true, "args": true }]
+      },
+      "fs": {
+        "all": true,
+        "readFile": true,
+        "writeFile": true,
+        "scope": ["$APPLOCALDATA/models/*", "$APPLOCALDATA", "$APPLOCALDATA/models"]
+      },
+      "path": {
+        "all": true
       }
     },
     "bundle": {

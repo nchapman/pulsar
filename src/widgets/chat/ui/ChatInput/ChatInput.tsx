@@ -1,10 +1,12 @@
-import { useEffect, useRef, useState } from 'preact/hooks';
 import { useUnit } from 'effector-react';
+import { useEffect, useRef, useState } from 'preact/hooks';
+
 import { classNames } from '@/shared/lib/func';
-import s from './ChatInput.module.scss';
+import { useKeyboardListener } from '@/shared/lib/hooks';
 import { SendIcon } from '@/widgets/chat/assets/SendIcon.tsx';
 import { $isInputDisabled, askQuestion } from '@/widgets/chat/model/chat.ts';
-import { useKeyboardListener } from '@/shared/lib/hooks';
+
+import s from './ChatInput.module.scss';
 
 interface Props {
   className?: string;

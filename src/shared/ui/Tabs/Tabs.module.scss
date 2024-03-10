@@ -1,5 +1,3 @@
-@import './src/shared/styles/typography';
-
 .tabs {
   display: flex;
   flex-direction: column;
@@ -16,7 +14,6 @@
 }
 
 .label {
-  @include font-subtitle-3;
 
   cursor: pointer;
 

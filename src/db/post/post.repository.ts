@@ -1,6 +1,8 @@
 import { Collection, Database } from '@nozbe/watermelondb';
-import { PostModel } from './post.model.ts';
+
 import { assignValues, serialize } from '@/shared/lib/func';
+
+import { PostModel } from './post.model.ts';
 import { postsTable } from './post.schema.ts';
 
 interface Post {

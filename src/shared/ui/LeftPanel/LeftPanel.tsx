@@ -1,8 +1,10 @@
 import { memo, ReactNode } from 'preact/compat';
 import { useState } from 'preact/hooks';
+
 import { classNames } from '@/shared/lib/func';
-import s from './LeftPanel.module.scss';
 import { Button } from '@/shared/ui';
+
+import s from './LeftPanel.module.scss';
 
 interface Props {
   className?: string;
@@ -18,7 +20,7 @@ export const LeftPanel = memo((props: Props) => {
 
   return (
     <div className={classNames(s.leftPanel, [className], { [s.opened]: isOpened })}>
-      <Button className={s.button} onClick={toggle}>
+      <Button variant="primary" className={s.button} onClick={toggle}>
         <div className={s.buttonIcon} />
       </Button>
       <div className={s.wrapper}>

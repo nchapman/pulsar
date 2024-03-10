@@ -3,7 +3,7 @@ import { ComponentChild } from 'preact';
 import { FC, memo, ReactNode, SVGProps } from 'preact/compat';
 
 import { classNames } from '@/shared/lib/func';
-import { Icon } from '@/shared/ui';
+import { Icon, Spinner } from '@/shared/ui';
 
 import s from './Button.module.scss';
 
@@ -12,11 +12,12 @@ interface ButtonProps {
   icon?: FC<SVGProps<SVGSVGElement>> | any;
   className?: string;
   children?: ComponentChild | any;
-  type?: 'clear' | 'outlined' | 'primary' | 'secondary';
+  variant: 'primary' | 'secondary' | 'link';
+  loading?: boolean;
   iconSize?: number;
-  htmlType?: 'button' | 'submit' | 'reset';
   active?: boolean;
   full?: boolean;
+  disabled?: boolean;
   activeSuffix?: ReactNode;
   onClick?: () => void;
 }
@@ -27,30 +28,36 @@ export const Button = memo((props: ButtonProps) => {
     icon,
     iconSize,
     children,
-    htmlType = 'button',
-    type = 'outlined',
     active,
     full,
     activeSuffix,
+    variant,
+    loading,
     ...otherProps
   } = props;
 
+  const content = icon ? <Icon Svg={icon} size={iconSize} /> : children;
+
+  const activeSuffixContent = (
+    <div onClick={(e) => e.stopPropagation()} className={s.suffix}>
+      {activeSuffix}
+    </div>
+  );
+
   return (
     <button
-      type={htmlType}
       {...otherProps}
-      className={classNames(s.button, [s[type], className], {
+      className={classNames(s.button, [s[variant], className], {
         [s.icon]: !!icon,
         [s.full]: full,
         [s.active]: active,
+        [s.loading]: loading,
       })}
+      disabled={props.disabled || loading}
     >
-      {icon ? <Icon Svg={icon} size={iconSize} /> : children}
-      {activeSuffix && (
-        <div onClick={(e) => e.stopPropagation()} className={s.suffix}>
-          {activeSuffix}
-        </div>
-      )}
+      {content}
+      {loading && <Spinner className={s.spinner} />}
+      {activeSuffix && activeSuffixContent}
     </button>
   );
 });

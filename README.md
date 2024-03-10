@@ -46,6 +46,8 @@ This is a temporary development integration. llamafile is now integrated into th
 # Download the Dolphin Mistral model
 mkdir -p src-tauri/models
 curl -L -o src-tauri/models/dolphin-2.6-mistral-7b.Q4_K_M.gguf https://huggingface.co/TheBloke/dolphin-2.6-mistral-7B-GGUF/resolve/main/dolphin-2.6-mistral-7b.Q4_K_M.gguf
+
+curl -L -o src-tauri/models/llava-v1.6-mistral-7b.Q5_K_M.gguf https://huggingface.co/cjpais/llava-1.6-mistral-7b-gguf/resolve/main/llava-v1.6-mistral-7b.Q5_K_M.gguf
 ```
 
 ## Start the app

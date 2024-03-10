@@ -1,6 +1,8 @@
 import { ChangeEvent, memo } from 'preact/compat';
 import { useCallback } from 'preact/hooks';
+
 import { classNames } from '@/shared/lib/func';
+
 import s from './Select.module.scss';
 
 interface SelectProps {

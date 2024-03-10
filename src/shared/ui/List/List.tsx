@@ -1,6 +1,8 @@
 import { memo, ReactNode } from 'preact/compat';
 import { useMemo } from 'preact/hooks';
+
 import { classNames } from '@/shared/lib/func';
+
 import s from './List.module.scss';
 
 interface ListProps {

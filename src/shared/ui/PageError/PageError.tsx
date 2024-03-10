@@ -1,4 +1,5 @@
 import { classNames } from '@/shared/lib/func';
+
 import s from './PageError.module.scss';
 
 interface PageErrorProps {

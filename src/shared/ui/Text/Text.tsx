@@ -1,47 +1,28 @@
-import { CSSProperties, createElement, memo, ReactNode } from 'preact/compat';
-import { classNames } from '@/shared/lib/func';
-import s from './Text.module.scss';
+import { createElement, CSSProperties, memo, ReactNode } from 'preact/compat';
 
-type textType =
-  | 'body-1'
-  | 'body-2'
-  | 'body-3'
-  | 'body-4'
-  | 'subtitle-1'
-  | 'subtitle-2'
-  | 'subtitle-3'
-  | 'subtitle-4'
-  | 'subtitle-5'
-  | 'heading-1'
-  | 'heading-2'
-  | 'heading-3'
-  | 'heading-4'
-  | 'heading-5'
-  | 'heading-6'
-  | 'link-1'
-  | 'link-2'
-  | 'link-3';
+import { classNames } from '@/shared/lib/func';
+
+import cls from './Text.module.scss';
 
 interface TextProps {
   className?: string;
   children?: string | number | (string | number)[] | ReactNode;
-  type: textType;
-  align?: 'right' | 'left' | 'center';
   style?: CSSProperties;
-  isTitle?: boolean;
-  brand?: boolean;
+  s?: number;
+  c?: 'primary' | 'secondary';
+  w?: 'bold' | 'semi' | 'normal' | 'medium';
 }
 
 export const Text = memo((props: TextProps) => {
-  const { className, children, type, align = 'left', style, isTitle, brand } = props;
+  const { className, children, style, w = 'normal', c = 'secondary', s = 16 } = props;
 
-  const textClass = classNames('text', [className, s[align], s[type]]);
+  const textClass = classNames(cls.text, [className, cls[c], cls[w]]);
 
   if (children === undefined || children === null) return null;
 
   return createElement(
     'span',
-    { className: classNames(textClass, [], { [s.title]: isTitle, [s.brand]: brand }), style },
+    { className: textClass, style: { fontSize: s, ...style } },
     children
   );
 });

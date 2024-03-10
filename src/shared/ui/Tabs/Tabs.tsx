@@ -1,6 +1,8 @@
 import { memo, ReactNode } from 'preact/compat';
 import { useCallback, useMemo, useState } from 'preact/hooks';
+
 import { classNames } from '@/shared/lib/func';
+
 import s from './Tabs.module.scss';
 
 export interface TabItem {

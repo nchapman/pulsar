@@ -1,7 +1,9 @@
 import { memo, ReactNode } from 'preact/compat';
 import { useEffect, useRef, useState } from 'preact/hooks';
+
 import { classNames } from '@/shared/lib/func';
 import { Portal, Text } from '@/shared/ui';
+
 import s from './Tooltip.module.scss';
 
 interface TooltipProps {
@@ -61,7 +63,6 @@ export const Tooltip = memo((props: TooltipProps) => {
   );
 
   return (
-    // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
     <div
       onFocus={() => setIsHovered(true)}
       onMouseOver={() => setIsHovered(true)}
@@ -74,10 +75,7 @@ export const Tooltip = memo((props: TooltipProps) => {
         <Portal>
           <div style={pos} className={s.tooltip}>
             {text ? (
-              <Text
-                className={classNames(s.tooltipText, [], { [s.success]: success })}
-                type="subtitle-4"
-              >
+              <Text className={classNames(s.tooltipText, [], { [s.success]: success })}>
                 {text}
               </Text>
             ) : (

@@ -1,77 +1,71 @@
 .app-light-theme {
-  // Redesign
-  // Primary
-  --color-primary-400: #daf373;
-  --color-primary-500: #c8eb46;
-  --color-primary-600: #a6ca33;
-
-  // Elevation
-  --color-el-0: #fff;
-  --color-el-100: #f8f9fb;
-  --color-el-300: #f1f3f7;
-  --color-el-400: #edeff5;
-  --color-el-500: #e3e6ee;
-  --color-el-600: #dce0ea;
-  --color-el-700: #c4cbdc;
-  --color-el-900: #95a1bf;
+  // Root
+  --white: #fff;
+  --black: #000;
 
   // Gray
-  --color-gray-50: #e8ebec;
-  --color-gray-500: #73858e;
-  --color-gray-600: #5c707b;
-  --color-gray-700: #455c68;
-  --color-gray-800: #163342;
-  --color-gray-900: #0e1c24;
+  --gray-50: #f9f9f9;
+  --gray-100: #ececec;
+  --gray-200: #cdcdcd;
+  --gray-300: #b4b4b4;
+  --gray-400: #9b9b9b;
+  --gray-500: #676767;
+  --gray-600: #424242;
+  --gray-700: #2f2f2f;
+  --gray-800: #212121;
+  --gray-900: #171717;
 
-  // Secondary
-  --color-secondary-50: #ebf2ff;
-  --color-secondary-200: #adc8ff;
-  --color-secondary-500: #5076ff;
-  --color-secondary-600: #254edb;
-  --color-secondary-700: #1939b7;
+  // Text
+  --text-primary: var(--gray-100);
+  --text-secondary: var(--gray-300);
+  --text-tertiary: var(--gray-500);
+  --text-quaternary: var(--gray-700);
+
+  // Border
+  --border-light: rgba(255, 255, 255, 0.1);
+  --border-medium: rgba(255, 255, 255, 0.15);
+  --border-heavy: rgba(255, 255, 255, 0.2);
+  --border-x-heavy: rgba(255, 255, 255, 0.25);
+
+  // Main Background
+  --main-background-primary: var(--gray-800);
+  --main-background-secondary: var(--gray-700);
+  --main-background-tertiary: var(--gray-600);
+  --main-background-quaternary: rgba(255, 255, 255, 0.05);
+
+  // Sidebar Background
+  --sidebar-background-primary: var(--gray-900);
+  --sidebar-background-secondary: var(--gray-800);
+  --sidebar-background-tertiary: var(--gray-700);
+
+  // Link
+  --link-default: #7ab7ff;
+  --link-hover: #5e83b3;
+
+  // Icon
+  --icon-default: rgba(255, 255, 255, 0.6);
+  --icon-hover: rgba(255, 255, 255, 0.8);
+  --icon-active: rgba(255, 255, 255, 1);
+  --icon-disabled: rgba(255, 255, 255, 0.15);
 
   // Semantic
-  --color-semantic-success: #12b76a;
-  --color-semantic-warning: #f79009;
-  --color-semantic-error: #f04438;
-  --color-pink-500: #ef6bcd;
-  --color-orange-500: #ffb38d;
-  --color-orange-600: #db8667;
+  --success: #12b76a;
+  --warning: #fdb022;
+  --error: #f04438;
+  --info: #0089c2;
 
-  // Button Colors
-  --color-button-active: #5076ff;
-  --color-button-hover: #003ea933;
-  --color-button-default: #003ea914;
-  --color-button-inactive: #f2f4f5;
-  --color-button-inactive-selected: #b8b9bb80;
+  // Button
+  --button-primary-default: rgba(255, 255, 255, 1);
+  --button-primary-hover: rgba(255, 255, 255, 0.9);
+  --button-primary-disabled: rgba(255, 255, 255, 0.3);
 
-  // additional
-  --color-button-active-state: #004fc5;
-  --color-button-bg-hover: rgb(28 30 41 / 8%);
-  --color-button-bg-active: rgb(28 30 41 / 20%);
+  --button-secondary-default: rgba(255, 255, 255, 0);
+  --button-secondary-hover: rgba(255, 255, 255, 0.05);
+  --button-secondary-disabled: rgba(255, 255, 255, 0);
 
-  // Text Colors
-  --color-text-link: #3f65f0;
-  --color-text-title: #1c1e29;
-  --color-text-content: #4d5156;
-  --color-button-inactive-shades: #1c1e2959;
-  --color-button-inactive-selected-shades: #1c1e2940;
-  --color-text-white: rgb(236, 236, 236);
-  --color-text-brand: #163342;
-  --color-text-brand-80: rgb(22 51 66 / 80%);
-  --color-text-brand-60: rgb(22 51 66 / 60%);
+  --button-text-primary: var(--gray-700);
+  --button-text-primary-disabled: #2F2F2FB2;
 
-  // Other Colors
-  --color-other-stroke-btn: #5076ffb2;
-  --color-other-stroke: #e5e8eb;
-  --color-other-stroke-dark: #bfc8d0;
-  --color-other-icon: #6f7a86;
-  --color-other-background-el1: #fff;
-  --color-other-background-el2: #f8f9fc;
-  --color-other-background-el3: #f2f4f9;
-  --color-other-background-el4: #ebeef4;
-  --color-other-background-el5: #dce0ea;
-
-  color: var(--color-text-content);
-  background: var(--color-other-background-el1);
+  --button-text-secondary: var(--gray-100);
+  --button-text-secondary-disabled: #ECECEC26;
 }

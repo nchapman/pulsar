@@ -1,6 +1,8 @@
-import { ChangeEvent, ForwardedRef, forwardRef, memo } from 'preact/compat';
 import { Ref } from 'preact';
+import { ChangeEvent, ForwardedRef, forwardRef, memo } from 'preact/compat';
+
 import { classNames } from '@/shared/lib/func';
+
 import s from './Textarea.module.scss';
 
 // @ts-ignore

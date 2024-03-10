@@ -1,16 +1,19 @@
 import { Page } from '@/shared/ui';
 import { Chat } from '@/widgets/chat';
-import s from './ChatPage.module.scss';
-import { Navbar } from '@/widgets/navbar';
 import { Sidebar } from '@/widgets/sidebar';
+import { WelcomeScreen } from '@/widgets/welcome-screen';
 
-export const ChatPage = () => (
-  <Page className={s.chatPage}>
-    <Sidebar className={s.sidebar} />
+import { useChatReady } from '../../hooks/useChatReady.ts';
+import s from './ChatPage.module.scss';
 
-    <main className={s.main}>
-      <Navbar className={s.navbar} />
-      <Chat />
-    </main>
-  </Page>
-);
+export const ChatPage = () => {
+  const { ready, handleLoaded } = useChatReady();
+
+  return (
+    <Page className={s.chatPage}>
+      <Sidebar className={s.sidebar} />
+
+      <main className={s.main}>{ready ? <Chat /> : <WelcomeScreen onLoaded={handleLoaded} />}</main>
+    </Page>
+  );
+};

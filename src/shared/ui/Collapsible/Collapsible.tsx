@@ -1,9 +1,11 @@
 /* eslint-disable react/prop-types */
 import { FC, ReactNode, useLayoutEffect } from 'preact/compat';
 import { useRef, useState } from 'preact/hooks';
-import { Icon } from '@/shared/ui';
+
 import ExpandIcon from '@/shared/assets/icons/expand.svg';
 import { classNames } from '@/shared/lib/func';
+import { Icon } from '@/shared/ui';
+
 import s from './Collapsible.module.scss';
 
 interface CollapsibleProps {

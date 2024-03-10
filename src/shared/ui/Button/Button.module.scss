@@ -66,23 +66,27 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
-  padding: 0;
-
-  //color: var(--color-gray-600);
-
-  border: 0;
   border-radius: 50%;
+  padding: 4px;
 
-  //transition: background-color var(--transition-base);
-  //
-  //&:hover {
-  //  background: var(--color-el-400);
-  //}
-  //
-  //&:active {
-  //  background: rgb(28 30 41 / 20%);
-  //}
+  &.primary {
+    color: var(--text-primary);
+    background: transparent;
+
+    &:hover {
+      color: var(--gray-800);
+      background: var(--button-primary-hover);
+    }
+  }
+
+  &.secondary {
+    color: var(--icon-default);
+    background: var(--main-background-secondary);
+
+    &:hover {
+      background: var(--gray-600);
+    }
+  }
 }
 
 .suffix {

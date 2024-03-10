@@ -3,11 +3,29 @@
   margin: 0 auto;
   border-radius: 16px;
   overflow: hidden;
-  border: 1px solid rgba(217, 217, 227, 0.2);
+  border: 1px solid var(--border-light);
   position: relative;
+  padding: 4px 16px 12px;
 
   &:focus-within {
-    border-color: rgba(217, 217, 227, 0.3);
+    border-color: var(--border-heavy);
+  }
+}
+
+.input-row {
+  position: relative;
+  margin-bottom: 4px;
+}
+
+.actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  & > div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 }
 
@@ -19,25 +37,13 @@
   background: none;
   border: none;
   color: #fff;
-  padding: 14px 48px 14px 16px;
+  padding: 8px 48px 8px 0;
   line-height: 24px;
 }
 
 .submit-btn {
-  position: absolute;
-  right: 12px;
-  bottom: 12px;
-  border: 1px solid #fff;
-  background: #fff;
-  color: #000;
-  outline: transparent;
-  border-radius: 8px;
-  padding: 2px;
-  display: flex;
-  cursor: pointer;
-
-  &:disabled {
-    opacity: 0.1;
+  svg {
+    transform: translateX(1px);
   }
 }
 

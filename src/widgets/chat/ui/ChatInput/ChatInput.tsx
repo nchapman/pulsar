@@ -1,11 +1,15 @@
 import { useUnit } from 'effector-react';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
+import PlusIcon from '@/shared/assets/icons/plus.svg';
+import SendIcon from '@/shared/assets/icons/send.svg';
+import StopIcon from '@/shared/assets/icons/stop.svg';
 import { classNames } from '@/shared/lib/func';
 import { useKeyboardListener } from '@/shared/lib/hooks';
-import { SendIcon } from '@/widgets/chat/assets/SendIcon.tsx';
-import { $isInputDisabled, askQuestion } from '@/widgets/chat/model/chat.ts';
+import { Button } from '@/shared/ui';
 
+import { $isInputDisabled, $streamedMsgId, askQuestion } from '../../model/chat.ts';
+import { VoiceInput } from '../VoiceInput/VoiceInput.tsx';
 import s from './ChatInput.module.scss';
 
 interface Props {
@@ -18,7 +22,8 @@ export const ChatInput = (props: Props) => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [input, setInput] = useState('');
 
-  const disabled = useUnit($isInputDisabled) || !input;
+  const isStreaming = useUnit($streamedMsgId);
+  const disabledSend = useUnit($isInputDisabled) || !input;
 
   const handleInputChange = (e: Event) => {
     setInput((e.target as HTMLInputElement).value);
@@ -26,7 +31,7 @@ export const ChatInput = (props: Props) => {
 
   function handleSubmit(e?: Event) {
     e?.preventDefault();
-    if (disabled) return;
+    if (isStreaming || disabledSend) return;
     askQuestion(input);
     setInput('');
   }
@@ -48,17 +53,29 @@ export const ChatInput = (props: Props) => {
 
   return (
     <form onSubmit={handleSubmit} className={classNames(s.chatForm, [className])}>
-      <textarea
-        ref={inputRef}
-        placeholder="Message Pulsar..."
-        value={input}
-        onChange={handleInputChange}
-        className={s.chatInput}
-        rows={1}
-      />
-      <button disabled={disabled} type="submit" className={s.submitBtn} aria-label="submit">
-        <SendIcon />
-      </button>
+      <div className={s.inputRow}>
+        <textarea
+          ref={inputRef}
+          placeholder="Type your query here..."
+          value={input}
+          onChange={handleInputChange}
+          className={s.chatInput}
+          rows={1}
+        />
+      </div>
+      <div className={s.actionsRow}>
+        <Button variant="secondary" icon={PlusIcon} />
+        <div>
+          <VoiceInput className={s.audioInput} />
+
+          {!disabledSend &&
+            (!isStreaming ? (
+              <Button type="submit" variant="primary" icon={SendIcon} className={s.submitBtn} />
+            ) : (
+              <Button type="button" variant="primary" icon={StopIcon} className={s.stopBtn} />
+            ))}
+        </div>
+      </div>
     </form>
   );
 };

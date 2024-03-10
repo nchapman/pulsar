@@ -1,0 +1,8 @@
+.voice-input {
+  &.recording {
+    outline: 1px solid var(--border-heavy);
+    color: var(--gray-800);
+    background: var(--button-primary-hover);
+  }
+}
+

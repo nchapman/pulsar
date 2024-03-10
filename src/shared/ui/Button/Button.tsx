@@ -13,6 +13,7 @@ interface ButtonProps {
   className?: string;
   children?: ComponentChild | any;
   variant: 'primary' | 'secondary' | 'link' | 'clear';
+  type?: 'button' | 'submit' | 'reset';
   loading?: boolean;
   iconSize?: number;
   active?: boolean;

@@ -26,12 +26,12 @@ const ChatHistoryItem = (props: Props) => {
 
   return (
     <Button
-      variant="primary"
+      variant="clear"
       active={isCurrent}
       onClick={handleChatClick}
       className={classNames(s.chatHistoryItem, [className])}
       activeSuffix={
-        <Button onClick={handleDeleteChat} variant="primary" icon={DeleteChatIcon} iconSize={18} />
+        <Button onClick={handleDeleteChat} variant="clear" icon={DeleteChatIcon} iconSize={18} />
       }
     >
       {chat?.title}

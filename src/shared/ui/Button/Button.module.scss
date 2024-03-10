@@ -43,6 +43,15 @@
   // styles
 }
 
+.clear {
+  background: transparent;
+  color: var(--text-primary);
+
+  &:hover {
+    background: var(--button-secondary-hover);
+  }
+}
+
 .spinner {
   width: 100%;
   height: 100%;

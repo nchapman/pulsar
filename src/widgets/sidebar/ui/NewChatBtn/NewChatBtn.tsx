@@ -17,12 +17,12 @@ export const NewChatBtn = memo((props: Props) => {
   return (
     <Button
       onClick={startNewChat}
-      variant="primary"
+      variant="clear"
       className={classNames(s.newChatBtn, [className])}
     >
       <Logo className={s.logo} />
 
-      <span className={s.text}>New chat</span>
+      <span className={s.text}>Pulsar</span>
 
       <NewChatIcon />
     </Button>

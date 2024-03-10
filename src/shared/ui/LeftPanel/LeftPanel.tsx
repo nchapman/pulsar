@@ -20,7 +20,7 @@ export const LeftPanel = memo((props: Props) => {
 
   return (
     <div className={classNames(s.leftPanel, [className], { [s.opened]: isOpened })}>
-      <Button variant="primary" className={s.button} onClick={toggle}>
+      <Button variant="clear" className={s.button} onClick={toggle}>
         <div className={s.buttonIcon} />
       </Button>
       <div className={s.wrapper}>

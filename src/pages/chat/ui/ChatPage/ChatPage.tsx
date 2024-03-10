@@ -1,5 +1,6 @@
 import { Page } from '@/shared/ui';
 import { Chat } from '@/widgets/chat';
+import { Navbar } from '@/widgets/navbar';
 import { Sidebar } from '@/widgets/sidebar';
 import { WelcomeScreen } from '@/widgets/welcome-screen';
 
@@ -13,7 +14,16 @@ export const ChatPage = () => {
     <Page className={s.chatPage}>
       <Sidebar className={s.sidebar} />
 
-      <main className={s.main}>{ready ? <Chat /> : <WelcomeScreen onLoaded={handleLoaded} />}</main>
+      <main className={s.main}>
+        {ready ? (
+          <>
+            <Navbar />
+            <Chat />
+          </>
+        ) : (
+          <WelcomeScreen onLoaded={handleLoaded} />
+        )}
+      </main>
     </Page>
   );
 };

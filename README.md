@@ -43,9 +43,11 @@ Corepack is a nodejs module that enables to use other package managers (pnpm, ya
 This is a temporary development integration. llamafile is now integrated into the GitHub repo but manually downloading the model is still required to run the app. This shouldn't interfere with the build process even those builds won't actually work without the model.
 
 ```bash
-# Download the llava-1.6-mistral-7b model
+# Download the Dolphin Mistral model
 mkdir -p src-tauri/models
-curl -L -o src-tauri/models/llava-v1.6-mistral-7b.Q5_K_M.gguf https://huggingface.co/cjpais/llava-1.6-mistral-7b-gguf/resolve/main/llava-v1.6-mistral-7b.Q5_K_M.gguf?download=true
+curl -L -o src-tauri/models/dolphin-2.6-mistral-7b.Q4_K_M.gguf https://huggingface.co/TheBloke/dolphin-2.6-mistral-7B-GGUF/resolve/main/dolphin-2.6-mistral-7b.Q4_K_M.gguf
+
+curl -L -o src-tauri/models/llava-v1.6-mistral-7b.Q5_K_M.gguf https://huggingface.co/cjpais/llava-1.6-mistral-7b-gguf/resolve/main/llava-v1.6-mistral-7b.Q5_K_M.gguf
 ```
 
 ## Start the app
@@ -78,6 +80,4 @@ See more examples in commits history.
 ## Recommended IDE Setup
 
 - [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
-
-```
 

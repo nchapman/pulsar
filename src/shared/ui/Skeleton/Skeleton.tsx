@@ -1,5 +1,7 @@
 import { memo } from 'preact/compat';
+
 import { classNames } from '@/shared/lib/func';
+
 import s from './Skeleton.module.scss';
 
 interface SkeletonProps {

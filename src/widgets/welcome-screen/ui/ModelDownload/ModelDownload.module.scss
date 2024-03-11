@@ -1,0 +1,24 @@
+.model-download {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.name {
+  margin: 16px 0 8px;
+}
+
+.desc {
+  width: 340px;
+}
+
+.size {
+  padding: 4px 8px;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  width: max-content;
+  margin: 0 auto;
+}

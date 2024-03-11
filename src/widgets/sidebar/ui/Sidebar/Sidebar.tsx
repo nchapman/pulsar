@@ -1,9 +1,11 @@
 import { memo } from 'preact/compat';
+
 import { classNames } from '@/shared/lib/func';
-import s from './Sidebar.module.scss';
 import { LeftPanel } from '@/shared/ui';
-import { SidebarFooter } from '../SidebarFooter/SidebarFooter.tsx';
+
 import { ChatHistory } from '../ChatHistory/ChatHistory.tsx';
+import { SidebarFooter } from '../SidebarFooter/SidebarFooter.tsx';
+import s from './Sidebar.module.scss';
 
 interface Props {
   className?: string;

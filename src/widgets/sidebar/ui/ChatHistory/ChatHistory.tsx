@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from 'preact/hooks';
 import { chatsRepository } from '@/db';
 import { Chat } from '@/db/chat';
 import { classNames } from '@/shared/lib/func';
+import { Text } from '@/shared/ui';
 import { $chat } from '@/widgets/chat';
 import { groupChats } from '@/widgets/sidebar/lib/groupChats.ts';
 
@@ -32,7 +33,9 @@ const ChatHistory = memo((props: Props) => {
     () =>
       groupChats(chats).map(({ chats, period }) => (
         <div className={s.group}>
-          <div className={s.period}>{period}</div>
+          <Text w="medium" s={12} className={s.period}>
+            {period}
+          </Text>
           <div className={s.chats}>
             {chats.map((chat) => (
               <ChatHistoryItem key={chat.id} id={chat.id} isCurrent={currChatId === chat.id} />

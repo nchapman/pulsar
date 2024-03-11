@@ -1,6 +1,8 @@
 import { memo } from 'preact/compat';
+
 import { classNames } from '@/shared/lib/func';
 import { Portal } from '@/shared/ui';
+
 import s from './Overlay.module.scss';
 
 interface OverlayProps {

@@ -1,10 +1,16 @@
-import { useEffect, useRef, useState } from 'preact/hooks';
 import { useUnit } from 'effector-react';
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
+
+import { FileData, UploadFile } from '@/features/upload-file';
+import { VoiceInput } from '@/features/voice-input';
+import SendIcon from '@/shared/assets/icons/send.svg';
+import StopIcon from '@/shared/assets/icons/stop.svg';
 import { classNames } from '@/shared/lib/func';
-import s from './ChatInput.module.scss';
-import { SendIcon } from '@/widgets/chat/assets/SendIcon.tsx';
-import { $isInputDisabled, askQuestion } from '@/widgets/chat/model/chat.ts';
 import { useKeyboardListener } from '@/shared/lib/hooks';
+import { Button } from '@/shared/ui';
+
+import { $isInputDisabled, $streamedMsgId, askQuestion } from '../../model/chat.ts';
+import s from './ChatInput.module.scss';
 
 interface Props {
   className?: string;
@@ -16,7 +22,8 @@ export const ChatInput = (props: Props) => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [input, setInput] = useState('');
 
-  const disabled = useUnit($isInputDisabled) || !input;
+  const isStreaming = useUnit($streamedMsgId);
+  const disabledSend = useUnit($isInputDisabled) || !input;
 
   const handleInputChange = (e: Event) => {
     setInput((e.target as HTMLInputElement).value);
@@ -24,10 +31,17 @@ export const ChatInput = (props: Props) => {
 
   function handleSubmit(e?: Event) {
     e?.preventDefault();
-    if (disabled) return;
+    if (isStreaming || disabledSend) return;
     askQuestion(input);
     setInput('');
   }
+
+  const handleReceiveFile = useCallback((data?: FileData) => {
+    if (!data) return;
+    const { file, ext, name } = data;
+
+    console.log('File received:', { file, ext, name });
+  }, []);
 
   useEffect(() => {
     const inputEl = inputRef.current;
@@ -46,17 +60,31 @@ export const ChatInput = (props: Props) => {
 
   return (
     <form onSubmit={handleSubmit} className={classNames(s.chatForm, [className])}>
-      <textarea
-        ref={inputRef}
-        placeholder="Message Pulsar..."
-        value={input}
-        onChange={handleInputChange}
-        className={s.chatInput}
-        rows={1}
-      />
-      <button disabled={disabled} type="submit" className={s.submitBtn} aria-label="submit">
-        <SendIcon />
-      </button>
+      <div className={s.inputRow}>
+        <textarea
+          ref={inputRef}
+          placeholder="Type your query here..."
+          value={input}
+          onChange={handleInputChange}
+          className={s.chatInput}
+          rows={1}
+        />
+      </div>
+
+      <div className={s.actionsRow}>
+        <UploadFile className={s.uploadFile} onFileReceive={handleReceiveFile} />
+
+        <div>
+          <VoiceInput className={s.audioInput} />
+
+          {!disabledSend &&
+            (!isStreaming ? (
+              <Button type="submit" variant="primary" icon={SendIcon} className={s.submitBtn} />
+            ) : (
+              <Button type="button" variant="primary" icon={StopIcon} className={s.stopBtn} />
+            ))}
+        </div>
+      </div>
     </form>
   );
 };

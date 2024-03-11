@@ -1,6 +1,8 @@
 import { Collection, Database, Q } from '@nozbe/watermelondb';
-import { ChatModel } from './chat.model.ts';
+
 import { assignValues, serialize } from '@/shared/lib/func';
+
+import { ChatModel } from './chat.model.ts';
 import { chatsTable } from './chat.schema.ts';
 
 export interface ChatMsg {

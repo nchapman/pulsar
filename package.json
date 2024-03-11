@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "tauri dev",
+    "typecheck": "tsc --noEmit",
     "build": "tsc && vite build",
     "lint:ts": "eslint \"**/*.{ts,tsx}\" --fix",
     "prettier": "npx prettier \"**/*.{ts,tsx}\" --write",
@@ -12,7 +13,7 @@
     "dev": "vite",
     "preview": "vite preview",
     "tauri": "tauri",
-    "test:frontend": "vitest"
+    "test:frontend": "vitest run"
   },
   "dependencies": {
     "@nozbe/watermelondb": "^0.27.1",
@@ -44,6 +45,7 @@
     "eslint-plugin-effector": "^0.13.0",
     "eslint-plugin-fsd-arch-validator": "0.0.2",
     "eslint-plugin-import": "2.27.5",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
     "eslint-plugin-n": "15.7.0",
     "eslint-plugin-promise": "6.1.1",
     "eslint-plugin-react": "7.32.2",

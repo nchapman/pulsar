@@ -12,6 +12,8 @@ export default class Llamafile {
       '--port',
       '52514',
       '--nobrowser',
+      '-ngl',
+      '9999',
     ]);
     this.process = null;
 

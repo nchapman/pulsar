@@ -11,6 +11,13 @@
   },
   "tauri": {
     "allowlist": {
+      "fs": {
+        "scope": ["*/**"],
+        "all": true
+      },
+      "path": {
+        "all": true
+      },
       "all": false,
       "shell": {
         "sidecar": true,

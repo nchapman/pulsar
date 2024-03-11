@@ -3,6 +3,7 @@
 
 fn main() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_sql::Builder::default().build())
         .plugin(tauri_plugin_upload::init())
         .plugin(tauri_plugin_window_state::Builder::default().build())
         .run(tauri::generate_context!())

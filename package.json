@@ -10,7 +10,7 @@
     "lint:ts": "eslint \"**/*.{ts,tsx}\" --fix",
     "prettier": "npx prettier \"**/*.{ts,tsx}\" --write",
     "prepare": "husky install",
-    "dev": "vite",
+    "dev": "vite --force",
     "preview": "vite preview",
     "tauri": "tauri",
     "test:frontend": "vitest run"

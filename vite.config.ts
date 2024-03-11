@@ -4,10 +4,34 @@ import path from 'path';
 import { defineConfig } from 'vite';
 import svgr from 'vite-plugin-svgr';
 
+// export function pluginWatchNodeModules(modules) {
+//   return {
+//     name: 'watch-node-modules',
+//     configureServer: (server) => {
+//       const regexp = `/node_modules\\/(?!${modules.join('|')}).*/`;
+//       // eslint-disable-next-line no-param-reassign
+//       server.watcher.options = {
+//         ...server.watcher.options,
+//         ignored: ['**/.git/**', new RegExp(regexp)],
+//       };
+//       // eslint-disable-next-line no-param-reassign
+//       server.watcher._userIgnored = undefined;
+//     },
+//     config() {
+//       return {
+//         optimizeDeps: {
+//           exclude: modules,
+//         },
+//       };
+//     },
+//   };
+// }
+
 const localsConvention = 'camelCaseOnly' as const;
 
 export default defineConfig(async () => ({
   plugins: [
+    // pluginWatchNodeModules(['@nozbe/watermelondb']),
     svgr({ exportAsDefault: true }),
     preact({
       babel: {

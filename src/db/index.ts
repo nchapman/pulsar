@@ -13,7 +13,3 @@ const database = new Database({
 // Repositories
 export const postsRepository = new PostsRepository(database);
 export const chatsRepository = new ChatsRepository(database);
-
-chatsRepository.getAll().then((chats) => {
-  console.log(`Chats should be HERE! 🟦🟦🟦🟦${chats}`);
-});

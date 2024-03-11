@@ -1,5 +1,6 @@
-import { schema } from '@/db/schema';
 import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite';
+
+import { schema } from '@/db/schema';
 
 export const adapter = new SQLiteAdapter({
   schema,

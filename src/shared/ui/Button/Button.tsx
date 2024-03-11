@@ -37,7 +37,7 @@ export const Button = memo((props: ButtonProps) => {
     ...otherProps
   } = props;
 
-  const content = icon ? <Icon Svg={icon} size={iconSize} /> : children;
+  const content = icon ? <Icon svg={icon} size={iconSize} /> : children;
 
   const activeSuffixContent = (
     <div onClick={(e) => e.stopPropagation()} className={s.suffix}>

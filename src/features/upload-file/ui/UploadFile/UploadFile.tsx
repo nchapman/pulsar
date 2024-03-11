@@ -1,11 +1,7 @@
 import { memo, ReactNode } from 'preact/compat';
-import { useCallback, useMemo, useRef, useState } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { Popover } from 'react-tiny-popover';
 
-import {
-  UploadedFile,
-  UploadedFileUIData,
-} from '@/features/upload-file/ui/UploadedFile/UploadedFile.tsx';
 import CamIcon from '@/shared/assets/icons/cam.svg';
 import FileIcon from '@/shared/assets/icons/file.svg';
 import ImgIcon from '@/shared/assets/icons/img.svg';
@@ -13,14 +9,11 @@ import PlusIcon from '@/shared/assets/icons/plus.svg';
 import { classNames } from '@/shared/lib/func';
 import { Button, Text } from '@/shared/ui';
 
+import { useUploadFile } from '../../hooks/useUploadFile.ts';
+import { FileData } from '../../types/upload-file.ts';
+import { UploadedFile } from '../UploadedFile/UploadedFile.tsx';
 import s from './UploadFile.module.scss';
 
-export interface FileData {
-  file: File;
-  ext: string;
-  name: string;
-  type: 'application' | 'img' | 'video';
-}
 interface Props {
   className?: string;
   onFileReceive: (data?: FileData) => void;
@@ -35,50 +28,35 @@ interface InputOption {
 export const UploadFile = memo((props: Props) => {
   const { className, onFileReceive } = props;
 
+  const [open, setOpen] = useState(false);
+
   const imgUpload = useRef<HTMLInputElement>(null);
   const fileUpload = useRef<HTMLInputElement>(null);
-  const [open, setOpen] = useState(false);
-  const [uiFile, setUIFile] = useState<UploadedFileUIData>();
 
-  const handleOpenFile = useCallback(() => {
-    fileUpload.current?.click();
-  }, []);
+  const { onSelectFile, fileData, preview } = useUploadFile();
 
-  const handleOpenImg = useCallback(() => {
-    imgUpload.current?.click();
-  }, []);
-
-  const handleOpenWebcam = useCallback(() => {
-    console.log('Webcam');
-  }, []);
-
-  const handleReceiveFile = useCallback(
-    (e: Event) => {
-      const { files } = e.target as HTMLInputElement;
-      const file = files?.[0];
-      if (!file) return;
-      const { name } = file;
-      const ext = name.split('.').pop() || '';
-      const type = file.type.split('/')[0] as FileData['type'];
-
-      onFileReceive({ file, ext, name, type });
-      setUIFile({ name, ext });
-    },
-    [onFileReceive]
-  );
+  useEffect(() => {
+    onFileReceive(fileData);
+  }, [fileData, onFileReceive]);
 
   const handleDeleteFile = useCallback(() => {
-    setUIFile(undefined);
-    onFileReceive();
-  }, [onFileReceive]);
+    onSelectFile();
+    if (imgUpload.current) {
+      imgUpload.current.value = '';
+    }
+
+    if (fileUpload.current) {
+      fileUpload.current.value = '';
+    }
+  }, [onSelectFile]);
 
   const options: InputOption[] = useMemo(
     () => [
-      { name: 'File', icon: FileIcon, onClick: handleOpenFile },
-      { name: 'Photo or Video', icon: ImgIcon, onClick: handleOpenImg },
-      { name: 'Web Camera', icon: CamIcon, onClick: handleOpenWebcam },
+      { name: 'File', icon: FileIcon, onClick: () => fileUpload.current?.click() },
+      { name: 'Photo or Video', icon: ImgIcon, onClick: () => imgUpload.current?.click() },
+      { name: 'Web Camera', icon: CamIcon, onClick: () => console.log('Webcam') },
     ],
-    [handleOpenFile, handleOpenImg, handleOpenWebcam]
+    []
   );
 
   const popover = (
@@ -101,7 +79,8 @@ export const UploadFile = memo((props: Props) => {
 
   return (
     <div className={classNames(s.uploadFile, [className])}>
-      {uiFile && <UploadedFile onDelete={handleDeleteFile} data={uiFile} />}
+      {fileData && <UploadedFile onDelete={handleDeleteFile} data={fileData} preview={preview} />}
+
       <Popover
         isOpen={open}
         positions={['top']}
@@ -122,14 +101,14 @@ export const UploadFile = memo((props: Props) => {
 
       <input
         type="file"
-        onChange={handleReceiveFile}
+        onChange={onSelectFile}
         ref={imgUpload}
         style={{ display: 'none' }}
         accept="image/*, video/*"
       />
       <input
         type="file"
-        onChange={handleReceiveFile}
+        onChange={onSelectFile}
         ref={fileUpload}
         style={{ display: 'none' }}
         accept="application/*"

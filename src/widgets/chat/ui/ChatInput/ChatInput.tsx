@@ -1,7 +1,8 @@
 import { useUnit } from 'effector-react';
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
-import PlusIcon from '@/shared/assets/icons/plus.svg';
+import { FileData, UploadFile } from '@/features/upload-file';
+import { VoiceInput } from '@/features/voice-input';
 import SendIcon from '@/shared/assets/icons/send.svg';
 import StopIcon from '@/shared/assets/icons/stop.svg';
 import { classNames } from '@/shared/lib/func';
@@ -9,7 +10,6 @@ import { useKeyboardListener } from '@/shared/lib/hooks';
 import { Button } from '@/shared/ui';
 
 import { $isInputDisabled, $streamedMsgId, askQuestion } from '../../model/chat.ts';
-import { VoiceInput } from '../VoiceInput/VoiceInput.tsx';
 import s from './ChatInput.module.scss';
 
 interface Props {
@@ -35,6 +35,13 @@ export const ChatInput = (props: Props) => {
     askQuestion(input);
     setInput('');
   }
+
+  const handleReceiveFile = useCallback((data?: FileData) => {
+    if (!data) return;
+    const { file, ext, name } = data;
+
+    console.log('File received:', { file, ext, name });
+  }, []);
 
   useEffect(() => {
     const inputEl = inputRef.current;
@@ -63,8 +70,10 @@ export const ChatInput = (props: Props) => {
           rows={1}
         />
       </div>
+
       <div className={s.actionsRow}>
-        <Button variant="secondary" icon={PlusIcon} />
+        <UploadFile className={s.uploadFile} onFileReceive={handleReceiveFile} />
+
         <div>
           <VoiceInput className={s.audioInput} />
 

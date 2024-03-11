@@ -19,10 +19,10 @@
 
 .actions-row {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
 
-  & > div {
+  & > div:last-child {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -37,7 +37,7 @@
   background: none;
   border: none;
   color: #fff;
-  padding: 8px 48px 8px 0;
+  padding: 8px 0;
   line-height: 24px;
 }
 

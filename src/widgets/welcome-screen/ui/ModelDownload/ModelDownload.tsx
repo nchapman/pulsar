@@ -23,7 +23,7 @@ interface Props {
 
 const handleDownload = () => {
   let progress = 0;
-  downloadModel('llava-v1.6-mistral', (downloaded, total) => {
+  downloadModel('llava-v1.6-mistral-7b', (downloaded, total) => {
     progress += downloaded;
 
     setTotal(total);
@@ -33,7 +33,7 @@ const handleDownload = () => {
 
 export const ModelDownload = memo((props: Props) => {
   const { className, onLoaded } = props;
-  const { name, desc, size } = models['llava-v1.6-mistral'];
+  const { name, desc, size } = models['llava-v1.6-mistral-7b'];
   const downloaded = useUnit($downloaded);
   const downloading = useUnit($downloading);
   const percent = useUnit($percent);

@@ -6,7 +6,7 @@ import Llamafile from '@/llamafile.ts';
 import { isDev } from '@/shared/lib/func';
 
 async function createLlama() {
-  const model: AIModel = 'llava-v1.6-mistral';
+  const model: AIModel = 'llava-v1.6-mistral-7b';
   const modelPath = isDev() ? `models/${model}` : await getModelPath(model);
   return new Llamafile(modelPath);
 }
@@ -17,7 +17,7 @@ export function useChatReady() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    hasModel('llava-v1.6-mistral').then(setReady);
+    hasModel('llava-v1.6-mistral-7b').then(setReady);
   }, []);
 
   useEffect(() => {

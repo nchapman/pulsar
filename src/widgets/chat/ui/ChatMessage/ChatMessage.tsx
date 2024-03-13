@@ -35,9 +35,7 @@ export const ChatMessage = (props: Props) => {
         <div>
           <div className={s.authorName}>{isUser ? 'You' : 'Pulsar'}</div>
           <div className={s.text}>
-            <Markdown className={s.markdown} remarkPlugins={[remarkGfm]}>
-              {text}
-            </Markdown>
+            <Markdown remarkPlugins={[remarkGfm]}>{text}</Markdown>
           </div>
           <div className={s.actions}></div>
         </div>

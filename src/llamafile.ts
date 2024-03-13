@@ -6,6 +6,8 @@ export default class Llamafile {
   private process: Child | null;
 
   constructor(modelPath: string) {
+    console.log('modelPath', modelPath);
+
     this.command = Command.sidecar('bin/llamafile', [
       '-m',
       modelPath,

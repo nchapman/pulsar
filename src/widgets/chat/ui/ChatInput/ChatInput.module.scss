@@ -36,9 +36,13 @@
   outline: transparent;
   background: none;
   border: none;
-  color: #fff;
+  color: var(--text-primary);
   padding: 8px 0;
   line-height: 24px;
+
+  &::placeholder {
+    color: var(--text-secondary);
+  }
 }
 
 .submit-btn {

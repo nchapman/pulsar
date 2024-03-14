@@ -15,7 +15,7 @@ export interface AIChatMessage {
 
 function getAIChatMessages(messages: ChatMsg[]): AIChatMessage[] {
   return messages
-    .slice(-1)
+    .slice(0, -1)
     .map((msg) => ({ role: msg.isUser ? 'user' : 'assistant', content: msg.text }));
 }
 

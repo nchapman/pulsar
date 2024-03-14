@@ -1,14 +1,14 @@
+import { useModelReady } from '@/entities/model';
 import { Page } from '@/shared/ui';
 import { Chat } from '@/widgets/chat';
 import { Navbar } from '@/widgets/navbar';
 import { Sidebar } from '@/widgets/sidebar';
 import { WelcomeScreen } from '@/widgets/welcome-screen';
 
-import { useChatReady } from '../../hooks/useChatReady.ts';
 import s from './ChatPage.module.scss';
 
 export const ChatPage = () => {
-  const { ready, handleLoaded } = useChatReady();
+  const { ready, handleLoaded } = useModelReady();
 
   return (
     <Page className={s.chatPage}>

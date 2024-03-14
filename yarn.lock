@@ -791,18 +791,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nozbe/watermelondb@npm:^0.27.1":
+"@nozbe/watermelondb@https://github.com/ospfranco/tauri-watermelon":
   version: 0.27.1
-  resolution: "@nozbe/watermelondb@npm:0.27.1"
+  resolution: "@nozbe/watermelondb@https://github.com/ospfranco/tauri-watermelon.git#commit=256f7ae94194484bd8dac4f5255fc5a9e114d73b"
   dependencies:
     "@babel/runtime": "npm:7.21.0"
     "@nozbe/simdjson": "npm:3.1.0-wmelon1"
     "@nozbe/sqlite": "npm:3.40.1"
+    "@tauri-apps/api": "npm:^1.5.3"
     hoist-non-react-statics: "npm:^3.3.2"
     lokijs: "npm:@nozbe/lokijs@1.5.12-wmelon6"
     rxjs: "npm:^7.8.0"
     sql-escape-string: "npm:^1.1.0"
-  checksum: 10c0/f7d0693b340ef5f728ec7e7b5e6af11e66dbf2c955c3979c69e4098bfc36fe3777e591fa602bfcc6aa1f1f8737ce063a4d14c4d2e775ee08489eaf47c3141e83
+  checksum: 10c0/84f867b932dcf0a285c95495a4ddc5a6606eb6592503a3e89657698364367e159954a08cf8588d6816bfca0a71d5e6a0cf28f0ef57d76ee4b998b36cfe288c5e
   languageName: node
   linkType: hard
 
@@ -1209,7 +1210,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tauri-apps/api@npm:1.5.3, @tauri-apps/api@npm:^1.5.2":
+"@tauri-apps/api@npm:1.5.3, @tauri-apps/api@npm:^1.5.2, @tauri-apps/api@npm:^1.5.3":
   version: 1.5.3
   resolution: "@tauri-apps/api@npm:1.5.3"
   checksum: 10c0/7709c368603881d1f615eb334261339b55f479e44af112702ce42e65a7bf1cfd48e95a7ad3efec9d275d78c09af43fe0b7c3acffc7cef6a14a470a457b807272
@@ -6347,7 +6348,7 @@ __metadata:
     "@babel/plugin-transform-runtime": "npm:^7.23.9"
     "@babel/runtime": "npm:^7.24.0"
     "@headlessui/react": "npm:^1.7.18"
-    "@nozbe/watermelondb": "npm:^0.27.1"
+    "@nozbe/watermelondb": "https://github.com/ospfranco/tauri-watermelon"
     "@preact/preset-vite": "npm:^2.5.0"
     "@stylexjs/babel-plugin": "npm:^0.5.1"
     "@stylexjs/stylex": "npm:^0.5.1"

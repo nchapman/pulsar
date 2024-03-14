@@ -2,7 +2,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    println!("Hello, world!");
     tauri::Builder::default()
         .plugin(tauri_plugin_upload::init())
         .plugin(tauri_plugin_window_state::Builder::default().build())

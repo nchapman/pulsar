@@ -8,7 +8,6 @@ const localsConvention = 'camelCaseOnly' as const;
 
 export default defineConfig(async () => ({
   plugins: [
-    // pluginWatchNodeModules(['@nozbe/watermelondb']),
     svgr({ exportAsDefault: true }),
     preact({
       babel: {

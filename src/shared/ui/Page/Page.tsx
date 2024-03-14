@@ -1,5 +1,7 @@
 import { ReactNode } from 'preact/compat';
+
 import { classNames } from '@/shared/lib/func';
+
 import s from './Page.module.scss';
 
 interface PageProps {

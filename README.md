@@ -24,9 +24,7 @@
 
 ## Requirements
 
-```bash
-brew install rust
-```
+See [Tauri's prerequisites](https://tauri.app/v1/guides/getting-started/prerequisites/) for platform-specific requirements.
 
 ## Corepack
 
@@ -37,16 +35,6 @@ corepack enable
 ```
 
 Corepack is a nodejs module that enables to use other package managers (pnpm, yarn) without the need to install them
-
-## Setup llamafile
-
-This is a temporary development integration. llamafile is now integrated into the GitHub repo but manually downloading the model is still required to run the app. This shouldn't interfere with the build process even those builds won't actually work without the model.
-
-```bash
-# Download the Dolphin Mistral model
-mkdir -p src-tauri/models
-curl -L -o src-tauri/models/dolphin-2.6-mistral-7b.Q4_K_M.gguf https://huggingface.co/TheBloke/dolphin-2.6-mistral-7B-GGUF/resolve/main/dolphin-2.6-mistral-7b.Q4_K_M.gguf
-```
 
 ## Start the app
 
@@ -72,8 +60,6 @@ example:
 feat(chat): add initial screen
 
 See more examples in commits history.
-
-```bash
 
 ## Recommended IDE Setup
 

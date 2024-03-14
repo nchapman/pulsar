@@ -15,10 +15,14 @@ export const NewChatBtn = memo((props: Props) => {
   const { className } = props;
 
   return (
-    <Button onClick={startNewChat} type="clear" className={classNames(s.newChatBtn, [className])}>
+    <Button
+      onClick={startNewChat}
+      variant="clear"
+      className={classNames(s.newChatBtn, [className])}
+    >
       <Logo className={s.logo} />
 
-      <span className={s.text}>New chat</span>
+      <span className={s.text}>Pulsar</span>
 
       <NewChatIcon />
     </Button>

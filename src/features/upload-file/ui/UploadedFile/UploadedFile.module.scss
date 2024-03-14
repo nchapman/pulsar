@@ -1,0 +1,27 @@
+@import './src/shared/styles/mixins';
+
+.uploaded-file {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  width: max-content;
+  border-radius: 12px;
+  border: 1px solid var(--border-light);
+  padding: 4px;
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+  background: #006E9B;;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.name {
+  @include line-clamp(1);
+  max-width: 160px;
+}

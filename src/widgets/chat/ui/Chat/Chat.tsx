@@ -5,7 +5,6 @@ import { classNames } from '@/shared/lib/func';
 import { $chat } from '../../model/chat';
 import { ChatInput } from '../ChatInput/ChatInput';
 import { ChatMsgList } from '../ChatMsgList/ChatMsgList';
-import { Precaution } from '../Precaution/Precaution';
 import s from './Chat.module.scss';
 
 interface Props {
@@ -20,7 +19,6 @@ export const Chat = (props: Props) => {
     <div className={classNames(s.chat, [className])}>
       <ChatMsgList className={s.msgList} />
       <ChatInput className={s.chatInput} />
-      <Precaution />
     </div>
   );
 };

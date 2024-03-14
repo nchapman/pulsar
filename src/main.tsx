@@ -5,11 +5,12 @@ import { render } from 'preact';
 import { ErrorBoundary, ThemeProvider } from '@/app/providers';
 
 import App from './app/App';
-import Llamafile from './llamafile';
 
-// Start the llamafile server
-
-new Llamafile().spawn();
+// @ts-ignore
+// eslint-disable-next-line func-names
+Object.hasOwn = function (obj, key) {
+  return Object.prototype.hasOwnProperty.call(obj, key);
+};
 
 render(
   <ErrorBoundary>

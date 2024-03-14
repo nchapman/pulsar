@@ -1,8 +1,10 @@
 import { memo, ReactNode } from 'preact/compat';
 import { useCallback, useState } from 'preact/hooks';
+
+import CloseIcon from '@/shared/assets/icons/close.svg';
 import { classNames } from '@/shared/lib/func';
 import { Button, Overlay, Portal } from '@/shared/ui';
-import CloseIcon from '@/shared/assets/icons/close.svg';
+
 import s from './Modal.module.scss';
 
 interface ModalProps {
@@ -38,7 +40,12 @@ export const Modal = memo((props: ModalProps) => {
       >
         <div className={s.body}>{children}</div>
 
-        <Button icon={CloseIcon as any} className={s.closeBtn} onClick={handleClose} />
+        <Button
+          variant="primary"
+          icon={CloseIcon as any}
+          className={s.closeBtn}
+          onClick={handleClose}
+        />
         <Overlay onClick={handleClose} visible={open && !closing} modal />
       </div>
     </Portal>

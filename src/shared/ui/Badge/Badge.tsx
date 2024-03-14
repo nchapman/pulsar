@@ -1,6 +1,8 @@
 import { memo } from 'preact/compat';
+
 import { classNames } from '@/shared/lib/func';
 import { Text } from '@/shared/ui';
+
 import s from './Badge.module.scss';
 
 interface BadgeProps {
@@ -18,9 +20,7 @@ export const Badge = memo((props: BadgeProps) => {
       className={classNames(s.badge, [className], { [s.dark]: isDark })}
       style={{ backgroundColor: bg }}
     >
-      <Text type="subtitle-5" className={s.content}>
-        {content}
-      </Text>
+      <Text className={s.content}>{content}</Text>
     </div>
   );
 });

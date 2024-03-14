@@ -1,0 +1,22 @@
+.progress {
+  width: 100%;
+  display: flex;
+  gap: 8px;
+}
+
+.bar {
+  flex-grow: 1;
+  background: var(--sidebar-background-tertiary);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.inner {
+  background: var(--success);
+  height: 100%;
+}
+
+.percent {
+  width: 30px;
+  text-align: right;
+}

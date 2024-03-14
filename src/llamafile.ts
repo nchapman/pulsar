@@ -5,10 +5,12 @@ export default class Llamafile {
 
   private process: Child | null;
 
-  constructor(model = 'dolphin-2.6-mistral-7b.Q4_K_M.gguf') {
+  constructor(modelPath: string) {
+    console.log('modelPath', modelPath);
+
     this.command = Command.sidecar('bin/llamafile', [
       '-m',
-      `models/${model}`,
+      modelPath,
       '--port',
       '52514',
       '--nobrowser',
@@ -27,10 +29,7 @@ export default class Llamafile {
     return this.process;
   }
 
-  // eslint-disable-next-line consistent-return
   async kill() {
-    if (this.process) {
-      return this.process.kill();
-    }
+    return this.process?.kill();
   }
 }

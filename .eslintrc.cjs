@@ -4,7 +4,8 @@ module.exports = {
     es2021: true,
     jest: true,
   },
-  extends: ['plugin:react/recommended', 'airbnb', 'prettier', 'plugin:effector/react'],
+  extends: ['plugin:react/recommended', "airbnb-base",
+    "airbnb/rules/react", 'prettier', 'plugin:effector/react'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
@@ -45,9 +46,6 @@ module.exports = {
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'error',
     'react/self-closing-comp': 'off',
-    'jsx-a11y/no-autofocus': 'off',
-    'jsx-a11y/no-static-element-interactions': 'off',
-    'jsx-a11y/click-events-have-key-events': 'off',
     '@typescript-eslint/no-unused-vars': [
       'error',
       {

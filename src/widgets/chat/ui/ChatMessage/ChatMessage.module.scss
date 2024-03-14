@@ -19,6 +19,7 @@
 
 .author-name {
   font-weight: 600;
+  color: var(--text-primary);
 }
 
 .author-icon {
@@ -30,7 +31,7 @@
 }
 
 .text {
-  opacity: 0.9;
+  color: var(--text-primary);
 }
 
 .actions {

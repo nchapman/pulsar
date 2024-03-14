@@ -1,6 +1,8 @@
 import { createPortal, memo } from 'preact/compat';
+
 import { classNames } from '@/shared/lib/func';
 import { Text } from '@/shared/ui';
+
 import s from './CopySnack.module.scss';
 
 interface CopySnackProps {
@@ -14,9 +16,7 @@ export const CopySnack = memo((props: CopySnackProps) => {
   if (!show) return null;
 
   return createPortal(
-    <Text type="subtitle-3" className={classNames(s.copySnack, [className])}>
-      Copied to clipboard!
-    </Text>,
+    <Text className={classNames(s.copySnack, [className])}>Copied to clipboard!</Text>,
     document.body
   );
 });

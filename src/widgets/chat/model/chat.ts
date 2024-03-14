@@ -220,11 +220,7 @@ $messages.data.on(streamEvt.addTextChunk, (state, { msgId, chunk }) => ({
 }));
 
 // UI Auxiliary
-export const $isInputDisabled = combine(
-  $isFetchingMessages,
-  $streamedMsgId,
-  (fetching, streamedMsgId) => fetching || !!streamedMsgId
-);
+export const $isInputDisabled = combine($isFetchingMessages, (fetching) => fetching);
 
 export const $streamedText = combine($streamedMsgId, $messages.data, (msgId, data) => {
   const msg = data[msgId!];
@@ -232,3 +228,5 @@ export const $streamedText = combine($streamedMsgId, $messages.data, (msgId, dat
 });
 
 export const { askQuestion, startNew: startNewChat, switch: switchChat } = chatEvt;
+
+createUserMsg.fail.watch((a) => console.log('askQuestion', a));

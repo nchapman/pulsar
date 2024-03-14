@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from 'preact/hooks';
 import { ReactNode } from 'preact/compat';
+import { useEffect, useMemo, useState } from 'preact/hooks';
+
 import { getDefaultTheme } from '../lib/getDefaultTheme';
 import { Theme, ThemeContext } from '../lib/ThemeContext';
 

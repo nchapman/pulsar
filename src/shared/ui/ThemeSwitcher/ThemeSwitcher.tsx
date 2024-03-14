@@ -1,4 +1,5 @@
 import { memo } from 'preact/compat';
+
 import { useTheme } from '@/app/providers/theme';
 import { classNames } from '@/shared/lib/func';
 import { Button } from '@/shared/ui';
@@ -12,5 +13,11 @@ export const ThemeSwitcher = memo((props: ThemeSwitcherProps) => {
 
   const { toggleTheme } = useTheme();
 
-  return <Button className={classNames('', [className])} onClick={toggleTheme}></Button>;
+  return (
+    <Button
+      variant="primary"
+      className={classNames('', [className])}
+      onClick={toggleTheme}
+    ></Button>
+  );
 });

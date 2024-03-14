@@ -1,5 +1,6 @@
 import { useContext } from 'preact/hooks';
-import { ThemeContext, Theme } from './ThemeContext';
+
+import { Theme, ThemeContext } from './ThemeContext';
 
 const THEME_LS_KEY = '';
 

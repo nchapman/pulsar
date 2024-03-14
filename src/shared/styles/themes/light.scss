@@ -1,77 +1,74 @@
 .app-light-theme {
-  // Redesign
-  // Primary
-  --color-primary-400: #daf373;
-  --color-primary-500: #c8eb46;
-  --color-primary-600: #a6ca33;
-
-  // Elevation
-  --color-el-0: #fff;
-  --color-el-100: #f8f9fb;
-  --color-el-300: #f1f3f7;
-  --color-el-400: #edeff5;
-  --color-el-500: #e3e6ee;
-  --color-el-600: #dce0ea;
-  --color-el-700: #c4cbdc;
-  --color-el-900: #95a1bf;
+  // Root
+  --white: #fff;
+  --black: #000;
+  --brand: #000;
 
   // Gray
-  --color-gray-50: #e8ebec;
-  --color-gray-500: #73858e;
-  --color-gray-600: #5c707b;
-  --color-gray-700: #455c68;
-  --color-gray-800: #163342;
-  --color-gray-900: #0e1c24;
+  --gray-50: #0D0D0D;
+  --gray-100: #171717;
+  --gray-200: #212121;
+  --gray-300: #2F2F2F;
+  --gray-400: #424242;
+  --gray-500: #676767;
+  --gray-600: #9B9B9B;
+  --gray-700: #B4B4B4;
+  --gray-800: #CDCDCD;
+  --gray-900: #ECECEC;
+  --gray-950: #F9F9F9;
 
-  // Secondary
-  --color-secondary-50: #ebf2ff;
-  --color-secondary-200: #adc8ff;
-  --color-secondary-500: #5076ff;
-  --color-secondary-600: #254edb;
-  --color-secondary-700: #1939b7;
+  // Text
+  --text-primary: var(--gray-50);
+  --text-secondary: var(--gray-500);
+  --text-tertiary: var(--gray-700);
+  --text-quaternary: var(--gray-900);
+
+  // Border
+  --border-light: rgba(0, 0, 0, 0.1);
+  --border-medium: rgba(0, 0, 0, 0.15);
+  --border-heavy: rgba(0, 0, 0, 0.2);
+  --border-x-heavy: rgba(0, 0, 0, 0.25);
+  --border-disabled: rgba(0, 0, 0, 0.05);
+
+  // Main Background
+  --main-background-primary: var(--white);
+  --main-background-secondary: var(--gray-950);
+  --main-background-tertiary: var(--gray-900);
+  --main-background-quaternary: var(--gray-700);
+
+  // Sidebar Background
+  --sidebar-background-primary: var(--gray-950);
+  --sidebar-background-secondary: var(--gray-900);
+  --sidebar-background-tertiary: var(--gray-800);
+
+  // Link
+  --link-default: #7ab7ff;
+  --link-hover: #5e83b3;
+
+  // Icon
+  --icon-default: rgba(0, 0, 0, 0.6);
+  --icon-hover: rgba(0, 0, 0, 0.8);
+  --icon-active: rgba(0, 0, 0, 1);
+  --icon-disabled: rgba(0, 0, 0, 0.15);
 
   // Semantic
-  --color-semantic-success: #12b76a;
-  --color-semantic-warning: #f79009;
-  --color-semantic-error: #f04438;
-  --color-pink-500: #ef6bcd;
-  --color-orange-500: #ffb38d;
-  --color-orange-600: #db8667;
+  --success: #12b76a;
+  --warning: #fdb022;
+  --error: #f04438;
+  --info: #0089c2;
 
-  // Button Colors
-  --color-button-active: #5076ff;
-  --color-button-hover: #003ea933;
-  --color-button-default: #003ea914;
-  --color-button-inactive: #f2f4f5;
-  --color-button-inactive-selected: #b8b9bb80;
+  // Button
+  --button-primary-default: rgba(0, 0, 0, 1);
+  --button-primary-hover: rgba(0, 0, 0, 0.9);
+  --button-primary-disabled: rgba(0, 0, 0, 0.3);
 
-  // additional
-  --color-button-active-state: #004fc5;
-  --color-button-bg-hover: rgb(28 30 41 / 8%);
-  --color-button-bg-active: rgb(28 30 41 / 20%);
+  --button-secondary-default: rgba(0, 0, 0, 0);
+  --button-secondary-hover: rgba(0, 0, 0, 0.05);
+  --button-secondary-disabled: rgba(0, 0, 0, 0);
 
-  // Text Colors
-  --color-text-link: #3f65f0;
-  --color-text-title: #1c1e29;
-  --color-text-content: #4d5156;
-  --color-button-inactive-shades: #1c1e2959;
-  --color-button-inactive-selected-shades: #1c1e2940;
-  --color-text-white: rgb(236, 236, 236);
-  --color-text-brand: #163342;
-  --color-text-brand-80: rgb(22 51 66 / 80%);
-  --color-text-brand-60: rgb(22 51 66 / 60%);
+  --button-text-primary: var(--gray-950);
+  --button-text-primary-disabled: #F9F9F9B2;
 
-  // Other Colors
-  --color-other-stroke-btn: #5076ffb2;
-  --color-other-stroke: #e5e8eb;
-  --color-other-stroke-dark: #bfc8d0;
-  --color-other-icon: #6f7a86;
-  --color-other-background-el1: #fff;
-  --color-other-background-el2: #f8f9fc;
-  --color-other-background-el3: #f2f4f9;
-  --color-other-background-el4: #ebeef4;
-  --color-other-background-el5: #dce0ea;
-
-  color: var(--color-text-content);
-  background: var(--color-other-background-el1);
+  --button-text-secondary: var(--gray-100);
+  --button-text-secondary-disabled: #17171726;
 }

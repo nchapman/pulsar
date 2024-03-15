@@ -13,8 +13,9 @@ interface Props {
 
 const content = {
   title: 'Welcome to Pulsar',
-  text: 'To get started we need to setup a model! You can download other models from Manage Models, but to start, we recommend one of the following:',
-  policy: 'You must use Pulsar in live with our Acceptable Use Policy.',
+  text: 'To get started you need to download a model.',
+  // TODO: Add this back when we have a terms of service and privacy policy
+  policy: '',
 };
 
 export const WelcomeScreen = memo((props: Props) => {

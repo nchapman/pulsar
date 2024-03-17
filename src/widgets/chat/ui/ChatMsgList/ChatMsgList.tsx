@@ -27,7 +27,7 @@ export const ChatMsgList = (props: Props) => {
       {list}
 
       <Button
-        variant="primary"
+        variant="secondary"
         icon={ArrowDownIcon}
         onClick={() => scrollToBottom()}
         className={classNames(s.scrollBtn, [], {

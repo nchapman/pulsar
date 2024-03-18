@@ -778,9 +778,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nozbe/watermelondb@https://github.com/ospfranco/tauri-watermelon":
+"@nozbe/watermelondb@https://github.com/ospfranco/tauri-watermelon#1a03ebe1a7ea4052405eb3f80486d82c52e46ed4":
   version: 0.27.1
-  resolution: "@nozbe/watermelondb@https://github.com/ospfranco/tauri-watermelon.git#commit=256f7ae94194484bd8dac4f5255fc5a9e114d73b"
+  resolution: "@nozbe/watermelondb@https://github.com/ospfranco/tauri-watermelon.git#commit=1a03ebe1a7ea4052405eb3f80486d82c52e46ed4"
   dependencies:
     "@babel/runtime": "npm:7.21.0"
     "@nozbe/simdjson": "npm:3.1.0-wmelon1"
@@ -790,7 +790,7 @@ __metadata:
     lokijs: "npm:@nozbe/lokijs@1.5.12-wmelon6"
     rxjs: "npm:^7.8.0"
     sql-escape-string: "npm:^1.1.0"
-  checksum: 10c0/84f867b932dcf0a285c95495a4ddc5a6606eb6592503a3e89657698364367e159954a08cf8588d6816bfca0a71d5e6a0cf28f0ef57d76ee4b998b36cfe288c5e
+  checksum: 10c0/06da4c28970b81430dc4fed42df9e2932e3041696e5d39391c67752c0aaa46d2ad8b83ee1de09057533389b1dfbfe26fc8103756839171b385e21001eb63e93d
   languageName: node
   linkType: hard
 
@@ -6329,7 +6329,7 @@ __metadata:
     "@babel/plugin-proposal-decorators": "npm:^7.23.9"
     "@babel/plugin-transform-runtime": "npm:^7.23.9"
     "@babel/runtime": "npm:^7.24.0"
-    "@nozbe/watermelondb": "https://github.com/ospfranco/tauri-watermelon"
+    "@nozbe/watermelondb": "https://github.com/ospfranco/tauri-watermelon#1a03ebe1a7ea4052405eb3f80486d82c52e46ed4"
     "@preact/preset-vite": "npm:^2.5.0"
     "@stylexjs/babel-plugin": "npm:^0.5.1"
     "@stylexjs/stylex": "npm:^0.5.1"

@@ -16,7 +16,7 @@
     "test:frontend": "vitest run"
   },
   "dependencies": {
-    "@nozbe/watermelondb": "https://github.com/ospfranco/tauri-watermelon",
+    "@nozbe/watermelondb": "https://github.com/ospfranco/tauri-watermelon#1a03ebe1a7ea4052405eb3f80486d82c52e46ed4",
     "@stylexjs/babel-plugin": "^0.5.1",
     "@stylexjs/stylex": "^0.5.1",
     "@tauri-apps/api": "^1.5.2",

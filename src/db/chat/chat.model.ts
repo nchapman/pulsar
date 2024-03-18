@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { Model } from '@nozbe/watermelondb';
-import { date, json, text } from '@nozbe/watermelondb/decorators';
+import { date, json, readonly, text } from '@nozbe/watermelondb/decorators';
+
 import { chatsTable } from './chat.schema.ts';
 
 export class ChatModel extends Model {
@@ -12,7 +13,7 @@ export class ChatModel extends Model {
 
   @text(chatsTable.cols.model) model;
 
-  @date(chatsTable.cols.createdAt) createdAt;
+  @readonly @date(chatsTable.cols.createdAt) createdAt;
 
-  @date(chatsTable.cols.updatedAt) updatedAt;
+  @readonly @date(chatsTable.cols.updatedAt) updatedAt;
 }

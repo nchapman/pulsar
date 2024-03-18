@@ -10,13 +10,13 @@
     "lint:ts": "eslint \"**/*.{ts,tsx}\" --fix",
     "prettier": "npx prettier \"**/*.{ts,tsx}\" --write",
     "prepare": "husky install",
-    "dev": "vite",
+    "dev": "vite --force",
     "preview": "vite preview",
     "tauri": "tauri",
     "test:frontend": "vitest run"
   },
   "dependencies": {
-    "@nozbe/watermelondb": "^0.27.1",
+    "@nozbe/watermelondb": "https://github.com/ospfranco/tauri-watermelon#1a03ebe1a7ea4052405eb3f80486d82c52e46ed4",
     "@stylexjs/babel-plugin": "^0.5.1",
     "@stylexjs/stylex": "^0.5.1",
     "@tauri-apps/api": "^1.5.2",
@@ -28,6 +28,7 @@
     "react-markdown": "^9.0.1",
     "react-tiny-popover": "^8.0.4",
     "remark-gfm": "^4.0.0",
+    "tauri-plugin-sql": "https://github.com/tauri-apps/tauri-plugin-sql#v1",
     "tauri-plugin-upload-api": "https://github.com/tauri-apps/tauri-plugin-upload#v1"
   },
   "devDependencies": {
@@ -35,6 +36,7 @@
     "@babel/plugin-proposal-class-properties": "^7.18.6",
     "@babel/plugin-proposal-decorators": "^7.23.9",
     "@babel/plugin-transform-runtime": "^7.23.9",
+    "@babel/runtime": "^7.24.0",
     "@preact/preset-vite": "^2.5.0",
     "@tauri-apps/cli": "^1.5.8",
     "@types/babel__core": "^7",
@@ -60,7 +62,7 @@
     "prettier": "2.8.8",
     "sass": "^1.70.0",
     "typescript": "^5.0.2",
-    "vite": "^5.0.0",
+    "vite": "^5.1.5",
     "vite-plugin-svgr": "2.4.0",
     "vitest": "^1.3.1"
   },

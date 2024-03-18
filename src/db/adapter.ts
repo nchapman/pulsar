@@ -1,4 +1,5 @@
 import LokiJSAdapter from '@nozbe/watermelondb/adapters/lokijs';
+
 import { schema } from '@/db/schema.ts';
 
 export const adapter = new LokiJSAdapter({

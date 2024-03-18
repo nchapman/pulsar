@@ -20,7 +20,7 @@
         "all": true,
         "readFile": true,
         "writeFile": true,
-        "scope": ["$APPLOCALDATA/models/*", "$APPLOCALDATA", "$APPLOCALDATA/models"]
+        "scope": ["$APPLOCALDATA/models/*", "$APPLOCALDATA", "$APPLOCALDATA/models", "$APPLOCALDATA/pulsar.db"]
       },
       "path": {
         "all": true

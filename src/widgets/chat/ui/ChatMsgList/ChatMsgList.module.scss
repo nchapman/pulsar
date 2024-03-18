@@ -12,16 +12,8 @@
   left: 50%;
   transform: translateX(-50%);
 
-  width: 32px;
-  height: 32px;
-
-  color: initial;
-
-  background: var(--gray-800);
-  border-radius: 50%;
-
   transition: opacity 0.2s;
-  border: 1px solid var(--gray-300);
+  border: 1px solid var(--gray-600);
 
   &.hidden {
     opacity: 0;

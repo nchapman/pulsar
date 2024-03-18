@@ -31,10 +31,16 @@ const ChatHistoryItem = (props: Props) => {
       onClick={handleChatClick}
       className={classNames(s.chatHistoryItem, [className])}
       activeSuffix={
-        <Button onClick={handleDeleteChat} variant="clear" icon={DeleteChatIcon} iconSize={18} />
+        <Button
+          className={s.suffix}
+          onClick={handleDeleteChat}
+          variant="clear"
+          icon={DeleteChatIcon}
+          iconSize={18}
+        />
       }
     >
-      {chat?.title}
+      <span>{chat?.title}</span>
     </Button>
   );
 };

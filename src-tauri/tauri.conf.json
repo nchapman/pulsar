@@ -11,13 +11,6 @@
   },
   "tauri": {
     "allowlist": {
-      "fs": {
-        "scope": ["*/**"],
-        "all": true
-      },
-      "path": {
-        "all": true
-      },
       "all": false,
       "shell": {
         "sidecar": true,
@@ -27,7 +20,7 @@
         "all": true,
         "readFile": true,
         "writeFile": true,
-        "scope": ["$APPLOCALDATA/models/*", "$APPLOCALDATA", "$APPLOCALDATA/models"]
+        "scope": ["$APPLOCALDATA/models/*", "$APPLOCALDATA", "$APPLOCALDATA/models", "$APPLOCALDATA/pulsar.db"]
       },
       "path": {
         "all": true

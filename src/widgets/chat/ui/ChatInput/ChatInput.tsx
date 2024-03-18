@@ -63,7 +63,7 @@ export const ChatInput = (props: Props) => {
       <div className={s.inputRow}>
         <textarea
           ref={inputRef}
-          placeholder="Type your query here..."
+          placeholder="Message Pulsar…"
           value={input}
           onChange={handleInputChange}
           className={s.chatInput}

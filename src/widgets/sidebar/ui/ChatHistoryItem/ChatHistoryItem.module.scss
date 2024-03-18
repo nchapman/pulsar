@@ -1,5 +1,20 @@
+@import './src/shared/styles/mixins';
+
 .chat-history-item {
   width: 228px;
   align-items: center;
   padding: 10px 16px;
+
+  & span {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
 }
+
+.suffix {
+  &, &:hover {
+    background: var(--sidebar-background-primary);
+  }
+}
+

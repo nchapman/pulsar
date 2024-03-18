@@ -6,7 +6,7 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "pulsar",
+    "productName": "Pulsar",
     "version": "0.0.1"
   },
   "tauri": {
@@ -44,7 +44,10 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "externalBin": ["bin/llamafile"]
+      "externalBin": ["bin/llamafile"],
+      "macOS": {
+        "signingIdentity": "-"
+      }
     },
     "security": {
       "csp": null
@@ -53,10 +56,11 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "pulsar",
+        "title": "Pulsar",
         "width": 1100,
         "height": 830
       }
     ]
   }
 }
+

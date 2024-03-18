@@ -88,10 +88,10 @@ const createAssistantMsg = createEffect<ChatMsg, ChatMsg>((userMessage) => ({
   assistant: { userMsgId: userMessage.id, input: userMessage.text },
 }));
 
-const streamMsg = createEffect<{ chatId: Id; msgId: Id; question: string }, void>(
-  async ({ msgId, chatId, question }) => {
+const streamMsg = createEffect<{ chatId: Id; msgId: Id; messages: ChatMsg[] }, void>(
+  async ({ msgId, chatId, messages }) => {
     stream({
-      question,
+      messages,
       onTextChunkReceived: (chunk) => streamEvt.addTextChunk({ chunk, msgId }),
       onStreamStart: () => streamEvt.start({ msgId }),
       onTitleUpdate: (title) => streamEvt.updateTitle({ title, chatId }),
@@ -204,9 +204,17 @@ sample({
 
 // start stream on assistant message creation
 sample({
-  source: $chat.id,
+  source: {
+    chatId: $chat.id,
+    msgIds: $messages.idsList,
+    msgsData: $messages.data,
+  },
   clock: createAssistantMsg.doneData,
-  fn: (chatId, msg) => ({ msgId: msg.id, chatId: chatId!, question: msg.assistant?.input! }),
+  fn: ({ chatId, msgIds, msgsData }, msg) => ({
+    msgId: msg.id,
+    chatId: chatId!,
+    messages: msgIds.map((id) => msgsData[id]),
+  }),
   target: streamMsg,
 });
 

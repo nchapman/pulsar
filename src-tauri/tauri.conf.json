@@ -18,9 +18,7 @@
       },
       "fs": {
         "all": true,
-        "readFile": true,
-        "writeFile": true,
-        "scope": ["$APPLOCALDATA/models/*", "$APPLOCALDATA", "$APPLOCALDATA/models", "$APPLOCALDATA/pulsar.db"]
+        "scope": ["$APPLOCALDATA/**"]
       },
       "path": {
         "all": true

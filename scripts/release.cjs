@@ -30,7 +30,12 @@ try {
   console.log('Version updated successfully!');
 
   // log git status
-  console.log(execSync('git status').toString());
+  const status = execSync('git status').toString();
+
+  if(status.includes('nothing to commit, working tree clean')) {
+    console.log('Nothing to commit 🟥');
+    return;
+  }
   
   execSync('git add .');
   execSync('git commit -m "Update version"');

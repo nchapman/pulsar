@@ -20,16 +20,11 @@ try {
   // Example usage:
   const currentVersion = tauriJson.package.version;
   const newVersion = bumpPatchVersion(currentVersion);
-  console.log(newVersion); // Output: 1.2.4
   // Update the version in tauriJson
   tauriJson.package.version = newVersion;
-
-  console.warn('New version', tauriJson);
   
   // Write the updated tauriJson back to the file
   fs.writeFileSync(path.resolve(__dirname, '../src-tauri/tauri.conf.json'), JSON.stringify(tauriJson, null, 2));
-  
-  console.log('Version updated successfully!');
 
   // log git status
   const status = execSync('git status').toString();
@@ -38,7 +33,10 @@ try {
     console.log('Nothing to commit 🟥');
     return;
   }
+
+  console.log(`Updated to ${tauriJson.package.version} 🟢`);
   
+
   execSync('git add .');
   execSync('git commit -m "Update version"');
   execSync('git push');

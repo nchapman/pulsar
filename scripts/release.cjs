@@ -22,7 +22,7 @@ try {
   const newVersion = bumpPatchVersion(currentVersion);
   console.log(newVersion); // Output: 1.2.4
   // Update the version in tauriJson
-  tauriJson.version = newVersion;
+  tauriJson.package.version = newVersion;
 
   console.warn('New version', tauriJson);
   

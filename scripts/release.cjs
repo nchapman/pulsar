@@ -1,0 +1,48 @@
+// print the working directory
+console.log('Current directory:', process.cwd());
+
+const {execSync} = require('child_process');
+const fs = require('fs');
+const path = require('path');
+
+const tauriJson = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../src-tauri/tauri.conf.json'), 'utf8'));
+
+// update the version
+function bumpPatchVersion(version) {
+  const parts = version.split('.');
+  const patch = parseInt(parts[2], 10) + 1;
+  return `${parts[0]}.${parts[1]}.${patch}`;
+}
+
+
+
+console.log('read tauri conf', tauriJson.package.version);
+
+// Example usage:
+const currentVersion = tauriJson.package.version;
+const newVersion = bumpPatchVersion(currentVersion);
+console.log(newVersion); // Output: 1.2.4
+// Update the version in tauriJson
+tauriJson.version = newVersion;
+
+// Write the updated tauriJson back to the file
+fs.writeFileSync('./src-tauri/tauri.conf.json', JSON.stringify(tauriJson, null, 2));
+
+console.log('Version updated successfully!');
+
+execSync('git add ./src-tauri/tauri.conf.json');
+execSync('git commit -m "Update tauri version"');
+execSync('git push');
+
+// switch to the release branch
+execSync('git checkout release');
+
+// merge the changes
+execSync('git merge main');
+
+// push the changes
+execSync('git push');
+
+// switch back to the master branch
+execSync('git checkout main');
+

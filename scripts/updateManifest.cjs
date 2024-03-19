@@ -16,6 +16,9 @@ manifest.version = '1.0.1';
 // Write the manifest
 require('fs').writeFileSync('./manifest/manifest.json', JSON.stringify(manifest, null, 2));
 
+// change dir
+process.chdir('./manifest');
+
 // Commit the changes
 execSync('git add .');
 

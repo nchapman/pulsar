@@ -34,3 +34,5 @@ src-tauri/models/*
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+scripts/manifest

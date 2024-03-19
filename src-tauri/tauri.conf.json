@@ -14,11 +14,19 @@
       "all": false,
       "shell": {
         "sidecar": true,
-        "scope": [{ "name": "bin/llamafile", "sidecar": true, "args": true }]
+        "scope": [
+          {
+            "name": "bin/llamafile",
+            "sidecar": true,
+            "args": true
+          }
+        ]
       },
       "fs": {
         "all": true,
-        "scope": ["$APPLOCALDATA/**"]
+        "scope": [
+          "$APPLOCALDATA/**"
+        ]
       },
       "path": {
         "all": true
@@ -35,7 +43,9 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "externalBin": ["bin/llamafile"],
+      "externalBin": [
+        "bin/llamafile"
+      ],
       "macOS": {
         "signingIdentity": "-"
       }
@@ -54,10 +64,12 @@
     ],
     "updater": {
       "active": true,
-      "endpoints": ["https://releases.myapp.com/{{target}}/{{arch}}/{{current_version}}"],
+      "endpoints": [
+        "https://releases.myapp.com/{{target}}/{{arch}}/{{current_version}}"
+      ],
       "dialog": true,
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDIzOUFENEQ3NDY4MjM2MzAKUldRd05vSkcxOVNhSS9NeWlSRDlTTG8veGVPbkk4VERCc0EwWk5zTXRESU9ORjRMb1pMM2gwUTUK"
     }
-  }
+  },
+  "version": "0.0.4"
 }
-

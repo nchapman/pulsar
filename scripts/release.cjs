@@ -23,6 +23,8 @@ try {
   console.log(newVersion); // Output: 1.2.4
   // Update the version in tauriJson
   tauriJson.version = newVersion;
+
+  console.warn('New version', tauriJson);
   
   // Write the updated tauriJson back to the file
   fs.writeFileSync(path.resolve(__dirname, '../src-tauri/tauri.conf.json'), JSON.stringify(tauriJson, null, 2));

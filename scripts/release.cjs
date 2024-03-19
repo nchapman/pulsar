@@ -28,6 +28,9 @@ try {
   fs.writeFileSync(path.resolve(__dirname, '../src-tauri/tauri.conf.json'), JSON.stringify(tauriJson, null, 2));
   
   console.log('Version updated successfully!');
+
+  // log git status
+  console.log(execSync('git status').toString());
   
   execSync('git add .');
   execSync('git commit -m "Update version"');

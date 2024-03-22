@@ -2,21 +2,16 @@ import '@/shared/styles/index.scss';
 
 import { render } from 'preact';
 
-import { ErrorBoundary, ThemeProvider } from '@/app/providers';
+import { ErrorBoundary } from '@/app/providers';
+import { addHasOwn } from '@/shared/lib/func';
 
 import App from './app/App';
 
-// @ts-ignore
-// eslint-disable-next-line func-names
-Object.hasOwn = function (obj, key) {
-  return Object.prototype.hasOwnProperty.call(obj, key);
-};
+addHasOwn();
 
 render(
   <ErrorBoundary>
-    <ThemeProvider>
-      <App />
-    </ThemeProvider>
+    <App />
   </ErrorBoundary>,
   document.getElementById('root')!
 );

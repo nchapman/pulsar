@@ -8,6 +8,7 @@ import StopIcon from '@/shared/assets/icons/stop.svg';
 import { classNames } from '@/shared/lib/func';
 import { useKeyboardListener } from '@/shared/lib/hooks';
 import { Button } from '@/shared/ui';
+import { autoResize } from '@/widgets/chat/lib/autoResize.ts';
 
 import { $isInputDisabled, $streamedMsgId, askQuestion } from '../../model/chat.ts';
 import s from './ChatInput.module.scss';
@@ -44,16 +45,7 @@ export const ChatInput = (props: Props) => {
   }, []);
 
   useEffect(() => {
-    const inputEl = inputRef.current;
-
-    function autoResize() {
-      if (!inputRef.current) return;
-      inputRef.current.style.height = 'auto';
-      inputRef.current.style.height = `${inputEl!.scrollHeight}px`;
-    }
-
-    inputEl?.addEventListener('input', autoResize);
-    return () => inputEl?.removeEventListener('input', autoResize);
+    autoResize(inputRef.current);
   }, [input]);
 
   useKeyboardListener(() => handleSubmit(), 'Enter');

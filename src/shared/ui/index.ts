@@ -23,6 +23,5 @@ export * from './Spinner/Spinner';
 export * from './Tabs/Tabs';
 export * from './Text/Text';
 export * from './Textarea/Textarea';
-export * from './ThemeSwitcher/ThemeSwitcher';
 export * from './Title/Title';
 export * from './Tooltip/Tooltip';

@@ -31,6 +31,7 @@ const ChatHistoryItem = (props: Props) => {
       onClick={handleChatClick}
       className={classNames(s.chatHistoryItem, [className])}
       suffixClassName={s.suffixWrapper}
+      endFade
       activeSuffix={
         <Button
           className={s.suffix}
@@ -41,7 +42,7 @@ const ChatHistoryItem = (props: Props) => {
         />
       }
     >
-      <span>{chat?.title}</span>
+      {chat?.title}
     </Button>
   );
 };

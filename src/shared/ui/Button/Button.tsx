@@ -9,6 +9,7 @@ import s from './Button.module.scss';
 
 // @ts-ignore
 interface ButtonProps {
+  endFade?: boolean;
   icon?: FC<SVGProps<SVGSVGElement>> | any;
   className?: string;
   children?: ComponentChild | any;
@@ -36,6 +37,7 @@ export const Button = memo((props: ButtonProps) => {
     variant,
     loading,
     suffixClassName,
+    endFade,
     ...otherProps
   } = props;
 
@@ -61,6 +63,7 @@ export const Button = memo((props: ButtonProps) => {
       {content}
       {loading && <Spinner className={s.spinner} />}
       {activeSuffix && activeSuffixContent}
+      {endFade && <div className={s.endFade} />}
     </button>
   );
 });

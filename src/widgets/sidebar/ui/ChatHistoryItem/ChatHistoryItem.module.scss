@@ -4,12 +4,9 @@
   width: 228px;
   align-items: center;
   padding: 10px 16px;
+  white-space: nowrap;
+  overflow: hidden;
 
-  & span {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-  }
 }
 
 .suffix {
@@ -19,8 +16,10 @@
 }
 
 .suffix-wrapper {
-  background: linear-gradient(90deg, transparent, var(--button-secondary-hover));
-background: red;
+  background: linear-gradient(90deg, rgb(255, 255, 255, 0) 0%, var(--button-secondary-hover) 50%, var(--button-secondary-hover) 100%);;
+  //width: 32px;
+  z-index: 10;
+
   .icon {
     background: none;
   }

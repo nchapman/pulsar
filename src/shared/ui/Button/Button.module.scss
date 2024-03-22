@@ -30,6 +30,7 @@
   background: var(--button-primary-default);
   font-weight: 500;
 
+  &.active,
   &:hover {
     background: var(--button-primary-hover);
   }
@@ -47,7 +48,8 @@
   background: transparent;
   color: var(--text-primary);
 
-  &:hover {
+  &:hover,
+  &.active {
     background: var(--button-secondary-hover);
   }
 }
@@ -73,6 +75,7 @@
     color: var(--text-primary);
     background: transparent;
 
+    &.active,
     &:hover {
       color: var(--gray-800);
       background: var(--button-primary-hover);
@@ -83,7 +86,9 @@
     color: var(--icon-default);
     background: var(--main-background-secondary);
 
+    &.active,
     &:hover {
+      color: var(--gray-900);
       background: var(--gray-600);
     }
   }
@@ -92,12 +97,15 @@
 .suffix {
   display: none;
   position: absolute;
-  right: 8px;
+  right: 0;
+  padding-right: 8px;
+  padding-left: 20px;
+  height: 100%;
+  align-items: center;
 }
 
-button:hover,
-.active {
+button:hover {
   .suffix {
-    display: block;
+    display: flex;
   }
 }

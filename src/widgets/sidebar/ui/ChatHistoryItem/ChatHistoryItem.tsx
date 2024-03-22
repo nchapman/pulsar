@@ -30,6 +30,7 @@ const ChatHistoryItem = (props: Props) => {
       active={isCurrent}
       onClick={handleChatClick}
       className={classNames(s.chatHistoryItem, [className])}
+      suffixClassName={s.suffixWrapper}
       activeSuffix={
         <Button
           className={s.suffix}

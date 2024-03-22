@@ -20,6 +20,7 @@ interface ButtonProps {
   full?: boolean;
   disabled?: boolean;
   activeSuffix?: ReactNode;
+  suffixClassName?: string;
   onClick?: () => void;
 }
 
@@ -34,13 +35,14 @@ export const Button = memo((props: ButtonProps) => {
     activeSuffix,
     variant,
     loading,
+    suffixClassName,
     ...otherProps
   } = props;
 
   const content = icon ? <Icon svg={icon} size={iconSize} /> : children;
 
   const activeSuffixContent = (
-    <div onClick={(e) => e.stopPropagation()} className={s.suffix}>
+    <div onClick={(e) => e.stopPropagation()} className={classNames(s.suffix, [suffixClassName])}>
       {activeSuffix}
     </div>
   );

@@ -18,3 +18,11 @@
   }
 }
 
+.suffix-wrapper {
+  background: linear-gradient(90deg, transparent, var(--button-secondary-hover));
+background: red;
+  .icon {
+    background: none;
+  }
+}
+

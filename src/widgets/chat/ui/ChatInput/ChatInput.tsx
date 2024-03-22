@@ -10,7 +10,7 @@ import { useKeyboardListener } from '@/shared/lib/hooks';
 import { Button } from '@/shared/ui';
 import { autoResize } from '@/widgets/chat/lib/autoResize.ts';
 
-import { $isInputDisabled, $streamedMsgId, askQuestion } from '../../model/chat.ts';
+import { $chat, $isInputDisabled, $streamedMsgId, askQuestion } from '../../model/chat.ts';
 import s from './ChatInput.module.scss';
 
 interface Props {
@@ -22,6 +22,8 @@ export const ChatInput = (props: Props) => {
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [input, setInput] = useState('');
+
+  const chatId = useUnit($chat.id);
 
   const isStreaming = useUnit($streamedMsgId);
   const disabledSend = useUnit($isInputDisabled) || !input;
@@ -47,6 +49,10 @@ export const ChatInput = (props: Props) => {
   useEffect(() => {
     autoResize(inputRef.current);
   }, [input]);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [chatId]);
 
   useKeyboardListener(() => handleSubmit(), 'Enter');
 

@@ -2,7 +2,7 @@ import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
 import { useEffect } from 'preact/hooks';
 
-import { downloadModel, models } from '@/entities/model';
+import { AIModel, downloadModel, models } from '@/entities/model';
 import { classNames } from '@/shared/lib/func';
 import { Avatar, Button, Card, Progress, Text } from '@/shared/ui';
 import {
@@ -19,11 +19,12 @@ import s from './ModelDownload.module.scss';
 interface Props {
   className?: string;
   onLoaded: () => void;
+  modelName: AIModel;
 }
 
-const handleDownload = () => {
+const handleDownload = (modelName: AIModel) => {
   let progress = 0;
-  downloadModel('llava-v1.6-mistral-7b', (downloaded, total) => {
+  downloadModel(modelName, (downloaded, total) => {
     progress += downloaded;
 
     setTotal(total);
@@ -32,8 +33,8 @@ const handleDownload = () => {
 };
 
 export const ModelDownload = memo((props: Props) => {
-  const { className, onLoaded } = props;
-  const { name, desc, size } = models['llava-v1.6-mistral-7b'];
+  const { className, onLoaded, modelName } = props;
+  const { name, desc, size } = models[modelName];
   const downloaded = useUnit($downloaded);
   const downloading = useUnit($downloading);
   const percent = useUnit($percent);
@@ -61,7 +62,7 @@ export const ModelDownload = memo((props: Props) => {
       {downloading ? (
         <Progress percent={percent} />
       ) : (
-        <Button onClick={handleDownload} variant="primary">
+        <Button onClick={() => handleDownload(modelName)} variant="primary">
           Download
         </Button>
       )}

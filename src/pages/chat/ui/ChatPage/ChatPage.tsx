@@ -1,4 +1,4 @@
-import { useModelReady } from '@/entities/model';
+import { defaultModel, useModelReady } from '@/entities/model';
 import { Page } from '@/shared/ui';
 import { Chat } from '@/widgets/chat';
 import { Navbar } from '@/widgets/navbar';
@@ -8,7 +8,7 @@ import { WelcomeScreen } from '@/widgets/welcome-screen';
 import s from './ChatPage.module.scss';
 
 export const ChatPage = () => {
-  const { ready, handleLoaded } = useModelReady();
+  const { ready, handleLoaded } = useModelReady(defaultModel);
 
   return (
     <Page className={s.chatPage}>

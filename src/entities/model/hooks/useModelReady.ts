@@ -1,16 +1,18 @@
 import { useUnit } from 'effector-react';
 import { useCallback, useEffect, useState } from 'preact/hooks';
 
+import { AIModel } from '@/entities/model';
+
 import { $llama } from '../consts/llama.ts';
 import { hasModel } from '../lib/hasModel.ts';
 
-export function useModelReady() {
-  const [ready, setReady] = useState(false);
+export function useModelReady(modelName: AIModel) {
+  const [ready, setReady] = useState(true);
   const llama = useUnit($llama);
 
   useEffect(() => {
-    hasModel('llava-v1.6-mistral-7b').then(setReady);
-  }, []);
+    hasModel(modelName).then(setReady);
+  }, [modelName]);
 
   useEffect(() => {
     if (!ready || !llama) return undefined;

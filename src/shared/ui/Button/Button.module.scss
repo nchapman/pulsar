@@ -48,9 +48,40 @@
   background: transparent;
   color: var(--text-primary);
 
+  .end-fade {
+    background: linear-gradient(90deg, rgb(255, 255, 255, 0) 0%, var(--sidebar-background-primary) 50%, var(--sidebar-background-primary) 100%);
+
+    @media (prefers-color-scheme: dark) {
+      background: linear-gradient(90deg, #17171700, var(--sidebar-background-primary) 50%, var(--sidebar-background-primary) 100%);
+    }
+  }
+
   &:hover,
   &.active {
-    background: var(--button-secondary-hover);
+    background: var(--gray-800);
+
+    .end-fade {
+      background: linear-gradient(90deg, #CDCDCD00 0%, var(--gray-800) 50%, var(--gray-800) 100%);
+
+      @media (prefers-color-scheme: dark) {
+        background: linear-gradient(90deg, #21212100 0%, var(--gray-800) 50%, var(--gray-800) 100%);
+      }
+    }
+
+    .icon {
+      background: none;
+      transition: color 0.2s;
+
+      &:hover {
+        color: var(--gray-400);
+      }
+    }
+  }
+
+  &:hover {
+    .end-fade {
+      width: 60px;
+    }
   }
 }
 
@@ -99,7 +130,6 @@
   right: 0;
   height: 100%;
   background: transparent;
-  background: linear-gradient(90deg, rgb(255, 255, 255, 0) 0%, var(--sidebar-background-primary) 50%, var(--sidebar-background-primary) 100%);;
   width: 32px;
 }
 
@@ -107,11 +137,12 @@
   display: none;
   position: absolute;
   right: 0;
-  padding-right: 8px;
   padding-left: 20px;
   height: 100%;
   align-items: center;
   background: transparent;
+
+  z-index: 10;
 }
 
 button:hover {

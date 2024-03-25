@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const aws = require('aws-sdk');
 
 // Read environment variables
 const {
@@ -12,18 +13,27 @@ const {
   S3_SECRET_ACCESS_KEY
 } = process.env;
 
+const s3 = new aws.S3({
+  endpoint: S3_ENDPOINT_URL,
+  accessKeyId: S3_ACCESS_KEY_ID,
+  secretAccessKey: S3_SECRET_ACCESS_KEY
+});
 
+// eslint-disable-next-line consistent-return
 const downloadManifest = async () => {
   const params = {
     Bucket: S3_BUCKET,
-    Key: 'manifest.json'
+    Key: 'latest.json'
   };
 
   try {
-    const response = await fetch(`${S3_ENDPOINT_URL}/${S3_BUCKET}/latest.json`);
-    const body = await response.json();
+    // Fetch the manifest file from S3
+    const { Body } = await s3.getObject(params).promise();
+    const manifest = JSON.parse(Body.toString());
+    console.log('Manifest fetched successfully', manifest);
+    return manifest;
   } catch (error) {
-    console.error('Failed to download manifest.json from r2:', error);
+    console.error('Failed to fetch manifest.json from S3:', error);
     process.exit(1);
   }
 };

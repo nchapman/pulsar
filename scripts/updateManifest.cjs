@@ -16,6 +16,8 @@ const {
   OS // macos-latest, ubuntu-20.04, windows-latest
 } = process.env;
 
+const APP_VERSION = MACOS_APP_VERSION || NON_MACOS_APP_VERSION
+
 const s3 = new aws.S3({
   endpoint: S3_ENDPOINT_URL,
   accessKeyId: S3_ACCESS_KEY_ID,
@@ -43,13 +45,13 @@ const downloadManifest = async () => {
 
 // Update manifest version
 const updateManifestVersion = (manifest) => {
-  manifest.version = MACOS_APP_VERSION || NON_MACOS_APP_VERSION;
+  manifest.version = APP_VERSION;
 
   console.log("🟩🟩🟩🟩 Artifact paths")
   console.log(MACOS_ARTIFACT_PATHS)
   console.log(NON_MACOS_ARTIFACT_PATHS)
   console.log('app version')
-  console.log(MACOS_APP_VERSION || NON_MACOS_APP_VERSION)
+  console.log(APP_VERSION)
 
 
   if(OS === 'macos-latest') {
@@ -115,7 +117,7 @@ const main = async () => {
 
 
   // Compare semantic version and check if APP VERSION is greater than the manifest version
-  if (semver.lt(MACOS_APP_VERSION || NON_MACOS_APP_VERSION, manifest.version)) {
+  if (semver.lt(APP_VERSION, manifest.version)) {
     console.error("App version is not greater than the manifest version. Update failed!")
     process.exit(1);
   }

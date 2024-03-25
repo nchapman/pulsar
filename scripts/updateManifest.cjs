@@ -68,7 +68,7 @@ const main = async () => {
   const manifest = await downloadManifest();
 
   // Compare semantic version and check if APP VERSION is greater than the manifest version
-  if (semver.lte(APP_VERSION, manifest.version)) {
+  if (semver.lt(APP_VERSION, manifest.version)) {
     console.error("App version is not greater than the manifest version. Update failed!")
     process.exit(1);
   }

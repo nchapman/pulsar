@@ -74,7 +74,8 @@ const main = async () => {
     // const updatedManifest = updateManifestVersion(manifest);
     
   } else {
-    throw new Error("App version is not greater than the manifest version. Update failed!")
+    console.error("App version is not greater than the manifest version. Update failed!")
+    process.exit(1);
   }
 
   // // Update manifest version

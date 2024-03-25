@@ -5,7 +5,8 @@ const fs = require('fs');
 
 // Read environment variables
 const {
-  APP_VERSION,
+  MACOS_APP_VERSION,
+  NON_MACOS_APP_VERSION,
   MACOS_ARTIFACT_PATHS,
   NON_MACOS_ARTIFACT_PATHS,
   S3_ENDPOINT_URL,
@@ -42,13 +43,13 @@ const downloadManifest = async () => {
 
 // Update manifest version
 const updateManifestVersion = (manifest) => {
-  manifest.version = APP_VERSION;
+  manifest.version = MACOS_APP_VERSION || NON_MACOS_APP_VERSION;
 
   console.log("🟩🟩🟩🟩 Artifact paths")
   console.log(MACOS_ARTIFACT_PATHS)
   console.log(NON_MACOS_ARTIFACT_PATHS)
   console.log('app version')
-  console.log(APP_VERSION)
+  console.log(MACOS_APP_VERSION || NON_MACOS_APP_VERSION)
 
 
   if(OS === 'macos-latest') {
@@ -111,10 +112,10 @@ const main = async () => {
   // Download manifest.json from S3
   const manifest = await downloadManifest();
 
-  
+
 
   // Compare semantic version and check if APP VERSION is greater than the manifest version
-  if (semver.lt(APP_VERSION, manifest.version)) {
+  if (semver.lt(MACOS_APP_VERSION || NON_MACOS_APP_VERSION, manifest.version)) {
     console.error("App version is not greater than the manifest version. Update failed!")
     process.exit(1);
   }

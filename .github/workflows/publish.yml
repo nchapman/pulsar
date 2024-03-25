@@ -74,8 +74,9 @@ jobs:
         run: node scripts/updateManifest.cjs
         env:
           OS: ${{ matrix.platform }}
-          APP_VERSION: ${{ steps.macosbuild.outputs.appVersion }}
+          MACOS_APP_VERSION: ${{ steps.macosbuild.outputs.appVersion }}
           MACOS_ARTIFACT_PATHS: ${{ steps.macosbuild.outputs.artifactPaths }}
+          NON_MACOS_APP_VERSION: ${{ steps.restbuild.outputs.appVersion }}
           NON_MACOS_ARTIFACT_PATHS: ${{ steps.restbuild.outputs.artifactPaths }}
           S3_ENDPOINT_URL: ${{ secrets.S3_ENDPOINT_URL }}
           S3_BUCKET: ${{ secrets.S3_BUCKET }}

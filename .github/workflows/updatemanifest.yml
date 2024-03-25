@@ -17,7 +17,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Update Manifest
-        run: node scripts/updatemanifest.cjs
+        run: node scripts/updateManifest.cjs
         env:
           # APP_VERSION: ${{ steps.Build_for_macos.outputs.appVersion }}
           # MACOS_ARTIFACT_PATHS: ${{ steps.Build_for_macos.outputs.artifactPaths }}

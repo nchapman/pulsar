@@ -48,7 +48,7 @@ const updateManifestVersion = (manifest) => {
 const uploadManifest = async (manifest) => {
   const params = {
     Bucket: S3_BUCKET,
-    Key: 'manifest.json',
+    Key: 'latest.json',
     Body: JSON.stringify(manifest, null, 2),
     ContentType: 'application/json'
   };

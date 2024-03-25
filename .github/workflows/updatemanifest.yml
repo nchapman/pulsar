@@ -19,7 +19,7 @@ jobs:
       - name: Update Manifest
         run: node scripts/updateManifest.cjs
         env:
-          APP_VERSION: 0.0.7
+          APP_VERSION: 0.0.8
           # MACOS_ARTIFACT_PATHS: ${{ steps.Build_for_macos.outputs.artifactPaths }}
           # NON_MACOS_ARTIFACT_PATHS: ${{ steps.Build_for_non_macos.outputs.artifactPaths }}
           S3_ENDPOINT_URL: ${{ secrets.S3_ENDPOINT_URL }}

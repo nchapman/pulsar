@@ -77,7 +77,8 @@ const main = async () => {
   const updatedManifest = updateManifestVersion(manifest);
 
   console.log("Artifact paths")
-  console.log(MACOS_ARTIFACT_PATHS, NON_MACOS_ARTIFACT_PATHS)
+  console.log(MACOS_ARTIFACT_PATHS)
+  console.log(NON_MACOS_ARTIFACT_PATHS)
   console.log('app version')
   console.log(APP_VERSION)
 

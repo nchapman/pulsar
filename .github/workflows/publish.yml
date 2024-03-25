@@ -69,7 +69,7 @@ jobs:
           tauriScript: yarn tauri
 
       - name: Update Manifest
-        if: ${{ job.status == 'success' && needs.publish-tauri.outputs.Build_for_macos == 'success' && needs.publish-tauri.outputs.Build_for_non_macos == 'success' }}
+        # if: ${{ job.status == 'success' && needs.publish-tauri.outputs.Build_for_macos == 'success' && needs.publish-tauri.outputs.Build_for_non_macos == 'success' }}
         run: node scripts/updateManifest.cjs
         env:
           APP_VERSION: ${{ steps.Build_for_macos.outputs.appVersion }}

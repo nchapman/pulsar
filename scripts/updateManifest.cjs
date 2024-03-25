@@ -39,6 +39,7 @@ const downloadManifest = async () => {
 
 // Update manifest version
 const updateManifestVersion = (manifest) => {
+  // eslint-disable-next-line no-param-reassign
   manifest.version = APP_VERSION;
   return manifest;
 };
@@ -79,10 +80,10 @@ const main = async () => {
   }
 
   // // Update manifest version
-  // const updatedManifest = updateManifestVersion(manifest);
+  const updatedManifest = updateManifestVersion(manifest);
 
   // // Upload updated manifest.json to S3
-  // await uploadManifest(updatedManifest);
+  await uploadManifest(updatedManifest);
 
   // // Download artifacts from MACOS_ARTIFACT_PATHS
   // await downloadArtifacts(MACOS_ARTIFACT_PATHS.split(','));

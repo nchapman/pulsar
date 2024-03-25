@@ -47,13 +47,6 @@ const downloadManifest = async () => {
 const updateManifestVersion = (manifest) => {
   manifest.version = APP_VERSION;
 
-  console.log("🟩🟩🟩🟩 Artifact paths")
-  console.log(MACOS_ARTIFACT_PATHS)
-  console.log(NON_MACOS_ARTIFACT_PATHS)
-  console.log('app version')
-  console.log(APP_VERSION)
-
-
   if(OS === 'macos-latest') {
     const signatureFile = JSON.parse(MACOS_ARTIFACT_PATHS).find(file => file.includes('.sig'))
 
@@ -87,6 +80,8 @@ const updateManifestVersion = (manifest) => {
       url: `https://github.com/nchapman/pulsar/releases/download/app-v${APP_VERSION}/Pulsar_${APP_VERSION}_x64_en-US.msi.zip`
     }
   }
+
+  manifest.pub_date = new Date().toISOString();
 
   return manifest;
 };

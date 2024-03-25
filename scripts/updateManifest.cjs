@@ -78,6 +78,8 @@ const main = async () => {
 
   console.log("Artifact paths:")
   console.log(MACOS_ARTIFACT_PATHS, NON_MACOS_ARTIFACT_PATHS)
+  console.log('app version')
+  console.log(APP_VERSION)
 
   // // Upload updated manifest.json to S3
   // await uploadManifest(updatedManifest);

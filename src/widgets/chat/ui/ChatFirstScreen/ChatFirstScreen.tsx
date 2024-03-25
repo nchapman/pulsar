@@ -2,6 +2,7 @@ import { memo } from 'preact/compat';
 
 import { classNames } from '@/shared/lib/func';
 import { Logo, Text } from '@/shared/ui';
+import { ExamplePrompts } from '@/widgets/chat/ui/ExamplePrompts/ExamplePrompts.tsx';
 
 import s from './ChatFirstScreen.module.scss';
 
@@ -20,6 +21,8 @@ export const ChatFirstScreen = memo((props: Props) => {
           How can I help you today?
         </Text>
       </div>
+
+      <ExamplePrompts className={s.examplePrompts} />
     </div>
   );
 });

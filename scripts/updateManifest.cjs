@@ -29,7 +29,7 @@ const downloadManifest = async () => {
     // Fetch the manifest file from S3
     const { Body } = await s3.getObject(params).promise();
     const manifest = JSON.parse(Body.toString());
-    console.log('Manifest fetched successfully', manifest);
+    // console.log('Manifest fetched successfully', manifest);
     return manifest;
   } catch (error) {
     console.error('Failed to fetch manifest.json from S3:', error);
@@ -67,6 +67,13 @@ const main = async () => {
   // Download manifest.json from S3
   const manifest = await downloadManifest();
 
+  console.log("🟩🟩🟩🟩 Artifact paths")
+  console.log(MACOS_ARTIFACT_PATHS)
+  console.log(NON_MACOS_ARTIFACT_PATHS)
+  console.log('app version')
+  console.log(APP_VERSION)
+
+
   // Compare semantic version and check if APP VERSION is greater than the manifest version
   if (semver.lt(APP_VERSION, manifest.version)) {
     console.error("App version is not greater than the manifest version. Update failed!")
@@ -76,11 +83,6 @@ const main = async () => {
   // // Update manifest version
   const updatedManifest = updateManifestVersion(manifest);
 
-  console.log("Artifact paths")
-  console.log(MACOS_ARTIFACT_PATHS)
-  console.log(NON_MACOS_ARTIFACT_PATHS)
-  console.log('app version')
-  console.log(APP_VERSION)
 
   // // Upload updated manifest.json to S3
   // await uploadManifest(updatedManifest);

@@ -1,6 +1,5 @@
-const fs = require('fs');
-const path = require('path');
 const aws = require('aws-sdk');
+const semver = require('semver')
 
 // Read environment variables
 const {
@@ -68,6 +67,15 @@ const main = async () => {
   const manifest = await downloadManifest();
 
   console.log(`Updating app from ${manifest.version} to ${APP_VERSION}`);
+
+  // Compare semantic version and check if APP VERSION is greater than the manifest version
+  if (semver.gt(APP_VERSION, manifest.version)) {
+    // Update manifest version
+    // const updatedManifest = updateManifestVersion(manifest);
+    
+  } else {
+    throw new Error("App version is not greater than the manifest version. Update failed!")
+  }
 
   // // Update manifest version
   // const updatedManifest = updateManifestVersion(manifest);

@@ -1,29 +1,132 @@
-const {execSync} = require('child_process');
-// This script is meant to read the manifest from a gist, update it and the commit it back to the gist
+const fs = require('fs');
+const path = require('path');
 
-// Remove the manifest folder if it exists
-execSync('rm -rf manifest');
-
-// Clone the repository
-execSync('git clone https://gist.github.com/ospfranco/2399e4a47b54e82049dd23741e5d9582 manifest');
-
-// Read the manifest
-const manifest = require('./manifest/manifest.json');
-
-// Update the manifest
-manifest.version = '1.0.1';
-
-// Write the manifest
-require('fs').writeFileSync('./manifest/manifest.json', JSON.stringify(manifest, null, 2));
-
-// change dir
-process.chdir('./manifest');
-
-// Commit the changes
-execSync('git add .');
-
-execSync('git commit -m "Update manifest"');
-
-execSync('git push');
+// Read environment variables
+const {
+  APP_VERSION,
+  MACOS_ARTIFACT_PATHS,
+  NON_MACOS_ARTIFACT_PATHS,
+  S3_ENDPOINT_URL,
+  S3_BUCKET,
+  S3_ACCESS_KEY_ID,
+  S3_SECRET_ACCESS_KEY
+} = process.env;
 
 
+const downloadManifest = async () => {
+  const params = {
+    Bucket: S3_BUCKET,
+    Key: 'manifest.json'
+  };
+
+  try {
+    const response = await fetch(`${S3_ENDPOINT_URL}/${S3_BUCKET}/latest.json`);
+    const body = await response.json();
+  } catch (error) {
+    console.error('Failed to download manifest.json from r2:', error);
+    process.exit(1);
+  }
+};
+
+// // Update manifest version
+// const updateManifestVersion = (manifest) => {
+//   manifest.version = APP_VERSION;
+//   return manifest;
+// };
+
+// // Upload manifest.json to S3
+// const uploadManifest = async (manifest) => {
+//   const params = {
+//     Bucket: S3_BUCKET,
+//     Key: 'manifest.json',
+//     Body: JSON.stringify(manifest, null, 2),
+//     ContentType: 'application/json'
+//   };
+
+//   try {
+//     await s3.putObject(params).promise();
+//     console.log('Manifest uploaded successfully');
+//   } catch (error) {
+//     console.error('Failed to upload manifest.json to S3:', error);
+//     process.exit(1);
+//   }
+// };
+
+// // Download artifacts from MACOS_ARTIFACT_PATHS and NON_MACOS_ARTIFACT_PATHS
+// const downloadArtifacts = async (artifactPaths) => {
+//   const downloadPromises = artifactPaths.map(async (artifactPath) => {
+//     const artifactName = path.basename(artifactPath);
+//     const artifactKey = `artifacts/${artifactName}`;
+
+//     const params = {
+//       Bucket: S3_BUCKET,
+//       Key: artifactKey
+//     };
+
+//     try {
+//       const { Body } = await s3.getObject(params).promise();
+//       const artifactFilePath = path.join(__dirname, artifactName);
+//       fs.writeFileSync(artifactFilePath, Body);
+//       console.log(`Downloaded artifact: ${artifactName}`);
+//     } catch (error) {
+//       console.error(`Failed to download artifact ${artifactName} from S3:`, error);
+//       process.exit(1);
+//     }
+//   });
+
+//   await Promise.all(downloadPromises);
+// };
+
+// // Upload artifacts to S3
+// const uploadArtifacts = async (artifactPaths) => {
+//   const uploadPromises = artifactPaths.map(async (artifactPath) => {
+//     const artifactName = path.basename(artifactPath);
+//     const artifactKey = `artifacts/${artifactName}`;
+
+//     const params = {
+//       Bucket: S3_BUCKET,
+//       Key: artifactKey,
+//       Body: fs.readFileSync(artifactPath)
+//     };
+
+//     try {
+//       await s3.putObject(params).promise();
+//       console.log(`Uploaded artifact: ${artifactName}`);
+//     } catch (error) {
+//       console.error(`Failed to upload artifact ${artifactName} to S3:`, error);
+//       process.exit(1);
+//     }
+//   });
+
+//   await Promise.all(uploadPromises);
+// };
+
+// Main script
+const main = async () => {
+  // Download manifest.json from S3
+  const manifest = await downloadManifest();
+
+  console.log('manifest:', manifest);
+
+  // // Update manifest version
+  // const updatedManifest = updateManifestVersion(manifest);
+
+  // // Upload updated manifest.json to S3
+  // await uploadManifest(updatedManifest);
+
+  // // Download artifacts from MACOS_ARTIFACT_PATHS
+  // await downloadArtifacts(MACOS_ARTIFACT_PATHS.split(','));
+
+  // // Download artifacts from NON_MACOS_ARTIFACT_PATHS
+  // await downloadArtifacts(NON_MACOS_ARTIFACT_PATHS.split(','));
+
+  // // Upload artifacts to S3
+  // await uploadArtifacts([...MACOS_ARTIFACT_PATHS.split(','), ...NON_MACOS_ARTIFACT_PATHS.split(',')]);
+
+  // console.log('Script completed successfully');
+};
+
+main().catch((error) => {
+  console.error('An error occurred:', error);
+  process.exit(1);
+});

@@ -67,14 +67,8 @@ const main = async () => {
   // Download manifest.json from S3
   const manifest = await downloadManifest();
 
-  console.log(`Updating app from ${manifest.version} to ${APP_VERSION}`);
-
   // Compare semantic version and check if APP VERSION is greater than the manifest version
-  if (semver.gt(APP_VERSION, manifest.version)) {
-    // Update manifest version
-    // const updatedManifest = updateManifestVersion(manifest);
-    
-  } else {
+  if (semver.lte(APP_VERSION, manifest.version)) {
     console.error("App version is not greater than the manifest version. Update failed!")
     process.exit(1);
   }
@@ -82,8 +76,11 @@ const main = async () => {
   // // Update manifest version
   const updatedManifest = updateManifestVersion(manifest);
 
+  console.log("Artifact paths:")
+  console.log(MACOS_ARTIFACT_PATHS, NON_MACOS_ARTIFACT_PATHS)
+
   // // Upload updated manifest.json to S3
-  await uploadManifest(updatedManifest);
+  // await uploadManifest(updatedManifest);
 
   // // Download artifacts from MACOS_ARTIFACT_PATHS
   // await downloadArtifacts(MACOS_ARTIFACT_PATHS.split(','));

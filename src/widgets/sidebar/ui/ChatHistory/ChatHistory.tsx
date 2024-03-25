@@ -48,7 +48,9 @@ const ChatHistory = memo((props: Props) => {
 
   return (
     <div className={classNames(s.chatHistory, [className])}>
-      <NewChatBtn className={s.newChatBtn} />
+      <div className={s.header}>
+        <NewChatBtn className={s.newChatBtn} />
+      </div>
 
       <div className={s.list}>
         <div className={s.whiteSpace} />

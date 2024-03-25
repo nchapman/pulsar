@@ -44,6 +44,7 @@ jobs:
         run: yarn install # change this to npm or pnpm depending on which one you use
 
       - name: Build app for non macos
+        id: restbuild
         if: matrix.platform != 'macos-latest'
         uses: tauri-apps/tauri-action@v0
         env:
@@ -56,6 +57,7 @@ jobs:
           tauriScript: yarn tauri
 
       - name: Build for macos
+        id: macosbuild
         if: matrix.platform == 'macos-latest'
         uses: tauri-apps/tauri-action@v0
         env:
@@ -72,9 +74,9 @@ jobs:
         # if: ${{ job.status == 'success' && needs.publish-tauri.outputs.Build_for_macos == 'success' && needs.publish-tauri.outputs.Build_for_non_macos == 'success' }}
         run: node scripts/updateManifest.cjs
         env:
-          APP_VERSION: ${{ steps.Build_for_macos.outputs.appVersion }}
-          MACOS_ARTIFACT_PATHS: ${{ steps.Build_for_macos.outputs.artifactPaths }}
-          NON_MACOS_ARTIFACT_PATHS: ${{ steps.Build_for_non_macos.outputs.artifactPaths }}
+          APP_VERSION: ${{ steps.macosbuild.outputs.appVersion }}
+          MACOS_ARTIFACT_PATHS: ${{ steps.macosbuild.outputs.artifactPaths }}
+          NON_MACOS_ARTIFACT_PATHS: ${{ steps.restbuild.outputs.artifactPaths }}
           S3_ENDPOINT_URL: ${{ secrets.S3_ENDPOINT_URL }}
           S3_BUCKET: ${{ secrets.S3_BUCKET }}
           S3_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}

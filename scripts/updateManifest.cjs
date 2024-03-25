@@ -38,85 +38,36 @@ const downloadManifest = async () => {
   }
 };
 
-// // Update manifest version
-// const updateManifestVersion = (manifest) => {
-//   manifest.version = APP_VERSION;
-//   return manifest;
-// };
+// Update manifest version
+const updateManifestVersion = (manifest) => {
+  manifest.version = APP_VERSION;
+  return manifest;
+};
 
-// // Upload manifest.json to S3
-// const uploadManifest = async (manifest) => {
-//   const params = {
-//     Bucket: S3_BUCKET,
-//     Key: 'manifest.json',
-//     Body: JSON.stringify(manifest, null, 2),
-//     ContentType: 'application/json'
-//   };
+// Upload manifest.json to S3
+const uploadManifest = async (manifest) => {
+  const params = {
+    Bucket: S3_BUCKET,
+    Key: 'manifest.json',
+    Body: JSON.stringify(manifest, null, 2),
+    ContentType: 'application/json'
+  };
 
-//   try {
-//     await s3.putObject(params).promise();
-//     console.log('Manifest uploaded successfully');
-//   } catch (error) {
-//     console.error('Failed to upload manifest.json to S3:', error);
-//     process.exit(1);
-//   }
-// };
-
-// // Download artifacts from MACOS_ARTIFACT_PATHS and NON_MACOS_ARTIFACT_PATHS
-// const downloadArtifacts = async (artifactPaths) => {
-//   const downloadPromises = artifactPaths.map(async (artifactPath) => {
-//     const artifactName = path.basename(artifactPath);
-//     const artifactKey = `artifacts/${artifactName}`;
-
-//     const params = {
-//       Bucket: S3_BUCKET,
-//       Key: artifactKey
-//     };
-
-//     try {
-//       const { Body } = await s3.getObject(params).promise();
-//       const artifactFilePath = path.join(__dirname, artifactName);
-//       fs.writeFileSync(artifactFilePath, Body);
-//       console.log(`Downloaded artifact: ${artifactName}`);
-//     } catch (error) {
-//       console.error(`Failed to download artifact ${artifactName} from S3:`, error);
-//       process.exit(1);
-//     }
-//   });
-
-//   await Promise.all(downloadPromises);
-// };
-
-// // Upload artifacts to S3
-// const uploadArtifacts = async (artifactPaths) => {
-//   const uploadPromises = artifactPaths.map(async (artifactPath) => {
-//     const artifactName = path.basename(artifactPath);
-//     const artifactKey = `artifacts/${artifactName}`;
-
-//     const params = {
-//       Bucket: S3_BUCKET,
-//       Key: artifactKey,
-//       Body: fs.readFileSync(artifactPath)
-//     };
-
-//     try {
-//       await s3.putObject(params).promise();
-//       console.log(`Uploaded artifact: ${artifactName}`);
-//     } catch (error) {
-//       console.error(`Failed to upload artifact ${artifactName} to S3:`, error);
-//       process.exit(1);
-//     }
-//   });
-
-//   await Promise.all(uploadPromises);
-// };
+  try {
+    await s3.putObject(params).promise();
+    console.log('Manifest uploaded successfully');
+  } catch (error) {
+    console.error('Failed to upload manifest.json to S3:', error);
+    process.exit(1);
+  }
+};
 
 // Main script
 const main = async () => {
   // Download manifest.json from S3
   const manifest = await downloadManifest();
 
-  console.log('manifest:', manifest);
+  console.log(`Updating app from ${manifest.version} to ${APP_VERSION}`);
 
   // // Update manifest version
   // const updatedManifest = updateManifestVersion(manifest);

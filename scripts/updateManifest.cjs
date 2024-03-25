@@ -1,5 +1,7 @@
+/* eslint-disable no-param-reassign */
 const aws = require('aws-sdk');
 const semver = require('semver')
+const fs = require('fs');
 
 // Read environment variables
 const {
@@ -9,7 +11,8 @@ const {
   S3_ENDPOINT_URL,
   S3_BUCKET,
   S3_ACCESS_KEY_ID,
-  S3_SECRET_ACCESS_KEY
+  S3_SECRET_ACCESS_KEY,
+  OS // macos-latest, ubuntu-20.04, windows-latest
 } = process.env;
 
 const s3 = new aws.S3({
@@ -39,8 +42,49 @@ const downloadManifest = async () => {
 
 // Update manifest version
 const updateManifestVersion = (manifest) => {
-  // eslint-disable-next-line no-param-reassign
   manifest.version = APP_VERSION;
+
+  console.log("🟩🟩🟩🟩 Artifact paths")
+  console.log(MACOS_ARTIFACT_PATHS)
+  console.log(NON_MACOS_ARTIFACT_PATHS)
+  console.log('app version')
+  console.log(APP_VERSION)
+
+
+  if(OS === 'macos-latest') {
+    const signatureFile = JSON.parse(MACOS_ARTIFACT_PATHS).find(file => file.includes('.sig'))
+
+    const signature = fs.readFileSync(signatureFile, 'utf8')
+    manifest.platforms['darwin-aarch64'] = {
+      signature,
+      // eslint-disable-next-line max-len
+      url: `https://github.com/nchapman/pulsar/releases/download/app-v${APP_VERSION}/Pulsar_universal.app.tar.gz`
+    }
+    manifest.platforms['darwin-x86_64'] = {
+      signature,
+      // eslint-disable-next-line max-len
+      url: `https://github.com/nchapman/pulsar/releases/download/app-v${APP_VERSION}/Pulsar_universal.app.tar.gz`
+    }
+  } else if (OS === 'ubuntu-20.04') {
+    const signatureFile = JSON.parse(NON_MACOS_ARTIFACT_PATHS).find(file => file.includes('.sig'))
+
+    const signature = fs.readFileSync(signatureFile, 'utf8')
+    manifest.platforms['linux-x86_64'] = {
+      signature,
+      // eslint-disable-next-line max-len
+      url: `https://github.com/nchapman/pulsar/releases/download/app-v${APP_VERSION}/pulsar_${APP_VERSION}_amd64.AppImage.tar.gz`
+    }
+  } else {
+    const signatureFile = JSON.parse(NON_MACOS_ARTIFACT_PATHS).find(file => file.includes('.sig'))
+
+    const signature = fs.readFileSync(signatureFile, 'utf8')
+    manifest.platforms['windows-x86_64'] = {
+      signature,
+      // eslint-disable-next-line max-len
+      url: `https://github.com/nchapman/pulsar/releases/download/app-v${APP_VERSION}/Pulsar_${APP_VERSION}_x64_en-US.msi.zip`
+    }
+  }
+
   return manifest;
 };
 
@@ -67,12 +111,7 @@ const main = async () => {
   // Download manifest.json from S3
   const manifest = await downloadManifest();
 
-  console.log("🟩🟩🟩🟩 Artifact paths")
-  console.log(MACOS_ARTIFACT_PATHS)
-  console.log(NON_MACOS_ARTIFACT_PATHS)
-  console.log('app version')
-  console.log(APP_VERSION)
-
+  
 
   // Compare semantic version and check if APP VERSION is greater than the manifest version
   if (semver.lt(APP_VERSION, manifest.version)) {
@@ -83,9 +122,9 @@ const main = async () => {
   // // Update manifest version
   const updatedManifest = updateManifestVersion(manifest);
 
-
+  console.log('manifest should be updated to', updatedManifest)
   // // Upload updated manifest.json to S3
-  // await uploadManifest(updatedManifest);
+  await uploadManifest(updatedManifest);
 
   // // Download artifacts from MACOS_ARTIFACT_PATHS
   // await downloadArtifacts(MACOS_ARTIFACT_PATHS.split(','));

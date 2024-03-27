@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // print the working directory
 const {execSync} = require('child_process');
 const fs = require('fs');
@@ -40,19 +41,8 @@ try {
   execSync('git add .');
   execSync('git commit -m "Update version"');
   execSync('git push');
-  
-  // switch to the release branch
-  execSync('git checkout release');
-  
-  // merge the changes
-  execSync('git merge main');
-  
-  // push the changes
-  execSync('git push');
-  
-  // switch back to the master branch
-  execSync('git checkout main');
-  
+
+  execSync(`git tag -a v${  newVersion  } -m "Release version ${  newVersion  }"`);
   
 } catch (error) {
   console.error('Error:', error);

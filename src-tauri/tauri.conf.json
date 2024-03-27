@@ -7,7 +7,7 @@
   },
   "package": {
     "productName": "Pulsar",
-    "version": "0.0.6"
+    "version": "0.0.13"
   },
   "tauri": {
     "allowlist": {
@@ -25,7 +25,7 @@
       "fs": {
         "all": true,
         "scope": [
-          "$APPLOCALDATA/**"
+          "$APPDATA/**"
         ]
       },
       "path": {
@@ -65,7 +65,7 @@
     "updater": {
       "active": true,
       "endpoints": [
-        "https://releases.myapp.com/{{target}}/{{arch}}/{{current_version}}"
+        "https://updates.getpulsar.ai/latest.json"
       ],
       "dialog": true,
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDIzOUFENEQ3NDY4MjM2MzAKUldRd05vSkcxOVNhSS9NeWlSRDlTTG8veGVPbkk4VERCc0EwWk5zTXRESU9ORjRMb1pMM2gwUTUK"

@@ -5,7 +5,7 @@ import { chatsRepository } from '@/db';
 import { ChatModel } from '@/db/chat';
 import { classNames } from '@/shared/lib/func';
 import { Button } from '@/shared/ui';
-import { switchChat } from '@/widgets/chat';
+import { startNewChat, switchChat } from '@/widgets/chat';
 
 import { DeleteChatIcon } from '../../assets/DeleteChatIcon.tsx';
 import s from './ChatHistoryItem.module.scss';
@@ -22,7 +22,10 @@ const ChatHistoryItem = (props: Props) => {
 
   const handleChatClick = () => switchChat(id);
 
-  const handleDeleteChat = () => chatsRepository.remove(id);
+  const handleDeleteChat = () => {
+    chatsRepository.remove(id);
+    if (isCurrent) startNewChat();
+  };
 
   return (
     <Button
@@ -30,6 +33,8 @@ const ChatHistoryItem = (props: Props) => {
       active={isCurrent}
       onClick={handleChatClick}
       className={classNames(s.chatHistoryItem, [className])}
+      suffixClassName={s.suffixWrapper}
+      endFade
       activeSuffix={
         <Button
           className={s.suffix}
@@ -40,7 +45,7 @@ const ChatHistoryItem = (props: Props) => {
         />
       }
     >
-      <span>{chat?.title}</span>
+      {chat?.title}
     </Button>
   );
 };

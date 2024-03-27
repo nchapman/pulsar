@@ -5,13 +5,19 @@
   position: relative;
 }
 
+.header {
+  width: calc(100% + 16px);
+  margin-left: -8px;;
+  padding: 6px 8px 4px;
+  border-bottom: 1px solid var(--sidebar-background-secondary);
+}
+
 .list {
   position: absolute;
-  top: 0;
+  top: 54px;
   left: 0;
   height: 100%;
-  width: calc(100% + 12px);
-  padding-right: 8px;
+  width: calc(100% + 8px);
 
   @include scrollbar;
   overflow-y: auto;
@@ -27,13 +33,8 @@
 }
 
 .new-chat-btn {
-  position: sticky;
-  top: 14px;
+  position: relative;
   z-index: 10;
   height: 40px;
-  width: calc(100% - 8px);
-}
-
-.white-space {
-  height: 40px;
+  width: 100%;
 }

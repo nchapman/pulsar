@@ -33,13 +33,13 @@ $desktop-width: 1080px;
 @mixin scrollbar {
   /* Firefox */
   & {
-    scrollbar-width: auto;
+    scrollbar-width: thin;
     scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
   }
 
   /* Chrome, Edge, and Safari */
   &::-webkit-scrollbar {
-    width: 16px;
+    width: 12px;
   }
 
   &::-webkit-scrollbar-track {

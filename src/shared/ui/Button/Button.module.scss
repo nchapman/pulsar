@@ -12,7 +12,7 @@
   font-size: 14px;
 
   position: relative;
-  line-height: 1;
+  line-height: 1.4;
   overflow: hidden;
 
   &:disabled {
@@ -30,6 +30,7 @@
   background: var(--button-primary-default);
   font-weight: 500;
 
+  &.active,
   &:hover {
     background: var(--button-primary-hover);
   }
@@ -47,8 +48,40 @@
   background: transparent;
   color: var(--text-primary);
 
+  .end-fade {
+    background: linear-gradient(90deg, rgb(255, 255, 255, 0) 0%, var(--sidebar-background-primary) 50%, var(--sidebar-background-primary) 100%);
+
+    @media (prefers-color-scheme: dark) {
+      background: linear-gradient(90deg, #17171700, var(--sidebar-background-primary) 50%, var(--sidebar-background-primary) 100%);
+    }
+  }
+
+  &:hover,
+  &.active {
+    background: var(--gray-800);
+
+    .end-fade {
+      background: linear-gradient(90deg, #CDCDCD00 0%, var(--gray-800) 50%, var(--gray-800) 100%);
+
+      @media (prefers-color-scheme: dark) {
+        background: linear-gradient(90deg, #21212100 0%, var(--gray-800) 50%, var(--gray-800) 100%);
+      }
+    }
+
+    .icon {
+      background: none;
+      transition: color 0.2s;
+
+      &:hover {
+        color: var(--gray-400);
+      }
+    }
+  }
+
   &:hover {
-    background: var(--button-secondary-hover);
+    .end-fade {
+      width: 60px;
+    }
   }
 }
 
@@ -73,6 +106,7 @@
     color: var(--text-primary);
     background: transparent;
 
+    &.active,
     &:hover {
       color: var(--gray-800);
       background: var(--button-primary-hover);
@@ -83,21 +117,36 @@
     color: var(--icon-default);
     background: var(--main-background-secondary);
 
+    &.active,
     &:hover {
+      color: var(--gray-900);
       background: var(--gray-600);
     }
   }
 }
 
+.end-fade {
+  position: absolute;
+  right: 0;
+  height: 100%;
+  background: transparent;
+  width: 32px;
+}
+
 .suffix {
   display: none;
   position: absolute;
-  right: 8px;
+  right: 0;
+  padding-left: 20px;
+  height: 100%;
+  align-items: center;
+  background: transparent;
+
+  z-index: 10;
 }
 
-button:hover,
-.active {
+button:hover {
   .suffix {
-    display: block;
+    display: flex;
   }
 }

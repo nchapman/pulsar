@@ -9,6 +9,7 @@ import s from './Button.module.scss';
 
 // @ts-ignore
 interface ButtonProps {
+  endFade?: boolean;
   icon?: FC<SVGProps<SVGSVGElement>> | any;
   className?: string;
   children?: ComponentChild | any;
@@ -20,6 +21,7 @@ interface ButtonProps {
   full?: boolean;
   disabled?: boolean;
   activeSuffix?: ReactNode;
+  suffixClassName?: string;
   onClick?: () => void;
 }
 
@@ -34,13 +36,15 @@ export const Button = memo((props: ButtonProps) => {
     activeSuffix,
     variant,
     loading,
+    suffixClassName,
+    endFade,
     ...otherProps
   } = props;
 
   const content = icon ? <Icon svg={icon} size={iconSize} /> : children;
 
   const activeSuffixContent = (
-    <div onClick={(e) => e.stopPropagation()} className={s.suffix}>
+    <div onClick={(e) => e.stopPropagation()} className={classNames(s.suffix, [suffixClassName])}>
       {activeSuffix}
     </div>
   );
@@ -59,6 +63,7 @@ export const Button = memo((props: ButtonProps) => {
       {content}
       {loading && <Spinner className={s.spinner} />}
       {activeSuffix && activeSuffixContent}
+      {endFade && <div className={s.endFade} />}
     </button>
   );
 });

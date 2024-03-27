@@ -8,8 +8,9 @@ import StopIcon from '@/shared/assets/icons/stop.svg';
 import { classNames } from '@/shared/lib/func';
 import { useKeyboardListener } from '@/shared/lib/hooks';
 import { Button } from '@/shared/ui';
+import { autoResize } from '@/widgets/chat/lib/autoResize.ts';
 
-import { $isInputDisabled, $streamedMsgId, askQuestion } from '../../model/chat.ts';
+import { $chat, $isInputDisabled, $streamedMsgId, askQuestion } from '../../model/chat.ts';
 import s from './ChatInput.module.scss';
 
 interface Props {
@@ -21,6 +22,8 @@ export const ChatInput = (props: Props) => {
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [input, setInput] = useState('');
+
+  const chatId = useUnit($chat.id);
 
   const isStreaming = useUnit($streamedMsgId);
   const disabledSend = useUnit($isInputDisabled) || !input;
@@ -44,17 +47,12 @@ export const ChatInput = (props: Props) => {
   }, []);
 
   useEffect(() => {
-    const inputEl = inputRef.current;
-
-    function autoResize() {
-      if (!inputRef.current) return;
-      inputRef.current.style.height = 'auto';
-      inputRef.current.style.height = `${inputEl!.scrollHeight}px`;
-    }
-
-    inputEl?.addEventListener('input', autoResize);
-    return () => inputEl?.removeEventListener('input', autoResize);
+    autoResize(inputRef.current);
   }, [input]);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [chatId]);
 
   useKeyboardListener(() => handleSubmit(), 'Enter');
 

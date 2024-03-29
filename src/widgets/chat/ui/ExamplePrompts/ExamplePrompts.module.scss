@@ -1,8 +1,11 @@
+@import './src/shared/styles/mixins';
+
 .example-prompts {
   width: var(--chat-container-width);
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 8px;
+  padding: 0 8px;
 }
 
 .prompt {
@@ -14,4 +17,8 @@
   &:hover {
     background-color: var(--main-background-secondary);
   }
+}
+
+.desc {
+  @include line-clamp(1)
 }

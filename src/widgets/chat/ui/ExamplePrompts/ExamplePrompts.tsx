@@ -23,7 +23,7 @@ export const ExamplePrompts = memo((props: Props) => {
           <Text s={14} c="primary">
             {prompt.title}
           </Text>
-          <Text s={14} c="tertiary">
+          <Text s={14} className={s.desc} c="tertiary">
             {prompt.description}
           </Text>
         </div>

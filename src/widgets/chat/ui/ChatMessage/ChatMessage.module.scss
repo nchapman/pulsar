@@ -38,6 +38,12 @@
 .actions {
   margin-top: 4px;
   height: 26px;
+  opacity: 0;
+  width: max-content;
+}
+
+.chat-message:hover .actions {
+  opacity: 1;
 }
 
 .markdown {

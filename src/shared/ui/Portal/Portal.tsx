@@ -1,5 +1,5 @@
-import { createPortal, ReactNode } from 'preact/compat';
 import { VNode } from 'preact';
+import { createPortal, ReactNode } from 'preact/compat';
 
 interface PortalProps {
   children: ReactNode;

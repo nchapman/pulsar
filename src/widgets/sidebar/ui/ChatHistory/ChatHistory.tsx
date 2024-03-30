@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from 'preact/hooks';
 
 import { chatsRepository } from '@/db';
 import { Chat } from '@/db/chat';
-import { classNames } from '@/shared/lib/func';
+import { classNames, debounce } from '@/shared/lib/func';
 import { Text } from '@/shared/ui';
 import { $chat } from '@/widgets/chat';
 import { groupChats } from '@/widgets/sidebar/lib/groupChats.ts';
@@ -21,13 +21,25 @@ interface Props {
 
 const ChatHistory = memo((props: Props) => {
   const { className, chatsCount } = props;
+  const [search, setSearch] = useState('');
 
   const [chats, setChats] = useState<Chat[]>([]);
   const currChatId = useUnit($chat.id);
 
   useEffect(() => {
+    setSearch('');
     chatsRepository.getAll({ limit: 28 }).then(setChats);
   }, [chatsCount]);
+
+  useEffect(() => {
+    const getHistoryItems = () => chatsRepository.getAll({ limit: 28, search }).then(setChats);
+
+    const [getHistoryItemsDebounced, teardown] = debounce(getHistoryItems, 500);
+
+    getHistoryItemsDebounced();
+
+    return teardown;
+  }, [search]);
 
   const chatsList = useMemo(
     () =>
@@ -48,7 +60,7 @@ const ChatHistory = memo((props: Props) => {
 
   return (
     <div className={classNames(s.chatHistory, [className])}>
-      <ChatHistoryHeader className={s.header} />
+      <ChatHistoryHeader search={search} onSearchChange={setSearch} className={s.header} />
 
       <div className={s.list}>{chatsList}</div>
     </div>

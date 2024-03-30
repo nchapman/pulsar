@@ -130,6 +130,7 @@
 
     &.active,
     &:hover {
+      background: transparent;
       color: var(--gray-100);
     }
   }

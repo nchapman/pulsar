@@ -10,8 +10,8 @@ import { Text } from '@/shared/ui';
 import { $chat } from '@/widgets/chat';
 import { groupChats } from '@/widgets/sidebar/lib/groupChats.ts';
 
+import { ChatHistoryHeader } from '../ChatHistoryHeader/ChatHistoryHeader.tsx';
 import { ChatHistoryItem } from '../ChatHistoryItem/ChatHistoryItem';
-import { NewChatBtn } from '../NewChatBtn/NewChatBtn.tsx';
 import s from './ChatHistory.module.scss';
 
 interface Props {
@@ -48,15 +48,9 @@ const ChatHistory = memo((props: Props) => {
 
   return (
     <div className={classNames(s.chatHistory, [className])}>
-      <div className={s.header}>
-        <NewChatBtn className={s.newChatBtn} />
-      </div>
+      <ChatHistoryHeader className={s.header} />
 
-      <div className={s.list}>
-        <div className={s.whiteSpace} />
-
-        {chatsList}
-      </div>
+      <div className={s.list}>{chatsList}</div>
     </div>
   );
 });

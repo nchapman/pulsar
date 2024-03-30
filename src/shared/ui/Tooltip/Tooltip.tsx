@@ -74,9 +74,14 @@ export const Tooltip = memo((props: TooltipProps) => {
       {children}
       {visible && pos && (
         <Portal>
-          <div style={pos} className={s.tooltip}>
+          <div style={pos} className={classNames(s.tooltip, [s[position]])}>
+            <div className={s.arrow} />
             {text ? (
-              <Text className={classNames(s.tooltipText, [], { [s.success]: success })}>
+              <Text
+                s={12}
+                c="primary"
+                className={classNames(s.tooltipText, [], { [s.success]: success })}
+              >
                 {text}
               </Text>
             ) : (

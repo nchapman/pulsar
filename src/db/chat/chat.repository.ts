@@ -29,6 +29,7 @@ interface ListParams {
   limit?: number;
   offset?: number;
   order?: 'asc' | 'desc';
+  search?: string;
 }
 
 export class ChatsRepository {
@@ -43,9 +44,17 @@ export class ChatsRepository {
   }
 
   async getAll(params?: ListParams): Promise<Chat[]> {
-    const { limit = 10, offset = 0, order = 'desc' } = params || {};
+    const { limit = 10, offset = 0, order = 'desc', search } = params || {};
 
-    const query = [Q.sortBy(chatsTable.cols.updatedAt, Q[order]), Q.skip(offset), Q.take(limit)];
+    const query: Q.Clause[] = [
+      Q.sortBy(chatsTable.cols.updatedAt, Q[order]),
+      Q.skip(offset),
+      Q.take(limit),
+    ];
+
+    if (search) {
+      query.push(Q.where(chatsTable.cols.title, Q.like(`%${search}%`)));
+    }
 
     return this.mapSerialize(await this.chatsCollection.query(...query).fetch());
   }

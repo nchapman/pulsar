@@ -14,6 +14,7 @@ interface TooltipProps {
   children: ReactNode;
   position: 'top' | 'bottom' | 'left' | 'right';
   success?: boolean;
+  show?: boolean;
 }
 
 function getPosition(position: TooltipProps['position'], dimensions: DOMRect) {
@@ -25,7 +26,7 @@ function getPosition(position: TooltipProps['position'], dimensions: DOMRect) {
     case 'top':
       return { top: top - height, left: left + halfWidth };
     case 'bottom':
-      return { top: top + height, left: left + halfWidth };
+      return { top: top + height + 8, left: left + halfWidth };
     case 'left':
       return { top, left: left - width };
     case 'right':
@@ -36,11 +37,11 @@ function getPosition(position: TooltipProps['position'], dimensions: DOMRect) {
 }
 
 export const Tooltip = memo((props: TooltipProps) => {
-  const { className, children, content, position, success, text } = props;
+  const { className, children, content, position, show, success, text } = props;
   const ref = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState<{ left: number; top: number } | null>(null);
   const [isHovered, setIsHovered] = useState(false);
-  const visible = props.visible ?? isHovered;
+  const visible = show !== false && (props.visible ?? isHovered);
 
   useEffect(() => {
     if (!visible || !ref.current) return;
@@ -73,9 +74,14 @@ export const Tooltip = memo((props: TooltipProps) => {
       {children}
       {visible && pos && (
         <Portal>
-          <div style={pos} className={s.tooltip}>
+          <div style={pos} className={classNames(s.tooltip, [s[position]])}>
+            <div className={s.arrow} />
             {text ? (
-              <Text className={classNames(s.tooltipText, [], { [s.success]: success })}>
+              <Text
+                s={12}
+                c="primary"
+                className={classNames(s.tooltipText, [], { [s.success]: success })}
+              >
                 {text}
               </Text>
             ) : (

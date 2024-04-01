@@ -2,13 +2,29 @@
   position: absolute;
   z-index: var(--z-index-tooltip);
   transform: translateX(-50%);
+
+  .arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+
+    border-bottom: 8px solid var(--sidebar-background-primary);
+  }
+
+  &.bottom .arrow {
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 }
 
 .tooltip-text {
-  padding: 2px 6px;
-  color: var(--color-el-0);
-  background: var(--color-gray-900);
-  border-radius: var(--border-radius-xs);
+  padding: 6px 10px;
+  background: var(--sidebar-background-primary);
+  border-radius: 8px;
+  border: 1px solid var(--border-light);
 }
 
 .success {

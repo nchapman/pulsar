@@ -15,7 +15,7 @@ export const Chat = (props: Props) => {
   const { className } = props;
   const chatId = useUnit($chat.id);
 
-  console.log(chatId);
+  console.log('Chat id:', chatId);
 
   return (
     <div className={classNames(s.chat, [className])}>

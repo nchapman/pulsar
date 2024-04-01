@@ -16,9 +16,9 @@ interface Props {
 
 export const ChatMsgList = (props: Props) => {
   const { className } = props;
-  const { listRef, scrollToBottom, showScrollBtn, onStackScroll } = useListScroll();
-
   const list = useList($messages.idsList, (msgId) => (<ChatMessage id={msgId} />) as any);
+
+  const { listRef, scrollToBottom, showScrollBtn, onStackScroll } = useListScroll();
 
   if (!(list as any).length) return <ChatFirstScreen className={classNames('', [className])} />;
 
@@ -35,6 +35,7 @@ export const ChatMsgList = (props: Props) => {
           // [s.loading]: isQuerying,
         })}
       />
+      <div className={s.anchor}></div>
     </div>
   );
 };

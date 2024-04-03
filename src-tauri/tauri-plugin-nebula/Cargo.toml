@@ -1,0 +1,21 @@
+[package]
+name = "tauri-plugin-nebula"
+version = "0.0.0"
+authors = [ "You" ]
+description = ""
+edition = "2021"
+rust-version = "1.60"
+exclude = ["/examples"]
+
+[dependencies]
+tauri = "1"
+tauri-build = "1"
+thiserror = "1"
+serde = { version = "1", features = ["derive"] }
+#nebula = { path = "../../../nebula", default-features = false }
+nebula = { git = "https://github.com/nchapman/nebula.git", default-features = false }
+uuid = "1.8.0"
+base64 = "0.22.0"
+
+[features]
+llama = ["nebula/llama"]

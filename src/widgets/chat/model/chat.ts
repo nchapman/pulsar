@@ -1,5 +1,5 @@
 import { combine, createEffect, createEvent, createStore, sample } from 'effector';
-
+import { invoke } from '@tauri-apps/api';
 import { chatsRepository } from '@/db';
 import type { Chat, ChatMsg } from '@/db/chat';
 import { suid } from '@/shared/lib/func';
@@ -63,6 +63,7 @@ async function createDBChat() {
 
 const fetchDbChatWithMessages = createEffect<{ chatId: Id | null }, ChatMsg[]>(
   async ({ chatId }) => {
+    invoke('plugin:awesome|do_something');
     if (!chatId) return [];
 
     const chat = await chatsRepository.getById(chatId);

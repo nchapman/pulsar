@@ -63,7 +63,7 @@ async function createDBChat() {
 
 const fetchDbChatWithMessages = createEffect<{ chatId: Id | null }, ChatMsg[]>(
   async ({ chatId }) => {
-    invoke('plugin:awesome|do_something');
+    invoke('plugin:nebula|do_something');
     if (!chatId) return [];
 
     const chat = await chatsRepository.getById(chatId);

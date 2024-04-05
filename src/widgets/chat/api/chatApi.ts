@@ -1,9 +1,6 @@
-import { invoke } from '@tauri-apps/api';
 import OpenAI from 'openai';
 
 import { ChatMsg } from '@/db/chat';
-
-invoke('plugin:nebula|init');
 
 const openai = new OpenAI({
   baseURL: 'http://127.0.0.1:52514/v1',

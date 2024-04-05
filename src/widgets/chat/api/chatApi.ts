@@ -1,11 +1,9 @@
-import NebulaModel from './model.ts';
-import ContextModel from './context.ts';
+import { NebulaModel } from './model.ts';
+import { ContextModel } from './context.ts';
 
 //import { ChatMsg } from '@/db/chat';
 
-const model = await NebulaModel.init_model(
-  './models/llava-v1.6-mistral-7b.Q4_K_M.gguf'
-);
+const model = await NebulaModel.init_model('./models/llava-v1.6-mistral-7b.Q4_K_M.gguf');
 
 // const openai = new OpenAI({
 //   baseURL: 'http://127.0.0.1:52514/v1',
@@ -25,14 +23,16 @@ const model = await NebulaModel.init_model(
 // }
 //
 
-export async function stream(config: {
-  messages: string[];
-  onStreamStart: () => void;
-  onTextChunkReceived: (chunk: string) => void;
-  onStreamEnd: () => void;
-  onTitleUpdate: (title: string) => void;
-},
-max_predict_len: i32 = 100) {
+export async function stream(
+  config: {
+    messages: string[];
+    onStreamStart: () => void;
+    onTextChunkReceived: (chunk: string) => void;
+    onStreamEnd: () => void;
+    onTitleUpdate: (title: string) => void;
+  },
+  maxPredictLen: number = 100
+) {
   const { messages, onStreamStart, onTextChunkReceived, onTitleUpdate, onStreamEnd } = config;
 
   const context = await model.create_context();
@@ -42,12 +42,12 @@ max_predict_len: i32 = 100) {
   context.onComplete = (p) => {
     onStreamEnd();
   };
-  for m in messages{
-    await context.eval_string(messages, true);
+  for (const m of messages) {
+    await context.eval_string(m, true);
   }
   onStreamStart();
 
-  await context.predict(max_predict_len);
+  await context.predict(maxPredictLen);
 
   // const stream = await openai.chat.completions.create({
   //   messages: [

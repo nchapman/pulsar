@@ -63,8 +63,8 @@ jobs:
       - name: Test
         working-directory: src-tauri
         run: cargo test
-  
-  publish-tauri:
+
+  build-tauri:
     permissions:
       contents: write
     strategy:

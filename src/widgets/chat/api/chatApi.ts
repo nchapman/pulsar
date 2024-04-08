@@ -45,13 +45,10 @@ export async function stream(
     onStreamEnd();
   };
 
-  const contextFeedQueue = [];
   // eslint-disable-next-line no-restricted-syntax
   for (const m of messages) {
     await context.eval_string(m.text, true);
   }
-
-  Promise.all(contextFeedQueue);
 
   onStreamStart();
 

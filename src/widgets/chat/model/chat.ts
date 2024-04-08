@@ -93,7 +93,7 @@ const createAssistantMsg = createEffect<ChatMsg, ChatMsg>((userMessage) => ({
 const streamMsg = createEffect<{ chatId: Id; msgId: Id; messages: ChatMsg[] }, void>(
   async ({ msgId, chatId, messages }) => {
     stream({
-      messages: messages.map((msg) => msg.text),
+      messages: messages.map((msg) => msg),
       onTextChunkReceived: (chunk) => streamEvt.addTextChunk({ chunk, msgId }),
       onStreamStart: () => streamEvt.start({ msgId }),
       onTitleUpdate: (title) => streamEvt.updateTitle({ title, chatId }),
@@ -240,4 +240,3 @@ export const $streamedText = combine($streamedMsgId, $messages.data, (msgId, dat
 export const { askQuestion, startNew: startNewChat, switch: switchChat } = chatEvt;
 
 createUserMsg.fail.watch((a) => console.log('askQuestion', a));
-

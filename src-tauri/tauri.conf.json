@@ -14,9 +14,12 @@
       "all": false,
       "fs": {
         "all": true,
-        "scope": [
-          "$APPDATA/**"
-        ]
+        "scope": {
+          "allow": [
+            "$APPDATA/**"
+          ], 
+          "requireLiteralLeadingDot": false
+        }
       },
       "path": {
         "all": true

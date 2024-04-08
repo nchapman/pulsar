@@ -1,7 +1,9 @@
-import { NebulaModel } from './model.ts';
 import { ChatMsg } from '@/db/chat';
 
-const model = await NebulaModel.init_model('/home/andrey/llava-v1.6-mistral-7b.Q4_K_M.gguf');
+import { NebulaModel } from './model.ts';
+
+// TODO do not use hardcoded paths
+const model = await NebulaModel.init_model('./models/llava-v1.6-mistral-7b.Q4_K_M.gguf');
 
 // const openai = new OpenAI({
 //   baseURL: 'http://127.0.0.1:52514/v1',
@@ -57,3 +59,4 @@ export async function stream(
   onStreamEnd();
   onTitleUpdate(messages[messages.length - 2].text);
 }
+

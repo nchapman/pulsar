@@ -170,14 +170,7 @@ async fn model_context_eval_image<R: Runtime>(
 struct PredictPayload {
     model: String,
     context: String,
-    token: String,
-    finished: bool,
-}
-
-#[derive(serde::Serialize, Clone)]
-struct FinishPayload {
-    model: String,
-    context: String,
+    token: Option<String>,
     finished: bool,
 }
 
@@ -202,7 +195,7 @@ async fn model_context_predict<R: Runtime>(
                         PredictPayload {
                             model: model.clone(),
                             context: context.clone(),
-                            token: token.to_string(),
+                            token: Some(token),
                             finished: false,
                         },
                     )
@@ -213,10 +206,11 @@ async fn model_context_predict<R: Runtime>(
             )?;
             aapp.emit_all(
                 "nebula-predict",
-                FinishPayload {
+                PredictPayload {
                     model: mmodel.clone(),
                     context: ccontext.clone(),
                     finished: true,
+                    token: None,
                 },
             )
             .unwrap();

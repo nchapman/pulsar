@@ -3,15 +3,17 @@ import { useCallback, useEffect, useState } from 'preact/hooks';
 
 import { AIModel } from '@/entities/model';
 
-import { $llama } from '../consts/llama.ts';
-import { hasModel } from '../lib/hasModel.ts';
+import { $llama } from '../consts/llama';
+import { hasModel } from '../lib/hasModel';
 
 export function useModelReady(modelName: AIModel) {
-  const [ready, setReady] = useState(true);
+  const [ready, setReady] = useState(false);
   const llama = useUnit($llama);
 
   useEffect(() => {
-    hasModel(modelName).then(setReady);
+    hasModel(modelName).then((hasModel) => {
+      setReady(hasModel);
+    });
   }, [modelName]);
 
   useEffect(() => {

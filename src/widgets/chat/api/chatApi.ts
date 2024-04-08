@@ -1,9 +1,17 @@
+import { fs } from '@tauri-apps/api';
+
 import { ChatMsg } from '@/db/chat';
+import { defaultModel } from '@/entities/model/index.ts';
+import { getModelPath } from '@/entities/model/lib/getModelPath.ts';
 
 import { NebulaModel } from './model.ts';
 
+const modelPath = await getModelPath(defaultModel);
+console.warn('Checking model at path:', modelPath);
+const modelExists = await fs.exists(modelPath);
+
 // TODO do not use hardcoded paths
-const model = await NebulaModel.init_model('./models/llava-v1.6-mistral-7b.Q4_K_M.gguf');
+const model = modelExists ? await NebulaModel.init_model(modelPath) : null;
 
 // const openai = new OpenAI({
 //   baseURL: 'http://127.0.0.1:52514/v1',
@@ -35,7 +43,13 @@ export async function stream(
 ) {
   const { messages, onStreamStart, onTextChunkReceived, onTitleUpdate, onStreamEnd } = config;
 
-  const context = await model.create_context();
+  const context = await model?.create_context();
+
+  if (!context) {
+    console.warn('Model not initialized');
+    return;
+  }
+
   context.onToken = (p) => {
     if (p.token != null) {
       onTextChunkReceived(p.token);

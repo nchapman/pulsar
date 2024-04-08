@@ -1,4 +1,4 @@
-pub mod error;
+mod error;
 use error::Error;
 use std::{collections::HashMap, sync::Arc};
 

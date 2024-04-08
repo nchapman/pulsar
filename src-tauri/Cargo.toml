@@ -14,7 +14,6 @@ tauri-build = { version = "1.5", features = [] }
 tauri = { version = "1.5", features = [
   "path-all",
   "fs-all",
-  "shell-sidecar",
   "updater",
 ] }
 serde = { version = "1.0", features = ["derive"] }

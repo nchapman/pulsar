@@ -12,16 +12,6 @@
   "tauri": {
     "allowlist": {
       "all": false,
-      "shell": {
-        "sidecar": true,
-        "scope": [
-          {
-            "name": "bin/llamafile",
-            "sidecar": true,
-            "args": true
-          }
-        ]
-      },
       "fs": {
         "all": true,
         "scope": [
@@ -42,9 +32,6 @@
         "icons/128x128@2x.png",
         "icons/icon.icns",
         "icons/icon.ico"
-      ],
-      "externalBin": [
-        "bin/llamafile"
       ],
       "macOS": {
         "signingIdentity": "-"

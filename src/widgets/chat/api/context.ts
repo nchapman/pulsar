@@ -6,7 +6,7 @@ import { NebulaModel } from './model';
 type NebulaPredictPayload = {
   model: string;
   context: string;
-  token: string | null;
+  token: string;
   finished: boolean;
 };
 
@@ -15,7 +15,7 @@ export class NebulaContext {
 
   private ctx: string;
 
-  public onToken?: (p: { token: string | null; finished: boolean }) => void;
+  public onToken?: (p: { token: string; finished: boolean }) => void;
 
   public onComplete?: (p: { finished: boolean }) => void;
 
@@ -69,4 +69,3 @@ export class NebulaContext {
     unlisten();
   }
 }
-

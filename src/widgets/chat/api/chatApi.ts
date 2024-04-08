@@ -1,9 +1,7 @@
-import { ContextModel } from './context.ts';
 import { NebulaModel } from './model.ts';
+import { ChatMsg } from '@/db/chat';
 
-// import { ChatMsg } from '@/db/chat';
-
-const model = await NebulaModel.init_model('./models/llava-v1.6-mistral-7b.Q4_K_M.gguf');
+const model = await NebulaModel.init_model('/home/andrey/llava-v1.6-mistral-7b.Q4_K_M.gguf');
 
 // const openai = new OpenAI({
 //   baseURL: 'http://127.0.0.1:52514/v1',
@@ -25,7 +23,7 @@ const model = await NebulaModel.init_model('./models/llava-v1.6-mistral-7b.Q4_K_
 
 export async function stream(
   config: {
-    messages: string[];
+    messages: ChatMsg[];
     onStreamStart: () => void;
     onTextChunkReceived: (chunk: string) => void;
     onStreamEnd: () => void;
@@ -40,18 +38,17 @@ export async function stream(
     console.log('Text chunk received: ', p.token);
     onTextChunkReceived(p.token);
   };
-  context.onComplete = (p) => {
+  context.onComplete = (_p) => {
     onStreamEnd();
   };
 
   for (const m of messages) {
-    await context.eval_string(m, true);
+    await context.eval_string(m.text, true);
   }
   onStreamStart();
 
   await context.predict(maxPredictLen);
 
   onStreamEnd();
-  onTitleUpdate(messages[messages.length - 2]);
+  onTitleUpdate(messages[messages.length - 2].text);
 }
-

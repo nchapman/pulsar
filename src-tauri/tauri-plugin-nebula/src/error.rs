@@ -8,10 +8,10 @@ pub enum Error {
     ModelNotExist(String),
     #[error("{0}")]
     ModelContextNotExist(String),
-    #[error("{0}")]
-    ModelNotInitialized(String),
-    #[error("{0}")]
-    Custom(String),
+    //    #[error("{0}")]
+    //    ModelNotInitialized(String),
+    //    #[error("{0}")]
+    //    Custom(String),
     #[error("{0}")]
     Nebula(#[from] nebula::error::Error),
     #[error("{0}")]

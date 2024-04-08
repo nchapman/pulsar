@@ -1,4 +1,3 @@
-import { ContextModel } from './context.ts';
 import { NebulaModel } from './model.ts';
 
 // import { ChatMsg } from '@/db/chat';
@@ -37,16 +36,25 @@ export async function stream(
 
   const context = await model.create_context();
   context.onToken = (p) => {
-    console.log('Text chunk received: ', p.token);
-    onTextChunkReceived(p.token);
+    if (p.token != null) {
+      onTextChunkReceived(p.token);
+    } else {
+      console.warn('received null token from model');
+    }
   };
-  context.onComplete = (p) => {
+
+  context.onComplete = () => {
     onStreamEnd();
   };
 
+  const contextFeedQueue = [];
+  // eslint-disable-next-line no-restricted-syntax
   for (const m of messages) {
-    await context.eval_string(m, true);
+    contextFeedQueue.push(context.eval_string(m, true));
   }
+
+  Promise.all(contextFeedQueue);
+
   onStreamStart();
 
   await context.predict(maxPredictLen);

@@ -1,5 +1,6 @@
-import { combine, createEffect, createEvent, createStore, sample } from 'effector';
 import { invoke } from '@tauri-apps/api';
+import { combine, createEffect, createEvent, createStore, sample } from 'effector';
+
 import { chatsRepository } from '@/db';
 import type { Chat, ChatMsg } from '@/db/chat';
 import { suid } from '@/shared/lib/func';
@@ -92,7 +93,7 @@ const createAssistantMsg = createEffect<ChatMsg, ChatMsg>((userMessage) => ({
 const streamMsg = createEffect<{ chatId: Id; msgId: Id; messages: ChatMsg[] }, void>(
   async ({ msgId, chatId, messages }) => {
     stream({
-      messages,
+      messages: messages.map((msg) => msg.text),
       onTextChunkReceived: (chunk) => streamEvt.addTextChunk({ chunk, msgId }),
       onStreamStart: () => streamEvt.start({ msgId }),
       onTitleUpdate: (title) => streamEvt.updateTitle({ title, chatId }),
@@ -239,3 +240,4 @@ export const $streamedText = combine($streamedMsgId, $messages.data, (msgId, dat
 export const { askQuestion, startNew: startNewChat, switch: switchChat } = chatEvt;
 
 createUserMsg.fail.watch((a) => console.log('askQuestion', a));
+

@@ -166,6 +166,9 @@ async fn model_context_eval_image<R: Runtime>(
     }
 }
 
+/// The event payload for the `nebula-predict` event that gets sent to the JS frontend.
+/// Do not change this struct without also changing the corresponding JS code.
+/// Do not create multiple with variations as things will get out of sync and everything will need to be updated at the same time
 #[derive(serde::Serialize, Clone)]
 struct PredictPayload {
     model: String,
@@ -174,6 +177,8 @@ struct PredictPayload {
     finished: bool,
 }
 
+/// Triggers the LLM to predict the next token in the current context.
+/// Sends a stream of events to the JS side with the tokens. A final event is sent with the finished flag set to true to signal the end of the stream.
 #[tauri::command]
 async fn model_context_predict<R: Runtime>(
     model: String,
@@ -183,44 +188,50 @@ async fn model_context_predict<R: Runtime>(
     //    window: Window<R>,
     state: State<'_, NebulaState>,
 ) -> Result<()> {
-    if let Some(mm) = state.models.lock().await.get_mut(&model) {
-        if let Some(cc) = mm.contexts.get_mut(&context) {
-            let aapp = app.clone();
-            let mmodel = model.clone();
-            let ccontext = context.clone();
-            cc.lock().await.predict_with_callback(
-                Box::new(move |token| {
-                    app.emit_all(
-                        "nebula-predict",
-                        PredictPayload {
-                            model: model.clone(),
-                            context: context.clone(),
-                            token: Some(token),
-                            finished: false,
-                        },
-                    )
-                    .unwrap();
-                    true
-                }),
-                max_len,
-            )?;
-            aapp.emit_all(
+    let lock = state.models.lock().await;
+    let mm = lock
+        .get(&model)
+        .ok_or(Error::ModelNotExist(model.clone()))?;
+
+    let cc = mm
+        .contexts
+        .get(&context)
+        .ok_or(Error::ModelContextNotExist(context.clone()))?;
+
+    let aapp = app.clone();
+    let mmodel = model.clone();
+    let ccontext = context.clone();
+
+    cc.lock().await.predict_with_callback(
+        Box::new(move |token| {
+            app.emit_all(
                 "nebula-predict",
                 PredictPayload {
-                    model: mmodel.clone(),
-                    context: ccontext.clone(),
-                    finished: true,
-                    token: None,
+                    model: model.clone(),
+                    context: context.clone(),
+                    token: Some(token),
+                    finished: false,
                 },
             )
-            .unwrap();
-            Ok(())
-        } else {
-            Err(Error::ModelContextNotExist(context))
-        }
-    } else {
-        Err(Error::ModelNotExist(model))
-    }
+            .expect("Could not emit llm predict payload event");
+
+            true
+        }),
+        max_len,
+    )?;
+
+    aapp.emit_all(
+        "nebula-predict",
+        PredictPayload {
+            model: mmodel,
+            context: ccontext,
+            finished: true,
+            token: None,
+        },
+    )
+    .expect("Could not emit llm predict payload event");
+
+    Ok(())
 }
 
 pub fn init<R: Runtime>() -> TauriPlugin<R> {

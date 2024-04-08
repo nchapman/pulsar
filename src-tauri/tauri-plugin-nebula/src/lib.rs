@@ -30,21 +30,26 @@ async fn init_model<R: Runtime>(
     _app: AppHandle<R>,
     state: State<'_, NebulaState>,
 ) -> Result<String> {
-    if state.models.lock().await.contains_key(&model_path) {
-        Err(Error::ModelExist(model_path))
-    } else {
-        state.models.lock().await.insert(
-            model_path.clone(),
-            NebulaModelState {
-                model: Arc::new(Mutex::new(nebula::Model::new(
-                    model_path.clone(),
-                    model_options,
-                )?)),
-                contexts: HashMap::new(),
-            },
-        );
-        Ok(model_path.clone())
+    // dbg!(model_path.clone());
+
+    let mut models = state.models.lock().await;
+
+    if models.contains_key(&model_path) {
+        return Err(Error::ModelExist(model_path));
     }
+
+    models.insert(
+        model_path.clone(),
+        NebulaModelState {
+            model: Arc::new(Mutex::new(nebula::Model::new(
+                model_path.clone(),
+                model_options,
+            )?)),
+            contexts: HashMap::new(),
+        },
+    );
+
+    Ok(model_path.clone())
 }
 
 #[tauri::command]
@@ -55,22 +60,25 @@ async fn init_model_with_mmproj<R: Runtime>(
     _app: AppHandle<R>,
     state: State<'_, NebulaState>,
 ) -> Result<String> {
-    if state.models.lock().await.contains_key(&model_path) {
-        Err(Error::ModelExist(model_path))
-    } else {
-        state.models.lock().await.insert(
-            model_path.clone(),
-            NebulaModelState {
-                model: Arc::new(Mutex::new(nebula::Model::new_with_mmproj(
-                    model_path.clone(),
-                    mmproj_path.clone(),
-                    model_options,
-                )?)),
-                contexts: HashMap::new(),
-            },
-        );
-        Ok(model_path.clone() + &mmproj_path)
+    let mut models = state.models.lock().await;
+
+    if models.contains_key(&model_path) {
+        return Err(Error::ModelExist(model_path));
     }
+
+    models.insert(
+        model_path.clone(),
+        NebulaModelState {
+            model: Arc::new(Mutex::new(nebula::Model::new_with_mmproj(
+                model_path.clone(),
+                mmproj_path.clone(),
+                model_options,
+            )?)),
+            contexts: HashMap::new(),
+        },
+    );
+
+    Ok(model_path.clone() + &mmproj_path)
 }
 
 #[tauri::command]

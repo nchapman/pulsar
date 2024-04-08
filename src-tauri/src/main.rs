@@ -3,8 +3,16 @@
 
 fn setup(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
     let app_data_dir = app.handle().path_resolver().app_data_dir();
-    println!("Data dir");
-    println!("\x1b[34m{}\x1b[0m", app_data_dir.unwrap().to_str().unwrap());
+    let local_data_dir = app.handle().path_resolver().app_local_data_dir();
+    println!("🟦 Directories");
+    println!(
+        "App data dir: \x1b[34m{}\x1b[0m",
+        app_data_dir.unwrap().to_str().unwrap()
+    );
+    println!(
+        "Local data dir: \x1b[34m{}\x1b[0m",
+        local_data_dir.unwrap().to_str().unwrap()
+    );
     Ok(())
 }
 

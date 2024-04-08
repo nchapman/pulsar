@@ -1,39 +1,39 @@
 import { invoke } from '@tauri-apps/api';
+
 import { NebulaContext } from './context';
 
 export class NebulaModel {
-  private model: string;
+  public model: string;
 
   constructor(model: string) {
-    this.model = model
+    this.model = model;
   }
 
-  public static async init_model(model: string, mmproj?: string): NebulaModel {
+  public static async init_model(model: string, mmproj?: string): Promise<NebulaModel> {
     if (typeof mmproj !== 'undefined') {
-      let mmodel = await invoke('plugin:nebula|init_model_with_mmproj', {
+      const mmodel = await invoke<string>('plugin:nebula|init_model_with_mmproj', {
         modelPath: model,
         modelMmproj: mmproj,
         modelOptions: {},
       });
-      return new NebulaModel(mmodel)
-    } else {
-      let mmodel = await invoke('plugin:nebula|init_model', {
-        modelPath: model,
-        modelOptions: {},
-      });
-      return new NebulaModel(mmodel)
+      return new NebulaModel(mmodel);
     }
-  };
+    const mmodel = await invoke<string>('plugin:nebula|init_model', {
+      modelPath: model,
+      modelOptions: {},
+    });
+    return new NebulaModel(mmodel);
+  }
 
   public async drop() {
     await invoke('plugin:nebula|drop_model', {
-      model: this.model
+      model: this.model,
     });
-  };
+  }
 
-
-  public async create_context(): NebulaContext {
+  public async create_context(): Promise<NebulaContext> {
     const ctx = await NebulaContext.init_context(this);
     return ctx;
-  };
+  }
 }
+

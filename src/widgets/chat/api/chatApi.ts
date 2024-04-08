@@ -1,7 +1,7 @@
-import { NebulaModel } from './model.ts';
 import { ContextModel } from './context.ts';
+import { NebulaModel } from './model.ts';
 
-//import { ChatMsg } from '@/db/chat';
+// import { ChatMsg } from '@/db/chat';
 
 const model = await NebulaModel.init_model('./models/llava-v1.6-mistral-7b.Q4_K_M.gguf');
 
@@ -37,11 +37,13 @@ export async function stream(
 
   const context = await model.create_context();
   context.onToken = (p) => {
+    console.log('Text chunk received: ', p.token);
     onTextChunkReceived(p.token);
   };
   context.onComplete = (p) => {
     onStreamEnd();
   };
+
   for (const m of messages) {
     await context.eval_string(m, true);
   }
@@ -49,25 +51,7 @@ export async function stream(
 
   await context.predict(maxPredictLen);
 
-  // const stream = await openai.chat.completions.create({
-  //   messages: [
-  //     {
-  //       role: 'system',
-  //       content:
-  //         'You are Pulsar, a friendly chatbot. You are helpful, kind, honest, good at writing, and never fails to answer any requests immediately and with precision.',
-  //     },
-  //     ...getAIChatMessages(messages),
-  //   ],
-  //   model: 'LLaMA_CPP',
-  //   stream: true,
-  // });
-  //
-  // eslint-disable-next-line no-restricted-syntax
-
-  // for await (const chunk of stream) {
-  //   onTextChunkReceived(chunk.choices[0]?.delta?.content || '');
-  // }
-  //
   onStreamEnd();
-  onTitleUpdate(messages[messages.length - 2].text);
+  onTitleUpdate(messages[messages.length - 2]);
 }
+

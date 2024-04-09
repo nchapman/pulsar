@@ -1,9 +1,8 @@
 import { BaseDirectory, readDir } from '@tauri-apps/api/fs';
 
-import { AIModel, models } from '../consts/models.ts';
-import { MODELS_DIR_NAME } from '../consts/modelsPath.ts';
+import { AIModelName, models, MODELS_DIR_NAME } from '@/constants';
 
-export async function hasModel(model?: AIModel) {
+export async function modelExists(model?: AIModelName) {
   const entries = await readDir(MODELS_DIR_NAME, { dir: BaseDirectory.AppLocalData });
 
   if (!model) {

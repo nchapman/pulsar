@@ -1,6 +1,6 @@
 import { memo } from 'preact/compat';
 
-import { defaultModel } from '@/entities/model';
+import { DEFAULT_MODEL_NAME } from '@/constants.ts';
 import { classNames } from '@/shared/lib/func';
 import { Text, Title } from '@/shared/ui';
 
@@ -31,7 +31,11 @@ export const WelcomeScreen = memo((props: Props) => {
         <Text>{content.text}</Text>
       </div>
 
-      <ModelDownload className={s.modelDownload} onLoaded={onLoaded} modelName={defaultModel} />
+      <ModelDownload
+        className={s.modelDownload}
+        onLoaded={onLoaded}
+        modelName={DEFAULT_MODEL_NAME}
+      />
 
       <Text s={14}>{content.policy}</Text>
     </div>

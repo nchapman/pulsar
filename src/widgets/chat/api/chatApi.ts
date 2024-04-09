@@ -1,17 +1,20 @@
-import { fs } from '@tauri-apps/api';
-
+import { AIModelName } from '@/constants.ts';
 import { ChatMsg } from '@/db/chat';
-import { defaultModel } from '@/entities/model/index.ts';
 import { getModelPath } from '@/entities/model/lib/getModelPath.ts';
 
 import { NebulaModel } from './model.ts';
 
-const modelPath = await getModelPath(defaultModel);
-console.warn('Checking model at path:', modelPath);
-const modelExists = await fs.exists(modelPath);
+let model: NebulaModel | null = null;
 
-// TODO do not use hardcoded paths
-const model = modelExists ? await NebulaModel.init_model(modelPath) : null;
+export async function loadModel(modelName: AIModelName) {
+  try {
+    const modelPath = await getModelPath(modelName);
+    model = await NebulaModel.init_model(modelPath);
+  } catch (e) {
+    console.error('Failed to load model', e);
+    throw e;
+  }
+}
 
 export async function stream(
   config: {

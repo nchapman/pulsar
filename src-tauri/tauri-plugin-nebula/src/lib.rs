@@ -1,6 +1,6 @@
 mod error;
 use error::Error;
-use std::{collections::HashMap, sync::Arc};
+use std::{collections::HashMap, sync::{Arc, atomic::AtomicBool}};
 
 use nebula::options::{ContextOptions, ModelOptions};
 use tauri::{
@@ -15,7 +15,7 @@ use base64::prelude::*;
 
 struct NebulaModelState {
     model: Arc<Mutex<nebula::Model>>,
-    contexts: HashMap<String, Arc<Mutex<nebula::Context>>>,
+    contexts: HashMap<String, (Arc<Mutex<nebula::Context>>, Arc<AtomicBool>)>,
 }
 
 #[derive(Default)]
@@ -105,7 +105,7 @@ async fn model_init_context<R: Runtime>(
         let context_name = uuid::Uuid::new_v4().to_string();
         mm.contexts.insert(
             context_name.clone(),
-            Arc::new(Mutex::new(mm.model.lock().await.context(context_options)?)),
+            (Arc::new(Mutex::new(mm.model.lock().await.context(context_options)?)), Arc::new(AtomicBool::new(false))),
         );
         Ok(context_name)
     } else {
@@ -142,7 +142,8 @@ async fn model_context_eval_string<R: Runtime>(
 ) -> Result<()> {
     eprintln!("{}", data);
     if let Some(mm) = state.models.lock().await.get_mut(&model) {
-        if let Some(cc) = mm.contexts.get_mut(&context) {
+        if let Some((cc, ss)) = mm.contexts.get_mut(&context) {
+            ss.store(true, std::sync::atomic::Ordering::Relaxed);
             cc.lock().await.eval_str(&data, use_bos)?;
             Ok(())
         } else {
@@ -158,14 +159,16 @@ async fn model_context_eval_image<R: Runtime>(
     model: String,
     context: String,
     base64_encoded_image: String,
+    prompt: String,
     _app: AppHandle<R>,
     state: State<'_, NebulaState>,
 ) -> Result<()> {
     if let Some(mm) = state.models.lock().await.get_mut(&model) {
-        if let Some(cc) = mm.contexts.get_mut(&context) {
+        if let Some((cc, ss)) = mm.contexts.get_mut(&context) {
+            ss.store(true, std::sync::atomic::Ordering::Relaxed);
             cc.lock()
                 .await
-                .eval_image(BASE64_STANDARD.decode(base64_encoded_image)?)?;
+                .eval_image(BASE64_STANDARD.decode(base64_encoded_image)?, &prompt)?;
             Ok(())
         } else {
             Err(Error::ModelContextNotExist(context))
@@ -202,7 +205,7 @@ async fn model_context_predict<R: Runtime>(
         .get(&model)
         .ok_or(Error::ModelNotExist(model.clone()))?;
 
-    let cc = mm
+    let (cc, ss) = mm
         .contexts
         .get(&context)
         .ok_or(Error::ModelContextNotExist(context.clone()))?;
@@ -210,7 +213,8 @@ async fn model_context_predict<R: Runtime>(
     let aapp = app.clone();
     let mmodel = model.clone();
     let ccontext = context.clone();
-
+    ss.store(false, std::sync::atomic::Ordering::Relaxed);
+    let ccc = ss.clone();
     cc.lock().await.predict_with_callback(
         Box::new(move |token| {
             app.emit_all(
@@ -224,7 +228,7 @@ async fn model_context_predict<R: Runtime>(
             )
             .expect("Could not emit llm predict payload event");
 
-            true
+            !ccc.load(std::sync::atomic::Ordering::Relaxed)
         }),
         max_len,
     )?;

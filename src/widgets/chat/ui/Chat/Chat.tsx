@@ -1,8 +1,5 @@
-import { useUnit } from 'effector-react';
-
 import { classNames } from '@/shared/lib/func';
 
-import { $chat } from '../../model/chat';
 import { ChatInput } from '../ChatInput/ChatInput';
 import { ChatMsgList } from '../ChatMsgList/ChatMsgList';
 import s from './Chat.module.scss';
@@ -13,9 +10,6 @@ interface Props {
 
 export const Chat = (props: Props) => {
   const { className } = props;
-  const chatId = useUnit($chat.id);
-
-  console.log('Chat id:', chatId);
 
   return (
     <div className={classNames(s.chat, [className])}>

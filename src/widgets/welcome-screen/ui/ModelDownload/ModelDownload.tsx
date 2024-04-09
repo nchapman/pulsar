@@ -2,7 +2,8 @@ import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
 import { useEffect } from 'preact/hooks';
 
-import { AIModel, downloadModel, models } from '@/entities/model';
+import { AIModelName, models } from '@/constants';
+import { downloadModel } from '@/entities/model';
 import { classNames } from '@/shared/lib/func';
 import { Avatar, Button, Card, Progress, Text } from '@/shared/ui';
 import {
@@ -19,10 +20,10 @@ import s from './ModelDownload.module.scss';
 interface Props {
   className?: string;
   onLoaded: () => void;
-  modelName: AIModel;
+  modelName: AIModelName;
 }
 
-const handleDownload = (modelName: AIModel) => {
+const handleDownload = (modelName: AIModelName) => {
   let progress = 0;
   downloadModel(modelName, (downloaded, total) => {
     progress += downloaded;

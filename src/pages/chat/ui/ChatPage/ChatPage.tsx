@@ -1,4 +1,5 @@
-import { defaultModel, useModelReady } from '@/entities/model';
+import { DEFAULT_MODEL_NAME } from '@/constants';
+import { useModelReady } from '@/entities/model';
 import { Page } from '@/shared/ui';
 import { Chat } from '@/widgets/chat';
 import { Navbar } from '@/widgets/navbar';
@@ -8,21 +9,25 @@ import { WelcomeScreen } from '@/widgets/welcome-screen';
 import s from './ChatPage.module.scss';
 
 export const ChatPage = () => {
-  const { ready, handleLoaded } = useModelReady(defaultModel);
+  const { ready, checkModelExists } = useModelReady(DEFAULT_MODEL_NAME);
 
-  const chatContent = (
-    <>
-      <Navbar />
-      <Chat />
-    </>
-  );
+  if (ready === false) {
+    return <div>Failed to load model! Contact support</div>;
+  }
 
   return (
     <Page className={s.chatPage}>
       <Sidebar className={s.sidebar} />
 
       <main className={s.main}>
-        {ready ? chatContent : <WelcomeScreen onLoaded={handleLoaded} />}
+        {ready ? (
+          <>
+            <Navbar />
+            <Chat />
+          </>
+        ) : (
+          <WelcomeScreen onLoaded={checkModelExists} />
+        )}
       </main>
     </Page>
   );

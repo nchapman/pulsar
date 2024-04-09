@@ -13,24 +13,6 @@ const modelExists = await fs.exists(modelPath);
 // TODO do not use hardcoded paths
 const model = modelExists ? await NebulaModel.init_model(modelPath) : null;
 
-// const openai = new OpenAI({
-//   baseURL: 'http://127.0.0.1:52514/v1',
-//   apiKey: 'none',
-//   dangerouslyAllowBrowser: true,
-// });
-//
-// export interface AIChatMessage {
-//   role: 'user' | 'assistant';
-//   content: string;
-// }
-//
-// function getAIChatMessages(messages: ChatMsg[]): AIChatMessage[] {
-//   return messages
-//     .slice(0, -1)
-//     .map((msg) => ({ role: msg.isUser ? 'user' : 'assistant', content: msg.text }));
-// }
-//
-
 export async function stream(
   config: {
     messages: ChatMsg[];

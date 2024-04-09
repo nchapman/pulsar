@@ -1,4 +1,3 @@
-import { invoke } from '@tauri-apps/api';
 import { combine, createEffect, createEvent, createStore, sample } from 'effector';
 
 import { chatsRepository } from '@/db';

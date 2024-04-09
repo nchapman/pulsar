@@ -59,4 +59,3 @@ export async function stream(
   onStreamEnd();
   onTitleUpdate(messages[messages.length - 2].text);
 }
-

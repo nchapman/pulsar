@@ -140,6 +140,7 @@ async fn model_context_eval_string<R: Runtime>(
     _app: AppHandle<R>,
     state: State<'_, NebulaState>,
 ) -> Result<()> {
+    eprintln!("{}", data);
     if let Some(mm) = state.models.lock().await.get_mut(&model) {
         if let Some(cc) = mm.contexts.get_mut(&context) {
             cc.lock().await.eval_str(&data, use_bos)?;

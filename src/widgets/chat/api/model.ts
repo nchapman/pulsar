@@ -9,7 +9,7 @@ export class NebulaModel {
     this.model = model;
   }
 
-  public static async init_model(model: string, mmproj?: string): Promise<NebulaModel> {
+  public static async initModel(model: string, mmproj?: string): Promise<NebulaModel> {
     if (typeof mmproj !== 'undefined') {
       const mmodel = await invoke<string>('plugin:nebula|init_model_with_mmproj', {
         modelPath: model,

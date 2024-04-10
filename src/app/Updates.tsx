@@ -5,8 +5,11 @@ import { loge, logi } from '@/shared/lib/Logger';
 
 export async function checkUpdates() {
   try {
-    if (process.env.NODE_ENV === 'development')
+    if (process.env.NODE_ENV === 'development') {
       logi('Updates', 'Development mode, skipping updates check');
+      return;
+    }
+
     const { shouldUpdate } = await checkUpdate();
 
     if (shouldUpdate) {

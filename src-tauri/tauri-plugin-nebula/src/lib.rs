@@ -41,7 +41,7 @@ async fn init_model<R: Runtime>(
     let mut models = state.models.lock().await;
 
     if models.contains_key(&model_path) {
-        return Err(Error::ModelAlreadyLoaded(model_path));
+        return Ok(model_path.clone());
     }
 
     models.insert(

@@ -12,11 +12,6 @@ export async function loadModel(modelName: AIModelName) {
     const modelPath = await getModelPath(modelName);
     model = await NebulaModel.initModel(modelPath);
   } catch (e: any) {
-    if (typeof e === 'string' && e.includes('Model already loaded')) {
-      logi('chatApi', `Model already loaded, skipping`);
-      return;
-    }
-
     loge('chatApi', `Failed to load model, rust error: ${e}`);
     throw e;
   }
@@ -24,7 +19,9 @@ export async function loadModel(modelName: AIModelName) {
 
 export async function dropModel() {
   try {
+    console.log('dropping model!');
     model?.drop();
+    model = null;
   } catch (e: any) {
     loge('chatApi', `Failed to unload model ${e}`);
     throw e;
@@ -41,9 +38,14 @@ export async function stream(
   },
   maxPredictLen: number = 100
 ) {
+  if (!model) {
+    loge('chatApi', 'Model not loaded, cannot stream');
+    return;
+  }
+
   const { messages, onStreamStart, onTextChunkReceived, onTitleUpdate, onStreamEnd } = config;
 
-  const context = await model?.create_context(
+  const context = await model.create_context(
     messages.slice(0, -1).map((msg) => ({ message: msg.text, is_user: !!msg.isUser }))
   );
 

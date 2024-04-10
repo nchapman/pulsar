@@ -39,6 +39,7 @@
     "@babel/runtime": "^7.24.0",
     "@preact/preset-vite": "^2.5.0",
     "@tauri-apps/cli": "^1.5.8",
+    "@tauri-apps/plugin-log": "^2.0.0-beta.2",
     "@types/babel__core": "^7",
     "@types/bun": "^1.0.8",
     "@types/semver": "^7",

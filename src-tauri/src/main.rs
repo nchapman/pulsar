@@ -1,6 +1,8 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+use tauri_plugin_log::LogTarget;
+
 fn setup(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
     let app_data_dir = app.handle().path_resolver().app_data_dir();
     let local_data_dir = app.handle().path_resolver().app_local_data_dir();
@@ -19,7 +21,11 @@ fn setup(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
 fn main() {
     tauri::Builder::default()
         .setup(setup)
-        .plugin(tauri_plugin_log::Builder::default().build())
+        .plugin(
+            tauri_plugin_log::Builder::default()
+                .targets([LogTarget::LogDir, LogTarget::Stdout, LogTarget::Webview])
+                .build(),
+        )
         .plugin(tauri_plugin_sql::Builder::default().build())
         .plugin(tauri_plugin_nebula::init())
         .plugin(tauri_plugin_upload::init())

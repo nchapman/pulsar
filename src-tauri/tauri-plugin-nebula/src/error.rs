@@ -2,11 +2,11 @@ use serde::{Serialize, Serializer};
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-    #[error("{0}")]
-    ModelExist(String),
-    #[error("{0}")]
-    ModelNotExist(String),
-    #[error("{0}")]
+    #[error("Model already loaded: {0}")]
+    ModelAlreadyLoaded(String),
+    #[error("Model does not exist: {0}")]
+    ModelNotLoaded(String),
+    #[error("Context for model does not exist: {0}")]
     ModelContextNotExist(String),
     //    #[error("{0}")]
     //    ModelNotInitialized(String),

@@ -1,6 +1,7 @@
 import { AIModelName } from '@/constants.ts';
 import { ChatMsg } from '@/db/chat';
 import { getModelPath } from '@/entities/model/lib/getModelPath.ts';
+import { loge, logi } from '@/shared/lib/Logger.ts';
 
 import { NebulaModel } from './model.ts';
 
@@ -9,9 +10,23 @@ let model: NebulaModel | null = null;
 export async function loadModel(modelName: AIModelName) {
   try {
     const modelPath = await getModelPath(modelName);
-    model = await NebulaModel.init_model(modelPath);
-  } catch (e) {
-    console.error('Failed to load model', e);
+    model = await NebulaModel.initModel(modelPath);
+  } catch (e: any) {
+    if (typeof e === 'string' && e.includes('Model already loaded')) {
+      logi('chatApi', `Model already loaded, skipping`);
+      return;
+    }
+
+    loge('chatApi', `Failed to load model, rust error: ${e}`);
+    throw e;
+  }
+}
+
+export async function dropModel() {
+  try {
+    model?.drop();
+  } catch (e: any) {
+    loge('chatApi', `Failed to unload model ${e}`);
     throw e;
   }
 }
@@ -29,19 +44,17 @@ export async function stream(
   const { messages, onStreamStart, onTextChunkReceived, onTitleUpdate, onStreamEnd } = config;
 
   const context = await model?.create_context(
-    messages.slice(0, -1).map((msg) => ({ message: msg.text, is_user: msg.isUser ? true : false }))
+    messages.slice(0, -1).map((msg) => ({ message: msg.text, is_user: !!msg.isUser }))
   );
 
   if (!context) {
-    console.warn('Model not initialized');
+    loge('chatApi', 'Model not loaded, cannot create context');
     return;
   }
 
   context.onToken = (p) => {
     if (p.token != null) {
       onTextChunkReceived(p.token);
-    } else {
-      console.warn('received null token from model');
     }
   };
   context.onComplete = (_p) => {
@@ -58,3 +71,4 @@ export async function stream(
   onStreamEnd();
   onTitleUpdate(messages[messages.length - 2].text);
 }
+

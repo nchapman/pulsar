@@ -1,6 +1,9 @@
 mod error;
 use error::Error;
-use std::{collections::HashMap, sync::{Arc, atomic::AtomicBool}};
+use std::{
+    collections::HashMap,
+    sync::{atomic::AtomicBool, Arc},
+};
 
 use nebula::options::{ContextOptions, ModelOptions};
 use tauri::{
@@ -35,12 +38,10 @@ async fn init_model<R: Runtime>(
     _app: AppHandle<R>,
     state: State<'_, NebulaState>,
 ) -> Result<String> {
-    // dbg!(model_path.clone());
-
     let mut models = state.models.lock().await;
 
     if models.contains_key(&model_path) {
-        return Err(Error::ModelExist(model_path));
+        return Err(Error::ModelAlreadyLoaded(model_path));
     }
 
     models.insert(
@@ -74,7 +75,7 @@ async fn init_model_with_mmproj<R: Runtime>(
     let mut models = state.models.lock().await;
 
     if models.contains_key(&model_path) {
-        return Err(Error::ModelExist(model_path));
+        return Err(Error::ModelAlreadyLoaded(model_path));
     }
 
     models.insert(
@@ -99,15 +100,17 @@ async fn init_model_with_mmproj<R: Runtime>(
 ///
 #[tauri::command]
 async fn drop_model<R: Runtime>(
-    model: String,
+    model_path: String,
     _app: AppHandle<R>,
     state: State<'_, NebulaState>,
 ) -> Result<()> {
-    if let None = state.models.lock().await.remove(&model) {
-        Err(Error::ModelNotExist(model))
-    } else {
-        Ok(())
+    let mut models = state.models.lock().await;
+
+    if models.contains_key(&model_path) {
+        models.remove(&model_path);
     }
+
+    Ok(())
 }
 
 /// initialize context for an initialized model.
@@ -127,11 +130,14 @@ async fn model_init_context<R: Runtime>(
         let context_name = uuid::Uuid::new_v4().to_string();
         mm.contexts.insert(
             context_name.clone(),
-            (Arc::new(Mutex::new(mm.model.lock().await.context(context_options)?)), Arc::new(AtomicBool::new(false))),
+            (
+                Arc::new(Mutex::new(mm.model.lock().await.context(context_options)?)),
+                Arc::new(AtomicBool::new(false)),
+            ),
         );
         Ok(context_name)
     } else {
-        Err(Error::ModelNotExist(model))
+        Err(Error::ModelNotLoaded(model))
     }
 }
 
@@ -155,7 +161,7 @@ async fn model_drop_context<R: Runtime>(
             Ok(())
         }
     } else {
-        Err(Error::ModelNotExist(model))
+        Err(Error::ModelNotLoaded(model))
     }
 }
 
@@ -186,7 +192,7 @@ async fn model_context_eval_string<R: Runtime>(
             Err(Error::ModelContextNotExist(context))
         }
     } else {
-        Err(Error::ModelNotExist(model))
+        Err(Error::ModelNotLoaded(model))
     }
 }
 
@@ -217,7 +223,7 @@ async fn model_context_eval_image<R: Runtime>(
             Err(Error::ModelContextNotExist(context))
         }
     } else {
-        Err(Error::ModelNotExist(model))
+        Err(Error::ModelNotLoaded(model))
     }
 }
 
@@ -246,7 +252,7 @@ async fn model_context_predict<R: Runtime>(
     let lock = state.models.lock().await;
     let mm = lock
         .get(&model)
-        .ok_or(Error::ModelNotExist(model.clone()))?;
+        .ok_or(Error::ModelNotLoaded(model.clone()))?;
 
     let (cc, ss) = mm
         .contexts

@@ -24,10 +24,13 @@ export class NebulaContext {
     this.ctx = ctx;
   }
 
-  public static async init_context(model: NebulaModel): Promise<NebulaContext> {
+  public static async init_context(
+    model: NebulaModel,
+    cctx: { message: string; is_user: boolean }[] = []
+  ): Promise<NebulaContext> {
     const ctx = await invoke<string>('plugin:nebula|model_init_context', {
       model: model.model,
-      contextOptions: {},
+      contextOptions: { ctx: cctx },
     });
 
     return new NebulaContext(model, ctx);

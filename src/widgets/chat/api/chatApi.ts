@@ -28,7 +28,9 @@ export async function stream(
 ) {
   const { messages, onStreamStart, onTextChunkReceived, onTitleUpdate, onStreamEnd } = config;
 
-  const context = await model?.create_context();
+  const context = await model?.create_context(
+    messages.slice(0, -1).map((msg) => ({ message: msg.text, is_user: msg.isUser ? true : false }))
+  );
 
   if (!context) {
     console.warn('Model not initialized');
@@ -47,9 +49,7 @@ export async function stream(
   };
 
   // eslint-disable-next-line no-restricted-syntax
-  for (const m of messages) {
-    await context.eval_string(m.text, true);
-  }
+  await context.eval_string(messages[messages.length - 1].text, true);
 
   onStreamStart();
 

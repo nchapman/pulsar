@@ -1,5 +1,7 @@
 import { invoke } from '@tauri-apps/api';
 
+import { loge } from '@/shared/lib/Logger';
+
 import { NebulaContext } from './context';
 
 export class NebulaModel {
@@ -10,19 +12,25 @@ export class NebulaModel {
   }
 
   public static async initModel(model: string, mmproj?: string): Promise<NebulaModel> {
-    if (typeof mmproj !== 'undefined') {
-      const mmodel = await invoke<string>('plugin:nebula|init_model_with_mmproj', {
+    try {
+      if (typeof mmproj !== 'undefined') {
+        await invoke<string>('plugin:nebula|init_model_with_mmproj', {
+          modelPath: model,
+          modelMmproj: mmproj,
+          modelOptions: {},
+        });
+        return new NebulaModel(model);
+      }
+
+      await invoke<string>('plugin:nebula|init_model', {
         modelPath: model,
-        modelMmproj: mmproj,
         modelOptions: {},
       });
-      return new NebulaModel(mmodel);
+    } catch (e) {
+      loge('chatApi', `Failed to load model, rust error: ${e}`);
     }
-    const mmodel = await invoke<string>('plugin:nebula|init_model', {
-      modelPath: model,
-      modelOptions: {},
-    });
-    return new NebulaModel(mmodel);
+
+    return new NebulaModel(model);
   }
 
   public async drop() {
@@ -38,3 +46,4 @@ export class NebulaModel {
     return ctx;
   }
 }
+

@@ -27,6 +27,7 @@
     "react-markdown": "^9.0.1",
     "react-tiny-popover": "^8.0.4",
     "remark-gfm": "^4.0.0",
+    "tauri-plugin-log": "https://github.com/tauri-apps/tauri-plugin-log",
     "tauri-plugin-sql": "https://github.com/tauri-apps/tauri-plugin-sql#v1",
     "tauri-plugin-upload-api": "https://github.com/tauri-apps/tauri-plugin-upload#v1"
   },

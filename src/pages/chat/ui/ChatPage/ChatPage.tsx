@@ -10,6 +10,7 @@ import s from './ChatPage.module.scss';
 
 export const ChatPage = () => {
   const { ready, checkModelExists } = useModelReady(DEFAULT_MODEL_NAME);
+  console.log('ready', ready);
 
   if (ready === false) {
     return <div>Failed to load model! Contact support</div>;

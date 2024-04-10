@@ -12,7 +12,7 @@ export async function loadModel(modelName: AIModelName) {
     const modelPath = await getModelPath(modelName);
     model = await NebulaModel.initModel(modelPath);
   } catch (e: any) {
-    if (e.contains('Model already loaded')) {
+    if (typeof e === 'string' && e.includes('Model already loaded')) {
       logi('chatApi', `Model already loaded, skipping`);
       return;
     }

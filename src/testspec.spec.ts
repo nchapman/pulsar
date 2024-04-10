@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-describe('sample test', () => {
+describe('sample simple test', () => {
   it('should return true', () => {
     expect(true).toBe(true);
   });

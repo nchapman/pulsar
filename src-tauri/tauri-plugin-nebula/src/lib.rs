@@ -1,5 +1,6 @@
 mod error;
 use error::Error;
+use log::info;
 use std::{
     collections::HashMap,
     sync::{atomic::AtomicBool, Arc},
@@ -126,19 +127,29 @@ async fn model_init_context<R: Runtime>(
     _app: AppHandle<R>,
     state: State<'_, NebulaState>,
 ) -> Result<String> {
-    if let Some(mm) = state.models.lock().await.get_mut(&model) {
-        let context_name = uuid::Uuid::new_v4().to_string();
-        mm.contexts.insert(
-            context_name.clone(),
-            (
-                Arc::new(Mutex::new(mm.model.lock().await.context(context_options)?)),
-                Arc::new(AtomicBool::new(false)),
-            ),
-        );
-        Ok(context_name)
-    } else {
-        Err(Error::ModelNotLoaded(model))
+    info!("model_init_context: {}", model);
+
+    let mut models = state.models.lock().await;
+
+    if !models.contains_key(&model) {
+        return Err(Error::ModelNotLoaded(model));
     }
+
+    let model = models.get_mut(&model).expect("model has no state");
+
+    let context_id = uuid::Uuid::new_v4().to_string();
+
+    model.contexts.insert(
+        context_id.clone(),
+        (
+            Arc::new(Mutex::new(
+                model.model.lock().await.context(context_options)?,
+            )),
+            Arc::new(AtomicBool::new(false)),
+        ),
+    );
+
+    Ok(context_id)
 }
 
 /// drop context.
@@ -182,7 +193,6 @@ async fn model_context_eval_string<R: Runtime>(
     _app: AppHandle<R>,
     state: State<'_, NebulaState>,
 ) -> Result<()> {
-    eprintln!("{}", data);
     if let Some(mm) = state.models.lock().await.get_mut(&model) {
         if let Some((cc, ss)) = mm.contexts.get_mut(&context) {
             ss.store(true, std::sync::atomic::Ordering::Relaxed);

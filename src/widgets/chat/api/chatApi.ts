@@ -1,7 +1,7 @@
 import { AIModelName } from '@/constants.ts';
 import { ChatMsg } from '@/db/chat';
 import { getModelPath } from '@/entities/model/lib/getModelPath.ts';
-import { loge, logi } from '@/shared/lib/Logger.ts';
+import { loge } from '@/shared/lib/Logger.ts';
 
 import { NebulaModel } from './model.ts';
 
@@ -19,7 +19,6 @@ export async function loadModel(modelName: AIModelName) {
 
 export async function dropModel() {
   try {
-    console.log('dropping model!');
     model?.drop();
     model = null;
   } catch (e: any) {

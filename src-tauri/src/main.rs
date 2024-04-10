@@ -19,6 +19,7 @@ fn setup(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
 fn main() {
     tauri::Builder::default()
         .setup(setup)
+        .plugin(tauri_plugin_log::Builder::default().build())
         .plugin(tauri_plugin_sql::Builder::default().build())
         .plugin(tauri_plugin_nebula::init())
         .plugin(tauri_plugin_upload::init())

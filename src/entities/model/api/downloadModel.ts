@@ -9,7 +9,7 @@ import { getModelPath } from '../lib/getModelPath.ts';
 export async function downloadModel(model: AIModelName, handler: Parameters<typeof download>[2]) {
   const { url } = models[model];
 
-  await createDir(MODELS_DIR_NAME, { dir: BaseDirectory.AppLocalData, recursive: true });
+  await createDir(MODELS_DIR_NAME, { dir: BaseDirectory.AppData, recursive: true });
 
   const pathToSave = await getModelPath(model);
 

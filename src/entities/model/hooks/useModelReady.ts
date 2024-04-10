@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'preact/hooks';
+import { useCallback, useEffect, useState } from 'preact/hooks';
 
 import { AIModelName } from '@/constants';
 import { loadModel } from '@/widgets/chat/api/chatApi';
@@ -8,34 +8,25 @@ import { modelExists } from '../lib/modelExists';
 export function useModelReady(modelName: AIModelName) {
   const [ready, setReady] = useState<boolean | null>(null);
 
-  async function checkModelExists() {
+  const checkModelExists = useCallback(async () => {
     const exists = await modelExists(modelName);
 
-    setReady(exists);
+    console.log('model exists', exists);
 
     if (exists) {
       try {
-        loadModel(modelName);
+        await loadModel(modelName);
+        setReady(true);
       } catch (e) {
+        console.error('Failed to load model', e);
         setReady(false);
       }
     }
-  }
+  }, [modelName]);
 
   useEffect(() => {
     checkModelExists();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [modelName]);
-
-  // useEffect(() => {
-  //   if (!ready || !llama) return undefined;
-
-  //   llama.spawn();
-
-  //   return () => {
-  //     llama.kill();
-  //   };
-  // }, [ready, llama]);
+  }, [checkModelExists]);
 
   return { ready, checkModelExists };
 }

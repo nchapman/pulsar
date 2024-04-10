@@ -23,6 +23,11 @@ struct NebulaState {
     models: Arc<Mutex<HashMap<String, NebulaModelState>>>,
 }
 
+/// initialize model.
+///
+/// * - `model_path` - path of model file
+/// * - `model_options` - Options for model creations
+///
 #[tauri::command]
 async fn init_model<R: Runtime>(
     model_path: String,
@@ -52,6 +57,12 @@ async fn init_model<R: Runtime>(
     Ok(model_path.clone())
 }
 
+/// initialize model with multi modal projector.
+///
+/// * - `model_path` - path of model file
+/// * - `mmproj_path` - path to projector file
+/// * - `model_options` - Options for model creations
+///
 #[tauri::command]
 async fn init_model_with_mmproj<R: Runtime>(
     model_path: String,
@@ -81,6 +92,11 @@ async fn init_model_with_mmproj<R: Runtime>(
     Ok(model_path.clone() + &mmproj_path)
 }
 
+/// drop model.
+///
+/// * - `model` - model creted by `init_model` or
+/// `init_model_with_mmproj`
+///
 #[tauri::command]
 async fn drop_model<R: Runtime>(
     model: String,
@@ -94,6 +110,12 @@ async fn drop_model<R: Runtime>(
     }
 }
 
+/// initialize context for an initialized model.
+///
+/// * - `model` - model creted by `init_model` or
+/// `init_model_with_mmproj`
+/// * - `context_option` - Options for context creation
+///
 #[tauri::command]
 async fn model_init_context<R: Runtime>(
     model: String,
@@ -113,6 +135,12 @@ async fn model_init_context<R: Runtime>(
     }
 }
 
+/// drop context.
+///
+/// * - `model` - model creted by `init_model` or
+/// `init_model_with_mmproj`
+/// * - `context` - context created with `model_init_context`
+///
 #[tauri::command]
 async fn model_drop_context<R: Runtime>(
     model: String,
@@ -131,6 +159,14 @@ async fn model_drop_context<R: Runtime>(
     }
 }
 
+/// evaluate string to context.
+///
+/// * - `model` - model creted by `init_model` or
+/// `init_model_with_mmproj`
+/// * - `context` - context created with `model_init_context`
+/// * - `data` - string for evaluating
+/// * - `use_bos` - Use BOS token for `data` evaluation
+///
 #[tauri::command]
 async fn model_context_eval_string<R: Runtime>(
     model: String,
@@ -154,6 +190,13 @@ async fn model_context_eval_string<R: Runtime>(
     }
 }
 
+/// evaluate image to context.
+///
+/// * - `model` - model creted by `init_model_with_mmproj`
+/// * - `context` - context created with `model_init_context`
+/// * - `base64_encoded_image` - base64 encoded image content
+/// * - `prompt` - Prompt evaluate for image
+///
 #[tauri::command]
 async fn model_context_eval_image<R: Runtime>(
     model: String,

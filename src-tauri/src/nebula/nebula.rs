@@ -154,7 +154,6 @@ async fn model_drop_context<R: Runtime>(
     state: State<'_, NebulaState>,
 ) -> NebulaResult<()> {
     let mut models = state.models.lock().await;
-
     let model = models
         .get_mut(&model_path)
         .ok_or(NebulaError::ModelNotLoaded(model_path.clone()))?;
@@ -297,6 +296,20 @@ async fn model_context_predict<R: Runtime>(
     Ok(())
 }
 
+/// drop all loaded models
+///
+#[tauri::command]
+async fn drop<R: Runtime>(
+    _app: AppHandle<R>,
+    state: State<'_, NebulaState>,
+) -> NebulaResult<()> {
+    let mut models = state.models.lock().await;
+
+    models.clear();
+    Ok(())
+}
+
+
 pub fn init<R: Runtime>() -> TauriPlugin<R> {
     Builder::new("nebula")
         .invoke_handler(tauri::generate_handler![
@@ -307,11 +320,70 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
             model_drop_context,
             model_context_eval_string,
             model_context_eval_image,
-            model_context_predict
+            model_context_predict,
+            drop
         ])
         .setup(|app_handle| {
             app_handle.manage(NebulaState::default());
             Ok(())
         })
         .build()
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn create_app<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::App<R> {
+        builder
+            .plugin(
+                tauri_plugin_log::Builder::default()
+                    .targets([LogTarget::Stdout])
+                    .build(),
+            )
+            .plugin(tauri_plugin_sql::Builder::default().build())
+            .plugin(super::init())
+            .plugin(tauri_plugin_upload::init())
+            .plugin(tauri_plugin_window_state::Builder::default().build())
+            .setup(crate::setup)
+            .build(tauri::generate_context!())
+            .expect("error while running tauri application")
+    }
+
+    use tauri_plugin_log::LogTarget;
+    #[test]
+    fn should_drop_model() {
+        let app = create_app(tauri::test::mock_builder());
+        let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
+        let model_path = app_data_dir.join("models/llava-v1.6-mistral-7b.Q4_K_M.gguf").to_string_lossy().to_string();
+        let window = app.get_window("main").unwrap();
+        let model_init_res = tauri::test::get_ipc_response::<String>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|init_model".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({
+                    "modelPath": model_path,
+                    "modelOptions": {}
+                }),
+            });
+        assert!(model_init_res.is_ok());
+        let model = model_init_res.unwrap();
+        eprintln!("{}", model);
+        let model_drop_res = tauri::test::get_ipc_response::<()>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|drop_model".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({
+                    "modelPath": model,
+                }),
+            });
+        assert!(model_drop_res.is_ok());
+    }
 }

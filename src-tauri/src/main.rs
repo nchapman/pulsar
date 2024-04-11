@@ -6,7 +6,10 @@ mod nebula;
 use log::info;
 use tauri_plugin_log::LogTarget;
 
-fn setup(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
+fn setup<R>(app: &mut tauri::App<R>) -> Result<(), Box<dyn std::error::Error>>
+where
+    R: tauri::Runtime,
+{
     let app_data_dir = app.handle().path_resolver().app_data_dir();
     info!(
         "App data dir: \x1b[34m{}\x1b[0m",

@@ -2501,7 +2501,7 @@ checksum = "01cda141df6706de531b6c46c3a33ecca755538219bd484262fa09410c13539c"
 [[package]]
 name = "llama-cpp"
 version = "0.0.1"
-source = "git+https://github.com/nchapman/nebula.git#ef6f9d58b205bc99869203be72cbc92ac8519da3"
+source = "git+https://github.com/nchapman/nebula.git#b0a5ce1edaf49ef1bd70a51e5be58ead0ce89351"
 dependencies = [
  "llama-cpp-sys",
  "thiserror",
@@ -2511,7 +2511,7 @@ dependencies = [
 [[package]]
 name = "llama-cpp-sys"
 version = "0.0.1"
-source = "git+https://github.com/nchapman/nebula.git#ef6f9d58b205bc99869203be72cbc92ac8519da3"
+source = "git+https://github.com/nchapman/nebula.git#b0a5ce1edaf49ef1bd70a51e5be58ead0ce89351"
 dependencies = [
  "bindgen",
  "cc",
@@ -2731,7 +2731,7 @@ dependencies = [
 [[package]]
 name = "nebula"
 version = "0.1.0"
-source = "git+https://github.com/nchapman/nebula.git#ef6f9d58b205bc99869203be72cbc92ac8519da3"
+source = "git+https://github.com/nchapman/nebula.git#b0a5ce1edaf49ef1bd70a51e5be58ead0ce89351"
 dependencies = [
  "clap",
  "hf-hub",

@@ -1,7 +1,7 @@
 import { AIModelName } from '@/constants.ts';
 import { ChatMsg } from '@/db/chat';
 import { getModelPath } from '@/entities/model/lib/getModelPath.ts';
-import { loge } from '@/shared/lib/Logger.ts';
+import { loge, logi } from '@/shared/lib/Logger.ts';
 
 import { NebulaModel } from './model.ts';
 
@@ -9,8 +9,11 @@ let model: NebulaModel | null = null;
 
 export async function loadModel(modelName: AIModelName) {
   try {
+    logi('chatApi', `Loading model: ${modelName}`);
     const modelPath = await getModelPath(modelName);
+    logi('chatApi', `ROPO LOADING MODEL: ${modelPath}`);
     model = await NebulaModel.initModel(modelPath);
+    logi('chatApi', `Model loaded: ${modelPath}`);
   } catch (e: any) {
     loge('chatApi', `Failed to load model, rust error: ${e}`);
     throw e;

@@ -1,5 +1,5 @@
-mod error;
-use error::Error;
+use crate::nebula::error::NebulaError;
+use crate::nebula::error::NebulaResult;
 use std::{
     collections::HashMap,
     sync::{atomic::AtomicBool, Arc},
@@ -11,8 +11,6 @@ use tauri::{
     plugin::{Builder, TauriPlugin},
     AppHandle, Manager, Runtime, State,
 };
-
-use crate::error::Result;
 
 use base64::prelude::*;
 
@@ -37,7 +35,8 @@ async fn init_model<R: Runtime>(
     model_options: ModelOptions,
     _app: AppHandle<R>,
     state: State<'_, NebulaState>,
-) -> Result<String> {
+) -> NebulaResult<String> {
+    println!("init_model: {}", model_path);
     let mut models = state.models.lock().await;
 
     if models.contains_key(&model_path) {
@@ -55,6 +54,8 @@ async fn init_model<R: Runtime>(
         },
     );
 
+    println!("Finished loading model!");
+
     Ok(model_path.clone())
 }
 
@@ -71,24 +72,21 @@ async fn init_model_with_mmproj<R: Runtime>(
     model_options: ModelOptions,
     _app: AppHandle<R>,
     state: State<'_, NebulaState>,
-) -> Result<String> {
+) -> NebulaResult<String> {
     let mut models = state.models.lock().await;
 
     if models.contains_key(&model_path) {
-        return Err(Error::ModelAlreadyLoaded(model_path));
+        return Ok(model_path.clone());
     }
 
-    models.insert(
-        model_path.clone(),
-        NebulaModelState {
-            model: Arc::new(Mutex::new(nebula::Model::new_with_mmproj(
-                model_path.clone(),
-                mmproj_path.clone(),
-                model_options,
-            )?)),
-            contexts: HashMap::new(),
-        },
-    );
+    let model =
+        nebula::Model::new_with_mmproj(model_path.clone(), mmproj_path.clone(), model_options)?;
+    let model_state = NebulaModelState {
+        model: Arc::new(Mutex::new(model)),
+        contexts: HashMap::new(),
+    };
+
+    models.insert(model_path.clone(), model_state);
 
     Ok(model_path.clone() + &mmproj_path)
 }
@@ -102,12 +100,12 @@ async fn drop_model<R: Runtime>(
     model_path: String,
     _app: AppHandle<R>,
     state: State<'_, NebulaState>,
-) -> Result<()> {
+) -> NebulaResult<()> {
     let mut models = state.models.lock().await;
 
-    if models.contains_key(&model_path) {
-        models.remove(&model_path);
-    }
+    models
+        .remove(&model_path)
+        .ok_or(NebulaError::ModelNotLoaded(model_path.clone()))?;
 
     Ok(())
 }
@@ -123,26 +121,28 @@ async fn model_init_context<R: Runtime>(
     context_options: ContextOptions,
     _app: AppHandle<R>,
     state: State<'_, NebulaState>,
-) -> Result<String> {
+) -> NebulaResult<String> {
+    println!("ROPO model_init_context: {}", model_path);
     let mut models = state.models.lock().await;
 
-    if !models.contains_key(&model_path) {
-        return Err(Error::ModelNotLoaded(model_path));
-    }
-
-    let model = models.get_mut(&model_path).expect("model has no state");
+    let model = models
+        .get_mut(&model_path)
+        .ok_or(NebulaError::ModelNotLoaded(model_path.clone()))?;
 
     let context_id = uuid::Uuid::new_v4().to_string();
 
-    model.contexts.insert(
-        context_id.clone(),
-        (
-            Arc::new(Mutex::new(
-                model.model.lock().await.context(context_options)?,
-            )),
-            Arc::new(AtomicBool::new(false)),
-        ),
-    );
+    model
+        .contexts
+        .insert(
+            context_id.clone(),
+            (
+                Arc::new(Mutex::new(
+                    model.model.lock().await.context(context_options)?,
+                )),
+                Arc::new(AtomicBool::new(false)),
+            ),
+        )
+        .ok_or(NebulaError::FailedToInsertContext)?;
 
     Ok(context_id)
 }
@@ -155,25 +155,25 @@ async fn model_init_context<R: Runtime>(
 ///
 #[tauri::command]
 async fn model_drop_context<R: Runtime>(
-    model: String,
+    model_path: String,
     context: String,
     _app: AppHandle<R>,
     state: State<'_, NebulaState>,
-) -> Result<()> {
-    if let Some(mm) = state.models.lock().await.get_mut(&model) {
-        if let None = mm.contexts.remove(&context) {
-            Err(Error::ModelContextNotExist(context))
-        } else {
-            Ok(())
-        }
-    } else {
-        Err(Error::ModelNotLoaded(model))
-    }
+) -> NebulaResult<()> {
+    let mut models = state.models.lock().await;
+
+    let model = models
+        .get_mut(&model_path)
+        .ok_or(NebulaError::ModelNotLoaded(model_path.clone()))?;
+
+    model.contexts.remove(&context);
+
+    Ok(())
 }
 
 /// evaluate string to context.
 ///
-/// * - `model` - model creted by `init_model` or
+/// * - `model_path` - model created by `init_model` or
 /// `init_model_with_mmproj`
 /// * - `context` - context created with `model_init_context`
 /// * - `data` - string for evaluating
@@ -181,24 +181,29 @@ async fn model_drop_context<R: Runtime>(
 ///
 #[tauri::command]
 async fn model_context_eval_string<R: Runtime>(
-    model: String,
-    context: String,
+    model_path: String,
+    context_id: String,
     data: String,
     use_bos: bool,
     _app: AppHandle<R>,
     state: State<'_, NebulaState>,
-) -> Result<()> {
-    if let Some(mm) = state.models.lock().await.get_mut(&model) {
-        if let Some((cc, ss)) = mm.contexts.get_mut(&context) {
-            ss.store(true, std::sync::atomic::Ordering::Relaxed);
-            cc.lock().await.eval_str(&data, use_bos)?;
-            Ok(())
-        } else {
-            Err(Error::ModelContextNotExist(context))
-        }
-    } else {
-        Err(Error::ModelNotLoaded(model))
-    }
+) -> NebulaResult<()> {
+    println!("ROPO model_context_eval_string: {}", model_path);
+
+    let mut models = state.models.lock().await;
+
+    let model = models
+        .get_mut(&model_path)
+        .ok_or(NebulaError::ModelNotLoaded(model_path.clone()))?;
+
+    let (cc, ss) = model
+        .contexts
+        .get_mut(&context_id)
+        .ok_or(NebulaError::ModelContextNotExist(context_id.clone()))?;
+
+    ss.store(true, std::sync::atomic::Ordering::Relaxed);
+    cc.lock().await.eval_str(&data, use_bos)?;
+    Ok(())
 }
 
 /// evaluate image to context.
@@ -216,7 +221,7 @@ async fn model_context_eval_image<R: Runtime>(
     prompt: String,
     _app: AppHandle<R>,
     state: State<'_, NebulaState>,
-) -> Result<()> {
+) -> NebulaResult<()> {
     if let Some(mm) = state.models.lock().await.get_mut(&model) {
         if let Some((cc, ss)) = mm.contexts.get_mut(&context) {
             ss.store(true, std::sync::atomic::Ordering::Relaxed);
@@ -225,10 +230,10 @@ async fn model_context_eval_image<R: Runtime>(
                 .eval_image(BASE64_STANDARD.decode(base64_encoded_image)?, &prompt)?;
             Ok(())
         } else {
-            Err(Error::ModelContextNotExist(context))
+            Err(NebulaError::ModelContextNotExist(context))
         }
     } else {
-        Err(Error::ModelNotLoaded(model))
+        Err(NebulaError::ModelNotLoaded(model))
     }
 }
 
@@ -253,16 +258,16 @@ async fn model_context_predict<R: Runtime>(
     app: AppHandle<R>,
     //    window: Window<R>,
     state: State<'_, NebulaState>,
-) -> Result<()> {
+) -> NebulaResult<()> {
     let lock = state.models.lock().await;
     let mm = lock
         .get(&model)
-        .ok_or(Error::ModelNotLoaded(model.clone()))?;
+        .ok_or(NebulaError::ModelNotLoaded(model.clone()))?;
 
     let (cc, ss) = mm
         .contexts
         .get(&context)
-        .ok_or(Error::ModelContextNotExist(context.clone()))?;
+        .ok_or(NebulaError::ModelContextNotExist(context.clone()))?;
 
     let aapp = app.clone();
     let mmodel = model.clone();
@@ -314,6 +319,7 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
             model_context_predict
         ])
         .setup(|app_handle| {
+            println!("🟦 Nebula Plugin Initialized");
             app_handle.manage(NebulaState::default());
             Ok(())
         })

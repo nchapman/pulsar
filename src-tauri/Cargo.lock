@@ -3498,16 +3498,19 @@ dependencies = [
 name = "pulsar"
 version = "0.0.0"
 dependencies = [
+ "base64 0.22.0",
  "log",
+ "nebula",
  "serde",
  "serde_json",
  "tauri",
  "tauri-build",
  "tauri-plugin-log",
- "tauri-plugin-nebula",
  "tauri-plugin-sql",
  "tauri-plugin-upload",
  "tauri-plugin-window-state",
+ "thiserror",
+ "uuid",
 ]
 
 [[package]]
@@ -4928,20 +4931,6 @@ dependencies = [
  "serde_repr",
  "tauri",
  "time",
-]
-
-[[package]]
-name = "tauri-plugin-nebula"
-version = "0.0.0"
-dependencies = [
- "base64 0.22.0",
- "log",
- "nebula",
- "serde",
- "tauri",
- "tauri-build",
- "thiserror",
- "uuid",
 ]
 
 [[package]]

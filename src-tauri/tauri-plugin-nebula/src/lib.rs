@@ -1,6 +1,5 @@
 mod error;
 use error::Error;
-use log::info;
 use std::{
     collections::HashMap,
     sync::{atomic::AtomicBool, Arc},
@@ -127,8 +126,6 @@ async fn model_init_context<R: Runtime>(
     _app: AppHandle<R>,
     state: State<'_, NebulaState>,
 ) -> Result<String> {
-    info!("model_init_context: {}", model);
-
     let mut models = state.models.lock().await;
 
     if !models.contains_key(&model) {

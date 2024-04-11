@@ -28,7 +28,7 @@ struct NebulaState {
 
 /// initialize model.
 ///
-/// * - `model_path` - path of model file
+/// * - `model_path` - full disk path of model file
 /// * - `model_options` - Options for model creations
 ///
 #[tauri::command]
@@ -93,10 +93,9 @@ async fn init_model_with_mmproj<R: Runtime>(
     Ok(model_path.clone() + &mmproj_path)
 }
 
-/// drop model.
+/// drop model from memory
 ///
-/// * - `model` - model creted by `init_model` or
-/// `init_model_with_mmproj`
+/// * - `model_path` - model path passed to `init_model` or `init_model_with_mmproj`
 ///
 #[tauri::command]
 async fn drop_model<R: Runtime>(
@@ -115,24 +114,23 @@ async fn drop_model<R: Runtime>(
 
 /// initialize context for an initialized model.
 ///
-/// * - `model` - model creted by `init_model` or
-/// `init_model_with_mmproj`
-/// * - `context_option` - Options for context creation
+/// * - `model_path` - model_path used in `init_model` or `init_model_with_mmproj`
+/// * - `context_option` - Set of options for context creation, should contain a message map
 ///
 #[tauri::command]
 async fn model_init_context<R: Runtime>(
-    model: String,
+    model_path: String,
     context_options: ContextOptions,
     _app: AppHandle<R>,
     state: State<'_, NebulaState>,
 ) -> Result<String> {
     let mut models = state.models.lock().await;
 
-    if !models.contains_key(&model) {
-        return Err(Error::ModelNotLoaded(model));
+    if !models.contains_key(&model_path) {
+        return Err(Error::ModelNotLoaded(model_path));
     }
 
-    let model = models.get_mut(&model).expect("model has no state");
+    let model = models.get_mut(&model_path).expect("model has no state");
 
     let context_id = uuid::Uuid::new_v4().to_string();
 

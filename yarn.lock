@@ -1151,13 +1151,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tauri-apps/api@npm:2.0.0-beta.4":
-  version: 2.0.0-beta.4
-  resolution: "@tauri-apps/api@npm:2.0.0-beta.4"
-  checksum: 10c0/56cdd6204dc21edbcb1328ed594f43f47e51361a34f8c73f000ea3549bba6c15535cb81d57d93258af5526a37265722930d1f88a3adb4f876a1bfedc66070fe1
-  languageName: node
-  linkType: hard
-
 "@tauri-apps/cli-darwin-arm64@npm:1.5.11":
   version: 1.5.11
   resolution: "@tauri-apps/cli-darwin-arm64@npm:1.5.11"
@@ -1266,15 +1259,6 @@ __metadata:
   bin:
     tauri: tauri.js
   checksum: 10c0/924f7365d1c86b793c80d6c349b4ba46f01af675497082575a2ace92178ee754b10b21894a3ab56c5934e7a718badaa4b8e6dc47d4d7926a039c4824262a7a3c
-  languageName: node
-  linkType: hard
-
-"@tauri-apps/plugin-log@npm:^2.0.0-beta.2":
-  version: 2.0.0-beta.2
-  resolution: "@tauri-apps/plugin-log@npm:2.0.0-beta.2"
-  dependencies:
-    "@tauri-apps/api": "npm:2.0.0-beta.4"
-  checksum: 10c0/568c02f547ee2144ef8e2ca33cef284c750e2d5a86278adfe16183879bc3212fbe0343550f508288c57b2d77e8e28c32e414af0139a1f1327ffcff08a93f9823
   languageName: node
   linkType: hard
 
@@ -6407,7 +6391,6 @@ __metadata:
     "@preact/preset-vite": "npm:^2.5.0"
     "@tauri-apps/api": "npm:^1.5.2"
     "@tauri-apps/cli": "npm:^1.5.8"
-    "@tauri-apps/plugin-log": "npm:^2.0.0-beta.2"
     "@types/babel__core": "npm:^7"
     "@types/bun": "npm:^1.0.8"
     "@types/semver": "npm:^7"

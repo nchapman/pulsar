@@ -39,10 +39,10 @@ export class NebulaModel {
     });
   }
 
-  public async create_context(
+  public async createContext(
     cctx: { message: string; is_user: boolean }[] = []
   ): Promise<NebulaContext> {
-    const ctx = await NebulaContext.init_context(this, cctx);
+    const ctx = await NebulaContext.initContext(this, cctx);
     return ctx;
   }
 }

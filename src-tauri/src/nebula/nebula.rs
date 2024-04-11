@@ -131,18 +131,15 @@ async fn model_init_context<R: Runtime>(
 
     let context_id = uuid::Uuid::new_v4().to_string();
 
-    model
-        .contexts
-        .insert(
-            context_id.clone(),
-            (
-                Arc::new(Mutex::new(
-                    model.model.lock().await.context(context_options)?,
-                )),
-                Arc::new(AtomicBool::new(false)),
-            ),
-        )
-        .ok_or(NebulaError::FailedToInsertContext)?;
+    model.contexts.insert(
+        context_id.clone(),
+        (
+            Arc::new(Mutex::new(
+                model.model.lock().await.context(context_options)?,
+            )),
+            Arc::new(AtomicBool::new(false)),
+        ),
+    );
 
     Ok(context_id)
 }
@@ -156,7 +153,7 @@ async fn model_init_context<R: Runtime>(
 #[tauri::command]
 async fn model_drop_context<R: Runtime>(
     model_path: String,
-    context: String,
+    context_id: String,
     _app: AppHandle<R>,
     state: State<'_, NebulaState>,
 ) -> NebulaResult<()> {
@@ -166,7 +163,7 @@ async fn model_drop_context<R: Runtime>(
         .get_mut(&model_path)
         .ok_or(NebulaError::ModelNotLoaded(model_path.clone()))?;
 
-    model.contexts.remove(&context);
+    model.contexts.remove(&context_id);
 
     Ok(())
 }
@@ -215,25 +212,25 @@ async fn model_context_eval_string<R: Runtime>(
 ///
 #[tauri::command]
 async fn model_context_eval_image<R: Runtime>(
-    model: String,
-    context: String,
+    model_path: String,
+    context_id: String,
     base64_encoded_image: String,
     prompt: String,
     _app: AppHandle<R>,
     state: State<'_, NebulaState>,
 ) -> NebulaResult<()> {
-    if let Some(mm) = state.models.lock().await.get_mut(&model) {
-        if let Some((cc, ss)) = mm.contexts.get_mut(&context) {
+    if let Some(mm) = state.models.lock().await.get_mut(&model_path) {
+        if let Some((cc, ss)) = mm.contexts.get_mut(&context_id) {
             ss.store(true, std::sync::atomic::Ordering::Relaxed);
             cc.lock()
                 .await
                 .eval_image(BASE64_STANDARD.decode(base64_encoded_image)?, &prompt)?;
             Ok(())
         } else {
-            Err(NebulaError::ModelContextNotExist(context))
+            Err(NebulaError::ModelContextNotExist(context_id))
         }
     } else {
-        Err(NebulaError::ModelNotLoaded(model))
+        Err(NebulaError::ModelNotLoaded(model_path))
     }
 }
 
@@ -252,8 +249,8 @@ struct PredictPayload {
 /// Sends a stream of events to the JS side with the tokens. A final event is sent with the finished flag set to true to signal the end of the stream.
 #[tauri::command]
 async fn model_context_predict<R: Runtime>(
-    model: String,
-    context: String,
+    model_path: String,
+    context_id: String,
     max_len: usize,
     app: AppHandle<R>,
     //    window: Window<R>,
@@ -261,17 +258,17 @@ async fn model_context_predict<R: Runtime>(
 ) -> NebulaResult<()> {
     let lock = state.models.lock().await;
     let mm = lock
-        .get(&model)
-        .ok_or(NebulaError::ModelNotLoaded(model.clone()))?;
+        .get(&model_path)
+        .ok_or(NebulaError::ModelNotLoaded(model_path.clone()))?;
 
     let (cc, ss) = mm
         .contexts
-        .get(&context)
-        .ok_or(NebulaError::ModelContextNotExist(context.clone()))?;
+        .get(&context_id)
+        .ok_or(NebulaError::ModelContextNotExist(context_id.clone()))?;
 
     let aapp = app.clone();
-    let mmodel = model.clone();
-    let ccontext = context.clone();
+    let mmodel = model_path.clone();
+    let ccontext = context_id.clone();
     ss.store(false, std::sync::atomic::Ordering::Relaxed);
     let ccc = ss.clone();
     cc.lock().await.predict_with_callback(
@@ -279,8 +276,8 @@ async fn model_context_predict<R: Runtime>(
             app.emit_all(
                 "nebula-predict",
                 PredictPayload {
-                    model: model.clone(),
-                    context: context.clone(),
+                    model: model_path.clone(),
+                    context: context_id.clone(),
                     token: Some(token),
                     finished: false,
                 },

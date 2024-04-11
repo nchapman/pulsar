@@ -40,6 +40,7 @@ export async function stream(
   },
   maxPredictLen: number = 100
 ) {
+  logi('ChatAPI', 'Trying to stream!');
   if (!model) {
     loge('chatApi', 'Model not loaded, cannot stream');
     return;
@@ -47,32 +48,30 @@ export async function stream(
 
   const { messages, onStreamStart, onTextChunkReceived, onTitleUpdate, onStreamEnd } = config;
 
-  const context = await model.create_context(
-    messages.slice(0, -1).map((msg) => ({ message: msg.text, is_user: !!msg.isUser }))
-  );
+  try {
+    const context = await model.createContext(
+      messages.slice(0, -1).map((msg) => ({ message: msg.text, is_user: !!msg.isUser }))
+    );
 
-  if (!context) {
-    loge('chatApi', 'Model not loaded, cannot create context');
-    return;
-  }
+    context.onToken = (p) => {
+      if (p.token != null) {
+        onTextChunkReceived(p.token);
+      }
+    };
+    context.onComplete = (_p) => {
+      onStreamEnd();
+    };
 
-  context.onToken = (p) => {
-    if (p.token != null) {
-      onTextChunkReceived(p.token);
-    }
-  };
-  context.onComplete = (_p) => {
+    await context.eval_string(messages[messages.length - 1].text, true);
+
+    onStreamStart();
+
+    await context.predict(maxPredictLen);
+  } catch (e) {
+    loge('chatApi', `Failed to stream: ${e}`);
+  } finally {
     onStreamEnd();
-  };
-
-  // eslint-disable-next-line no-restricted-syntax
-  await context.eval_string(messages[messages.length - 1].text, true);
-
-  onStreamStart();
-
-  await context.predict(maxPredictLen);
-
-  onStreamEnd();
-  onTitleUpdate(messages[messages.length - 2].text);
+    onTitleUpdate(messages[messages.length - 2].text);
+  }
 }
 

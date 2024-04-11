@@ -13,7 +13,7 @@ type NebulaPredictPayload = {
 export class NebulaContext {
   private model: NebulaModel;
 
-  private ctx: string;
+  private contextId: string;
 
   public onToken?: (p: { token: string; finished: boolean }) => void;
 
@@ -21,15 +21,15 @@ export class NebulaContext {
 
   constructor(model: NebulaModel, ctx: string) {
     this.model = model;
-    this.ctx = ctx;
+    this.contextId = ctx;
   }
 
-  public static async init_context(
+  public static async initContext(
     model: NebulaModel,
     cctx: { message: string; is_user: boolean }[] = []
   ): Promise<NebulaContext> {
     const ctx = await invoke<string>('plugin:nebula|model_init_context', {
-      model: model.model,
+      modelPath: model.model,
       contextOptions: { ctx: cctx },
     });
 
@@ -38,15 +38,15 @@ export class NebulaContext {
 
   public async drop() {
     await invoke('plugin:nebula|model_drop_context', {
-      model: this.model.model,
-      context: this.ctx,
+      modelPath: this.model.model,
+      contextId: this.contextId,
     });
   }
 
   public async eval_string(data: string, useBos: boolean = false) {
     await invoke('plugin:nebula|model_context_eval_string', {
-      model: this.model.model,
-      context: this.ctx,
+      modelPath: this.model.model,
+      contextId: this.contextId,
       data,
       useBos,
     });
@@ -54,7 +54,7 @@ export class NebulaContext {
 
   public async predict(maxLength: number) {
     const unlisten = await listen<NebulaPredictPayload>('nebula-predict', (event) => {
-      if (event.payload.model === this.model.model && event.payload.context === this.ctx) {
+      if (event.payload.model === this.model.model && event.payload.context === this.contextId) {
         if (!event.payload.finished) {
           this.onToken?.({ token: event.payload.token, finished: event.payload.finished });
         } else {
@@ -64,8 +64,8 @@ export class NebulaContext {
     });
 
     await invoke('plugin:nebula|model_context_predict', {
-      model: this.model.model,
-      context: this.ctx,
+      modelPath: this.model.model,
+      contextId: this.contextId,
       maxLen: maxLength,
     });
 

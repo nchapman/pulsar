@@ -8,8 +8,6 @@ pub enum NebulaError {
     ModelContextNotExist(String),
     #[error("[NebulaError]: {0}")]
     NebulaError(#[from] nebula::error::Error),
-    #[error("[NebulaError]: Failed to init a new context")]
-    FailedToInsertContext,
     #[error("[NebulaError]: Decode base 64 error {0}")]
     Base64(#[from] base64::DecodeError),
 }

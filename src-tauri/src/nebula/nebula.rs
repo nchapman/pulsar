@@ -1,18 +1,16 @@
 use crate::nebula::error::NebulaError;
 use crate::nebula::error::NebulaResult;
+use base64::prelude::*;
+use nebula::options::{ContextOptions, ModelOptions};
 use std::{
     collections::HashMap,
     sync::{atomic::AtomicBool, Arc},
 };
-
-use nebula::options::{ContextOptions, ModelOptions};
 use tauri::{
     async_runtime::Mutex,
     plugin::{Builder, TauriPlugin},
     AppHandle, Manager, Runtime, State,
 };
-
-use base64::prelude::*;
 
 struct NebulaModelState {
     model: Arc<Mutex<nebula::Model>>,
@@ -24,7 +22,8 @@ struct NebulaState {
     models: Arc<Mutex<HashMap<String, NebulaModelState>>>,
 }
 
-/// initialize model.
+/// initialize a model, loading it from disk and creating a new state
+/// if the model is already loaded, it will return the existing path and nothing will be created
 ///
 /// * - `model_path` - full disk path of model file
 /// * - `model_options` - Options for model creations
@@ -213,19 +212,23 @@ async fn model_context_eval_image<R: Runtime>(
     _app: AppHandle<R>,
     state: State<'_, NebulaState>,
 ) -> NebulaResult<()> {
-    if let Some(mm) = state.models.lock().await.get_mut(&model_path) {
-        if let Some((cc, ss)) = mm.contexts.get_mut(&context_id) {
-            ss.store(true, std::sync::atomic::Ordering::Relaxed);
-            cc.lock()
-                .await
-                .eval_image(BASE64_STANDARD.decode(base64_encoded_image)?, &prompt)?;
-            Ok(())
-        } else {
-            Err(NebulaError::ModelContextNotExist(context_id))
-        }
-    } else {
-        Err(NebulaError::ModelNotLoaded(model_path))
-    }
+    let mut models = state.models.lock().await;
+
+    let model = models
+        .get_mut(&model_path)
+        .ok_or(NebulaError::ModelNotLoaded(model_path.clone()))?;
+
+    let (cc, ss) = model
+        .contexts
+        .get_mut(&context_id)
+        .ok_or(NebulaError::ModelContextNotExist(context_id.clone()))?;
+
+    ss.store(true, std::sync::atomic::Ordering::Relaxed);
+    cc.lock()
+        .await
+        .eval_image(BASE64_STANDARD.decode(base64_encoded_image)?, &prompt)?;
+
+    Ok(())
 }
 
 /// The event payload for the `nebula-predict` event that gets sent to the JS frontend.
@@ -260,34 +263,37 @@ async fn model_context_predict<R: Runtime>(
         .get(&context_id)
         .ok_or(NebulaError::ModelContextNotExist(context_id.clone()))?;
 
-    let aapp = app.clone();
-    let mmodel = model_path.clone();
-    let ccontext = context_id.clone();
-    ss.store(false, std::sync::atomic::Ordering::Relaxed);
+    let app_clone = app.clone();
+    let model_path_clone = model_path.clone();
+    let context_id_clone = context_id.clone();
     let ccc = ss.clone();
+
+    ss.store(false, std::sync::atomic::Ordering::Relaxed);
+
     cc.lock().await.predict_with_callback(
         Box::new(move |token| {
-            app.emit_all(
-                "nebula-predict",
-                PredictPayload {
-                    model: model_path.clone(),
-                    context: context_id.clone(),
-                    token: Some(token),
-                    finished: false,
-                },
-            )
-            .expect("Could not emit llm predict payload event");
+            app_clone
+                .emit_all(
+                    "nebula-predict",
+                    PredictPayload {
+                        model: model_path_clone.clone(),
+                        context: context_id_clone.clone(),
+                        token: Some(token),
+                        finished: false,
+                    },
+                )
+                .expect("Could not emit llm predict payload event");
 
             !ccc.load(std::sync::atomic::Ordering::Relaxed)
         }),
         max_len,
     )?;
 
-    aapp.emit_all(
+    app.emit_all(
         "nebula-predict",
         PredictPayload {
-            model: mmodel,
-            context: ccontext,
+            model: model_path,
+            context: context_id,
             finished: true,
             token: None,
         },

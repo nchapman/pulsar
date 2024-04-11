@@ -36,7 +36,6 @@ async fn init_model<R: Runtime>(
     _app: AppHandle<R>,
     state: State<'_, NebulaState>,
 ) -> NebulaResult<String> {
-    println!("init_model: {}", model_path);
     let mut models = state.models.lock().await;
 
     if models.contains_key(&model_path) {
@@ -53,8 +52,6 @@ async fn init_model<R: Runtime>(
             contexts: HashMap::new(),
         },
     );
-
-    println!("Finished loading model!");
 
     Ok(model_path.clone())
 }
@@ -122,7 +119,6 @@ async fn model_init_context<R: Runtime>(
     _app: AppHandle<R>,
     state: State<'_, NebulaState>,
 ) -> NebulaResult<String> {
-    println!("ROPO model_init_context: {}", model_path);
     let mut models = state.models.lock().await;
 
     let model = models
@@ -185,8 +181,6 @@ async fn model_context_eval_string<R: Runtime>(
     _app: AppHandle<R>,
     state: State<'_, NebulaState>,
 ) -> NebulaResult<()> {
-    println!("ROPO model_context_eval_string: {}", model_path);
-
     let mut models = state.models.lock().await;
 
     let model = models
@@ -316,7 +310,6 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
             model_context_predict
         ])
         .setup(|app_handle| {
-            println!("🟦 Nebula Plugin Initialized");
             app_handle.manage(NebulaState::default());
             Ok(())
         })

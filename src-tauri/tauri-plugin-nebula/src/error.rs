@@ -2,19 +2,15 @@ use serde::{Serialize, Serializer};
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-    #[error("Model already loaded: {0}")]
+    #[error("[NebulaError]: Model already loaded: {0}")]
     ModelAlreadyLoaded(String),
-    #[error("Model does not exist: {0}")]
+    #[error("[NebulaError]: Model does not exist: {0}")]
     ModelNotLoaded(String),
-    #[error("Context for model does not exist: {0}")]
+    #[error("[NebulaError]: Context for model does not exist: {0}")]
     ModelContextNotExist(String),
-    //    #[error("{0}")]
-    //    ModelNotInitialized(String),
-    //    #[error("{0}")]
-    //    Custom(String),
-    #[error("{0}")]
+    #[error("[NebulaError]: {0}")]
     Nebula(#[from] nebula::error::Error),
-    #[error("{0}")]
+    #[error("[NebulaError]: Decode base 64 error {0}")]
     Base64(#[from] base64::DecodeError),
 }
 

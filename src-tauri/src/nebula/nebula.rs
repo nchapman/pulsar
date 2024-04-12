@@ -349,6 +349,9 @@ mod tests {
 
         let source_path = Path::new("tests/evolvedseeker_1_3.Q2_K.gguf");
         let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
+        let model_dir = app_data_dir.join("models");
+        fs::create_dir_all(model_dir).unwrap();
+
         let target_path = app_data_dir.join("models/evolvedseeker_1_3.Q2_K.gguf");
 
         if !target_path.exists() {

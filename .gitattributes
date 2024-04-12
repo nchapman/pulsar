@@ -1,1 +1,2 @@
 *.lockb binary diff=lockb
+src-tauri/tests/evolvedseeker_1_3.Q2_K.gguf filter=lfs diff=lfs merge=lfs -text

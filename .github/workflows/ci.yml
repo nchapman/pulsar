@@ -62,7 +62,7 @@ jobs:
 
       - name: Test
         working-directory: src-tauri
-        run: cargo test -- --test-threads=1
+        run: RUST_BACKTRACE=1 cargo test -- --test-threads=1 --nocapture
 
   build-tauri:
     permissions:

@@ -41,10 +41,11 @@ jobs:
         with:
           lfs: true
 
-      - name: Download LFS objects
-        run: |
-          git lfs fetch --all
-          git lfs pull
+      - name: Fetch LFS objects
+        run: git lfs fetch --all
+
+      - name: Pull LFS objects
+        run: git lfs pull
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable

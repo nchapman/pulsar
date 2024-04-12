@@ -271,7 +271,6 @@ async fn model_context_predict<R: Runtime>(
 
     cc.lock().await.predict_with_callback(
         Box::new(move |token| {
-            println!("🟦 emitting event!");
             app_clone
                 .emit_all(
                     "nebula-predict",

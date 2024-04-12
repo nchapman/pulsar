@@ -47,10 +47,6 @@ jobs:
       - name: Pull LFS objects
         run: git lfs pull
 
-      - name: Print downloaded files
-        run: ls -l
-        working-directory: src-tauri/tests
-
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
 

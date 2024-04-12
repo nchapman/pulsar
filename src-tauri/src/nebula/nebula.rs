@@ -271,6 +271,7 @@ async fn model_context_predict<R: Runtime>(
 
     cc.lock().await.predict_with_callback(
         Box::new(move |token| {
+            println!("🟦 emitting event!");
             app_clone
                 .emit_all(
                     "nebula-predict",
@@ -305,16 +306,12 @@ async fn model_context_predict<R: Runtime>(
 /// drop all loaded models
 ///
 #[tauri::command]
-async fn drop<R: Runtime>(
-    _app: AppHandle<R>,
-    state: State<'_, NebulaState>,
-) -> NebulaResult<()> {
+async fn drop<R: Runtime>(_app: AppHandle<R>, state: State<'_, NebulaState>) -> NebulaResult<()> {
     let mut models = state.models.lock().await;
 
     models.clear();
     Ok(())
 }
-
 
 pub fn init<R: Runtime>() -> TauriPlugin<R> {
     Builder::new("nebula")
@@ -336,33 +333,39 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
         .build()
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::fs;
+    use std::path::Path;
 
-    fn create_app<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::App<R> {
-        builder
-            .plugin(
-                tauri_plugin_log::Builder::default()
-                    .targets([LogTarget::Stdout])
-                    .build(),
-            )
-            .plugin(tauri_plugin_sql::Builder::default().build())
+    fn setup<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::App<R> {
+        let app = builder
             .plugin(super::init())
-            .plugin(tauri_plugin_upload::init())
-            .plugin(tauri_plugin_window_state::Builder::default().build())
-            .setup(crate::setup)
             .build(tauri::generate_context!())
-            .expect("error while running tauri application")
+            .unwrap();
+
+        let source_path = Path::new("tests/evolvedseeker_1_3.Q2_K.gguf");
+        let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
+        let target_path = app_data_dir.join("models/evolvedseeker_1_3.Q2_K.gguf");
+
+        if !target_path.exists() {
+            if let Err(err) = fs::copy(source_path, target_path) {
+                eprintln!("Failed to copy model file: {}", err);
+            }
+        }
+
+        app
     }
 
-    use tauri_plugin_log::LogTarget;
     #[test]
     fn should_drop_model() {
-        let app = create_app(tauri::test::mock_builder());
+        let app = setup(tauri::test::mock_builder());
         let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
-        let model_path = app_data_dir.join("models/llava-v1.6-mistral-7b.Q4_K_M.gguf").to_string_lossy().to_string();
+        let model_path = app_data_dir
+            .join("models/llava-v1.6-mistral-7b.Q4_K_M.gguf")
+            .to_string_lossy()
+            .to_string();
         let window = app.get_window("main").unwrap();
         let model_init_res = tauri::test::get_ipc_response::<String>(
             &window,
@@ -375,10 +378,13 @@ mod tests {
                     "modelPath": model_path,
                     "modelOptions": {}
                 }),
-            });
+            },
+        );
+
         assert!(model_init_res.is_ok());
+
         let model = model_init_res.unwrap();
-        eprintln!("{}", model);
+
         let model_drop_res = tauri::test::get_ipc_response::<()>(
             &window,
             tauri::InvokePayload {
@@ -389,7 +395,98 @@ mod tests {
                 inner: serde_json::json!({
                     "modelPath": model,
                 }),
-            });
+            },
+        );
+
+        assert!(model_drop_res.is_ok());
+    }
+
+    #[test]
+    fn should_predict_text() {
+        let app = setup(tauri::test::mock_builder());
+        let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
+        let model_path = app_data_dir
+            .join("models/llava-v1.6-mistral-7b.Q4_K_M.gguf")
+            .to_string_lossy()
+            .to_string();
+        let window = app.get_window("main").unwrap();
+        let model_init_res = tauri::test::get_ipc_response::<String>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|init_model".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({
+                    "modelPath": model_path,
+                    "modelOptions": {}
+                }),
+            },
+        );
+
+        assert!(model_init_res.is_ok());
+
+        let model_path = model_init_res.unwrap();
+
+        let context_init_res = tauri::test::get_ipc_response::<String>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|model_init_context".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({
+                    "modelPath": model_path,
+                    "contextOptions": {
+                        "ctx": [{"message": "Hello, world!", "is_user": true}, {"message": "How are you doing?", "is_user": false}]
+                    }
+                }),
+            },
+        );
+
+        assert!(context_init_res.is_ok());
+
+        let context_id = context_init_res.unwrap();
+
+        // setup listener to listen for predict events
+        let id = app.listen_global("nebula-predict", |event| {
+            println!("Received event: {:?}", event.payload().unwrap());
+            // let payload: PredictPayload = event.payload().unwrap();
+            // assert_eq!(payload.model, model_path);
+            // assert_eq!(payload.context, context_id);
+            // assert_eq!(payload.finished, true);
+        });
+
+        let predict_res = tauri::test::get_ipc_response::<()>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|model_context_predict".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({
+                    "modelPath": model_path,
+                    "contextId": context_id,
+                    "maxLen": 10
+                }),
+            },
+        );
+
+        assert!(predict_res.is_ok());
+
+        let model_drop_res = tauri::test::get_ipc_response::<()>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|drop_model".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({
+                    "modelPath": model_path,
+                }),
+            },
+        );
+
         assert!(model_drop_res.is_ok());
     }
 }

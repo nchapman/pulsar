@@ -18,6 +18,7 @@ where
     Ok(())
 }
 
+#[cfg(not(test))]
 fn main() {
     tauri::Builder::default()
         .plugin(

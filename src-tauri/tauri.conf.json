@@ -11,22 +11,12 @@
   },
   "tauri": {
     "allowlist": {
-      "all": false,
-      "shell": {
-        "sidecar": true,
-        "scope": [
-          {
-            "name": "bin/llamafile",
-            "sidecar": true,
-            "args": true
-          }
-        ]
-      },
+      "all": true,
       "fs": {
         "all": true,
-        "scope": [
-          "$APPDATA/**"
-        ]
+        "scope": {
+          "allow": ["$CONFIG", "$CONFIG/*", "$APPDATA/**"]
+        }
       },
       "path": {
         "all": true
@@ -42,9 +32,6 @@
         "icons/128x128@2x.png",
         "icons/icon.icns",
         "icons/icon.ico"
-      ],
-      "externalBin": [
-        "bin/llamafile"
       ],
       "macOS": {
         "signingIdentity": "-"

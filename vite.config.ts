@@ -41,5 +41,6 @@ export default defineConfig(async () => ({
   css: { modules: { localsConvention } },
   build: {
     chunkSizeWarningLimit: 768, // The limit in KB
+    target: 'esnext'
   },
 }));

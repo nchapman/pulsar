@@ -41,6 +41,9 @@ jobs:
         with:
           lfs: true
 
+      - name: Check out LFS objects
+        run: git lfs checkout src-tauri/tests/evolvedseeker_1_3.Q2_K.gguf
+
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
 

@@ -339,7 +339,9 @@ mod tests {
     use std::fs;
     use std::path::Path;
 
-    fn setup<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::App<R> {
+    fn setup<R: tauri::Runtime>(
+        builder: tauri::Builder<R>,
+    ) -> Result<tauri::App<R>, std::io::Error> {
         let app = builder
             .plugin(super::init())
             .build(tauri::generate_context!())
@@ -351,16 +353,16 @@ mod tests {
 
         if !target_path.exists() {
             if let Err(err) = fs::copy(source_path, target_path) {
-                eprintln!("Failed to copy model file: {}", err);
+                return Err(err.into());
             }
         }
 
-        app
+        Ok(app)
     }
 
     #[test]
     fn should_drop_model() {
-        let app = setup(tauri::test::mock_builder());
+        let app = setup(tauri::test::mock_builder()).unwrap();
         let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
         let model_path = app_data_dir
             .join("models/evolvedseeker_1_3.Q2_K.gguf")
@@ -403,7 +405,7 @@ mod tests {
 
     #[test]
     fn should_predict_text() {
-        let app = setup(tauri::test::mock_builder());
+        let app = setup(tauri::test::mock_builder()).unwrap();
         let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
         let model_path = app_data_dir
             .join("models/evolvedseeker_1_3.Q2_K.gguf")

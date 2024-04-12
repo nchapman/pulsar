@@ -363,7 +363,7 @@ mod tests {
         let app = setup(tauri::test::mock_builder());
         let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
         let model_path = app_data_dir
-            .join("models/llava-v1.6-mistral-7b.Q4_K_M.gguf")
+            .join("models/evolvedseeker_1_3.Q2_K.gguf")
             .to_string_lossy()
             .to_string();
         let window = app.get_window("main").unwrap();
@@ -406,7 +406,7 @@ mod tests {
         let app = setup(tauri::test::mock_builder());
         let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
         let model_path = app_data_dir
-            .join("models/llava-v1.6-mistral-7b.Q4_K_M.gguf")
+            .join("models/evolvedseeker_1_3.Q2_K.gguf")
             .to_string_lossy()
             .to_string();
         let window = app.get_window("main").unwrap();

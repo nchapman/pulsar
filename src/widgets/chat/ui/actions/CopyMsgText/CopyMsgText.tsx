@@ -28,7 +28,7 @@ export const CopyMsgText = memo((props: Props) => {
   }, [copied, resetCopy]);
 
   return (
-    <Tooltip text="Copy" position="bottom" show={!copied}>
+    <Tooltip text="Copy" show={!copied}>
       <Button
         iconSize={16}
         className={classNames(s.copyMsgText, [className])}

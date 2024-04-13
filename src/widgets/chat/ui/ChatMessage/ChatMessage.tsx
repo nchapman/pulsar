@@ -1,8 +1,7 @@
 import { useStoreMap, useUnit } from 'effector-react';
 import { useMemo } from 'preact/hooks';
-import Markdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 
+import { Markdown } from '@/entities/markdown';
 import { classNames } from '@/shared/lib/func';
 import { Logo } from '@/shared/ui';
 import { CopyMsgText } from '@/widgets/chat/ui/actions/CopyMsgText/CopyMsgText.tsx';
@@ -48,12 +47,10 @@ export const ChatMessage = (props: Props) => {
           {isUser ? <img src={userImg} alt="author" /> : <Logo className={s.logo} />}
         </div>
 
-        <div>
+        <div className={s.body}>
           <div className={s.authorName}>{isUser ? 'You' : 'Pulsar'}</div>
           <div className={s.text}>
-            <Markdown className={s.markdown} remarkPlugins={[remarkGfm]}>
-              {text}
-            </Markdown>
+            <Markdown text={text} />
           </div>
           <div className={s.actions}>{actions}</div>
         </div>

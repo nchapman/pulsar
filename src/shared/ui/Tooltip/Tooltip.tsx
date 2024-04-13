@@ -12,7 +12,7 @@ interface TooltipProps {
   text?: string;
   content?: ReactNode;
   children: ReactNode;
-  position: 'top' | 'bottom' | 'left' | 'right';
+  position?: 'top' | 'bottom' | 'left' | 'right';
   success?: boolean;
   show?: boolean;
 }
@@ -37,7 +37,7 @@ function getPosition(position: TooltipProps['position'], dimensions: DOMRect) {
 }
 
 export const Tooltip = memo((props: TooltipProps) => {
-  const { className, children, content, position, show, success, text } = props;
+  const { className, children, content, position = 'bottom', show, success, text } = props;
   const ref = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState<{ left: number; top: number } | null>(null);
   const [isHovered, setIsHovered] = useState(false);

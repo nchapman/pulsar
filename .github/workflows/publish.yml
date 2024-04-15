@@ -31,7 +31,7 @@ jobs:
 
       - name: install macos universal arch
         if: matrix.platform == 'macos-14'
-        run: rustup target add aarch64-apple-darwin
+        run: rustup target add x86_64-apple-darwin
 
       - name: set latest version of clang for compilation
         if: matrix.platform == 'macos-14'

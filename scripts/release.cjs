@@ -42,7 +42,7 @@ try {
 
   execSync('git add .');
   execSync('git commit -m "Update version"');
-  execSync('git push');
+  execSync(`git push --set-upstream origin ${newVersion}`);
 
   execSync(`git tag -a v${  newVersion  } -m "Release version ${  newVersion  }"`);
   

@@ -7,7 +7,7 @@
   },
   "package": {
     "productName": "Pulsar",
-    "version": "0.0.14"
+    "version": "0.0.16"
   },
   "tauri": {
     "allowlist": {
@@ -15,7 +15,11 @@
       "fs": {
         "all": true,
         "scope": {
-          "allow": ["$CONFIG", "$CONFIG/*", "$APPDATA/**"]
+          "allow": [
+            "$CONFIG",
+            "$CONFIG/*",
+            "$APPDATA/**"
+          ]
         }
       },
       "path": {

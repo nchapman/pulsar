@@ -36,7 +36,9 @@ try {
   }
 
   console.log(`Updated to ${tauriJson.package.version} 🟢`);
-  
+
+  execSync(`git checkout -b ${newVersion}`)
+
 
   execSync('git add .');
   execSync('git commit -m "Update version"');

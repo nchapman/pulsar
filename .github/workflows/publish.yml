@@ -35,9 +35,11 @@ jobs:
 
       - name: set latest version of clang for compilation
         if: matrix.platform == 'macos-latest'
-        run: |
-          ln -s $(brew --prefix llvm@15)/bin/clang /usr/local/bin/clang
-          clang --version
+        run: ln -s $(brew --prefix llvm@15)/bin/clang /usr/local/bin/clang
+
+      - name: Print clang version
+        if: matrix.platform == 'macos-latest'
+        run: clang --version
 
       - name: install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-20.04'

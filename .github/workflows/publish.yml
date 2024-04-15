@@ -37,6 +37,10 @@ jobs:
         if: matrix.platform == 'macos-latest'
         run: ln -s $(brew --prefix llvm@15)/bin/clang /usr/local/bin/clang
 
+      - name: Also add clang++ to path
+        if: matrix.platform == 'macos-latest'
+        run: ln -s $(brew --prefix llvm@15)/bin/clang++ /usr/local/bin/clang++
+
       - name: Print clang version
         if: matrix.platform == 'macos-latest'
         run: clang --version

@@ -40,7 +40,7 @@ try {
   execSync('git commit -m "Update version"');
   execSync(`git push --set-upstream origin ${newVersion}`);
 
-  execSync(`git tag -a v${  newVersion  }`);
+  execSync(`git tag -a v${  newVersion  } -m "Release version ${  newVersion  }"`);
   
 } catch (error) {
   console.error('Error:', error);

@@ -13,12 +13,6 @@ function bumpPatchVersion(version) {
 try {
   const tauriJson = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../src-tauri/tauri.conf.json'), 'utf8'));
 
-  execSync(`git checkout release`);
-
-  execSync(`git pull origin release`);
-
-  execSync(`git merge main`);
-
   console.log('🟦 Current version', tauriJson.package.version);
   
   // Example usage:
@@ -40,11 +34,13 @@ try {
 
   console.log(`🟢 Updated to ${tauriJson.package.version}`);
 
+  execSync(`git checkout -b ${newVersion}`);
+
   execSync('git add .');
   execSync('git commit -m "Update version"');
-  execSync(`git push origin release`);
+  execSync(`git push --set-upstream origin ${newVersion}`);
 
-  execSync(`git tag -a v${  newVersion  } -m "Release version ${  newVersion  }"`);
+  execSync(`git tag -a v${  newVersion  }`);
   
 } catch (error) {
   console.error('Error:', error);

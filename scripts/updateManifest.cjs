@@ -13,7 +13,7 @@ const {
   S3_BUCKET,
   S3_ACCESS_KEY_ID,
   S3_SECRET_ACCESS_KEY,
-  OS // macos-latest, ubuntu-20.04, windows-latest
+  OS // macos-14, ubuntu-20.04, windows-latest
 } = process.env;
 
 const APP_VERSION = MACOS_APP_VERSION || NON_MACOS_APP_VERSION
@@ -47,7 +47,7 @@ const downloadManifest = async () => {
 const updateManifestVersion = (manifest) => {
   manifest.version = APP_VERSION;
 
-  if(OS === 'macos-latest') {
+  if(OS === 'macos-14') {
     const signatureFile = JSON.parse(MACOS_ARTIFACT_PATHS).find(file => file.includes('.sig'))
 
     const signature = fs.readFileSync(signatureFile, 'utf8')

@@ -16,9 +16,7 @@
         "all": true,
         "scope": {
           "allow": [
-            "$CONFIG",
-            "$CONFIG/*",
-            "$APPDATA/**"
+            "**"
           ]
         }
       },

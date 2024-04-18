@@ -59,7 +59,8 @@ export async function stream(
       onStreamEnd();
     };
 
-    await context.eval_string(messages[messages.length - 1].text, true);
+    // await context.evaluateImage(file, messages[messages.length - 1].text);
+    await context.evaluateString(messages[messages.length - 1].text, true);
 
     onStreamStart();
 

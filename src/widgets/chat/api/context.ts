@@ -10,6 +10,15 @@ type NebulaPredictPayload = {
   finished: boolean;
 };
 
+function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as any);
+    reader.onerror = reject;
+  });
+}
+
 export class NebulaContext {
   private model: NebulaModel;
 
@@ -43,12 +52,24 @@ export class NebulaContext {
     });
   }
 
-  public async eval_string(data: string, useBos: boolean = false) {
+  public async evaluateString(data: string, useBos: boolean = false) {
     await invoke('plugin:nebula|model_context_eval_string', {
       modelPath: this.model.model,
       contextId: this.contextId,
       data,
       useBos,
+    });
+  }
+
+  public async evaluateImage(file: File, prompt: string) {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+
+    await invoke('plugin:nebula|model_context_eval_image', {
+      modelPath: this.model.model,
+      contextId: this.contextId,
+      base64EncodedImage: await fileToBase64(file),
+      prompt,
     });
   }
 

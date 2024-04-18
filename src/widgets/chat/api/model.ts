@@ -16,7 +16,7 @@ export class NebulaModel {
       if (typeof mmproj !== 'undefined') {
         await invoke<string>('plugin:nebula|init_model_with_mmproj', {
           modelPath: model,
-          modelMmproj: mmproj,
+          mmprojPath: mmproj,
           modelOptions: {},
         });
         return new NebulaModel(model);

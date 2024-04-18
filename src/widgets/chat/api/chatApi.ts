@@ -1,6 +1,6 @@
 import { AIModelName } from '@/constants.ts';
 import { ChatMsg } from '@/db/chat';
-import { getModelPath } from '@/entities/model/lib/getModelPath.ts';
+import { getModelPath, getMultiModalPath } from '@/entities/model/lib/getModelPath.ts';
 import { loge, logi } from '@/shared/lib/Logger.ts';
 
 import { NebulaModel } from './model.ts';
@@ -22,7 +22,9 @@ function dataURLtoFile(dataurl: string, filename: string): File {
 export async function loadModel(modelName: AIModelName) {
   try {
     const modelPath = await getModelPath(modelName);
-    model = await NebulaModel.initModel(modelPath);
+    // TODO @dmytro - implement getMultiModalPath with the downloaded/selected multimodal model
+    const multiModalPath = await getMultiModalPath();
+    model = await NebulaModel.initModel(modelPath, multiModalPath);
   } catch (e: any) {
     loge('chatApi', `Failed to load model, rust error: ${e}`);
     throw e;

@@ -21,7 +21,18 @@ export const models = {
     desc: 'Good balance of quality and resource usage.',
   },
 };
+
+export const multiModalModels = {
+  'mmproj-model-f16.gguf': {
+    localName: 'mmproj-model-f16.gguf',
+    url: 'https://huggingface.co/cjpais/llava-1.6-mistral-7b-gguf/resolve/main/mmproj-model-f16.gguf?download=true',
+    name: 'Llava v1.6 (Mistral 7b)',
+  },
+};
+
 export type AIModelName = keyof typeof models;
+export type MultiModalName = keyof typeof multiModalModels;
 export const DEFAULT_MODEL_NAME: AIModelName = 'llava-v1.6-mistral-7b';
+export const DEFAULT_MULTI_MODAL_MODEL_NAME: MultiModalName = 'mmproj-model-f16.gguf';
 export const MODELS_DIR_NAME = 'models';
 

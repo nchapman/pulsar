@@ -40,7 +40,7 @@ export class NebulaContext {
   ): Promise<NebulaContext> {
     const ctx = await invoke<string>('plugin:nebula|model_init_context', {
       modelPath: model.model,
-      contextOptions: { ctx: cctx },
+      contextOptions: { ctx: cctx, nCtx: 6000 },
     });
 
     return new NebulaContext(model, ctx);
@@ -66,8 +66,6 @@ export class NebulaContext {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     const base64 = await fileToBase64(file);
-
-    logi('context', `base64 ${base64.slice(0, 100)}`);
 
     await invoke('plugin:nebula|model_context_eval_image', {
       modelPath: this.model.model,

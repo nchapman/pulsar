@@ -40,7 +40,7 @@ export class NebulaContext {
   ): Promise<NebulaContext> {
     const ctx = await invoke<string>('plugin:nebula|model_init_context', {
       modelPath: model.model,
-      contextOptions: { ctx: cctx, nCtx: 6000 },
+      contextOptions: { ctx: cctx, n_ctx: 20000 },
     });
 
     return new NebulaContext(model, ctx);

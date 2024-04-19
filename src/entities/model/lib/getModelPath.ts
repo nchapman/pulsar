@@ -7,7 +7,6 @@ import {
   models,
   MODELS_DIR_NAME,
   multiModalModels,
-  MultiModalName,
 } from '@/constants';
 
 export async function getModelPath(model: AIModelName) {

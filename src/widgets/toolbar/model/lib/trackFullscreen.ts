@@ -1,27 +1,18 @@
 import { appWindow } from '@tauri-apps/api/window';
 import { useEffect, useState } from 'preact/hooks';
 
-import { debounce } from '@/shared/lib/func';
-
-const [handler] = debounce(async () => {
-  const isFullscreen = await appWindow.isFullscreen();
-  appWindow.emit('fullscreen', isFullscreen);
-}, 300);
+import { useDebounce } from '@/shared/lib/hooks';
 
 export function useFullscreen() {
   const [fullscreen, setFullscreen] = useState(false);
 
+  const onWindowResize = useDebounce(() => appWindow.isFullscreen().then(setFullscreen), 300);
+
   useEffect(() => {
-    const clearOnceListener = appWindow.once('fullscreen', ({ payload }) =>
-      setFullscreen(payload as boolean)
-    );
+    window.addEventListener('resize', onWindowResize);
 
-    const clearResizeListener = appWindow.onResized(handler);
-
-    return async () => {
-      (await clearOnceListener)();
-      (await clearResizeListener)();
-    };
+    return () => window.removeEventListener('resize', onWindowResize);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { fullscreen };

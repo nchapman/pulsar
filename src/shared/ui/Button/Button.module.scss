@@ -80,8 +80,10 @@
 
   &.active,
   &:hover {
-    .end-fade {
-      width: 60px;
+    &:not(&.not-active) {
+      .end-fade {
+        width: 60px;
+      }
     }
   }
 }
@@ -137,6 +139,7 @@
   }
 }
 
+
 .end-fade {
   position: absolute;
   right: 0;
@@ -144,6 +147,15 @@
   background: transparent;
   width: 32px;
 }
+
+.not-active {
+  .end-fade {
+    width: 0;
+  }
+}
+
+
+
 
 .suffix {
   display: none;
@@ -159,7 +171,9 @@
 
 .active,
 button:hover {
-  .suffix {
-    display: flex;
+  &:not(&.not-active) {
+    .suffix {
+      display: flex;
+    }
   }
 }

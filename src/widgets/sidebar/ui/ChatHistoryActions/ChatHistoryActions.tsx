@@ -23,19 +23,22 @@ interface Props {
   onOpen: () => void;
   isPinned: boolean;
   isArchived: boolean;
+  onRename: () => void;
 }
 
 export const ChatHistoryActions = memo((props: Props) => {
-  const { className, isCurrent, id, onClose, onOpen, isOpen, isPinned, isArchived } = props;
+  const { className, isCurrent, id, onClose, onOpen, isOpen, isPinned, isArchived, onRename } =
+    props;
+
+  const handleRenameChat = useCallback(() => {
+    onRename();
+    onClose();
+  }, [onClose, onRename]);
 
   const handleDeleteChat = useCallback(() => {
     chatsRepository.remove(id);
     if (isCurrent) startNewChat();
   }, [id, isCurrent]);
-
-  const handleRenameChat = useCallback(() => {
-    chatsRepository.update(id, { title: 'Toxis Slimey' });
-  }, [id]);
 
   const handlePinChat = useCallback(() => {
     chatsRepository.update(id, { isPinned: true });

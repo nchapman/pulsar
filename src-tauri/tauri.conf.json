@@ -7,26 +7,20 @@
   },
   "package": {
     "productName": "Pulsar",
-    "version": "0.0.14"
+    "version": "0.0.29"
   },
   "tauri": {
     "allowlist": {
-      "all": false,
-      "shell": {
-        "sidecar": true,
-        "scope": [
-          {
-            "name": "bin/llamafile",
-            "sidecar": true,
-            "args": true
-          }
-        ]
-      },
+      "all": true,
       "fs": {
         "all": true,
-        "scope": [
-          "$APPDATA/**"
-        ]
+        "scope": {
+          "allow": [
+            "$CONFIG",
+            "$CONFIG/*",
+            "$APPDATA/**"
+          ]
+        }
       },
       "path": {
         "all": true
@@ -45,9 +39,6 @@
         "icons/128x128@2x.png",
         "icons/icon.icns",
         "icons/icon.ico"
-      ],
-      "externalBin": [
-        "bin/llamafile"
       ],
       "macOS": {
         "signingIdentity": "-"
@@ -71,7 +62,7 @@
       "endpoints": [
         "https://updates.getpulsar.ai/latest.json"
       ],
-      "dialog": true,
+      "dialog": false,
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDIzOUFENEQ3NDY4MjM2MzAKUldRd05vSkcxOVNhSS9NeWlSRDlTTG8veGVPbkk4VERCc0EwWk5zTXRESU9ORjRMb1pMM2gwUTUK"
     }
   }

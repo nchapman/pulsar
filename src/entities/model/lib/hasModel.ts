@@ -1,14 +1,13 @@
 import { BaseDirectory, createDir, exists, readDir } from '@tauri-apps/api/fs';
 
-import { AIModel, models } from '../consts/models.ts';
-import { MODELS_DIR } from '../consts/modelsPath.ts';
+import { AIModelName, models, MODELS_DIR_NAME } from '../../../constants.ts';
 
-export async function hasModel(model?: AIModel) {
-  if (!(await exists(MODELS_DIR, { dir: BaseDirectory.AppLocalData }))) {
-    await createDir(MODELS_DIR, { recursive: true, dir: BaseDirectory.AppLocalData });
+export async function hasModel(model?: AIModelName) {
+  if (!(await exists(MODELS_DIR_NAME, { dir: BaseDirectory.AppLocalData }))) {
+    await createDir(MODELS_DIR_NAME, { recursive: true, dir: BaseDirectory.AppLocalData });
   }
 
-  const entries = await readDir(MODELS_DIR, { dir: BaseDirectory.AppLocalData });
+  const entries = await readDir(MODELS_DIR_NAME, { dir: BaseDirectory.AppLocalData });
 
   if (!model) {
     return entries.length > 0;

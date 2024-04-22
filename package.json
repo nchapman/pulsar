@@ -1,7 +1,7 @@
 {
   "name": "pulsar",
   "private": true,
-  "version": "0.0.3",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "start": "tauri dev",
@@ -28,6 +28,7 @@
     "react-syntax-highlighter": "^15.5.0",
     "react-tiny-popover": "^8.0.4",
     "remark-gfm": "^4.0.0",
+    "tauri-plugin-log": "https://github.com/tauri-apps/tauri-plugin-log",
     "tauri-plugin-sql": "https://github.com/tauri-apps/tauri-plugin-sql#v1",
     "tauri-plugin-upload-api": "https://github.com/tauri-apps/tauri-plugin-upload#v1"
   },

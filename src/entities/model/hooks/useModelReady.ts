@@ -1,32 +1,35 @@
-import { useUnit } from 'effector-react';
 import { useCallback, useEffect, useState } from 'preact/hooks';
 
-import { AIModel } from '@/entities/model';
+import { AIModelName } from '@/constants';
+import { dropModel, loadModel } from '@/widgets/chat/api/chatApi';
 
-import { $llama } from '../consts/llama.ts';
-import { hasModel } from '../lib/hasModel.ts';
+import { modelExists } from '../lib/modelExists';
 
-export function useModelReady(modelName: AIModel) {
-  const [ready, setReady] = useState(true);
-  const llama = useUnit($llama);
+export function useModelReady(modelName: AIModelName) {
+  const [ready, setReady] = useState<boolean | null>(null);
 
-  useEffect(() => {
-    hasModel(modelName).then(setReady);
+  const checkModelExists = useCallback(async () => {
+    await dropModel();
+    const exists = await modelExists(modelName);
+
+    if (exists) {
+      try {
+        await loadModel(modelName);
+        setReady(true);
+      } catch (e) {
+        setReady(false);
+      }
+    }
+
+    return async () => {
+      await dropModel();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modelName]);
 
   useEffect(() => {
-    if (!ready || !llama) return undefined;
+    checkModelExists();
+  }, [checkModelExists]);
 
-    llama.spawn();
-
-    return () => {
-      llama.kill();
-    };
-  }, [ready, llama]);
-
-  const handleLoaded = useCallback(() => {
-    setReady(true);
-  }, []);
-
-  return { ready, handleLoaded };
+  return { ready, checkModelExists };
 }

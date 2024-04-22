@@ -4,6 +4,7 @@ on:
     branches:
       - develop
       - main
+      - release
 
 jobs:
   types:
@@ -38,6 +39,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Fetch LFS objects
+        run: git lfs fetch --all
+
+      - name: Pull LFS objects
+        run: git lfs pull
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -62,7 +71,7 @@ jobs:
 
       - name: Test
         working-directory: src-tauri
-        run: cargo test
+        run: RUST_BACKTRACE=1 cargo test -- --test-threads=1 --nocapture
 
   build-tauri:
     permissions:

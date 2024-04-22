@@ -4,10 +4,11 @@ import { memo } from 'preact/compat';
 import { chatsRepository } from '@/db';
 import { ChatModel } from '@/db/chat';
 import { classNames } from '@/shared/lib/func';
+import { useToggle } from '@/shared/lib/hooks';
 import { Button } from '@/shared/ui';
-import { startNewChat, switchChat } from '@/widgets/chat';
+import { switchChat } from '@/widgets/chat';
 
-import { DeleteChatIcon } from '../../assets/DeleteChatIcon.tsx';
+import { ChatHistoryActions } from '../ChatHistoryActions/ChatHistoryActions.tsx';
 import s from './ChatHistoryItem.module.scss';
 
 interface Props {
@@ -19,29 +20,26 @@ interface Props {
 
 const ChatHistoryItem = (props: Props) => {
   const { className, chat, id, isCurrent } = props;
-
+  const { isOn: isPopoverShown, off: hidePopover, toggle: togglePopover } = useToggle();
   const handleChatClick = () => switchChat(id);
-
-  const handleDeleteChat = () => {
-    chatsRepository.remove(id);
-    if (isCurrent) startNewChat();
-  };
 
   return (
     <Button
       variant="clear"
-      active={isCurrent}
+      active={isCurrent || isPopoverShown}
       onClick={handleChatClick}
       className={classNames(s.chatHistoryItem, [className])}
       suffixClassName={s.suffixWrapper}
       endFade
       activeSuffix={
-        <Button
-          className={s.suffix}
-          onClick={handleDeleteChat}
-          variant="clear"
-          icon={DeleteChatIcon}
-          iconSize={18}
+        <ChatHistoryActions
+          isOpen={isPopoverShown}
+          onClose={hidePopover}
+          onOpen={togglePopover}
+          isCurrent={isCurrent}
+          id={id}
+          isPinned={chat?.isPinned}
+          isArchived={chat?.isArchived}
         />
       }
     >

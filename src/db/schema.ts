@@ -4,6 +4,6 @@ import { chatSchema } from './chat';
 import { postSchema } from './post';
 
 export const schema = appSchema({
-  version: 1,
+  version: 2,
   tables: [postSchema, chatSchema],
 });

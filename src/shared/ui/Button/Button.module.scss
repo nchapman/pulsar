@@ -78,6 +78,7 @@
     }
   }
 
+  &.active,
   &:hover {
     .end-fade {
       width: 60px;
@@ -156,6 +157,7 @@
   z-index: 10;
 }
 
+.active,
 button:hover {
   .suffix {
     display: flex;

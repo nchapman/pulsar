@@ -55,6 +55,8 @@ async function createDBChat() {
     title: NEW_CHAT_TITLE,
     messages: [],
     model: 'pulsar',
+    isArchived: false,
+    isPinned: false,
   });
 
   chatEvt.setChatId(newChat.id);

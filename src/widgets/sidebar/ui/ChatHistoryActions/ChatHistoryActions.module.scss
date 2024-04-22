@@ -1,0 +1,40 @@
+.chat-history-actions {
+  position: relative;
+}
+
+.popover {
+  padding: 8px;
+  background: var(--main-background-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  outline: none;
+  width: max-content;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 10;
+}
+
+.divider {
+  height: 1px;
+  background: var(--border-light);
+}
+
+.trigger {
+  border-radius: 4px;
+}
+
+.action-btn {
+  width: 164px;
+  padding: 8px;
+  gap: 8px;
+
+  &:hover {
+    background: var(--main-background-tertiary);
+  }
+}
+
+.delete-btn {
+  color: var(--error);
+}

@@ -9,13 +9,18 @@ import s from './Sidebar.module.scss';
 
 interface Props {
   className?: string;
+  open: boolean;
 }
 
 export const Sidebar = memo((props: Props) => {
-  const { className } = props;
+  const { className, open } = props;
 
   return (
-    <LeftPanel className={classNames(s.panel, [className])} contentClassName={s.sidebar}>
+    <LeftPanel
+      open={open}
+      className={classNames(s.panel, [className])}
+      contentClassName={s.sidebar}
+    >
       <ChatHistory className={s.chatHistory} />
       <SidebarFooter className={s.sidebarFooter} />
     </LeftPanel>

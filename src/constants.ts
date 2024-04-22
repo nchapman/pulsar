@@ -24,4 +24,3 @@ export const models = {
 export type AIModelName = keyof typeof models;
 export const DEFAULT_MODEL_NAME: AIModelName = 'llava-v1.6-mistral-7b';
 export const MODELS_DIR_NAME = 'models';
-

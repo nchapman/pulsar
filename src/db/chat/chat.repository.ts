@@ -20,6 +20,8 @@ export interface Chat {
   id: Id;
   title: string;
   messages: ChatMsg[];
+  isPinned: boolean;
+  isArchived: boolean;
   model: string;
   createdAt: number;
   updatedAt: number;
@@ -47,6 +49,7 @@ export class ChatsRepository {
     const { limit = 10, offset = 0, order = 'desc', search } = params || {};
 
     const query: Q.Clause[] = [
+      Q.where(chatsTable.cols.isArchived, Q.eq('false')),
       Q.sortBy(chatsTable.cols.updatedAt, Q[order]),
       Q.skip(offset),
       Q.take(limit),
@@ -60,39 +63,48 @@ export class ChatsRepository {
   }
 
   async create(data: Dto<Chat>): Promise<Chat> {
-    const newPost = await this.db.write(() =>
+    const newChat = await this.db.write(() =>
       this.chatsCollection.create((post) => assignValues(post, data))
     );
 
-    return this.serialize(newPost);
+    return this.serialize(newChat);
   }
 
   async update(id: Id, data: UpdateDto<Chat>): Promise<Chat> {
-    const post = await this.chatsCollection.find(id);
+    const chat = await this.chatsCollection.find(id);
 
     try {
-      const updatedPost = await this.db.write(() =>
-        post.update((post) => {
-          assignValues(post, data);
+      const updatedChat = await this.db.write(() =>
+        chat.update((chat) => {
+          assignValues(chat, data);
         })
       );
 
-      return this.serialize(updatedPost);
+      return this.serialize(updatedChat);
     } catch (e) {
-      return post;
+      return chat;
     }
   }
 
   async remove(id: Id): Promise<void> {
-    const post = await this.chatsCollection.find(id);
-    await this.db.write(() => post.destroyPermanently());
+    const chat = await this.chatsCollection.find(id);
+    await this.db.write(() => chat.destroyPermanently());
   }
 
-  private serialize(post: ChatModel): Chat {
-    return serialize(post, ['id', 'title', 'messages', 'model', 'createdAt', 'updatedAt']);
+  private serialize(chat: ChatModel): Chat {
+    return serialize(chat, [
+      'id',
+      'title',
+      'messages',
+      'model',
+      'createdAt',
+      'updatedAt',
+      'isArchived',
+      'isPinned',
+    ]);
   }
 
-  private mapSerialize(posts: ChatModel[]): Chat[] {
-    return posts.map(this.serialize);
+  private mapSerialize(chats: ChatModel[]): Chat[] {
+    return chats.map(this.serialize);
   }
 }

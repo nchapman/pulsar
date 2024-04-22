@@ -1,0 +1,25 @@
+.code {
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.header {
+  background: var(--main-background-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  font-family: var(--font-main);
+}
+
+.copy-btn {
+  padding: 0;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--text-secondary);
+
+  &:hover {
+    background: transparent;
+  }
+}

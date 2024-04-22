@@ -24,6 +24,9 @@
       },
       "path": {
         "all": true
+      },
+      "window": {
+        "all": true
       }
     },
     "bundle": {
@@ -50,7 +53,8 @@
         "resizable": true,
         "title": "Pulsar",
         "width": 1100,
-        "height": 830
+        "height": 830,
+        "titleBarStyle": "Overlay"
       }
     ],
     "updater": {

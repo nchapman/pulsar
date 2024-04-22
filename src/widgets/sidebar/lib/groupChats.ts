@@ -2,6 +2,7 @@ import { Chat } from '@/db/chat';
 
 function groupChatsByDate(chats: Chat[]) {
   // Initialize groups
+  const pinned: Chat[] = [];
   const today: Chat[] = [];
   const prev7days: Chat[] = [];
   const prev30days: Chat[] = [];
@@ -21,7 +22,9 @@ function groupChatsByDate(chats: Chat[]) {
     const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
 
     // Group chats based on time difference
-    if (daysDiff === 0) {
+    if (chat.isPinned) {
+      pinned.push(chat);
+    } else if (daysDiff === 0) {
       today.push(chat);
     } else if (daysDiff <= 7) {
       prev7days.push(chat);
@@ -50,6 +53,7 @@ function groupChatsByDate(chats: Chat[]) {
   const formattedYears = Object.keys(years).map((key) => ({ year: key, chats: years[key] }));
 
   return {
+    pinned,
     today,
     prev7days,
     prev30days,
@@ -60,6 +64,10 @@ function groupChatsByDate(chats: Chat[]) {
 
 function formatChatsList(groupedChats: ReturnType<typeof groupChatsByDate>) {
   const formattedList = [];
+
+  if (groupedChats.pinned.length > 0) {
+    formattedList.push({ period: 'Pinned Chats', chats: groupedChats.pinned });
+  }
 
   // Add today chats
   if (groupedChats.today.length > 0) {

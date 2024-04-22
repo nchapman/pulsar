@@ -7,4 +7,3 @@ export function logi(tag: string, msg: string) {
 export function loge(tag: string, msg: string) {
   error(`[${tag}] ${msg}`);
 }
-

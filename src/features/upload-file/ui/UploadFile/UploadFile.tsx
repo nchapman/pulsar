@@ -90,12 +90,7 @@ export const UploadFile = memo((props: Props) => {
         onClickOutside={() => setOpen(false)}
       >
         <div>
-          <Button
-            onClick={() => setOpen((pv) => !pv)}
-            className={s.triger}
-            variant="secondary"
-            icon={PlusIcon}
-          />
+          <Button onClick={() => setOpen((pv) => !pv)} variant="secondary" icon={PlusIcon} />
         </div>
       </Popover>
 

@@ -52,22 +52,18 @@ export async function stream(
   },
   maxPredictLen: number = 100
 ) {
-  logi('ChatAPI', 'Trying to stream!');
   if (!model) {
     loge('chatApi', 'Model not loaded, cannot stream');
     return;
   }
-  const { messages, onStreamStart, onTextChunkReceived, onTitleUpdate, onStreamEnd } = config;
-  let i = messages.length - 1;
-  for (; i >= 0; i -= 1) {
-    if (messages[i].isUser === true) {
-      break;
-    }
-  }
+
+  let { messages, onStreamStart, onTextChunkReceived, onTitleUpdate, onStreamEnd } = config;
+
+  messages = messages.slice(0, -1);
 
   try {
     const context = await model.createContext(
-      messages.slice(0, i).map((msg) => ({ message: msg.text, is_user: !!msg.isUser }))
+      messages.slice(0, -1).map((msg) => ({ message: msg.text, is_user: !!msg.isUser }))
     );
 
     context.onToken = (p) => {
@@ -81,9 +77,9 @@ export async function stream(
 
     // test reading a file and sending it to the model
     const file = dataURLtoFile(cat, 'cat.png');
-    console.log(messages);
-    await context.evaluateImage(file, messages[i].text);
-    //await context.evaluateString(messages[i].text, true);
+
+    await context.evaluateImage(file, messages[messages.length - 1].text);
+    // await context.evaluateString(messages[messages.length - 1].text, true);
 
     onStreamStart();
 
@@ -95,3 +91,4 @@ export async function stream(
     onTitleUpdate(messages[messages.length - 2].text);
   }
 }
+

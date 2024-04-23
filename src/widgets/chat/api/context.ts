@@ -2,7 +2,6 @@ import { invoke } from '@tauri-apps/api';
 import { listen } from '@tauri-apps/api/event';
 
 import { NebulaModel } from './model';
-import { logi } from '@/shared/lib/Logger';
 
 type NebulaPredictPayload = {
   model: string;

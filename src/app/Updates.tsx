@@ -19,4 +19,3 @@ export async function checkUpdates() {
     loge('Updates', error.toString());
   }
 }
-

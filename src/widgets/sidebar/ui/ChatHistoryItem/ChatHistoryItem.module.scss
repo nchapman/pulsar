@@ -3,16 +3,30 @@
 .chat-history-item {
   width: 228px;
   align-items: center;
-  padding: 10px 16px;
+  padding: 8px 16px;
   white-space: nowrap;
   overflow: hidden;
-
+  line-height: 24px;
 }
 
 .suffix {
   &, &:hover {
     background: var(--sidebar-background-primary);
   }
+}
+
+.suffix-wrapper {
+  padding-right: 8px;
+}
+
+.rename-input {
+  color: var(--sidebar-text-primary);
+  padding: 4px 2px;
+  outline: 1px solid var(--info);
+  font-size: 14px;
+  font-weight: 400;
+  border-radius: 2px;
+  height: 24px;
 }
 
 

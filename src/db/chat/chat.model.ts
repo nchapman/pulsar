@@ -13,6 +13,10 @@ export class ChatModel extends Model {
 
   @text(chatsTable.cols.model) model;
 
+  @json(chatsTable.cols.isPinned, (json) => json) isPinned;
+
+  @json(chatsTable.cols.isArchived, (json) => json) isArchived;
+
   @readonly @date(chatsTable.cols.createdAt) createdAt;
 
   @readonly @date(chatsTable.cols.updatedAt) updatedAt;

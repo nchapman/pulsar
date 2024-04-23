@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'preact/hooks';
 
 import { chatsRepository } from '@/db';
 import { Chat } from '@/db/chat';
+import { chatsTable } from '@/db/chat/chat.schema.ts';
 import { classNames, debounce } from '@/shared/lib/func';
 import { Text } from '@/shared/ui';
 import { $chat } from '@/widgets/chat';
@@ -17,10 +18,11 @@ import s from './ChatHistory.module.scss';
 interface Props {
   className?: string;
   chatsCount?: number;
+  status?: any;
 }
 
 const ChatHistory = memo((props: Props) => {
-  const { className, chatsCount } = props;
+  const { className, chatsCount, status } = props;
   const [search, setSearch] = useState('');
 
   const [chats, setChats] = useState<Chat[]>([]);
@@ -29,7 +31,7 @@ const ChatHistory = memo((props: Props) => {
   useEffect(() => {
     setSearch('');
     chatsRepository.getAll({ limit: 28 }).then(setChats);
-  }, [chatsCount]);
+  }, [chatsCount, status]);
 
   useEffect(() => {
     const getHistoryItems = () => chatsRepository.getAll({ limit: 28, search }).then(setChats);
@@ -69,6 +71,9 @@ const ChatHistory = memo((props: Props) => {
 
 const enhance = withObservables([], () => ({
   chatsCount: chatsRepository.chatsCollection.query().observeCount(),
+  status: chatsRepository.chatsCollection
+    .query()
+    .observeWithColumns([chatsTable.cols.isArchived, chatsTable.cols.isPinned]),
 }));
 
 // @ts-ignore

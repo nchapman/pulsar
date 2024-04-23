@@ -1,7 +1,7 @@
 import { AIModelName } from '@/constants.ts';
 import { ChatMsg } from '@/db/chat';
 import { getModelPath, getMultiModalPath } from '@/entities/model/lib/getModelPath.ts';
-import { loge, logi } from '@/shared/lib/Logger.ts';
+import { loge } from '@/shared/lib/Logger.ts';
 
 import { NebulaModel } from './model.ts';
 import { cat } from './sampleImage.ts';

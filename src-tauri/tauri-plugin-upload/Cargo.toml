@@ -1,0 +1,18 @@
+[package]
+name = "tauri-plugin-upload"
+version = "0.0.0"
+description = "Upload files from disk to a remote server over HTTP."
+edition = "2021"
+
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+log = "0.4"
+tauri = "1"
+thiserror = "1"
+tokio = { version = "1", features = ["fs"] }
+tokio-util = { version = "0.7", features = ["codec"] }
+reqwest = { version = "0.12", features = ["json", "stream"] }
+futures-util = "0.3"
+read-progress-stream = "1.0.0"

@@ -13,7 +13,7 @@ where
     let app_data_dir = app.handle().path_resolver().app_data_dir();
     info!(
         "App data dir: \x1b[34m{}\x1b[0m",
-        app_data_dir.unwrap().to_str().unwrap()
+        app_data_dir.unwrap().to_str().unwrap().replace(" ", "\\ ")
     );
     Ok(())
 }

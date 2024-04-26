@@ -24,12 +24,9 @@ interface Props {
 }
 
 const handleDownload = (modelName: AIModelName) => {
-  let progress = 0;
   downloadModel(modelName, (downloaded, total) => {
-    progress += downloaded;
-
     setTotal(total);
-    setProgress(progress);
+    setProgress(downloaded);
   });
 };
 

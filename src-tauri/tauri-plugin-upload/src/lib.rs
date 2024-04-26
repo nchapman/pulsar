@@ -61,6 +61,7 @@ async fn download<R: Runtime>(
     let client = reqwest::Client::new();
 
     let mut progress: u64 = 0;
+    let mut last_percent = 0;
 
     let mut request = client.get(url);
     // Loop trought the headers keys and values
@@ -78,21 +79,21 @@ async fn download<R: Runtime>(
     while let Some(chunk) = stream.try_next().await? {
         file.write_all(&chunk).await?;
 
-        progress = chunk.len() as u64;
-
-        let emit_result = window.emit(
-            "download://progress",
-            ProgressPayload {
-                id,
-                progress,
-                total,
-            },
-        );
-
-        if emit_result.is_err() {
-            info!("Failed to emit download progress event");
+        progress += chunk.len() as u64;
+        if progress / total * 100 > last_percent {
+            last_percent = progress / total * 100;
+            let _ = window.emit(
+                "download://progress",
+                ProgressPayload {
+                    id,
+                    progress,
+                    total,
+                },
+            );
+            info!("Download progress: {}%", last_percent);
         }
     }
+
     file.flush().await?;
 
     Ok(id)

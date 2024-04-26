@@ -60,7 +60,7 @@ async fn download<R: Runtime>(
 ) -> Result<u32> {
     let client = reqwest::Client::new();
 
-    let mut progress: u64 = 0;
+    let mut progress = 0.;
     let mut last_percent = 0;
 
     let mut request = client.get(url);
@@ -79,14 +79,14 @@ async fn download<R: Runtime>(
     while let Some(chunk) = stream.try_next().await? {
         file.write_all(&chunk).await?;
 
-        progress += chunk.len() as u64;
-        if progress / total * 100 > last_percent {
-            last_percent = progress / total * 100;
+        progress += chunk.len() as f64;
+        if (progress / total as f64 * 100.0) as i32 > last_percent {
+            last_percent = (progress / total as f64 * 100.0) as i32;
             let _ = window.emit(
                 "download://progress",
                 ProgressPayload {
                     id,
-                    progress,
+                    progress: progress as u64,
                     total,
                 },
             );

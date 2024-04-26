@@ -1,19 +1,17 @@
 import { BaseDirectory, createDir, exists, readDir } from '@tauri-apps/api/fs';
 
 import { MODELS_DIR_NAME } from '@/entities/model/consts/model.const.ts';
-import { supportedLlms } from '@/entities/model/consts/supported-llms.const.ts';
-import { LlmName } from '@/entities/model/types/model.types.ts';
+import { LlmName } from '@/entities/model/consts/supported-llms.const.ts';
 
-export async function modelExists(modelName: LlmName, isMmp = false) {
+export async function getAvailableModels() {
   if (!(await exists(MODELS_DIR_NAME, { dir: BaseDirectory.AppData }))) {
     await createDir(MODELS_DIR_NAME, { recursive: true, dir: BaseDirectory.AppData });
   }
 
   const entries = await readDir(MODELS_DIR_NAME, { dir: BaseDirectory.AppData });
 
-  const { localName, mmp } = supportedLlms[modelName];
-
-  const fileName = isMmp ? mmp?.localName : localName;
-
-  return entries.some((entry) => entry.name === fileName);
+  return entries.reduce((acc, m) => ({ ...acc, [m.name || 'unknown']: true }), {}) as Record<
+    LlmName,
+    boolean
+  >;
 }

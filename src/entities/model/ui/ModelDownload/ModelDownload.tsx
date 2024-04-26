@@ -1,41 +1,51 @@
 import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
-import { useEffect } from 'preact/hooks';
+import { useCallback, useEffect } from 'preact/hooks';
 
-import { AIModelName, models } from '@/constants';
-import { downloadModel } from '@/entities/model';
+import { supportedLlms } from '@/entities/model/consts/supported-llms.const.ts';
 import { classNames } from '@/shared/lib/func';
 import { Avatar, Button, Card, Progress, Text } from '@/shared/ui';
+
+import { downloadModel } from '../../api/downloadModel.ts';
+import modelImg from '../../assets/model.png';
 import {
   $downloaded,
   $downloading,
   $percent,
   setProgress,
   setTotal,
-} from '@/widgets/welcome-screen/model/welcome-screne-model.ts';
-
-import modelImg from '../../assets/model.png';
+} from '../../model/download-models-model.ts';
+import { LlmName } from '../../types/model.types.ts';
 import s from './ModelDownload.module.scss';
 
 interface Props {
   className?: string;
   onLoaded: () => void;
-  modelName: AIModelName;
+  model: LlmName;
 }
 
-const handleDownload = (modelName: AIModelName) => {
+const handleDownload = ({
+  model,
+  onTotalChange,
+  onProgressChange,
+}: {
+  model: LlmName;
+  onTotalChange: (t: number) => void;
+  onProgressChange: (t: number) => void;
+}) => {
   let progress = 0;
-  downloadModel(modelName, (downloaded, total) => {
+  downloadModel(model, false, (downloaded, total) => {
     progress += downloaded;
 
-    setTotal(total);
-    setProgress(progress);
+    onTotalChange(total);
+    onProgressChange(progress);
   });
 };
 
 export const ModelDownload = memo((props: Props) => {
-  const { className, onLoaded, modelName } = props;
-  const { name, desc, size } = models[modelName];
+  const { className, onLoaded, model } = props;
+  const { name, desc, size } = supportedLlms[model];
+
   const downloaded = useUnit($downloaded);
   const downloading = useUnit($downloading);
   const percent = useUnit($percent);
@@ -43,6 +53,14 @@ export const ModelDownload = memo((props: Props) => {
   useEffect(() => {
     if (downloaded) onLoaded();
   }, [downloaded, onLoaded]);
+
+  const handleModelDownload = useCallback(() => {
+    handleDownload({
+      model,
+      onTotalChange: setTotal,
+      onProgressChange: setProgress,
+    });
+  }, [model]);
 
   return (
     <Card className={classNames(s.modelDownload, [className])}>
@@ -63,7 +81,7 @@ export const ModelDownload = memo((props: Props) => {
       {downloading ? (
         <Progress percent={percent} />
       ) : (
-        <Button onClick={() => handleDownload(modelName)} variant="primary">
+        <Button onClick={handleModelDownload} variant="primary">
           Download
         </Button>
       )}

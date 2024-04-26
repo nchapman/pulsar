@@ -59,7 +59,7 @@ export async function stream(
       onStreamEnd();
     };
 
-    await context.eval_string(messages[messages.length - 1].text, true);
+    await context.eval_string(messages[messages.length - 2].text, true);
 
     onStreamStart();
 

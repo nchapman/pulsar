@@ -1,13 +1,10 @@
 import { combine, createEffect, createEvent, createStore, sample } from 'effector';
-import { download } from 'tauri-plugin-upload-api';
 
-import { downloadModel } from '@/entities/model';
-import { getModelPath } from '@/entities/model/lib/getModelPath.ts';
-
-import { DEFAULT_LLM } from '../consts/model.const.ts';
-import { LlmName, supportedLlms } from '../consts/supported-llms.const.ts';
-import { getAvailableModels } from '../lib/getAvailableModels.ts';
-import { dropModel, loadModel } from './model-state.ts';
+import { downloadModel } from '../api/downloadModel';
+import { DEFAULT_LLM } from '../consts/model.const';
+import { LlmName, supportedLlms } from '../consts/supported-llms.const';
+import { getAvailableModels } from '../lib/getAvailableModels';
+import { dropModel, loadModel } from './model-state';
 
 // check available models
 // if current not available - show download screen
@@ -27,12 +24,30 @@ const getAvailableModelsEff = createEffect(getAvailableModels);
 $availableModels.on(getAvailableModelsEff.doneData, (_, availableModels) => availableModels);
 
 // download info / false on downloaded
-type ModelDownloadInfo = { percent: number; isMmp: boolean } | false;
+type ModelDownloadInfo = {
+  percentLlm?: number;
+  percentMmp?: number;
+  withMmp: boolean;
+  percent: number;
+};
 
 const $modelsDownload = createStore<Record<string, ModelDownloadInfo>>({});
 const updateDownloadInfo = createEvent<{ model: string; info: ModelDownloadInfo }>();
 
-$modelsDownload.on(updateDownloadInfo, (store, { info, model }) => ({ ...store, [model]: info }));
+$modelsDownload.on(updateDownloadInfo, (store, { info, model }) => {
+  const newState = { ...store, [model]: { ...store[model], ...info } };
+
+  const { percentMmp, percentLlm, withMmp } = newState[model];
+  let percent = percentLlm || 0;
+
+  if (withMmp) {
+    percent = Math.floor(((percentLlm || 0) + (percentMmp || 0)) / 2);
+  }
+
+  newState[model].percent = percent;
+
+  return newState;
+});
 
 // mark downloaded model as available
 sample({
@@ -44,7 +59,18 @@ sample({
 });
 
 const downloadModelEff = createEffect((model: LlmName) => {
-  downloadModel('', '', (percent) => updateDownloadInfo({ model, info: { percent } }));
+  const { localName, url, mmp } = supportedLlms[model];
+  const withMmp = !!mmp;
+
+  downloadModel(localName, url, (percentLlm) =>
+    updateDownloadInfo({ model, info: { percentLlm, withMmp } })
+  );
+
+  if (!withMmp) return;
+
+  downloadModel(mmp.localName, mmp.url, (percentMmp) =>
+    updateDownloadInfo({ model, info: { percentMmp, withMmp } })
+  );
 });
 
 const $currentModel = createStore<LlmName>(DEFAULT_LLM);

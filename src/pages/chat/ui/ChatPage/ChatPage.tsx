@@ -17,18 +17,17 @@ export const ChatPage = () => {
   const ready = useUnit($modelReady);
   const modelLoadError = useUnit($modelLoadError);
 
-  const mainContent = (
-    <>
-      <Navbar />
-      <Chat />
-    </>
-  );
-
   function getContent() {
     if (modelLoadError) return <div>Failed to load model! Contact support</div>;
 
     if (!ready) return <WelcomeScreen model={DEFAULT_LLM} />;
-    return mainContent;
+
+    return (
+      <>
+        <Navbar />
+        <Chat />
+      </>
+    );
   }
 
   return (

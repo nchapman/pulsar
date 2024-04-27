@@ -77,7 +77,7 @@ export const ChatHistoryActions = memo((props: Props) => {
         className={s.actionBtn}
         onClick={isArchived ? handleUnarchiveChat : handleArchiveChat}
       >
-        <Icon svg={ArchiveIcon} /> {isPinned ? 'Unarchive' : 'Archive'} Chat
+        <Icon svg={ArchiveIcon} /> {isArchived ? 'Unarchive' : 'Archive'} Chat
       </Button>
 
       <div className={s.divider} />

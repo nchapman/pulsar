@@ -57,14 +57,14 @@ $modelsDownload.on(updateDownloadInfo, (store, { info, model }) => {
 sample({
   source: $availableModels,
   clock: updateDownloadInfo,
-  filter: (_, { info }) => calcPercent(info) === 100,
+  filter: (_, { info }) => info.percentLlm === 100 || info.percentMmp === 100,
   fn: (availableModels, { model, info }) => {
-    const newState = { ...availableModels, [model]: true };
-    if (info.withMmp) {
-      const mmpName = supportedLlms[model].mmp!.name;
-      newState[mmpName] = true;
+    if (info.percentLlm === 100) {
+      return { ...availableModels, [model]: true };
     }
-    return newState;
+
+    const mmpName = supportedLlms[model].mmp!.name;
+    return { ...availableModels, [mmpName]: true };
   },
   target: $availableModels,
 });
@@ -76,7 +76,6 @@ const $currentMmp = $currentModel.map(
 const $hasMmp = $currentMmp.map((currentMmp) => !!currentMmp);
 
 export const $modelReady = createStore(false);
-$modelReady.watch(console.log);
 export const $modelLoadError = createStore(false);
 const setModelLoadError = createEvent<boolean>();
 $modelLoadError.on(setModelLoadError, (_, hasErr) => hasErr);

@@ -9,7 +9,6 @@ import s from './WelcomeScreen.module.scss';
 
 interface Props {
   className?: string;
-  onLoaded: () => void;
   model: LlmName;
 }
 
@@ -21,7 +20,7 @@ const content = {
 };
 
 export const WelcomeScreen = memo((props: Props) => {
-  const { className, onLoaded, model } = props;
+  const { className, model } = props;
 
   return (
     <div className={classNames(s.welcomeScreen, [className])}>
@@ -32,7 +31,7 @@ export const WelcomeScreen = memo((props: Props) => {
         <Text>{content.text}</Text>
       </div>
 
-      <ModelDownload className={s.modelDownload} onLoaded={onLoaded} model={model} />
+      <ModelDownload className={s.modelDownload} model={model} />
 
       <Text s={14}>{content.policy}</Text>
     </div>

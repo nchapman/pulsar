@@ -1,65 +1,26 @@
-import { useUnit } from 'effector-react';
+import { useStoreMap } from 'effector-react';
 import { memo } from 'preact/compat';
-import { useCallback, useEffect } from 'preact/hooks';
 
-import { LlmName, supportedLlms } from '@/entities/model/consts/supported-llms.const.ts';
 import { classNames } from '@/shared/lib/func';
 import { Avatar, Button, Card, Progress, Text } from '@/shared/ui';
 
-import { downloadModel } from '../../api/downloadModel.ts';
 import modelImg from '../../assets/model.png';
-import {
-  $downloaded,
-  $downloading,
-  $percent,
-  setProgress,
-  setTotal,
-} from '../../model/download-models-model.ts';
+import { LlmName, supportedLlms } from '../../consts/supported-llms.const.ts';
+import { $modelsDownload, downloadModelEff } from '../../model/manage-models-model.ts';
 import s from './ModelDownload.module.scss';
 
 interface Props {
   className?: string;
-  onLoaded: () => void;
   model: LlmName;
 }
 
-const handleDownload = ({
-  model,
-  onPercentChange,
-}: {
-  model: LlmName;
-  onPercentChange: (p: number) => void;
-}) => {
-  let progress = 0;
-  let total = 0;
-
-  downloadModel(model, false, (downloaded, totalCur) => {
-    progress += downloaded;
-    total = totalCur;
-    const percent = !total ? 0 : (progress / total) * 100;
-    onPercentChange(percent);
-  });
-};
-
 export const ModelDownload = memo((props: Props) => {
-  const { className, onLoaded, model } = props;
+  const { className, model } = props;
   const { name, desc, size } = supportedLlms[model];
 
-  const downloaded = useUnit($downloaded);
-  const downloading = useUnit($downloading);
-  const percent = useUnit($percent);
+  const downloadInfo = useStoreMap($modelsDownload, (s) => s[model]);
 
-  useEffect(() => {
-    if (downloaded) onLoaded();
-  }, [downloaded, onLoaded]);
-
-  const handleModelDownload = useCallback(() => {
-    handleDownload({
-      model,
-      onTotalChange: setTotal,
-      onProgressChange: setProgress,
-    });
-  }, [model]);
+  const handleModelDownload = () => downloadModelEff(model);
 
   return (
     <Card className={classNames(s.modelDownload, [className])}>
@@ -77,8 +38,8 @@ export const ModelDownload = memo((props: Props) => {
         </Text>
       </div>
 
-      {downloading ? (
-        <Progress percent={percent} />
+      {downloadInfo?.percent ? (
+        <Progress percent={downloadInfo?.percent} />
       ) : (
         <Button onClick={handleModelDownload} variant="primary">
           Download

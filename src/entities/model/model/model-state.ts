@@ -9,8 +9,9 @@ export let model: NebulaModel | null = null;
 
 export async function loadModel(llmName: LlmName) {
   try {
-    const modelPath = await getModelPath(llmName);
-    const multiModalPath = await getModelPath(supportedLlms[llmName].mmp?.localName, true);
+    const { localName, mmp } = supportedLlms[llmName];
+    const modelPath = await getModelPath(localName);
+    const multiModalPath = await getModelPath(mmp!.localName);
 
     model = await NebulaModel.initModel(modelPath, multiModalPath);
   } catch (e) {

@@ -11,6 +11,8 @@ export const downloadModel = async (
   let total = 0;
   const pathToSave = await getModelPath(localName);
 
+  console.log(url, pathToSave);
+
   download(url, pathToSave, (downloaded, totalCur) => {
     progress += downloaded;
     total = totalCur;

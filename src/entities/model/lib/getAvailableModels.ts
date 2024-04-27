@@ -10,8 +10,10 @@ export async function getAvailableModels() {
 
   const entries = await readDir(MODELS_DIR_NAME, { dir: BaseDirectory.AppData });
 
-  return entries.reduce((acc, m) => ({ ...acc, [m.name || 'unknown']: true }), {}) as Record<
-    LlmName,
-    boolean
-  >;
+  return entries.reduce<OptionalRecord<LlmName, boolean>>((acc, i) => {
+    if (!i.name?.includes('.gguf')) return acc;
+    const name = i.name as LlmName;
+    acc[name] = true;
+    return acc;
+  }, {}) as Record<LlmName, boolean>;
 }

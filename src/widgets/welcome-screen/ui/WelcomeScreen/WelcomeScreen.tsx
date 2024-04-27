@@ -1,7 +1,7 @@
 import { memo } from 'preact/compat';
 
 import { ModelDownload } from '@/entities/model';
-import { LlmName } from '@/entities/model/types/model.types.ts';
+import { LlmName } from '@/entities/model/consts/supported-llms.const.ts';
 import { classNames } from '@/shared/lib/func';
 import { Text, Title } from '@/shared/ui';
 

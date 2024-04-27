@@ -2,7 +2,7 @@ import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
 import { useCallback, useEffect } from 'preact/hooks';
 
-import { supportedLlms } from '@/entities/model/consts/supported-llms.const.ts';
+import { LlmName, supportedLlms } from '@/entities/model/consts/supported-llms.const.ts';
 import { classNames } from '@/shared/lib/func';
 import { Avatar, Button, Card, Progress, Text } from '@/shared/ui';
 
@@ -15,7 +15,6 @@ import {
   setProgress,
   setTotal,
 } from '../../model/download-models-model.ts';
-import { LlmName } from '../../types/model.types.ts';
 import s from './ModelDownload.module.scss';
 
 interface Props {
@@ -26,19 +25,19 @@ interface Props {
 
 const handleDownload = ({
   model,
-  onTotalChange,
-  onProgressChange,
+  onPercentChange,
 }: {
   model: LlmName;
-  onTotalChange: (t: number) => void;
-  onProgressChange: (t: number) => void;
+  onPercentChange: (p: number) => void;
 }) => {
   let progress = 0;
-  downloadModel(model, false, (downloaded, total) => {
-    progress += downloaded;
+  let total = 0;
 
-    onTotalChange(total);
-    onProgressChange(progress);
+  downloadModel(model, false, (downloaded, totalCur) => {
+    progress += downloaded;
+    total = totalCur;
+    const percent = !total ? 0 : (progress / total) * 100;
+    onPercentChange(percent);
   });
 };
 

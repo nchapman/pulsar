@@ -1,5 +1,6 @@
 import { Collection, Database, Q } from '@nozbe/watermelondb';
 
+import { FileData } from '@/features/upload-file';
 import { assignValues, serialize } from '@/shared/lib/func';
 
 import { ChatModel } from './chat.model.ts';
@@ -8,6 +9,7 @@ import { chatsTable } from './chat.schema.ts';
 export interface ChatMsg {
   id: Id;
   text: string;
+  file?: FileData;
   isUser?: boolean;
   user?: { name: string };
   assistant?: {

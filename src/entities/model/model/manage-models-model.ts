@@ -125,6 +125,8 @@ export const downloadModelEff = createEffect((model: LlmName) => {
   }
 });
 
+export const $hasCheckedModels = createStore(false);
+
 const loadModelEff = createEffect<{ llm: LlmName }, void>(({ llm }) => {
   dropModel()
     .then(() => {

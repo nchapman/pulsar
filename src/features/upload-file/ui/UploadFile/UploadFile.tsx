@@ -1,7 +1,8 @@
 import { memo, ReactNode } from 'preact/compat';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useEffect, useMemo, useState } from 'preact/hooks';
 import { Popover } from 'react-tiny-popover';
 
+import { FileData } from '@/features/upload-file';
 import CamIcon from '@/shared/assets/icons/cam.svg';
 import FileIcon from '@/shared/assets/icons/file.svg';
 import ImgIcon from '@/shared/assets/icons/img.svg';
@@ -9,14 +10,14 @@ import PlusIcon from '@/shared/assets/icons/plus.svg';
 import { classNames } from '@/shared/lib/func';
 import { Button, Text } from '@/shared/ui';
 
-import { useUploadFile } from '../../hooks/useUploadFile.ts';
-import { FileData } from '../../types/upload-file.ts';
 import { UploadedFile } from '../UploadedFile/UploadedFile.tsx';
 import s from './UploadFile.module.scss';
 
 interface Props {
   className?: string;
-  onFileReceive: (data?: FileData) => void;
+  onUpload: (type: FileData['type']) => void;
+  fileData?: FileData;
+  onRemove: () => void;
 }
 
 interface InputOption {
@@ -26,38 +27,24 @@ interface InputOption {
 }
 
 export const UploadFile = memo((props: Props) => {
-  const { className, onFileReceive } = props;
+  const { className, onUpload, fileData, onRemove } = props;
 
   const [open, setOpen] = useState(false);
 
-  const imgUpload = useRef<HTMLInputElement>(null);
-  const fileUpload = useRef<HTMLInputElement>(null);
-
-  const { onSelectFile, fileData, preview } = useUploadFile();
-
-  useEffect(() => {
-    onFileReceive(fileData);
-  }, [fileData, onFileReceive]);
-
-  const handleDeleteFile = useCallback(() => {
-    onSelectFile();
-    if (imgUpload.current) {
-      imgUpload.current.value = '';
-    }
-
-    if (fileUpload.current) {
-      fileUpload.current.value = '';
-    }
-  }, [onSelectFile]);
-
   const options: InputOption[] = useMemo(
     () => [
-      { name: 'File', icon: FileIcon, onClick: () => fileUpload.current?.click() },
-      { name: 'Photo or Video', icon: ImgIcon, onClick: () => imgUpload.current?.click() },
+      { name: 'File', icon: FileIcon, onClick: () => onUpload('application') },
+      { name: 'Photo or Video', icon: ImgIcon, onClick: () => onUpload('image') },
       { name: 'Web Camera', icon: CamIcon, onClick: () => console.log('Webcam') },
     ],
-    []
+    [onUpload]
   );
+
+  useEffect(() => {
+    if (fileData) {
+      setOpen(false);
+    }
+  }, [fileData]);
 
   const popover = (
     <div className={s.popover}>
@@ -79,7 +66,7 @@ export const UploadFile = memo((props: Props) => {
 
   return (
     <div className={classNames(s.uploadFile, [className])}>
-      {fileData && <UploadedFile onDelete={handleDeleteFile} data={fileData} preview={preview} />}
+      {fileData && <UploadedFile onDelete={onRemove} fileData={fileData} />}
 
       <Popover
         isOpen={open}
@@ -90,24 +77,14 @@ export const UploadFile = memo((props: Props) => {
         onClickOutside={() => setOpen(false)}
       >
         <div>
-          <Button onClick={() => setOpen((pv) => !pv)} variant="secondary" icon={PlusIcon} />
+          <Button
+            type="button"
+            onClick={() => setOpen((pv) => !pv)}
+            variant="secondary"
+            icon={PlusIcon}
+          />
         </div>
       </Popover>
-
-      <input
-        type="file"
-        onChange={onSelectFile}
-        ref={imgUpload}
-        style={{ display: 'none' }}
-        accept="image/*, video/*"
-      />
-      <input
-        type="file"
-        onChange={onSelectFile}
-        ref={fileUpload}
-        style={{ display: 'none' }}
-        accept="application/*"
-      />
     </div>
   );
 });

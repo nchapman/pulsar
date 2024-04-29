@@ -1,9 +1,8 @@
 import { ChatMsg } from '@/db/chat';
 import { model } from '@/entities/model';
-import { dataURLtoFile } from '@/features/upload-file';
 import { loge } from '@/shared/lib/Logger.ts';
 
-import { catImg } from '../mocks/sampleImage.ts';
+import { urlToBase64 } from '../lib/urlToBase64.ts';
 
 export async function stream(
   config: {
@@ -34,11 +33,14 @@ export async function stream(
 
     context.onComplete = onStreamEnd;
 
-    // test reading a file and sending it to the model
-    const file = dataURLtoFile(catImg, 'cat.png');
+    const msg = messages[messages.length - 1];
 
-    await context.evaluateImage(file, messages[messages.length - 1].text);
-    // await context.evaluateString(messages[messages.length - 1].text, true);
+    if (msg.file?.type === 'image') {
+      const file = await urlToBase64(msg.file.src);
+      await context.evaluateImage(file, messages[messages.length - 1].text);
+    } else {
+      await context.evaluateString(messages[messages.length - 1].text, true);
+    }
 
     onStreamStart();
 

@@ -1,8 +1,6 @@
 import { invoke } from '@tauri-apps/api';
 import { listen } from '@tauri-apps/api/event';
 
-import { fileToBase64 } from '@/shared/lib/func';
-
 import { NebulaModel } from './NebulaModel.ts';
 
 type NebulaPredictPayload = {
@@ -54,15 +52,11 @@ export class NebulaContext {
     });
   }
 
-  public async evaluateImage(file: File, prompt: string) {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    const base64 = await fileToBase64(file);
-
+  public async evaluateImage(base64EncodedImage: string, prompt: string) {
     await invoke('plugin:nebula|model_context_eval_image', {
       modelPath: this.model.model,
       contextId: this.contextId,
-      base64EncodedImage: base64,
+      base64EncodedImage,
       prompt,
     });
   }

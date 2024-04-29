@@ -2,6 +2,7 @@ import { combine, createEffect, createEvent, createStore, sample } from 'effecto
 
 import { chatsRepository } from '@/db';
 import type { Chat, ChatMsg } from '@/db/chat';
+import { FileData } from '@/features/upload-file';
 import { suid } from '@/shared/lib/func';
 
 import { stream } from '../api/chatApi.ts';
@@ -10,7 +11,7 @@ const chatEvt = {
   setChatId: createEvent<Id>(),
   switch: createEvent<Id>(),
   startNew: createEvent(),
-  askQuestion: createEvent<string>(),
+  askQuestion: createEvent<{ text: string; file?: FileData }>(),
   replaceData: createEvent<Chat>(),
 };
 
@@ -76,12 +77,15 @@ const fetchDbChatWithMessages = createEffect<{ chatId: Id | null }, ChatMsg[]>(
 
 export const $isFetchingMessages = fetchDbChatWithMessages.pending;
 
-const createUserMsg = createEffect<{ text: string }, ChatMsg>(async ({ text }) => ({
-  text,
-  isUser: true,
-  id: suid(),
-  user: { name: 'User' },
-}));
+const createUserMsg = createEffect<{ text: string; file?: FileData }, ChatMsg>(
+  async ({ text, file }) => ({
+    text,
+    file,
+    isUser: true,
+    id: suid(),
+    user: { name: 'User' },
+  })
+);
 
 const createAssistantMsg = createEffect<ChatMsg, ChatMsg>((userMessage) => ({
   text: '',
@@ -102,13 +106,14 @@ const streamMsg = createEffect<{ chatId: Id; msgId: Id; messages: ChatMsg[] }, v
   }
 );
 
-const askQuestionMiddleware = createEffect<{ isNew: boolean; text: string }, { text: string }>(
-  async ({ isNew, text }) => {
-    if (isNew) await createDBChat();
+const askQuestionMiddleware = createEffect<
+  { isNew: boolean; text: string; file?: FileData },
+  { text: string; file?: FileData }
+>(async ({ isNew, ...rest }) => {
+  if (isNew) await createDBChat();
 
-    return { text };
-  }
-);
+  return rest;
+});
 
 const updateDBChatMessages = createEffect<{ chatId: Id | null; newMessages: ChatMsg[] }, void>(
   async ({ chatId, newMessages }) => {
@@ -170,15 +175,15 @@ sample({
     streamedMsgId: $streamedMsgId,
   },
   clock: chatEvt.askQuestion,
-  fn: ({ chatId }, text) => ({ text, isNew: !chatId }),
-  filter: ({ streamedMsgId }, text) => text.trim() !== '' && streamedMsgId === null,
+  fn: ({ chatId }, { text, file }) => ({ text, isNew: !chatId, file }),
+  filter: ({ streamedMsgId }, { text }) => text.trim() !== '' && streamedMsgId === null,
   target: askQuestionMiddleware,
 });
 
 // create user message on askQuestionMiddleware done
 sample({
   clock: askQuestionMiddleware.doneData,
-  fn: ({ text }) => ({ text }),
+  fn: ({ text, file }) => ({ text, file }),
   target: createUserMsg,
 });
 

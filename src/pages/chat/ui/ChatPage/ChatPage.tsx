@@ -1,7 +1,12 @@
 import { useUnit } from 'effector-react';
+import { useMemo } from 'preact/hooks';
 
 import { DEFAULT_LLM } from '@/entities/model';
-import { $modelLoadError, $modelReady } from '@/entities/model/model/manage-models-model.ts';
+import {
+  $hasCheckedModels,
+  $modelLoadError,
+  $modelReady,
+} from '@/entities/model/model/manage-models-model.ts';
 import { Page } from '@/shared/ui';
 import { Chat } from '@/widgets/chat';
 import { Navbar } from '@/widgets/navbar';
@@ -15,12 +20,13 @@ export const ChatPage = () => {
   const sidebarOpened = useUnit($sidebarOpened);
 
   const ready = useUnit($modelReady);
+  const hasCheckedModels = useUnit($hasCheckedModels);
   const modelLoadError = useUnit($modelLoadError);
 
-  function getContent() {
+  const content = useMemo(() => {
     if (modelLoadError) return <div>Failed to load model! Contact support</div>;
 
-    if (!ready) return <WelcomeScreen model={DEFAULT_LLM} />;
+    if (!ready && hasCheckedModels) return <WelcomeScreen model={DEFAULT_LLM} />;
 
     return (
       <>
@@ -28,13 +34,13 @@ export const ChatPage = () => {
         <Chat />
       </>
     );
-  }
+  }, [hasCheckedModels, modelLoadError, ready]);
 
   return (
     <Page className={s.chatPage}>
       <Sidebar open={sidebarOpened} className={s.sidebar} />
 
-      <main className={s.main}>{getContent()}</main>
+      <main className={s.main}>{content}</main>
     </Page>
   );
 };

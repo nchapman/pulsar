@@ -1,37 +1,45 @@
-import { useCallback, useEffect, useState } from 'preact/hooks';
+import { open as openDialog } from '@tauri-apps/api/dialog';
+import { useCallback, useState } from 'preact/hooks';
 
-import { FileData } from '@/features/upload-file/types/upload-file.ts';
+import { saveMedia } from '../lib/saveMedia.ts';
+import { FileData } from '../types/upload-file.ts';
+
+const filters: Record<FileData['type'], { name: string; extensions: string[] }> = {
+  image: {
+    name: 'Image',
+    extensions: ['png', 'jpeg'],
+  },
+  video: {
+    name: 'Video',
+    extensions: ['mp4'],
+  },
+  application: {
+    name: 'Application',
+    extensions: ['pdf'],
+  },
+};
 
 export const useUploadFile = () => {
   const [fileData, setFileData] = useState<FileData>();
-  const [preview, setPreview] = useState<string>();
 
-  useEffect(() => {
-    if (fileData?.type !== 'image') {
-      setPreview(undefined);
-      return undefined;
-    }
+  const uploadFile = useCallback(async (type: FileData['type']) => {
+    const selected = await openDialog({
+      multiple: false,
+      filters: [filters[type]],
+    });
 
-    const objectUrl = URL.createObjectURL(fileData.file);
-    setPreview(objectUrl);
+    if (selected === null) return;
 
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [fileData]);
-
-  const onSelectFile = useCallback((e?: Event) => {
-    const { files } = (e?.target as HTMLInputElement) || {};
-    if (!files?.length) {
-      setFileData(undefined);
-      return;
-    }
-
-    const file = files[0];
-    const { name } = file;
-    const ext = name.split('.').pop() || '';
-    const type = file.type.split('/')[0] as FileData['type'];
-
-    setFileData({ file, ext, name, type });
+    const src = await saveMedia(selected as string);
+    const ext = src.split('.').pop() || '';
+    const name = src.split('/').pop() || '';
+    const fileData: FileData = { type, ext, name, src };
+    setFileData(fileData);
   }, []);
 
-  return { preview, fileData, onSelectFile };
+  const resetFileData = useCallback(() => {
+    setFileData(undefined);
+  }, []);
+
+  return { uploadFile, fileData, resetFileData };
 };

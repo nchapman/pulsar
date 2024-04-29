@@ -7,12 +7,10 @@ export const downloadModel = async (
   localName: string,
   onProgress: (p: number) => void
 ) => {
-  let progress = 0;
   let total = 0;
   const pathToSave = await getModelPath(localName);
 
-  download(url, pathToSave, (downloaded, totalCur) => {
-    progress += downloaded;
+  download(url, pathToSave, (progress, totalCur) => {
     total = totalCur;
     const percent = !total ? 0 : (progress / total) * 100;
     onProgress(percent);

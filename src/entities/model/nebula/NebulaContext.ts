@@ -1,7 +1,7 @@
 import { invoke } from '@tauri-apps/api';
 import { listen } from '@tauri-apps/api/event';
 
-import { NebulaModel } from './model';
+import { NebulaModel } from './NebulaModel.ts';
 
 type NebulaPredictPayload = {
   model: string;
@@ -30,7 +30,7 @@ export class NebulaContext {
   ): Promise<NebulaContext> {
     const ctx = await invoke<string>('plugin:nebula|model_init_context', {
       modelPath: model.model,
-      contextOptions: { ctx: cctx },
+      contextOptions: { ctx: cctx, n_ctx: 20000 },
     });
 
     return new NebulaContext(model, ctx);
@@ -43,12 +43,21 @@ export class NebulaContext {
     });
   }
 
-  public async eval_string(data: string, useBos: boolean = false) {
+  public async evaluateString(data: string, useBos: boolean = false) {
     await invoke('plugin:nebula|model_context_eval_string', {
       modelPath: this.model.model,
       contextId: this.contextId,
       data,
       useBos,
+    });
+  }
+
+  public async evaluateImage(base64EncodedImage: string, prompt: string) {
+    await invoke('plugin:nebula|model_context_eval_image', {
+      modelPath: this.model.model,
+      contextId: this.contextId,
+      base64EncodedImage,
+      prompt,
     });
   }
 

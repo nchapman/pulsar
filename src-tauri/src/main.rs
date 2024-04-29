@@ -20,17 +20,22 @@ where
 
 #[cfg(not(test))]
 fn main() {
+    use log::LevelFilter;
+    use tauri_plugin_log::fern::colors::ColoredLevelConfig;
+
     tauri::Builder::default()
+        .setup(setup)
         .plugin(
             tauri_plugin_log::Builder::default()
                 .targets([LogTarget::Stdout])
+                .with_colors(ColoredLevelConfig::default())
+                .level(LevelFilter::Info)
                 .build(),
         )
         .plugin(tauri_plugin_sql::Builder::default().build())
         .plugin(nebula::nebula::init())
         .plugin(tauri_plugin_upload::init())
         .plugin(tauri_plugin_window_state::Builder::default().build())
-        .setup(setup)
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

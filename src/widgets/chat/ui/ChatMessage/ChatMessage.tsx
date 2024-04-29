@@ -1,3 +1,4 @@
+import { convertFileSrc } from '@tauri-apps/api/tauri';
 import { useStoreMap, useUnit } from 'effector-react';
 import { useMemo } from 'preact/hooks';
 
@@ -26,7 +27,7 @@ export const ChatMessage = (props: Props) => {
     fn: (msgMap, [msgId]) => msgMap[msgId],
   });
 
-  const { text, isUser } = msg;
+  const { text, isUser, file } = msg;
 
   const actions = useMemo(() => {
     const actions = [];
@@ -52,6 +53,9 @@ export const ChatMessage = (props: Props) => {
           <div className={s.text}>
             <Markdown text={text} />
           </div>
+          {file?.type === 'image' && (
+            <img src={convertFileSrc(file?.src)} alt="img" className={s.img} />
+          )}
           <div className={s.actions}>{actions}</div>
         </div>
       </div>

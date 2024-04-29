@@ -3,6 +3,7 @@ export { assignValues } from './assignValues/assignValues.ts';
 export { capitalize } from './capitalize/capitalize.ts';
 export { classNames } from './classNames/classNames';
 export { debounce } from './debounce.ts';
+export { fileToBase64 } from './fileToBase64.ts';
 export { formatDateMedium } from './formatDateMedium/formatDateMedium.ts';
 export { formatDateWithOffset } from './formatDateWithOffset/formatDateWithOffset';
 export { getDomainFromUrl } from './getDomainFromUrl/getDomainFromUrl';

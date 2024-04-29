@@ -1,31 +1,8 @@
-import { AIModelName } from '@/constants.ts';
 import { ChatMsg } from '@/db/chat';
-import { getModelPath } from '@/entities/model/lib/getModelPath.ts';
-import { loge, logi } from '@/shared/lib/Logger.ts';
+import { model } from '@/entities/model';
+import { loge } from '@/shared/lib/Logger.ts';
 
-import { NebulaModel } from './model.ts';
-
-let model: NebulaModel | null = null;
-
-export async function loadModel(modelName: AIModelName) {
-  try {
-    const modelPath = await getModelPath(modelName);
-    model = await NebulaModel.initModel(modelPath);
-  } catch (e: any) {
-    loge('chatApi', `Failed to load model, rust error: ${e}`);
-    throw e;
-  }
-}
-
-export async function dropModel() {
-  try {
-    model?.drop();
-    model = null;
-  } catch (e: any) {
-    loge('chatApi', `Failed to unload model ${e}`);
-    throw e;
-  }
-}
+import { urlToBase64 } from '../lib/urlToBase64.ts';
 
 export async function stream(
   config: {
@@ -37,13 +14,13 @@ export async function stream(
   },
   maxPredictLen: number = 100
 ) {
-  logi('ChatAPI', 'Trying to stream!');
   if (!model) {
     loge('chatApi', 'Model not loaded, cannot stream');
     return;
   }
 
-  const { messages, onStreamStart, onTextChunkReceived, onTitleUpdate, onStreamEnd } = config;
+  const { messages } = config;
+  const { onStreamStart, onTextChunkReceived, onTitleUpdate, onStreamEnd } = config;
 
   try {
     const context = await model.createContext(
@@ -51,15 +28,19 @@ export async function stream(
     );
 
     context.onToken = (p) => {
-      if (p.token != null) {
-        onTextChunkReceived(p.token);
-      }
-    };
-    context.onComplete = (_p) => {
-      onStreamEnd();
+      if (p.token !== null) onTextChunkReceived(p.token);
     };
 
-    await context.eval_string(messages[messages.length - 2].text, true);
+    context.onComplete = onStreamEnd;
+
+    const msg = messages[messages.length - 1];
+
+    if (msg.file?.type === 'image') {
+      const file = await urlToBase64(msg.file.src);
+      await context.evaluateImage(file, messages[messages.length - 1].text);
+    } else {
+      await context.evaluateString(messages[messages.length - 1].text, true);
+    }
 
     onStreamStart();
 
@@ -68,6 +49,6 @@ export async function stream(
     loge('chatApi', `Failed to stream: ${e}`);
   } finally {
     onStreamEnd();
-    onTitleUpdate(messages[messages.length - 2].text);
+    onTitleUpdate(messages[messages.length - 1].text);
   }
 }

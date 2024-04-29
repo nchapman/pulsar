@@ -16,9 +16,7 @@
         "all": true,
         "scope": {
           "allow": [
-            "$CONFIG",
-            "$CONFIG/*",
-            "$APPDATA/**"
+            "**"
           ]
         }
       },
@@ -27,6 +25,10 @@
       },
       "window": {
         "all": true
+      },
+      "protocol": {
+        "asset": true,
+        "assetScope": ["**"]
       }
     },
     "bundle": {
@@ -45,7 +47,7 @@
       }
     },
     "security": {
-      "csp": null
+      "csp": "asset:"
     },
     "windows": [
       {

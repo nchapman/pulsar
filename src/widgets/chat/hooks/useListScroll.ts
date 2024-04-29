@@ -67,8 +67,6 @@ export const useListScroll = () => {
         pinnedToBottom = false;
       }
 
-      // console.log('here', 'scroll');
-
       const isScrolledToBottom = el.scrollHeight - el.scrollTop === el.clientHeight;
       setShowScrollBtn(!isScrolledToBottom);
     };

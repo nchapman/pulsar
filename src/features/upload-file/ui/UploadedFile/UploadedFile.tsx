@@ -1,3 +1,4 @@
+import { convertFileSrc } from '@tauri-apps/api/tauri';
 import { memo } from 'preact/compat';
 
 import FileIcon from '@/shared/assets/icons/file.svg';
@@ -10,18 +11,18 @@ import s from './UploadedFile.module.scss';
 
 interface Props {
   className?: string;
-  data: FileData;
   onDelete: () => void;
-  preview?: string;
+  fileData: FileData;
 }
 
 export const UploadedFile = memo((props: Props) => {
-  const { className, data, onDelete, preview } = props;
+  const { className, onDelete, fileData } = props;
+  const { src, name, type, ext } = fileData;
 
   const fileIcon = (
     <div className={s.icon}>
-      {preview ? (
-        <img className={s.preview} src={preview} alt={data.name} />
+      {type === 'image' ? (
+        <img className={s.preview} src={convertFileSrc(src)} alt="img" />
       ) : (
         <Icon size={20} svg={FileIcon} />
       )}
@@ -31,9 +32,9 @@ export const UploadedFile = memo((props: Props) => {
   const info = (
     <div className={s.info}>
       <Text c="primary" s={12} w="medium" className={s.name}>
-        {data.name}
+        {name}
       </Text>
-      <Text s={12}>{data.ext.toUpperCase()}</Text>
+      <Text s={12}>{ext.toUpperCase()}</Text>
     </div>
   );
 

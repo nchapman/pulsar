@@ -213,6 +213,14 @@ async fn model_context_eval_image<R: Runtime>(
 ) -> NebulaResult<()> {
     let mut models = state.models.lock().await;
 
+    let decoded_image = if base64_encoded_image.starts_with("data:") {
+        let data_start = base64_encoded_image.find(",").unwrap();
+        let encoded_data = &base64_encoded_image[data_start + 1..];
+        BASE64_STANDARD.decode(encoded_data.as_bytes())?
+    } else {
+        BASE64_STANDARD.decode(base64_encoded_image.as_bytes())?
+    };
+
     let model = models
         .get_mut(&model_path)
         .ok_or(NebulaError::ModelNotLoaded(model_path.clone()))?;
@@ -223,9 +231,7 @@ async fn model_context_eval_image<R: Runtime>(
         .ok_or(NebulaError::ModelContextNotExist(context_id.clone()))?;
 
     ss.store(true, std::sync::atomic::Ordering::Relaxed);
-    cc.lock()
-        .await
-        .eval_image(BASE64_STANDARD.decode(base64_encoded_image)?, &prompt)?;
+    cc.lock().await.eval_image(decoded_image, &prompt)?;
 
     Ok(())
 }

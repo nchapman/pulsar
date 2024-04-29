@@ -1,17 +1,18 @@
-import { createDir } from '@tauri-apps/api/fs';
-import { BaseDirectory } from '@tauri-apps/api/path';
 import { download } from 'tauri-plugin-upload-api';
-
-import { AIModelName, models, MODELS_DIR_NAME } from '@/constants.ts';
 
 import { getModelPath } from '../lib/getModelPath.ts';
 
-export async function downloadModel(model: AIModelName, handler: Parameters<typeof download>[2]) {
-  const { url } = models[model];
+export const downloadModel = async (
+  url: string,
+  localName: string,
+  onProgress: (p: number) => void
+) => {
+  let total = 0;
+  const pathToSave = await getModelPath(localName);
 
-  await createDir(MODELS_DIR_NAME, { dir: BaseDirectory.AppData, recursive: true });
-
-  const pathToSave = await getModelPath(model);
-
-  download(url, pathToSave, handler);
-}
+  download(url, pathToSave, (progress, totalCur) => {
+    total = totalCur;
+    const percent = !total ? 0 : (progress / total) * 100;
+    onProgress(percent);
+  });
+};

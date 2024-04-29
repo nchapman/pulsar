@@ -14,8 +14,10 @@ tauri = { version = "1.5", features = ["api-all", "updater", "test"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
-log = { version = "^0.4", features = ["max_level_info"] }
-tauri-plugin-log = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+log = { version = "^0.4" }
+tauri-plugin-log = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1", features = [
+  "colored",
+] }
 nebula = { git = "https://github.com/nchapman/nebula.git", default-features = false, features = [
   "llama",
 ] }

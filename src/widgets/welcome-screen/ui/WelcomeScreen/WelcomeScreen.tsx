@@ -1,15 +1,15 @@
 import { memo } from 'preact/compat';
 
-import { DEFAULT_MODEL_NAME } from '@/constants.ts';
+import { ModelDownload } from '@/entities/model';
+import { LlmName } from '@/entities/model/consts/supported-llms.const.ts';
 import { classNames } from '@/shared/lib/func';
 import { Text, Title } from '@/shared/ui';
 
-import { ModelDownload } from '../ModelDownload/ModelDownload.tsx';
 import s from './WelcomeScreen.module.scss';
 
 interface Props {
   className?: string;
-  onLoaded: () => void;
+  model: LlmName;
 }
 
 const content = {
@@ -20,7 +20,7 @@ const content = {
 };
 
 export const WelcomeScreen = memo((props: Props) => {
-  const { className, onLoaded } = props;
+  const { className, model } = props;
 
   return (
     <div className={classNames(s.welcomeScreen, [className])}>
@@ -31,11 +31,7 @@ export const WelcomeScreen = memo((props: Props) => {
         <Text>{content.text}</Text>
       </div>
 
-      <ModelDownload
-        className={s.modelDownload}
-        onLoaded={onLoaded}
-        modelName={DEFAULT_MODEL_NAME}
-      />
+      <ModelDownload className={s.modelDownload} model={model} />
 
       <Text s={14}>{content.policy}</Text>
     </div>

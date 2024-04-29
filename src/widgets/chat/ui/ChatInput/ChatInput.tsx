@@ -1,15 +1,15 @@
 import { useUnit } from 'effector-react';
-import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 
-import { FileData, UploadFile } from '@/features/upload-file';
+import { UploadFile, useUploadFile } from '@/features/upload-file';
 import { VoiceInput } from '@/features/voice-input';
 import SendIcon from '@/shared/assets/icons/send.svg';
 import StopIcon from '@/shared/assets/icons/stop.svg';
 import { classNames } from '@/shared/lib/func';
 import { useKeyboardListener } from '@/shared/lib/hooks';
 import { Button } from '@/shared/ui';
-import { autoResize } from '@/widgets/chat/lib/autoResize.ts';
 
+import { autoResize } from '../../lib/autoResize.ts';
 import { $chat, $isInputDisabled, $streamedMsgId, askQuestion } from '../../model/chat.ts';
 import s from './ChatInput.module.scss';
 
@@ -22,6 +22,7 @@ export const ChatInput = (props: Props) => {
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [input, setInput] = useState('');
+  const { fileData, uploadFile, resetFileData } = useUploadFile();
 
   const chatId = useUnit($chat.id);
 
@@ -35,16 +36,10 @@ export const ChatInput = (props: Props) => {
   function handleSubmit(e?: Event) {
     e?.preventDefault();
     if (isStreaming || disabledSend) return;
-    askQuestion(input);
+    askQuestion({ text: input, file: fileData });
     setInput('');
+    resetFileData();
   }
-
-  const handleReceiveFile = useCallback((data?: FileData) => {
-    if (!data) return;
-    const { file, ext, name } = data;
-
-    console.log('File received:', { file, ext, name });
-  }, []);
 
   useEffect(() => {
     autoResize(inputRef.current);
@@ -70,7 +65,12 @@ export const ChatInput = (props: Props) => {
       </div>
 
       <div className={s.actionsRow}>
-        <UploadFile className={s.uploadFile} onFileReceive={handleReceiveFile} />
+        <UploadFile
+          className={s.uploadFile}
+          onUpload={uploadFile}
+          fileData={fileData}
+          onRemove={resetFileData}
+        />
 
         <div>
           <VoiceInput className={s.audioInput} />

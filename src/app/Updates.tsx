@@ -5,6 +5,7 @@ import { loge, logi } from '@/shared/lib/Logger';
 
 export async function checkUpdates() {
   try {
+    // @ts-ignore
     if (process.env.NODE_ENV === 'development') {
       logi('Updates', 'Development mode, skipping updates check');
       return;

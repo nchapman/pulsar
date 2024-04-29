@@ -18,12 +18,8 @@ export const ExamplePrompts = memo((props: Props) => {
 
   const prompts = useMemo(
     () =>
-      getRandomElements(examplePrompts, 4).map((prompt) => (
-        <div
-          key={prompt.title}
-          className={s.prompt}
-          onClick={() => askQuestion({ text: prompt.prompt })}
-        >
+      getRandomElements(examplePrompts, 4).map((prompt, idx) => (
+        <div key={idx} className={s.prompt} onClick={() => askQuestion({ text: prompt.prompt })}>
           <Text s={14} c="primary">
             {prompt.title}
           </Text>

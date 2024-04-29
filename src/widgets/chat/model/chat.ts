@@ -243,5 +243,3 @@ export const $streamedText = combine($streamedMsgId, $messages.data, (msgId, dat
 });
 
 export const { askQuestion, startNew: startNewChat, switch: switchChat } = chatEvt;
-
-createUserMsg.fail.watch((a) => console.log('askQuestion', a));

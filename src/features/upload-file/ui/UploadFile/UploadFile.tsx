@@ -3,8 +3,8 @@ import { useEffect, useMemo, useState } from 'preact/hooks';
 import { Popover } from 'react-tiny-popover';
 
 import { FileData } from '@/features/upload-file';
-import CamIcon from '@/shared/assets/icons/cam.svg';
-import FileIcon from '@/shared/assets/icons/file.svg';
+// import CamIcon from '@/shared/assets/icons/cam.svg';
+// import FileIcon from '@/shared/assets/icons/file.svg';
 import ImgIcon from '@/shared/assets/icons/img.svg';
 import PlusIcon from '@/shared/assets/icons/plus.svg';
 import { classNames } from '@/shared/lib/func';
@@ -33,9 +33,9 @@ export const UploadFile = memo((props: Props) => {
 
   const options: InputOption[] = useMemo(
     () => [
-      { name: 'File', icon: FileIcon, onClick: () => onUpload('application') },
+      // { name: 'File', icon: FileIcon, onClick: () => onUpload('application') },
       { name: 'Photo or Video', icon: ImgIcon, onClick: () => onUpload('image') },
-      { name: 'Web Camera', icon: CamIcon, onClick: () => console.log('Webcam') },
+      // { name: 'Web Camera', icon: CamIcon, onClick: () => console.log('Webcam') },
     ],
     [onUpload]
   );

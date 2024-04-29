@@ -3,47 +3,20 @@ import { combine, createEffect, createEvent, createStore, sample } from 'effecto
 import { downloadModel } from '../api/downloadModel';
 import { DEFAULT_LLM } from '../consts/model.const';
 import { LlmName, supportedLlms } from '../consts/supported-llms.const';
+import { calcPercent } from '../lib/calcPercent.ts';
 import { getAvailableModels } from '../lib/getAvailableModels';
+import { ModelDownloadInfo } from '../types/model.types.ts';
 import { dropModel, loadModel } from './model-state';
 
-// check available models
-// if current not available - show download screen
-// if available - check mmp
-// download current on event trigger (download btn click)
-// when downloaded, check mmp
-// if has mmp = download it
-// set ready to true
-// load model on true
-
-// P.S
-// treat llm and mmp as equal when downloading
+// export const $appStatus = createStore<AppStatus>('loading');
 
 const $availableModels = createStore<Record<string, boolean> | null>(null);
 export const getAvailableModelsEff = createEffect(getAvailableModels);
 
 $availableModels.on(getAvailableModelsEff.doneData, (_, availableModels) => availableModels);
 
-// download info / false on downloaded
-type ModelDownloadInfo = {
-  percentLlm?: number;
-  percentMmp?: number;
-  withMmp: boolean;
-  percent?: number;
-};
-
 export const $modelsDownload = createStore<OptionalRecord<LlmName, ModelDownloadInfo>>({});
 const updateDownloadInfo = createEvent<{ model: LlmName; info: ModelDownloadInfo }>();
-
-function calcPercent(info: ModelDownloadInfo) {
-  const { percentLlm, percentMmp, withMmp } = info;
-  let percent = percentLlm || 0;
-
-  if (withMmp) {
-    percent = Math.floor(((percentLlm || 0) + (percentMmp || 0)) / 2);
-  }
-
-  return percent;
-}
 
 $modelsDownload.on(updateDownloadInfo, (store, { info, model }) => {
   const newState = { ...store, [model]: { ...(store[model] || {}), ...info } };
@@ -63,7 +36,7 @@ sample({
       return { ...availableModels, [model]: true };
     }
 
-    const mmpName = supportedLlms[model].mmp!.name;
+    const mmpName = supportedLlms[model].mmp!.localName;
     return { ...availableModels, [mmpName]: true };
   },
   target: $availableModels,
@@ -83,13 +56,22 @@ $modelLoadError.on(setModelLoadError, (_, hasErr) => hasErr);
 const setModelReady = createEvent<boolean>();
 $modelReady.on(setModelReady, (_, ready) => ready);
 
-const $llmPresent = combine($availableModels, $currentModel, (available, current) => {
-  console.log(available, current);
-  return !!available?.[current];
-});
+const $llmPresent = combine(
+  $availableModels,
+  $currentModel,
+  (available, current) => (available ? available[current] : undefined),
+  { skipVoid: false }
+);
 
-const $mmpPresent = combine($availableModels, $currentMmp, (available, currentMmp) =>
-  currentMmp ? !!available?.[currentMmp] : false
+const $mmpPresent = combine(
+  $availableModels,
+  $currentMmp,
+  (available, currentMmp) => {
+    if (!available) return undefined;
+
+    return currentMmp ? available[currentMmp] : false;
+  },
+  { skipVoid: false }
 );
 
 const $modelPresent = combine(
@@ -97,9 +79,21 @@ const $modelPresent = combine(
   $llmPresent,
   $mmpPresent,
   (hasMmp, llmPresent, mmpPresent) => {
+    if (llmPresent === undefined || mmpPresent === undefined) return undefined;
     if (!hasMmp) return llmPresent;
     return llmPresent && mmpPresent;
-  }
+  },
+  { skipVoid: false }
+);
+
+export const $missingModel = combine(
+  $availableModels,
+  $modelPresent,
+  (available: null, present: undefined) => {
+    if (available === null) return false;
+    return present === undefined;
+  },
+  []
 );
 
 export const downloadModelEff = createEffect((model: LlmName) => {
@@ -125,8 +119,6 @@ export const downloadModelEff = createEffect((model: LlmName) => {
   }
 });
 
-export const $hasCheckedModels = createStore(false);
-
 const loadModelEff = createEffect<{ llm: LlmName }, void>(({ llm }) => {
   dropModel()
     .then(() => {
@@ -144,7 +136,7 @@ const loadModelEff = createEffect<{ llm: LlmName }, void>(({ llm }) => {
 sample({
   source: $currentModel,
   clock: $modelPresent,
-  filter: (_, present) => present,
+  filter: (_, present) => !!present,
   fn: (llm) => ({ llm }),
   target: loadModelEff,
 });

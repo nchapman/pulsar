@@ -3653,6 +3653,7 @@ dependencies = [
  "futures-util",
  "log",
  "nebula",
+ "once_cell",
  "read-progress-stream",
  "reqwest 0.12.4",
  "serde",

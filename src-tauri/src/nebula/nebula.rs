@@ -340,17 +340,15 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
 
 #[cfg(test)]
 mod tests {
+    use tauri::test::MockRuntime;
     use super::*;
     use std::fs;
     use std::path::Path;
 
-    fn setup<R: tauri::Runtime>(
-        builder: tauri::Builder<R>,
-    ) -> Result<tauri::App<R>, std::io::Error> {
-        let app = builder
-            .plugin(super::init())
-            .build(tauri::generate_context!())
-            .unwrap();
+    fn setup(
+        
+    ) -> Result<tauri::App<MockRuntime>, std::io::Error> {
+        let app = tauri::test::mock_app();
 
         let source_path = Path::new("tests/evolvedseeker_1_3.Q2_K.gguf");
         let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
@@ -370,7 +368,7 @@ mod tests {
 
     #[test]
     fn should_drop_model() {
-        let app = setup(tauri::test::mock_builder()).unwrap();
+        let app = setup().unwrap();
         let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
         let model_path = app_data_dir
             .join("models/evolvedseeker_1_3.Q2_K.gguf")
@@ -413,7 +411,7 @@ mod tests {
 
     #[test]
     fn should_predict_text() {
-        let app = setup(tauri::test::mock_builder()).unwrap();
+        let app = setup().unwrap();
         let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
         let model_path = app_data_dir
             .join("models/evolvedseeker_1_3.Q2_K.gguf")

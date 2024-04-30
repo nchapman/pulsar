@@ -14,7 +14,7 @@ where
     let app_data_dir = app.handle().path_resolver().app_data_dir();
     info!(
         "App data dir: \x1b[34m{}\x1b[0m",
-        app_data_dir.unwrap().to_str().unwrap().replace(" ", "\\ ")
+        app_data_dir.unwrap().to_str().unwrap()
     );
     Ok(())
 }
@@ -38,4 +38,14 @@ fn main() {
         .plugin(tauri_plugin_window_state::Builder::default().build())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_greet() {
+        assert_eq!("Johnny", "Hello, Johnny! You've been greeted from Rust!");
+    }
 }

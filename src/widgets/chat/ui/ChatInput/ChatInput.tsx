@@ -1,6 +1,7 @@
 import { useUnit } from 'effector-react';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
+import { $modelReady } from '@/entities/model/model/manage-models-model.ts';
 import { UploadFile, useUploadFile } from '@/features/upload-file';
 import { VoiceInput } from '@/features/voice-input';
 import SendIcon from '@/shared/assets/icons/send.svg';
@@ -25,9 +26,10 @@ export const ChatInput = (props: Props) => {
   const { fileData, uploadFile, resetFileData } = useUploadFile();
 
   const chatId = useUnit($chat.id);
+  const isModelReady = useUnit($modelReady);
 
   const isStreaming = useUnit($streamedMsgId);
-  const disabledSend = useUnit($isInputDisabled) || !input;
+  const disabledSend = useUnit($isInputDisabled) || !input || !isModelReady;
 
   const handleInputChange = (e: Event) => {
     setInput((e.target as HTMLInputElement).value);
@@ -56,7 +58,7 @@ export const ChatInput = (props: Props) => {
       <div className={s.inputRow}>
         <textarea
           ref={inputRef}
-          placeholder="Message Pulsar…"
+          placeholder={isModelReady ? 'Message Pulsar…' : 'Loading…'}
           value={input}
           onChange={handleInputChange}
           className={s.chatInput}

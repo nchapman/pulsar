@@ -2,6 +2,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod nebula;
+mod upload;
 
 use log::info;
 use tauri_plugin_log::LogTarget;
@@ -18,7 +19,6 @@ where
     Ok(())
 }
 
-#[cfg(not(test))]
 fn main() {
     use log::LevelFilter;
     use tauri_plugin_log::fern::colors::ColoredLevelConfig;
@@ -34,7 +34,7 @@ fn main() {
         )
         .plugin(tauri_plugin_sql::Builder::default().build())
         .plugin(nebula::nebula::init())
-        .plugin(tauri_plugin_upload::init())
+        .plugin(upload::init())
         .plugin(tauri_plugin_window_state::Builder::default().build())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

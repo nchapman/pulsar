@@ -459,7 +459,7 @@ mod tests {
         let context_id = context_init_res.unwrap();
 
         // setup listener to listen for predict events
-        let id = app.listen_global("nebula-predict", |event| {
+        let _id = app.listen_global("nebula-predict", |event| {
             println!("Received event: {:?}", event.payload().unwrap());
             // let payload: PredictPayload = event.payload().unwrap();
             // assert_eq!(payload.model, model_path);

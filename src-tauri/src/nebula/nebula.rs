@@ -318,7 +318,7 @@ async fn drop<R: Runtime>(_app: AppHandle<R>, state: State<'_, NebulaState>) -> 
     Ok(())
 }
 
-pub fn init<R: Runtime>() -> TauriPlugin<R> {
+pub fn init_plugin<R: Runtime>() -> TauriPlugin<R> {
     Builder::new("nebula")
         .invoke_handler(tauri::generate_handler![
             init_model,
@@ -347,7 +347,7 @@ mod tests {
 
     fn setup() -> Result<tauri::App<MockRuntime>, std::io::Error> {
         let app = tauri::test::mock_builder()
-            .plugin(super::init())
+            .plugin(super::init_plugin())
             .build(mock_context(noop_assets()))
             .unwrap();
 

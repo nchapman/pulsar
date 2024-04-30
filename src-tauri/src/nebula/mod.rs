@@ -1,2 +1,4 @@
 mod error;
-pub mod nebula;
+mod nebula;
+
+pub use nebula::init_plugin;

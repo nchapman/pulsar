@@ -1,7 +1,3 @@
-// Copyright 2021 Tauri Programme within The Commons Conservancy
-// SPDX-License-Identifier: Apache-2.0
-// SPDX-License-Identifier: MIT
-
 use futures_core::future::BoxFuture;
 use serde::{ser::Serializer, Deserialize, Serialize};
 use serde_json::Value as JsonValue;
@@ -21,20 +17,11 @@ use tokio::sync::Mutex;
 
 use std::collections::HashMap;
 
-#[cfg(feature = "sqlite")]
 use std::{fs::create_dir_all, path::PathBuf};
 
-#[cfg(feature = "sqlite")]
 type Db = sqlx::sqlite::Sqlite;
-#[cfg(feature = "mysql")]
-type Db = sqlx::mysql::MySql;
-#[cfg(feature = "postgres")]
-type Db = sqlx::postgres::Postgres;
 
-#[cfg(feature = "sqlite")]
 type LastInsertId = i64;
-#[cfg(not(feature = "sqlite"))]
-type LastInsertId = u64;
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
@@ -59,7 +46,6 @@ impl Serialize for Error {
 
 type Result<T> = std::result::Result<T, Error>;
 
-#[cfg(feature = "sqlite")]
 /// Resolves the App's **file path** from the `AppHandle` context
 /// object
 fn app_path<R: Runtime>(app: &AppHandle<R>) -> PathBuf {
@@ -69,7 +55,6 @@ fn app_path<R: Runtime>(app: &AppHandle<R>) -> PathBuf {
         .expect("No App path was found!")
 }
 
-#[cfg(feature = "sqlite")]
 /// Maps the user supplied DB connection string to a connection string
 /// with a fully qualified file path to the App's designed "app_path"
 fn path_mapper(mut app_path: PathBuf, connection_string: &str) -> String {
@@ -152,12 +137,8 @@ async fn load<R: Runtime>(
     migrations: State<'_, Migrations>,
     db: String,
 ) -> Result<String> {
-    #[cfg(feature = "sqlite")]
     let fqdb = path_mapper(app_path(&app), &db);
-    #[cfg(not(feature = "sqlite"))]
-    let fqdb = db.clone();
 
-    #[cfg(feature = "sqlite")]
     create_dir_all(app_path(&app)).expect("Problem creating App directory!");
 
     if !Db::database_exists(&fqdb).await.unwrap_or(false) {
@@ -219,12 +200,7 @@ async fn execute(
         }
     }
     let result = query.execute(&*db).await?;
-    #[cfg(feature = "sqlite")]
     let r = Ok((result.rows_affected(), result.last_insert_rowid()));
-    #[cfg(feature = "mysql")]
-    let r = Ok((result.rows_affected(), result.last_insert_id()));
-    #[cfg(feature = "postgres")]
-    let r = Ok((result.rows_affected(), 0));
     r
 }
 
@@ -254,7 +230,7 @@ async fn select(
         for (i, column) in row.columns().iter().enumerate() {
             let v = row.try_get_raw(i)?;
 
-            let v = crate::decode::to_json(v)?;
+            let v = super::decode::to_json(v)?;
 
             value.insert(column.name().to_string(), v);
         }
@@ -287,17 +263,13 @@ impl Builder {
             .setup_with_config(|app, config: Option<PluginConfig>| {
                 let config = config.unwrap_or_default();
 
-                #[cfg(feature = "sqlite")]
                 create_dir_all(app_path(app)).expect("problems creating App directory!");
 
                 tauri::async_runtime::block_on(async move {
                     let instances = DbInstances::default();
                     let mut lock = instances.0.lock().await;
                     for db in config.preload {
-                        #[cfg(feature = "sqlite")]
                         let fqdb = path_mapper(app_path(app), &db);
-                        #[cfg(not(feature = "sqlite"))]
-                        let fqdb = db.clone();
 
                         if !Db::database_exists(&fqdb).await.unwrap_or(false) {
                             Db::create_database(&fqdb).await?;

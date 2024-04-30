@@ -2,6 +2,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod nebula;
+mod sqlite;
 mod upload;
 
 use tauri_plugin_log::LogTarget;
@@ -18,9 +19,9 @@ fn main() {
                 .level(LevelFilter::Info)
                 .build(),
         )
-        .plugin(tauri_plugin_sql::Builder::default().build())
-        .plugin(nebula::nebula::init())
-        .plugin(upload::init())
+        .plugin(sqlite::Builder::default().build())
+        .plugin(nebula::init_plugin())
+        .plugin(upload::init_plugin())
         .plugin(tauri_plugin_window_state::Builder::default().build())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

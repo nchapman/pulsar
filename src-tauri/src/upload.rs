@@ -153,7 +153,7 @@ fn file_to_body<R: Runtime>(id: u32, window: Window<R>, file: File) -> reqwest::
     ))
 }
 
-pub fn init<R: Runtime>() -> TauriPlugin<R> {
+pub fn init_plugin<R: Runtime>() -> TauriPlugin<R> {
     PluginBuilder::new("upload")
         .invoke_handler(tauri::generate_handler![download, upload])
         .build()

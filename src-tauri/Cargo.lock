@@ -3650,6 +3650,7 @@ name = "pulsar"
 version = "0.0.0"
 dependencies = [
  "base64 0.22.0",
+ "futures-core",
  "futures-util",
  "log",
  "nebula",
@@ -3658,12 +3659,13 @@ dependencies = [
  "reqwest 0.12.4",
  "serde",
  "serde_json",
+ "sqlx",
  "tauri",
  "tauri-build",
  "tauri-plugin-log",
- "tauri-plugin-sql",
  "tauri-plugin-window-state",
  "thiserror",
+ "time",
  "tokio",
  "tokio-util",
  "uuid",
@@ -5141,22 +5143,6 @@ dependencies = [
  "serde_repr",
  "tauri",
  "time",
-]
-
-[[package]]
-name = "tauri-plugin-sql"
-version = "0.0.0"
-dependencies = [
- "futures-core",
- "log",
- "serde",
- "serde_json",
- "sqlx",
- "tauri",
- "tauri-build",
- "thiserror",
- "time",
- "tokio",
 ]
 
 [[package]]

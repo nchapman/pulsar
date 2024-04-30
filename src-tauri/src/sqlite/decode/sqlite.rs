@@ -2,7 +2,7 @@ use serde_json::Value as JsonValue;
 use sqlx::{sqlite::SqliteValueRef, TypeInfo, Value, ValueRef};
 use time::{Date, PrimitiveDateTime, Time};
 
-use crate::Error;
+use super::super::Error;
 
 pub(crate) fn to_json(v: SqliteValueRef) -> Result<JsonValue, Error> {
     if v.is_null() {

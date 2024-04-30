@@ -15,8 +15,9 @@ use tauri::{
 };
 use tokio::sync::Mutex;
 
-use std::collections::HashMap;
+use std::{collections::HashMap, ffi::c_char};
 
+use sqlite_vss::{sqlite3_vector_init, sqlite3_vss_init};
 use std::{fs::create_dir_all, path::PathBuf};
 
 type Db = sqlx::sqlite::Sqlite;
@@ -151,7 +152,40 @@ async fn load<R: Runtime>(
         migrator.run(&pool).await?;
     }
 
-    db_instances.0.lock().await.insert(db.clone(), pool);
+    db_instances.0.lock().await.insert(db.clone(), pool.clone());
+
+    // We are going to hijack the connection creation to load the vss extension
+    let mut connection = pool.acquire().await?;
+    let mut db_pointer = connection.lock_handle().await?;
+    unsafe {
+        // Transmute the function to a void pointer
+        let vector_init = sqlite3_vector_init as *const ();
+        // Then cast it to the correct function signature
+        let vector_init_correct: extern "C" fn(
+            db: *mut *const (),
+            pzErrMsg: *mut *const c_char,
+            pThunk: *const (),
+        ) = std::mem::transmute(vector_init);
+        // We can then finally call it
+        (vector_init_correct)(
+            db_pointer.as_raw_handle().as_ptr() as *mut *const (),
+            std::ptr::null_mut(),
+            std::ptr::null(),
+        );
+
+        // Now do the same for vss
+        let vss_init = sqlite3_vss_init as *const ();
+        let vss_init_correct: extern "C" fn(
+            db: *mut *const (),
+            pzErrMsg: *mut *const c_char,
+            pThunk: *const (),
+        ) = std::mem::transmute(vss_init);
+        (vss_init_correct)(
+            db_pointer.as_raw_handle().as_ptr() as *mut *const (),
+            std::ptr::null_mut(),
+            std::ptr::null(),
+        );
+    }
     Ok(db)
 }
 
@@ -248,15 +282,6 @@ pub struct Builder {
 }
 
 impl Builder {
-    /// Add migrations to a database.
-    #[must_use]
-    pub fn add_migrations(mut self, db_url: &str, migrations: Vec<Migration>) -> Self {
-        self.migrations
-            .get_or_insert(Default::default())
-            .insert(db_url.to_string(), MigrationList(migrations));
-        self
-    }
-
     pub fn build<R: Runtime>(mut self) -> TauriPlugin<R, Option<PluginConfig>> {
         PluginBuilder::new("sql")
             .invoke_handler(tauri::generate_handler![load, execute, select, close])

@@ -340,25 +340,29 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
 
 #[cfg(test)]
 mod tests {
-    use tauri::test::MockRuntime;
     use super::*;
     use std::fs;
     use std::path::Path;
+    use tauri::test::{mock_context, noop_assets, MockRuntime};
 
-    fn setup(
-        
-    ) -> Result<tauri::App<MockRuntime>, std::io::Error> {
-        let app = tauri::test::mock_app();
+    fn setup() -> Result<tauri::App<MockRuntime>, std::io::Error> {
+        let app = tauri::test::mock_builder()
+            .plugin(super::init())
+            .build(mock_context(noop_assets()))
+            .unwrap();
 
         let source_path = Path::new("tests/evolvedseeker_1_3.Q2_K.gguf");
         let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
         let model_dir = app_data_dir.join("models");
-        fs::create_dir_all(model_dir).unwrap();
+        if !model_dir.exists() {
+            // fs::remove_dir_all(&model_dir).unwrap();
+            fs::create_dir_all(model_dir.clone()).unwrap();
+        }
 
-        let target_path = app_data_dir.join("models/evolvedseeker_1_3.Q2_K.gguf");
+        let model_path = model_dir.join("evolvedseeker_1_3.Q2_K.gguf");
 
-        if !target_path.exists() {
-            if let Err(err) = fs::copy(source_path, target_path) {
+        if !model_path.exists() {
+            if let Err(err) = fs::copy(source_path, model_path) {
                 return Err(err.into());
             }
         }
@@ -388,6 +392,8 @@ mod tests {
                 }),
             },
         );
+
+        println!("{:?}", model_init_res);
 
         assert!(model_init_res.is_ok());
 

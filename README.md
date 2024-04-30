@@ -46,7 +46,22 @@ yarn start
 ## Testing
 
 ```bash
-bun test
+yarn test:frontend
+```
+
+For backend tests you need to have `git-lfs` installed (`brew install git-lfs`). After you have cloned the repo do:
+
+```
+git lfs install
+git lfs pull
+```
+
+It will download a small llm that is required to run the tests.
+
+Afterwards you can do
+
+```
+yarn test:backend
 ```
 
 ## Commits

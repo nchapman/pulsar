@@ -4,7 +4,6 @@
 mod nebula;
 mod upload;
 
-use log::info;
 use tauri_plugin_log::LogTarget;
 
 fn main() {
@@ -25,14 +24,4 @@ fn main() {
         .plugin(tauri_plugin_window_state::Builder::default().build())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_greet() {
-        assert_eq!("Johnny", "Hello, Johnny! You've been greeted from Rust!");
-    }
 }

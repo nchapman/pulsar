@@ -343,24 +343,25 @@ mod tests {
     use super::*;
     use std::fs;
     use std::path::Path;
+    use tauri::test::{mock_context, noop_assets, MockRuntime};
 
-    fn setup<R: tauri::Runtime>(
-        builder: tauri::Builder<R>,
-    ) -> Result<tauri::App<R>, std::io::Error> {
-        let app = builder
+    fn setup() -> Result<tauri::App<MockRuntime>, std::io::Error> {
+        let app = tauri::test::mock_builder()
             .plugin(super::init())
-            .build(tauri::generate_context!())
+            .build(mock_context(noop_assets()))
             .unwrap();
 
         let source_path = Path::new("tests/evolvedseeker_1_3.Q2_K.gguf");
         let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
         let model_dir = app_data_dir.join("models");
-        fs::create_dir_all(model_dir).unwrap();
+        if !model_dir.exists() {
+            fs::create_dir_all(model_dir.clone()).unwrap();
+        }
 
-        let target_path = app_data_dir.join("models/evolvedseeker_1_3.Q2_K.gguf");
+        let model_path = model_dir.join("evolvedseeker_1_3.Q2_K.gguf");
 
-        if !target_path.exists() {
-            if let Err(err) = fs::copy(source_path, target_path) {
+        if !model_path.exists() {
+            if let Err(err) = fs::copy(source_path, model_path) {
                 return Err(err.into());
             }
         }
@@ -370,7 +371,7 @@ mod tests {
 
     #[test]
     fn should_drop_model() {
-        let app = setup(tauri::test::mock_builder()).unwrap();
+        let app = setup().unwrap();
         let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
         let model_path = app_data_dir
             .join("models/evolvedseeker_1_3.Q2_K.gguf")
@@ -413,7 +414,7 @@ mod tests {
 
     #[test]
     fn should_predict_text() {
-        let app = setup(tauri::test::mock_builder()).unwrap();
+        let app = setup().unwrap();
         let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
         let model_path = app_data_dir
             .join("models/evolvedseeker_1_3.Q2_K.gguf")
@@ -459,7 +460,7 @@ mod tests {
         let context_id = context_init_res.unwrap();
 
         // setup listener to listen for predict events
-        let id = app.listen_global("nebula-predict", |event| {
+        let _id = app.listen_global("nebula-predict", |event| {
             println!("Received event: {:?}", event.payload().unwrap());
             // let payload: PredictPayload = event.payload().unwrap();
             // assert_eq!(payload.model, model_path);

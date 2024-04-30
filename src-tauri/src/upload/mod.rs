@@ -28,8 +28,8 @@ pub enum Error {
     Io(#[from] std::io::Error),
     #[error(transparent)]
     Request(#[from] reqwest::Error),
-    #[error("{0}")]
-    ContentLength(String),
+    // #[error("{0}")]
+    // ContentLength(String),
     #[error("request failed with status code {0}: {1}")]
     HttpErrorCode(u16, String),
 }

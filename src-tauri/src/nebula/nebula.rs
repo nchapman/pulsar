@@ -355,7 +355,6 @@ mod tests {
         let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
         let model_dir = app_data_dir.join("models");
         if !model_dir.exists() {
-            // fs::remove_dir_all(&model_dir).unwrap();
             fs::create_dir_all(model_dir.clone()).unwrap();
         }
 
@@ -392,8 +391,6 @@ mod tests {
                 }),
             },
         );
-
-        println!("{:?}", model_init_res);
 
         assert!(model_init_res.is_ok());
 

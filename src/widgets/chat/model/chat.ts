@@ -151,6 +151,8 @@ $messages.idsList.on([createUserMsg.doneData, createAssistantMsg.doneData], (sta
   msg.id,
 ]);
 
+export const regenerateAnswer = createEvent<Id>();
+
 sample({
   source: $chat.data,
   clock: streamEvt.updateTitle,
@@ -225,12 +227,37 @@ sample({
   target: streamMsg,
 });
 
+// Regenerate massage
+sample({
+  source: {
+    chatId: $chat.id,
+    msgIds: $messages.idsList,
+    msgData: $messages.data,
+  },
+  clock: regenerateAnswer,
+  fn: ({ chatId, msgIds, msgData }, msgId) => ({
+    msgId,
+    chatId: chatId!,
+    messages: msgIds.map((id) => msgData[id]),
+  }),
+  target: streamMsg,
+});
+
 // change msg data on stream events
 $messages.data.on(streamEvt.addTextChunk, (state, { msgId, chunk }) => ({
   ...state,
   [msgId]: {
     ...state[msgId],
     text: state[msgId].text + chunk,
+  },
+}));
+
+// reset msg text on regenerate
+$messages.data.on(regenerateAnswer, (state, msgId) => ({
+  ...state,
+  [msgId]: {
+    ...state[msgId],
+    text: '',
   },
 }));
 

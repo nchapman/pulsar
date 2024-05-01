@@ -6,7 +6,8 @@ use sqlx::{
     migrate::{
         MigrateDatabase, Migration as SqlxMigration, MigrationSource, MigrationType, Migrator,
     },
-    Column, Pool, Row,
+    sqlite::SqliteRow,
+    Any, Column, Pool, Row,
 };
 use tauri::{
     command,
@@ -17,6 +18,7 @@ use tokio::sync::Mutex;
 
 use std::{collections::HashMap, ffi::c_char};
 
+use libsqlite3_sys::{sqlite3, sqlite3_api_routines};
 use sqlite_vss::{sqlite3_vector_init, sqlite3_vss_init};
 use std::{fs::create_dir_all, path::PathBuf};
 
@@ -138,6 +140,25 @@ async fn load<R: Runtime>(
     migrations: State<'_, Migrations>,
     db: String,
 ) -> Result<String> {
+    println!("Loading database: {:?}", db);
+    unsafe {
+        let vss_vector_init = sqlite3_vector_init as *const ();
+        let vss_vector_init_correct: extern "C" fn(
+            db: *mut sqlite3,
+            pzErrMsg: *mut *const c_char,
+            pThunk: *const sqlite3_api_routines,
+        ) -> i32 = std::mem::transmute(vss_vector_init);
+        libsqlite3_sys::sqlite3_auto_extension(Some(vss_vector_init_correct));
+
+        let vss_init = sqlite3_vss_init as *const ();
+        let vss_init_correct: extern "C" fn(
+            db: *mut sqlite3,
+            pzErrMsg: *mut *const c_char,
+            pThunk: *const sqlite3_api_routines,
+        ) -> i32 = std::mem::transmute(vss_init);
+        libsqlite3_sys::sqlite3_auto_extension(Some(vss_init_correct));
+    }
+
     let fqdb = path_mapper(app_path(&app), &db);
 
     create_dir_all(app_path(&app)).expect("Problem creating App directory!");
@@ -145,7 +166,7 @@ async fn load<R: Runtime>(
     if !Db::database_exists(&fqdb).await.unwrap_or(false) {
         Db::create_database(&fqdb).await?;
     }
-    let pool = Pool::connect(&fqdb).await?;
+    let pool = Pool::connect(&fqdb).await.unwrap();
 
     if let Some(migrations) = migrations.0.lock().await.remove(&db) {
         let migrator = Migrator::new(migrations).await?;
@@ -154,38 +175,17 @@ async fn load<R: Runtime>(
 
     db_instances.0.lock().await.insert(db.clone(), pool.clone());
 
-    // We are going to hijack the connection creation to load the vss extension
-    let mut connection = pool.acquire().await?;
-    let mut db_pointer = connection.lock_handle().await?;
-    unsafe {
-        // Transmute the function to a void pointer
-        let vector_init = sqlite3_vector_init as *const ();
-        // Then cast it to the correct function signature
-        let vector_init_correct: extern "C" fn(
-            db: *mut *const (),
-            pzErrMsg: *mut *const c_char,
-            pThunk: *const (),
-        ) = std::mem::transmute(vector_init);
-        // We can then finally call it
-        (vector_init_correct)(
-            db_pointer.as_raw_handle().as_ptr() as *mut *const (),
-            std::ptr::null_mut(),
-            std::ptr::null(),
-        );
+    println!("VSS loaded!");
+    let row = sqlx::query("SELECT vss_version()").fetch_one(&pool).await;
 
-        // Now do the same for vss
-        let vss_init = sqlite3_vss_init as *const ();
-        let vss_init_correct: extern "C" fn(
-            db: *mut *const (),
-            pzErrMsg: *mut *const c_char,
-            pThunk: *const (),
-        ) = std::mem::transmute(vss_init);
-        (vss_init_correct)(
-            db_pointer.as_raw_handle().as_ptr() as *mut *const (),
-            std::ptr::null_mut(),
-            std::ptr::null(),
-        );
+    if let Err(err) = row {
+        println!("Error: {:?}", err);
+    } else {
+        let row = row.unwrap();
+        let version: String = row.try_get("vss_version()")?;
+        println!("VSS version: {:?}", version);
     }
+
     Ok(db)
 }
 

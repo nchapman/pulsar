@@ -1,13 +1,6 @@
-use futures_core::future::BoxFuture;
 use serde::{ser::Serializer, Deserialize, Serialize};
 use serde_json::Value as JsonValue;
-use sqlx::{
-    error::BoxDynError,
-    migrate::{
-        MigrateDatabase, Migration as SqlxMigration, MigrationSource, MigrationType, Migrator,
-    },
-    Column, Pool, Row,
-};
+use sqlx::{migrate::MigrateDatabase, Column, Pool, Row};
 use tauri::{
     command,
     plugin::{Builder as PluginBuilder, TauriPlugin},
@@ -80,65 +73,16 @@ fn path_mapper(mut app_path: PathBuf, connection_string: &str) -> String {
 #[derive(Default)]
 struct DbInstances(Mutex<HashMap<String, Pool<Db>>>);
 
-struct Migrations(Mutex<HashMap<String, MigrationList>>);
-
 #[derive(Default, Deserialize)]
 pub struct PluginConfig {
     #[serde(default)]
     preload: Vec<String>,
 }
 
-#[derive(Debug)]
-pub enum MigrationKind {
-    Up,
-    Down,
-}
-
-impl From<MigrationKind> for MigrationType {
-    fn from(kind: MigrationKind) -> Self {
-        match kind {
-            MigrationKind::Up => Self::ReversibleUp,
-            MigrationKind::Down => Self::ReversibleDown,
-        }
-    }
-}
-
-/// A migration definition.
-#[derive(Debug)]
-pub struct Migration {
-    pub version: i64,
-    pub description: &'static str,
-    pub sql: &'static str,
-    pub kind: MigrationKind,
-}
-
-#[derive(Debug)]
-struct MigrationList(Vec<Migration>);
-
-impl MigrationSource<'static> for MigrationList {
-    fn resolve(self) -> BoxFuture<'static, std::result::Result<Vec<SqlxMigration>, BoxDynError>> {
-        Box::pin(async move {
-            let mut migrations = Vec::new();
-            for migration in self.0 {
-                if matches!(migration.kind, MigrationKind::Up) {
-                    migrations.push(SqlxMigration::new(
-                        migration.version,
-                        migration.description.into(),
-                        migration.kind.into(),
-                        migration.sql.into(),
-                    ));
-                }
-            }
-            Ok(migrations)
-        })
-    }
-}
-
 #[command]
 async fn load<R: Runtime>(
     #[allow(unused_variables)] app: AppHandle<R>,
     db_instances: State<'_, DbInstances>,
-    migrations: State<'_, Migrations>,
     db: String,
 ) -> Result<String> {
     let fqdb = path_mapper(app_path(&app), &db);
@@ -148,14 +92,9 @@ async fn load<R: Runtime>(
     if !Db::database_exists(&fqdb).await.unwrap_or(false) {
         Db::create_database(&fqdb).await?;
     }
-    let pool = Pool::connect(&fqdb).await.unwrap();
+    let pool = Pool::connect(&fqdb).await?;
 
-    if let Some(migrations) = migrations.0.lock().await.remove(&db) {
-        let migrator = Migrator::new(migrations).await?;
-        migrator.run(&pool).await?;
-    }
-
-    db_instances.0.lock().await.insert(db.clone(), pool.clone());
+    db_instances.0.lock().await.insert(db.clone(), pool);
 
     Ok(db)
 }
@@ -247,12 +186,10 @@ async fn select(
 
 /// Tauri SQL plugin builder.
 #[derive(Default)]
-pub struct Builder {
-    migrations: Option<HashMap<String, MigrationList>>,
-}
+pub struct Builder {}
 
 impl Builder {
-    pub fn build<R: Runtime>(mut self) -> TauriPlugin<R, Option<PluginConfig>> {
+    pub fn build<R: Runtime>(self) -> TauriPlugin<R, Option<PluginConfig>> {
         // Create an auto extension for the VSS functions
         // Everytime a new connection is created, the VSS functions will be loaded
         unsafe {
@@ -291,18 +228,11 @@ impl Builder {
                         }
                         let pool = Pool::connect(&fqdb).await?;
 
-                        if let Some(migrations) = self.migrations.as_mut().unwrap().remove(&db) {
-                            let migrator = Migrator::new(migrations).await?;
-                            migrator.run(&pool).await?;
-                        }
                         lock.insert(db, pool);
                     }
                     drop(lock);
 
                     app.manage(instances);
-                    app.manage(Migrations(Mutex::new(
-                        self.migrations.take().unwrap_or_default(),
-                    )));
 
                     Ok(())
                 })

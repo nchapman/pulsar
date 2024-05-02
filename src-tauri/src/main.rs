@@ -3,7 +3,7 @@
 
 mod nebula;
 mod sqlite;
-mod upload;
+mod transfer;
 
 use tauri_plugin_log::LogTarget;
 
@@ -21,7 +21,7 @@ fn main() {
         )
         .plugin(sqlite::Builder::default().build())
         .plugin(nebula::init_plugin())
-        .plugin(upload::init_plugin())
+        .plugin(transfer::init_plugin())
         .plugin(tauri_plugin_window_state::Builder::default().build())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

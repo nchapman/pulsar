@@ -1,7 +1,3 @@
-// Copyright 2021 Tauri Programme within The Commons Conservancy
-// SPDX-License-Identifier: Apache-2.0
-// SPDX-License-Identifier: MIT
-
 use futures_util::TryStreamExt;
 use log::info;
 use serde::{ser::Serializer, Serialize};

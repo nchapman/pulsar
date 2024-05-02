@@ -6,8 +6,7 @@ use sqlx::{
     migrate::{
         MigrateDatabase, Migration as SqlxMigration, MigrationSource, MigrationType, Migrator,
     },
-    sqlite::SqliteRow,
-    Any, Column, Pool, Row,
+    Column, Pool, Row,
 };
 use tauri::{
     command,
@@ -21,6 +20,8 @@ use std::{collections::HashMap, ffi::c_char};
 use libsqlite3_sys::{sqlite3, sqlite3_api_routines};
 use sqlite_vss::{sqlite3_vector_init, sqlite3_vss_init};
 use std::{fs::create_dir_all, path::PathBuf};
+
+use super::decode;
 
 type Db = sqlx::sqlite::Sqlite;
 
@@ -140,25 +141,6 @@ async fn load<R: Runtime>(
     migrations: State<'_, Migrations>,
     db: String,
 ) -> Result<String> {
-    println!("Loading database: {:?}", db);
-    unsafe {
-        let vss_vector_init = sqlite3_vector_init as *const ();
-        let vss_vector_init_correct: extern "C" fn(
-            db: *mut sqlite3,
-            pzErrMsg: *mut *const c_char,
-            pThunk: *const sqlite3_api_routines,
-        ) -> i32 = std::mem::transmute(vss_vector_init);
-        libsqlite3_sys::sqlite3_auto_extension(Some(vss_vector_init_correct));
-
-        let vss_init = sqlite3_vss_init as *const ();
-        let vss_init_correct: extern "C" fn(
-            db: *mut sqlite3,
-            pzErrMsg: *mut *const c_char,
-            pThunk: *const sqlite3_api_routines,
-        ) -> i32 = std::mem::transmute(vss_init);
-        libsqlite3_sys::sqlite3_auto_extension(Some(vss_init_correct));
-    }
-
     let fqdb = path_mapper(app_path(&app), &db);
 
     create_dir_all(app_path(&app)).expect("Problem creating App directory!");
@@ -174,17 +156,6 @@ async fn load<R: Runtime>(
     }
 
     db_instances.0.lock().await.insert(db.clone(), pool.clone());
-
-    println!("VSS loaded!");
-    let row = sqlx::query("SELECT vss_version()").fetch_one(&pool).await;
-
-    if let Err(err) = row {
-        println!("Error: {:?}", err);
-    } else {
-        let row = row.unwrap();
-        let version: String = row.try_get("vss_version()")?;
-        println!("VSS version: {:?}", version);
-    }
 
     Ok(db)
 }
@@ -263,8 +234,7 @@ async fn select(
         let mut value = HashMap::default();
         for (i, column) in row.columns().iter().enumerate() {
             let v = row.try_get_raw(i)?;
-
-            let v = super::decode::to_json(v)?;
+            let v = decode::to_json(v)?;
 
             value.insert(column.name().to_string(), v);
         }
@@ -283,6 +253,26 @@ pub struct Builder {
 
 impl Builder {
     pub fn build<R: Runtime>(mut self) -> TauriPlugin<R, Option<PluginConfig>> {
+        // Create an auto extension for the VSS functions
+        // Everytime a new connection is created, the VSS functions will be loaded
+        unsafe {
+            let vss_vector_init = sqlite3_vector_init as *const ();
+            let vss_vector_init_correct: extern "C" fn(
+                db: *mut sqlite3,
+                pzErrMsg: *mut *const c_char,
+                pThunk: *const sqlite3_api_routines,
+            ) -> i32 = std::mem::transmute(vss_vector_init);
+            libsqlite3_sys::sqlite3_auto_extension(Some(vss_vector_init_correct));
+
+            let vss_init = sqlite3_vss_init as *const ();
+            let vss_init_correct: extern "C" fn(
+                db: *mut sqlite3,
+                pzErrMsg: *mut *const c_char,
+                pThunk: *const sqlite3_api_routines,
+            ) -> i32 = std::mem::transmute(vss_init);
+            libsqlite3_sys::sqlite3_auto_extension(Some(vss_init_correct));
+        }
+
         PluginBuilder::new("sql")
             .invoke_handler(tauri::generate_handler![load, execute, select, close])
             .setup_with_config(|app, config: Option<PluginConfig>| {

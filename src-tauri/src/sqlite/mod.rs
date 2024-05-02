@@ -1,4 +1,4 @@
 mod decode;
-mod plugin;
+mod sqlite;
 
-pub use plugin::*;
+pub use sqlite::*;

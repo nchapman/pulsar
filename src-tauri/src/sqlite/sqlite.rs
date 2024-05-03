@@ -1,17 +1,6 @@
-// Copyright 2021 Tauri Programme within The Commons Conservancy
-// SPDX-License-Identifier: Apache-2.0
-// SPDX-License-Identifier: MIT
-
-use futures_core::future::BoxFuture;
 use serde::{ser::Serializer, Deserialize, Serialize};
 use serde_json::Value as JsonValue;
-use sqlx::{
-    error::BoxDynError,
-    migrate::{
-        MigrateDatabase, Migration as SqlxMigration, MigrationSource, MigrationType, Migrator,
-    },
-    Column, Pool, Row,
-};
+use sqlx::{migrate::MigrateDatabase, Column, Pool, Row};
 use tauri::{
     command,
     plugin::{Builder as PluginBuilder, TauriPlugin},
@@ -20,21 +9,18 @@ use tauri::{
 use tokio::sync::Mutex;
 
 use std::collections::HashMap;
-
-#[cfg(feature = "sqlite")]
 use std::{fs::create_dir_all, path::PathBuf};
 
-#[cfg(feature = "sqlite")]
-type Db = sqlx::sqlite::Sqlite;
-#[cfg(feature = "mysql")]
-type Db = sqlx::mysql::MySql;
-#[cfg(feature = "postgres")]
-type Db = sqlx::postgres::Postgres;
+// TODO part of vss, replace with sqlite-vec once it is out
+// use std::{collections::HashMap, ffi::c_char};
+// use libsqlite3_sys::{sqlite3, sqlite3_api_routines};
+// use sqlite_vss::{sqlite3_vector_init, sqlite3_vss_init};
 
-#[cfg(feature = "sqlite")]
+use super::decode;
+
+type Db = sqlx::sqlite::Sqlite;
+
 type LastInsertId = i64;
-#[cfg(not(feature = "sqlite"))]
-type LastInsertId = u64;
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
@@ -59,7 +45,6 @@ impl Serialize for Error {
 
 type Result<T> = std::result::Result<T, Error>;
 
-#[cfg(feature = "sqlite")]
 /// Resolves the App's **file path** from the `AppHandle` context
 /// object
 fn app_path<R: Runtime>(app: &AppHandle<R>) -> PathBuf {
@@ -69,7 +54,6 @@ fn app_path<R: Runtime>(app: &AppHandle<R>) -> PathBuf {
         .expect("No App path was found!")
 }
 
-#[cfg(feature = "sqlite")]
 /// Maps the user supplied DB connection string to a connection string
 /// with a fully qualified file path to the App's designed "app_path"
 fn path_mapper(mut app_path: PathBuf, connection_string: &str) -> String {
@@ -91,73 +75,20 @@ fn path_mapper(mut app_path: PathBuf, connection_string: &str) -> String {
 #[derive(Default)]
 struct DbInstances(Mutex<HashMap<String, Pool<Db>>>);
 
-struct Migrations(Mutex<HashMap<String, MigrationList>>);
-
 #[derive(Default, Deserialize)]
 pub struct PluginConfig {
     #[serde(default)]
     preload: Vec<String>,
 }
 
-#[derive(Debug)]
-pub enum MigrationKind {
-    Up,
-    Down,
-}
-
-impl From<MigrationKind> for MigrationType {
-    fn from(kind: MigrationKind) -> Self {
-        match kind {
-            MigrationKind::Up => Self::ReversibleUp,
-            MigrationKind::Down => Self::ReversibleDown,
-        }
-    }
-}
-
-/// A migration definition.
-#[derive(Debug)]
-pub struct Migration {
-    pub version: i64,
-    pub description: &'static str,
-    pub sql: &'static str,
-    pub kind: MigrationKind,
-}
-
-#[derive(Debug)]
-struct MigrationList(Vec<Migration>);
-
-impl MigrationSource<'static> for MigrationList {
-    fn resolve(self) -> BoxFuture<'static, std::result::Result<Vec<SqlxMigration>, BoxDynError>> {
-        Box::pin(async move {
-            let mut migrations = Vec::new();
-            for migration in self.0 {
-                if matches!(migration.kind, MigrationKind::Up) {
-                    migrations.push(SqlxMigration::new(
-                        migration.version,
-                        migration.description.into(),
-                        migration.kind.into(),
-                        migration.sql.into(),
-                    ));
-                }
-            }
-            Ok(migrations)
-        })
-    }
-}
-
 #[command]
 async fn load<R: Runtime>(
     #[allow(unused_variables)] app: AppHandle<R>,
     db_instances: State<'_, DbInstances>,
-    migrations: State<'_, Migrations>,
     db: String,
 ) -> Result<String> {
-    #[cfg(feature = "sqlite")]
     let fqdb = path_mapper(app_path(&app), &db);
-    #[cfg(not(feature = "sqlite"))]
-    let fqdb = db.clone();
 
-    #[cfg(feature = "sqlite")]
     create_dir_all(app_path(&app)).expect("Problem creating App directory!");
 
     if !Db::database_exists(&fqdb).await.unwrap_or(false) {
@@ -165,12 +96,8 @@ async fn load<R: Runtime>(
     }
     let pool = Pool::connect(&fqdb).await?;
 
-    if let Some(migrations) = migrations.0.lock().await.remove(&db) {
-        let migrator = Migrator::new(migrations).await?;
-        migrator.run(&pool).await?;
-    }
-
     db_instances.0.lock().await.insert(db.clone(), pool);
+
     Ok(db)
 }
 
@@ -219,12 +146,7 @@ async fn execute(
         }
     }
     let result = query.execute(&*db).await?;
-    #[cfg(feature = "sqlite")]
     let r = Ok((result.rows_affected(), result.last_insert_rowid()));
-    #[cfg(feature = "mysql")]
-    let r = Ok((result.rows_affected(), result.last_insert_id()));
-    #[cfg(feature = "postgres")]
-    let r = Ok((result.rows_affected(), 0));
     r
 }
 
@@ -253,8 +175,7 @@ async fn select(
         let mut value = HashMap::default();
         for (i, column) in row.columns().iter().enumerate() {
             let v = row.try_get_raw(i)?;
-
-            let v = crate::decode::to_json(v)?;
+            let v = decode::to_json(v)?;
 
             value.insert(column.name().to_string(), v);
         }
@@ -267,55 +188,53 @@ async fn select(
 
 /// Tauri SQL plugin builder.
 #[derive(Default)]
-pub struct Builder {
-    migrations: Option<HashMap<String, MigrationList>>,
-}
+pub struct Builder {}
 
 impl Builder {
-    /// Add migrations to a database.
-    #[must_use]
-    pub fn add_migrations(mut self, db_url: &str, migrations: Vec<Migration>) -> Self {
-        self.migrations
-            .get_or_insert(Default::default())
-            .insert(db_url.to_string(), MigrationList(migrations));
-        self
-    }
+    pub fn build<R: Runtime>(self) -> TauriPlugin<R, Option<PluginConfig>> {
+        // Create an auto extension for the VSS functions
+        // Everytime a new connection is created, the VSS functions will be loaded
+        // unsafe {
+        //     let vss_vector_init = sqlite3_vector_init as *const ();
+        //     let vss_vector_init_correct: extern "C" fn(
+        //         db: *mut sqlite3,
+        //         pzErrMsg: *mut *const c_char,
+        //         pThunk: *const sqlite3_api_routines,
+        //     ) -> i32 = std::mem::transmute(vss_vector_init);
+        //     libsqlite3_sys::sqlite3_auto_extension(Some(vss_vector_init_correct));
 
-    pub fn build<R: Runtime>(mut self) -> TauriPlugin<R, Option<PluginConfig>> {
+        //     let vss_init = sqlite3_vss_init as *const ();
+        //     let vss_init_correct: extern "C" fn(
+        //         db: *mut sqlite3,
+        //         pzErrMsg: *mut *const c_char,
+        //         pThunk: *const sqlite3_api_routines,
+        //     ) -> i32 = std::mem::transmute(vss_init);
+        //     libsqlite3_sys::sqlite3_auto_extension(Some(vss_init_correct));
+        // }
+
         PluginBuilder::new("sql")
             .invoke_handler(tauri::generate_handler![load, execute, select, close])
             .setup_with_config(|app, config: Option<PluginConfig>| {
                 let config = config.unwrap_or_default();
 
-                #[cfg(feature = "sqlite")]
                 create_dir_all(app_path(app)).expect("problems creating App directory!");
 
                 tauri::async_runtime::block_on(async move {
                     let instances = DbInstances::default();
                     let mut lock = instances.0.lock().await;
                     for db in config.preload {
-                        #[cfg(feature = "sqlite")]
                         let fqdb = path_mapper(app_path(app), &db);
-                        #[cfg(not(feature = "sqlite"))]
-                        let fqdb = db.clone();
 
                         if !Db::database_exists(&fqdb).await.unwrap_or(false) {
                             Db::create_database(&fqdb).await?;
                         }
                         let pool = Pool::connect(&fqdb).await?;
 
-                        if let Some(migrations) = self.migrations.as_mut().unwrap().remove(&db) {
-                            let migrator = Migrator::new(migrations).await?;
-                            migrator.run(&pool).await?;
-                        }
                         lock.insert(db, pool);
                     }
                     drop(lock);
 
                     app.manage(instances);
-                    app.manage(Migrations(Mutex::new(
-                        self.migrations.take().unwrap_or_default(),
-                    )));
 
                     Ok(())
                 })

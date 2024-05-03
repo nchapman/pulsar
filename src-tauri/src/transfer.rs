@@ -1,7 +1,3 @@
-// Copyright 2021 Tauri Programme within The Commons Conservancy
-// SPDX-License-Identifier: Apache-2.0
-// SPDX-License-Identifier: MIT
-
 use futures_util::TryStreamExt;
 use log::info;
 use serde::{ser::Serializer, Serialize};
@@ -153,7 +149,7 @@ fn file_to_body<R: Runtime>(id: u32, window: Window<R>, file: File) -> reqwest::
     ))
 }
 
-pub fn init<R: Runtime>() -> TauriPlugin<R> {
+pub fn init_plugin<R: Runtime>() -> TauriPlugin<R> {
     PluginBuilder::new("upload")
         .invoke_handler(tauri::generate_handler![download, upload])
         .build()

@@ -35,10 +35,11 @@ sqlx = { version = "0.7.4", features = [
   "sqlite",
   "runtime-tokio",
 ] }
-libsqlite3-sys = { version = "=0.27.0", features = ["bundled"] }
 futures-core = "0.3"
 time = "=0.3.36"
-sqlite-vss = { version = "0.1.2", features = ["download-libs"] }
+# When the time comes to enable sqlite-vec, uncomment the following lines
+# sqlite-vss = { version = "0.1.2", features = ["download-libs"] }
+# libsqlite3-sys = { version = "=0.27.0", features = ["bundled"] }
 
 [profile.dev.package.nebula]
 opt-level = 3

@@ -8,11 +8,13 @@ use tauri::{
 };
 use tokio::sync::Mutex;
 
-use std::{collections::HashMap, ffi::c_char};
-
-use libsqlite3_sys::{sqlite3, sqlite3_api_routines};
-use sqlite_vss::{sqlite3_vector_init, sqlite3_vss_init};
+use std::collections::HashMap;
 use std::{fs::create_dir_all, path::PathBuf};
+
+// TODO part of vss, replace with sqlite-vec once it is out
+// use std::{collections::HashMap, ffi::c_char};
+// use libsqlite3_sys::{sqlite3, sqlite3_api_routines};
+// use sqlite_vss::{sqlite3_vector_init, sqlite3_vss_init};
 
 use super::decode;
 
@@ -192,23 +194,23 @@ impl Builder {
     pub fn build<R: Runtime>(self) -> TauriPlugin<R, Option<PluginConfig>> {
         // Create an auto extension for the VSS functions
         // Everytime a new connection is created, the VSS functions will be loaded
-        unsafe {
-            let vss_vector_init = sqlite3_vector_init as *const ();
-            let vss_vector_init_correct: extern "C" fn(
-                db: *mut sqlite3,
-                pzErrMsg: *mut *const c_char,
-                pThunk: *const sqlite3_api_routines,
-            ) -> i32 = std::mem::transmute(vss_vector_init);
-            libsqlite3_sys::sqlite3_auto_extension(Some(vss_vector_init_correct));
+        // unsafe {
+        //     let vss_vector_init = sqlite3_vector_init as *const ();
+        //     let vss_vector_init_correct: extern "C" fn(
+        //         db: *mut sqlite3,
+        //         pzErrMsg: *mut *const c_char,
+        //         pThunk: *const sqlite3_api_routines,
+        //     ) -> i32 = std::mem::transmute(vss_vector_init);
+        //     libsqlite3_sys::sqlite3_auto_extension(Some(vss_vector_init_correct));
 
-            let vss_init = sqlite3_vss_init as *const ();
-            let vss_init_correct: extern "C" fn(
-                db: *mut sqlite3,
-                pzErrMsg: *mut *const c_char,
-                pThunk: *const sqlite3_api_routines,
-            ) -> i32 = std::mem::transmute(vss_init);
-            libsqlite3_sys::sqlite3_auto_extension(Some(vss_init_correct));
-        }
+        //     let vss_init = sqlite3_vss_init as *const ();
+        //     let vss_init_correct: extern "C" fn(
+        //         db: *mut sqlite3,
+        //         pzErrMsg: *mut *const c_char,
+        //         pThunk: *const sqlite3_api_routines,
+        //     ) -> i32 = std::mem::transmute(vss_init);
+        //     libsqlite3_sys::sqlite3_auto_extension(Some(vss_init_correct));
+        // }
 
         PluginBuilder::new("sql")
             .invoke_handler(tauri::generate_handler![load, execute, select, close])

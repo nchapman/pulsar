@@ -44,6 +44,11 @@
   // styles
 }
 
+.danger {
+  background: var(--error);
+  color: var(--white);
+}
+
 .clear {
   background: transparent;
   color: var(--text-primary);

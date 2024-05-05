@@ -1,0 +1,18 @@
+.settings-tab-wrapper {
+  width: 100%;
+  position: relative;
+}
+
+.children {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-medium);
+  width: 100%;
+}
+
+.back {
+  position: absolute;
+  top: 2px;
+  right: 100%;
+  transform: translateX(-10px);
+}

@@ -1,3 +1,11 @@
 .sidebar-footer {
   height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.btn {
+  justify-content: center;
 }

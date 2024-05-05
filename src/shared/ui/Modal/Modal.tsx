@@ -41,7 +41,7 @@ export const Modal = memo((props: ModalProps) => {
         <div className={s.body}>{children}</div>
 
         <Button
-          variant="primary"
+          variant="clear"
           icon={CloseIcon as any}
           className={s.closeBtn}
           onClick={handleClose}

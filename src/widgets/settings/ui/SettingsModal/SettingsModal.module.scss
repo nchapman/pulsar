@@ -1,0 +1,54 @@
+.settings-modal {
+  width: 960px;
+  height: 640px;
+  border: 1px solid var(--main-background-secondary);
+
+  & > div {
+    height: 100%;
+  }
+}
+
+.tabs {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.tabs-header {
+  display: flex;
+  flex-direction: column;
+  padding: 50px 8px;
+  background: var(--sidebar-background-primary);
+  height: 100%;
+  justify-content: flex-start;
+  border-right: 1px solid var(--main-background-secondary);
+}
+
+.tabs-body {
+  padding: 36px 48px;
+  width: 100%;
+}
+
+.tab-label {
+  padding: 8px;
+  width: 184px;
+  border-radius: 8px;
+
+  svg {
+    stroke-opacity: 0.6;
+  }
+}
+
+.tab-label-inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.active-tab-label {
+  background: var(--main-background-primary);
+
+  svg {
+    stroke-opacity: 1;
+  }
+}

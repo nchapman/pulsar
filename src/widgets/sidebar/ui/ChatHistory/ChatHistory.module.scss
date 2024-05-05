@@ -3,6 +3,7 @@
 .chat-history {
   height: 100%;
   position: relative;
+  overflow: hidden;
 }
 
 .header {
@@ -17,7 +18,7 @@
   top: 54px;
   left: 0;
   height: 100%;
-  width: calc(100% + 8px);
+  width: calc(100%);
 
   @include scrollbar;
   overflow-y: auto;

@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { Model } from '@nozbe/watermelondb';
 import { field, text } from '@nozbe/watermelondb/decorators';
+
 import { postsTable } from './post.schema.ts';
 
 export class PostModel extends Model {

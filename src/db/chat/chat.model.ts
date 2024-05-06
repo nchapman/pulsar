@@ -2,7 +2,7 @@
 import { Model } from '@nozbe/watermelondb';
 import { date, json, readonly, text } from '@nozbe/watermelondb/decorators';
 
-import { chatsTable } from './chat.schema.ts';
+import { chatsTable } from './chat.schema';
 
 export class ChatModel extends Model {
   static table = chatsTable.name;

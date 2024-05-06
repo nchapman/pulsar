@@ -1,24 +1,24 @@
+import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
 
 import { classNames } from '@/shared/lib/func';
-import { Icon, Modal, TabItem, Tabs } from '@/shared/ui';
-import { SettingGeneral } from '@/widgets/settings/ui/SettingGeneral/SettingGeneral.tsx';
+import { Icon, Modal, TabItem, Tabs, Text } from '@/shared/ui';
 
 import MyModelsIcon from '../../assets/server.svg';
 import GeneralIcon from '../../assets/settings.svg';
+import { $isSettingsModalOpen, closeSettingsModal } from '../../model/settings.model.ts';
+import { SettingsGeneral } from '../general/SettingsGeneral/SettingsGeneral.tsx';
 import s from './SettingsModal.module.scss';
 
 interface Props {
   className?: string;
-  open: boolean;
-  onClose: () => void;
 }
 
 const items = [
   {
     icon: GeneralIcon,
     label: 'General',
-    content: <SettingGeneral />,
+    content: <SettingsGeneral />,
   },
   {
     icon: MyModelsIcon,
@@ -28,7 +28,8 @@ const items = [
 ];
 
 export const SettingsModal = memo((props: Props) => {
-  const { className, open, onClose } = props;
+  const { className } = props;
+  const open = useUnit($isSettingsModalOpen);
 
   const tabs: TabItem[] = items.map((item) => ({
     key: item.label,
@@ -42,7 +43,14 @@ export const SettingsModal = memo((props: Props) => {
   }));
 
   return (
-    <Modal open={open} onClose={onClose} className={classNames(s.settingsModal, [className])}>
+    <Modal
+      open={open}
+      onClose={closeSettingsModal}
+      className={classNames(s.settingsModal, [className])}
+    >
+      <Text className={s.title} s={12} w="semi" c="tertiary">
+        Settings
+      </Text>
       <Tabs
         className={s.tabs}
         headerClassName={s.tabsHeader}

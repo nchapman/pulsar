@@ -47,11 +47,11 @@ export class ChatsRepository {
     return this.serialize(await this.chatsCollection.find(id));
   }
 
-  async getAll(params?: ListParams): Promise<Chat[]> {
+  async getAll(params?: ListParams, archived = false): Promise<Chat[]> {
     const { limit = 10, offset = 0, order = 'desc', search } = params || {};
 
     const query: Q.Clause[] = [
-      Q.where(chatsTable.cols.isArchived, Q.eq('false')),
+      Q.where(chatsTable.cols.isArchived, Q.eq(archived ? 'true' : 'false')),
       Q.sortBy(chatsTable.cols.updatedAt, Q[order]),
       Q.skip(offset),
       Q.take(limit),
@@ -91,6 +91,18 @@ export class ChatsRepository {
   async remove(id: Id): Promise<void> {
     const chat = await this.chatsCollection.find(id);
     await this.db.write(() => chat.destroyPermanently());
+  }
+
+  async archiveAll(): Promise<void> {
+    await this.db.adapter.unsafeExecute({
+      sqls: [[`update ${chatsTable.name} set ${chatsTable.cols.isArchived} = true`, []]],
+    });
+  }
+
+  async removeAll(): Promise<void> {
+    await this.db.adapter.unsafeExecute({
+      sqls: [[`delete from ${chatsTable.name}`, []]],
+    });
   }
 
   private serialize(chat: ChatModel): Chat {

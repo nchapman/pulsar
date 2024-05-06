@@ -38,7 +38,9 @@ export const Modal = memo((props: ModalProps) => {
           [s.white]: white,
         })}
       >
-        <div className={s.body}>{children}</div>
+        <div key={String(open)} className={s.body}>
+          {children}
+        </div>
 
         <Button
           variant="clear"

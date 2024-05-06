@@ -8,6 +8,12 @@
   }
 }
 
+.title {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+}
+
 .tabs {
   display: flex;
   flex-direction: row;

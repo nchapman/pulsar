@@ -1,22 +1,28 @@
 .wrapper {
-  width: 124px;
-  padding: 4.5px var(--spacing-xs) 4.5px var(--spacing-md);
-  border: var(--border-width-xs) solid var(--color-other-stroke);
-  border-radius: var(--spacing-sm);
+
+
 }
 
 .select {
+  color: var(--text-primary);
+  gap: 8px;
+}
+
+.popover {
+  padding: 8px;
+  background: var(--main-background-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  outline: none;
+  width: max-content;
+  position: absolute;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 4px;
+}
 
-  width: 100%;
-
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 175%;
-  color: var(--color-text-content);
-  letter-spacing: 0.02em;
-
-  border: 0;
-  outline-color: transparent;
+.option {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }

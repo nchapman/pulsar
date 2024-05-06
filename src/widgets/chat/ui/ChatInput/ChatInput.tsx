@@ -26,6 +26,7 @@ export const ChatInput = (props: Props) => {
   const { fileData, uploadFile, resetFileData } = useUploadFile();
 
   const chatId = useUnit($chat.id);
+
   const isModelReady = useUnit($modelReady);
 
   const isStreaming = useUnit($streamedMsgId);

@@ -8,6 +8,8 @@ body {
   font-size: 16px;
   color: var(--text-primary);
   background: var(--main-background-primary);
+  max-height: 100vh;
+  overflow: hidden;
 }
 
 #toolbar {
@@ -27,6 +29,10 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+}
+
+#react-tiny-popover-container{
+  z-index: 10000;
 }
 
 

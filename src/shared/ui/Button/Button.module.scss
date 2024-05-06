@@ -14,6 +14,7 @@
   position: relative;
   line-height: 1.4;
   overflow: hidden;
+  transition: background-color 0.2s;
 
   &:disabled {
     cursor: unset;
@@ -41,12 +42,30 @@
 }
 
 .secondary {
-  // styles
+  border: 1px solid var(--border-light);
+  color: var(--button-text-secondary);
+
+  &:hover {
+    background: var(--button-secondary-hover);
+  }
+}
+
+.link {
+  color: var(--text-primary);
+  text-align: left;
+
+    &:hover {
+      color: var(--link-default);
+    }
 }
 
 .danger {
   background: var(--error);
   color: var(--white);
+
+  &:hover {
+    background: var(--error-hover);
+  }
 }
 
 .clear {
@@ -123,6 +142,7 @@
   }
 
   &.secondary {
+    border: 0;
     color: var(--icon-default);
     background: var(--main-background-secondary);
 

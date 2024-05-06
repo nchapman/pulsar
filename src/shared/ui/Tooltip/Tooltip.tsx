@@ -24,7 +24,7 @@ function getPosition(position: TooltipProps['position'], dimensions: DOMRect) {
 
   switch (position) {
     case 'top':
-      return { top: top - height, left: left + halfWidth };
+      return { top: top - height - 14, left: left + halfWidth };
     case 'bottom':
       return { top: top + height + 8, left: left + halfWidth };
     case 'left':

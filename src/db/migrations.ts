@@ -38,10 +38,6 @@ export default schemaMigrations({
               isOptional: true,
             },
             {
-              name: documentsTable.cols.hash,
-              type: 'string',
-            },
-            {
               name: documentsTable.cols.createdAt,
               type: 'number',
             },

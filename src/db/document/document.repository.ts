@@ -1,5 +1,7 @@
 import { Collection, Database, Q } from '@nozbe/watermelondb';
 
+import { assignValues } from '@/shared/lib/func';
+
 import { DocumentModel } from './document.model';
 import { documentsTable } from './document.schema';
 
@@ -7,8 +9,7 @@ export interface Document {
   id: Id;
   filename: string;
   path: string;
-  content: string;
-  hash: string;
+  text: string;
   createdAt: number;
   updatedAt: number;
 }
@@ -41,6 +42,23 @@ export class DocumentRepository {
     }
 
     return this.documentsCollection.query(...query).fetch();
+  }
+
+  async findFirst() {
+    const query: Q.Clause[] = [Q.take(1)];
+
+    return this.documentsCollection.query(query).fetch();
+  }
+
+  // async clearAll() {
+  //   return this.documentsCollection.
+  // }
+
+  async create(data: Dto<Document>) {
+    const newDocument = await this.db.write(() =>
+      this.documentsCollection.create((document) => assignValues(document, data))
+    );
+    return newDocument;
   }
 }
 

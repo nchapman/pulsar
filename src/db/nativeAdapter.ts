@@ -7,11 +7,9 @@ export const adapter = new SQLiteAdapter({
   schema,
   dbName: 'pulsar',
   onSetUpError: (error) => {
-    console.error(error);
-    confirm('Error setting up database. Click to reload the app.', {
+    confirm(`Error setting up database ${error}. Click to reload the app.`, {
       title: 'Error',
       type: 'error',
     });
   },
 });
-

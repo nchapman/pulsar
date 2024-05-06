@@ -7,8 +7,7 @@ export const documentsTable = {
   cols: {
     filename: 'filename',
     path: 'path',
-    content: 'content',
-    hash: 'hash',
+    text: 'text',
     createdAt: 'created_at',
     updatedAt: 'updated_at',
   },
@@ -19,8 +18,7 @@ export const documentSchema = tableSchema({
   columns: [
     { name: documentsTable.cols.filename, type: 'string' },
     { name: documentsTable.cols.path, type: 'string' },
-    { name: documentsTable.cols.content, type: 'string' },
-    { name: documentsTable.cols.hash, type: 'string' },
+    { name: documentsTable.cols.text, type: 'string' },
     { name: documentsTable.cols.createdAt, type: 'number' },
     { name: documentsTable.cols.updatedAt, type: 'number' },
   ],

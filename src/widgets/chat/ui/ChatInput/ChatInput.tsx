@@ -1,6 +1,7 @@
 import { useUnit } from 'effector-react';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
+import { $modelReady } from '@/entities/model/model/manage-models-model.ts';
 import { UploadFile, useUploadFile } from '@/features/upload-file';
 import { VoiceInput } from '@/features/voice-input';
 import SendIcon from '@/shared/assets/icons/send.svg';
@@ -9,7 +10,7 @@ import { classNames } from '@/shared/lib/func';
 import { useKeyboardListener } from '@/shared/lib/hooks';
 import { Button } from '@/shared/ui';
 
-import { autoResize } from '../../lib/autoResize.ts';
+import { autoResize } from '../../lib/utils/autoResize.ts';
 import { $chat, $isInputDisabled, $streamedMsgId, askQuestion } from '../../model/chat.ts';
 import s from './ChatInput.module.scss';
 
@@ -26,8 +27,10 @@ export const ChatInput = (props: Props) => {
 
   const chatId = useUnit($chat.id);
 
+  const isModelReady = useUnit($modelReady);
+
   const isStreaming = useUnit($streamedMsgId);
-  const disabledSend = useUnit($isInputDisabled) || !input;
+  const disabledSend = useUnit($isInputDisabled) || !input || !isModelReady;
 
   const handleInputChange = (e: Event) => {
     setInput((e.target as HTMLInputElement).value);
@@ -56,7 +59,7 @@ export const ChatInput = (props: Props) => {
       <div className={s.inputRow}>
         <textarea
           ref={inputRef}
-          placeholder="Message Pulsar…"
+          placeholder={isModelReady ? 'Message Pulsar…' : 'Loading…'}
           value={input}
           onChange={handleInputChange}
           className={s.chatInput}

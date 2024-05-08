@@ -2,7 +2,7 @@ import { ChatMsg } from '@/db/chat';
 import { model } from '@/entities/model';
 import { loge } from '@/shared/lib/Logger.ts';
 
-import { urlToBase64 } from '../lib/urlToBase64.ts';
+import { urlToBase64 } from '../lib/utils/urlToBase64.ts';
 
 export async function stream(
   config: {

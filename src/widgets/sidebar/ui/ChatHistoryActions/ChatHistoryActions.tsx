@@ -9,8 +9,8 @@ import EditIcon from '@/shared/assets/icons/edit.svg';
 import PinIcon from '@/shared/assets/icons/pin.svg';
 import DeleteIcon from '@/shared/assets/icons/trash.svg';
 import { classNames } from '@/shared/lib/func';
-import { Button, Icon } from '@/shared/ui';
-import { startNewChat } from '@/widgets/chat';
+import { Button, Icon, showToast, Text } from '@/shared/ui';
+import { deleteChatWithConfirm } from '@/widgets/chat/lib/deleteChat.tsx';
 
 import s from './ChatHistoryActions.module.scss';
 
@@ -24,11 +24,35 @@ interface Props {
   isPinned: boolean;
   isArchived: boolean;
   onRename: () => void;
+  title?: string;
 }
 
+const showArchiveToast = () => {
+  showToast({
+    type: 'success',
+    title: 'Chat successfully archived!',
+    message: (
+      <>
+        You can manage archived chats on the page “
+        <Text s={12} c="primary">
+          General settings
+        </Text>
+        ”
+      </>
+    ),
+  });
+};
+
+const showPinnedToast = (chatName: string) => {
+  showToast({
+    type: 'success',
+    title: 'Chat successfully pinned!',
+    message: chatName,
+  });
+};
+
 export const ChatHistoryActions = memo((props: Props) => {
-  const { className, isCurrent, id, onClose, onOpen, isOpen, isPinned, isArchived, onRename } =
-    props;
+  const { className, title, id, onClose, onOpen, isOpen, isPinned, isArchived, onRename } = props;
 
   const handleRenameChat = useCallback(() => {
     onRename();
@@ -36,14 +60,14 @@ export const ChatHistoryActions = memo((props: Props) => {
   }, [onClose, onRename]);
 
   const handleDeleteChat = useCallback(() => {
-    chatsRepository.remove(id);
-    if (isCurrent) startNewChat();
-  }, [id, isCurrent]);
+    onClose();
+    deleteChatWithConfirm(id);
+  }, [id, onClose]);
 
   const handlePinChat = useCallback(() => {
-    chatsRepository.update(id, { isPinned: true });
+    chatsRepository.update(id, { isPinned: true }).then(() => showPinnedToast(title!));
     onClose();
-  }, [id, onClose]);
+  }, [id, onClose, title]);
 
   const handleUnpinChat = useCallback(() => {
     chatsRepository.update(id, { isPinned: false });
@@ -53,6 +77,7 @@ export const ChatHistoryActions = memo((props: Props) => {
   const handleArchiveChat = useCallback(() => {
     chatsRepository.update(id, { isArchived: true });
     onClose();
+    showArchiveToast();
   }, [id, onClose]);
 
   const handleUnarchiveChat = useCallback(() => {

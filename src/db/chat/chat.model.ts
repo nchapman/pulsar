@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { Model } from '@nozbe/watermelondb';
-import { date, json, readonly, text } from '@nozbe/watermelondb/decorators';
+import { date, json, readonly, text, writer } from '@nozbe/watermelondb/decorators';
 
 import { chatsTable } from './chat.schema.ts';
 
@@ -20,4 +20,13 @@ export class ChatModel extends Model {
   @readonly @date(chatsTable.cols.createdAt) createdAt;
 
   @readonly @date(chatsTable.cols.updatedAt) updatedAt;
+
+  @writer async archiveAll() {
+    await this.batch(
+      this.prepareUpdate((chat) => {
+        // eslint-disable-next-line no-param-reassign
+        chat.isArchived = true;
+      })
+    );
+  }
 }

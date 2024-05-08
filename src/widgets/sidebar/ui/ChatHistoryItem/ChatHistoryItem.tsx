@@ -56,6 +56,7 @@ const ChatHistoryItem = (props: Props) => {
           isPinned={chat?.isPinned}
           isArchived={chat?.isArchived}
           onRename={toggleRename}
+          title={chat?.title}
         />
       }
     >

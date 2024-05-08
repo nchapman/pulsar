@@ -1,44 +1,64 @@
-import { ChangeEvent, memo } from 'preact/compat';
-import { useCallback } from 'preact/hooks';
+import { memo, ReactNode, SVGProps } from 'preact/compat';
+import { FC } from 'react';
+import { Popover } from 'react-tiny-popover';
 
+import ChevronDownIcon from '@/shared/assets/icons/chevron-down.svg';
 import { classNames } from '@/shared/lib/func';
+import { useToggle } from '@/shared/lib/hooks';
+import { Button, Icon } from '@/shared/ui';
 
 import s from './Select.module.scss';
 
 interface SelectProps {
   className?: string;
-  options: { value: string; label: string }[];
+  options: { value: string; label: ReactNode; icon?: FC<SVGProps<SVGSVGElement>> | string }[];
   defaultValue?: string;
   value?: string;
-  onChange?: (value: string) => void;
+  onChange: (value: string) => void;
   firstDisabled?: boolean;
+  popoverClassName?: string;
+  optionClassName?: string;
 }
 
 export const Select = memo((props: SelectProps) => {
-  const { className, options, onChange, value, defaultValue, firstDisabled } = props;
+  const { className, options, onChange, value, optionClassName, popoverClassName } = props;
+  const { toggle, isOn, off } = useToggle();
 
-  const handleChange = useCallback(
-    (e: ChangeEvent<HTMLSelectElement>) => {
-      // @ts-ignore
-      onChange?.(e.target?.value);
-    },
-    [onChange]
+  const content = (
+    <div className={classNames(s.popover, [popoverClassName])}>
+      {options.map((option) => (
+        <Button
+          key={option.value}
+          className={classNames(s.option, [optionClassName])}
+          variant="clear"
+          onClick={() => {
+            onChange(option.value);
+            toggle();
+          }}
+        >
+          {option.icon && <Icon svg={option.icon} />}
+
+          {option.label}
+        </Button>
+      ))}
+    </div>
   );
 
   return (
-    <div className={classNames(s.wrapper, [className])}>
-      <select
-        value={value}
-        onChange={handleChange}
-        defaultValue={defaultValue}
-        className={s.select}
-      >
-        {options.map((option, idx) => (
-          <option disabled={idx === 0 && firstDisabled} key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-    </div>
+    <Popover
+      isOpen={isOn}
+      positions={['bottom', 'top']}
+      content={content}
+      align="start"
+      padding={4}
+      onClickOutside={off}
+    >
+      <div>
+        <Button className={classNames(s.select, [className])} onClick={toggle} variant="clear">
+          {options.find((o) => o.value === value)?.label || options[0].label}
+          <Icon svg={ChevronDownIcon} />
+        </Button>
+      </div>
+    </Popover>
   );
 });

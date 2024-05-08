@@ -1,0 +1,23 @@
+div.confirm-modal  {
+  padding: 24px;
+  width: 420px
+}
+
+.divider {
+  height: 1px;
+  background: var(--border-light);
+  margin: 12px 0;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.message {
+  span {
+    display: inline;
+  }
+}

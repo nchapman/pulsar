@@ -1,0 +1,11 @@
+.settings-item {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  justify-content: space-between;
+}
+
+.action-wrapper {
+  width: max-content;
+  flex-shrink: 0;
+}

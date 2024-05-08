@@ -1,0 +1,41 @@
+@import './src/shared/styles/mixins';
+
+.archived-chats {
+}
+
+.chats {
+  overflow-y: auto;
+  height: 400px;
+  padding-right: 8px;
+}
+
+.chat {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 16px 0;
+  border-top: 1px solid var(--border-disabled);
+}
+
+.header {
+  border: 0;
+}
+
+.title {
+  width: 398px;
+  padding: 0;
+
+  & span {
+    @include line-clamp(1);
+  }
+}
+
+.date {
+  width: 150px;
+}
+
+.actions {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}

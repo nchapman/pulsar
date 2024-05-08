@@ -6,6 +6,7 @@ import { Markdown } from '@/entities/markdown';
 import { classNames } from '@/shared/lib/func';
 import { Logo } from '@/shared/ui';
 import { CopyMsgText } from '@/widgets/chat/ui/actions/CopyMsgText/CopyMsgText.tsx';
+import { Regenerate } from '@/widgets/chat/ui/actions/Regenerate/Regenerate.tsx';
 
 import userImg from '../../assets/user.jpeg';
 import { $messages, $streamedMsgId } from '../../model/chat.ts';
@@ -34,12 +35,12 @@ export const ChatMessage = (props: Props) => {
 
     if (!isUser) {
       if (!isStreamed) {
-        actions.push(<CopyMsgText text={text} />);
+        actions.push(<Regenerate msgId={msg.id} />, <CopyMsgText text={text} />);
       }
     }
 
     return actions;
-  }, [isStreamed, isUser, text]);
+  }, [isStreamed, isUser, msg.id, text]);
 
   return (
     <div className={classNames(s.chatMessageWrapper, [className])}>

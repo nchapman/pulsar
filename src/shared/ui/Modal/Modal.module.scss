@@ -11,11 +11,10 @@
 
   width: 500px;
 
-  color: var(--color-gray-700);
-
   opacity: 0;
-  background: var(--color-el-0);
-  border-radius: var(--border-radius-lg);
+  background: var(--main-background-primary);
+  border-radius: 12px;
+  border: 1px solid var(--main-background-secondary);
 
   transition: transform 250ms cubic-bezier(1, 0.01, 0.03, 1),
     opacity 250ms cubic-bezier(1, 0.01, 0.03, 1);
@@ -33,23 +32,12 @@
 .close-btn {
   position: absolute;
   top: 20px;
-  right: var(--spacing-xl);
-}
-
-.no-styles {
-  .body {
-    padding: 0;
-  }
+  right: 20px;
+  color: var(--white);
 }
 
 .white {
   .close-btn {
     color: var(--color-el-0);
-  }
-}
-
-@include mobile-only {
-  .modal {
-    width: 100vw;
   }
 }

@@ -1,4 +1,8 @@
+import { useStoreMap } from 'effector-react';
+
 import { classNames } from '@/shared/lib/func';
+import { $chat } from '@/widgets/chat';
+import { UnarchiveChat } from '@/widgets/chat/ui/UnarchiveChat/UnarchiveChat.tsx';
 
 import { ChatInput } from '../ChatInput/ChatInput';
 import { ChatMsgList } from '../ChatMsgList/ChatMsgList';
@@ -11,10 +15,16 @@ interface Props {
 export const Chat = (props: Props) => {
   const { className } = props;
 
+  const isArchived = useStoreMap({
+    keys: [],
+    store: $chat.data,
+    fn: (data) => data?.isArchived,
+  });
+
   return (
     <div className={classNames(s.chat, [className])}>
       <ChatMsgList className={s.msgList} />
-      <ChatInput className={s.chatInput} />
+      {isArchived ? <UnarchiveChat /> : <ChatInput className={s.chatInput} />}
     </div>
   );
 };

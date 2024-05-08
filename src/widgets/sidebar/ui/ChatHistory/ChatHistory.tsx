@@ -1,3 +1,4 @@
+import { Q } from '@nozbe/watermelondb';
 import { withObservables } from '@nozbe/watermelondb/react';
 import { useUnit } from 'effector-react/effector-react.mjs';
 import { memo } from 'preact/compat';
@@ -70,7 +71,9 @@ const ChatHistory = memo((props: Props) => {
 });
 
 const enhance = withObservables([], () => ({
-  chatsCount: chatsRepository.chatsCollection.query().observeCount(),
+  chatsCount: chatsRepository.chatsCollection
+    .query(Q.where(chatsTable.cols.isArchived, Q.eq('false')))
+    .observeCount(),
   status: chatsRepository.chatsCollection
     .query()
     .observeWithColumns([chatsTable.cols.isArchived, chatsTable.cols.isPinned]),

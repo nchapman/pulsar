@@ -2,7 +2,7 @@
   pointer-events: none;
 
   position: fixed;
-  z-index: var(--z-index-overlay-sidebar);
+  z-index: var(--z-index-overlay);
   inset: 0;
 
   display: flex;
@@ -10,15 +10,9 @@
   justify-content: center;
 
   transition: background-color var(--transition-base);
-
-  &.modal {
-    z-index: var(--z-index-overlay-modal);
-    transition-delay: 0s;
-  }
 }
 
 .visible {
   pointer-events: initial;
-  background-color: var(--color-overlay);
-  transition-delay: var(--transition-duration-ai);
+  background-color: rgba(0, 0, 0, 0.50);;
 }

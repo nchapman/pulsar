@@ -9,7 +9,7 @@ import { chatsTable } from '@/db/chat/chat.schema.ts';
 import ArchiveIcon from '@/shared/assets/icons/credit-card.svg';
 import TrashIcon from '@/shared/assets/icons/trash.svg';
 import { classNames } from '@/shared/lib/func';
-import { Button, Text, Tooltip } from '@/shared/ui';
+import { Button, showToast, Text, Tooltip } from '@/shared/ui';
 import { switchChat } from '@/widgets/chat';
 import { closeSettingsModal } from '@/widgets/settings';
 
@@ -28,6 +28,14 @@ function formatTime(datestamp: number) {
     day: 'numeric',
   });
 }
+
+const showUnarchiveToast = (chatName: string) => {
+  showToast({
+    type: 'success',
+    title: 'Chat successfully unarchived!',
+    message: chatName,
+  });
+};
 
 const ArchivedChats = memo((props: Props) => {
   const { className, chatsCount } = props;
@@ -61,7 +69,11 @@ const ArchivedChats = memo((props: Props) => {
                 <Button
                   variant="clear"
                   icon={ArchiveIcon}
-                  onClick={() => chatsRepository.update(chat.id, { isArchived: false })}
+                  onClick={() =>
+                    chatsRepository
+                      .update(chat.id, { isArchived: false })
+                      .then(() => showUnarchiveToast(chat.title))
+                  }
                 />
               </Tooltip>
               <Tooltip position="top" text="Delete">

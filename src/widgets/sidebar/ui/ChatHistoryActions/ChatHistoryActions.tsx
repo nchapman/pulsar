@@ -9,7 +9,7 @@ import EditIcon from '@/shared/assets/icons/edit.svg';
 import PinIcon from '@/shared/assets/icons/pin.svg';
 import DeleteIcon from '@/shared/assets/icons/trash.svg';
 import { classNames } from '@/shared/lib/func';
-import { Button, Icon } from '@/shared/ui';
+import { Button, Icon, showToast, Text } from '@/shared/ui';
 import { startNewChat } from '@/widgets/chat';
 
 import s from './ChatHistoryActions.module.scss';
@@ -25,6 +25,22 @@ interface Props {
   isArchived: boolean;
   onRename: () => void;
 }
+
+const showArchiveToast = () => {
+  showToast({
+    type: 'success',
+    title: 'Chat successfully archived!',
+    message: (
+      <>
+        You can manage archived chats on the page “
+        <Text s={12} c="primary">
+          General settings
+        </Text>
+        ”
+      </>
+    ),
+  });
+};
 
 export const ChatHistoryActions = memo((props: Props) => {
   const { className, isCurrent, id, onClose, onOpen, isOpen, isPinned, isArchived, onRename } =
@@ -53,6 +69,7 @@ export const ChatHistoryActions = memo((props: Props) => {
   const handleArchiveChat = useCallback(() => {
     chatsRepository.update(id, { isArchived: true });
     onClose();
+    showArchiveToast();
   }, [id, onClose]);
 
   const handleUnarchiveChat = useCallback(() => {

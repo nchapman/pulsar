@@ -1,3 +1,4 @@
+import { appWindow } from '@tauri-apps/api/window';
 import { useEffect } from 'preact/hooks';
 
 import { initAppFolders } from '@/app/lib/initAppFolders.ts';
@@ -13,6 +14,14 @@ function App() {
   useEffect(() => {
     initAppFolders().then(() => getAvailableModelsEff());
     checkUpdates();
+
+    document
+      .getElementById('titlebar-minimize')
+      .addEventListener('click', () => appWindow.minimize());
+    document
+      .getElementById('titlebar-maximize')
+      .addEventListener('click', () => appWindow.toggleMaximize());
+    document.getElementById('titlebar-close').addEventListener('click', () => appWindow.close());
   }, []);
 
   return (

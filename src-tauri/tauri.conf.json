@@ -21,18 +21,15 @@
         }
       },
       "path": {
-        "all": true
+        "all": true,
+        "scope": {
+          "allow": [
+            "**"
+          ]
+        }
       },
       "window": {
-        "all": false,
-        "close": true,
-        "hide": true,
-        "show": true,
-        "maximize": true,
-        "minimize": true,
-        "unmaximize": true,
-        "unminimize": true,
-        "startDragging": true
+        "all": true
       },
       "protocol": {
         "asset": true,

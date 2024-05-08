@@ -10,7 +10,7 @@ import { classNames } from '@/shared/lib/func';
 import { useKeyboardListener } from '@/shared/lib/hooks';
 import { Button } from '@/shared/ui';
 
-import { autoResize } from '../../lib/autoResize.ts';
+import { autoResize } from '../../lib/utils/autoResize.ts';
 import { $chat, $isInputDisabled, $streamedMsgId, askQuestion } from '../../model/chat.ts';
 import s from './ChatInput.module.scss';
 

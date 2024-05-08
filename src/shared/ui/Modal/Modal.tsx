@@ -15,10 +15,12 @@ interface ModalProps {
 
   white?: boolean;
   noStyles?: boolean;
+  zIndex?: number;
+  noClose?: boolean;
 }
 
 export const Modal = memo((props: ModalProps) => {
-  const { className, children, open, onClose, noStyles, white } = props;
+  const { className, children, open, onClose, noStyles, noClose, white, zIndex } = props;
   const [closing, setClosing] = useState(false);
 
   const handleClose = useCallback(() => {
@@ -32,6 +34,7 @@ export const Modal = memo((props: ModalProps) => {
   return (
     <Portal>
       <div
+        style={{ zIndex: zIndex ? zIndex + 1 : undefined }}
         className={classNames(s.modal, [className], {
           [s.open]: open && !closing,
           [s.noStyles]: noStyles,
@@ -42,13 +45,15 @@ export const Modal = memo((props: ModalProps) => {
           {children}
         </div>
 
-        <Button
-          variant="clear"
-          icon={CloseIcon as any}
-          className={s.closeBtn}
-          onClick={handleClose}
-        />
-        <Overlay onClick={handleClose} visible={open && !closing} modal />
+        {!noClose && (
+          <Button
+            variant="clear"
+            icon={CloseIcon as any}
+            className={s.closeBtn}
+            onClick={handleClose}
+          />
+        )}
+        <Overlay zIndex={zIndex} onClick={handleClose} visible={open && !closing} modal />
       </div>
     </Portal>
   );

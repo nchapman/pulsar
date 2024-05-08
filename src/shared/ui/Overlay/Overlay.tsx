@@ -10,14 +10,16 @@ interface OverlayProps {
   onClick?: () => void;
   visible?: boolean;
   modal?: boolean;
+  zIndex?: number;
 }
 
 export const Overlay = memo((props: OverlayProps) => {
-  const { className, onClick, visible, modal } = props;
+  const { className, onClick, zIndex, visible, modal } = props;
 
   return (
     <Portal>
       <div
+        style={{ zIndex }}
         onClick={onClick}
         className={classNames(s.overlay, [className], {
           [s.visible]: visible,

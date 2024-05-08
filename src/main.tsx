@@ -6,6 +6,7 @@ import { ToastContainer } from 'react-toastify';
 
 import { ErrorBoundary } from '@/app/providers';
 import { addHasOwn } from '@/shared/lib/func';
+import { ConfirmModal } from '@/shared/ui';
 
 import App from './app/App';
 
@@ -15,6 +16,7 @@ render(
   <ErrorBoundary>
     <App />
     <ToastContainer />
+    <ConfirmModal />
   </ErrorBoundary>,
   document.getElementById('root')!
 );

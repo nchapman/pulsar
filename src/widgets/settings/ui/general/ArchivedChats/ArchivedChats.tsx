@@ -10,7 +10,7 @@ import ArchiveIcon from '@/shared/assets/icons/credit-card.svg';
 import TrashIcon from '@/shared/assets/icons/trash.svg';
 import { classNames } from '@/shared/lib/func';
 import { Button, showToast, Text, Tooltip } from '@/shared/ui';
-import { switchChat } from '@/widgets/chat';
+import { deleteChatWithConfirm, switchChat } from '@/widgets/chat';
 import { closeSettingsModal } from '@/widgets/settings';
 
 import s from './ArchivedChats.module.scss';
@@ -36,6 +36,8 @@ const showUnarchiveToast = (chatName: string) => {
     message: chatName,
   });
 };
+
+const emptyChatText = "Looks like you don't have any archived conversations yet :(";
 
 const ArchivedChats = memo((props: Props) => {
   const { className, chatsCount } = props;
@@ -80,7 +82,7 @@ const ArchivedChats = memo((props: Props) => {
                 <Button
                   variant="clear"
                   icon={TrashIcon}
-                  onClick={() => chatsRepository.remove(chat.id)}
+                  onClick={() => deleteChatWithConfirm(chat.id)}
                 />
               </Tooltip>
             </div>
@@ -89,6 +91,12 @@ const ArchivedChats = memo((props: Props) => {
       </div>
     ),
     [chats]
+  );
+
+  const emptyList = (
+    <Text w="medium" s={14}>
+      {emptyChatText}
+    </Text>
   );
 
   return (
@@ -103,7 +111,7 @@ const ArchivedChats = memo((props: Props) => {
         <div className={s.actions} />
       </div>
 
-      {chatsList}
+      {chats.length ? chatsList : emptyList}
     </div>
   );
 });

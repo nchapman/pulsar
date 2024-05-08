@@ -4,7 +4,7 @@ import { useMemo } from 'preact/hooks';
 import { classNames } from '@/shared/lib/func';
 import { Text } from '@/shared/ui';
 import { askQuestion } from '@/widgets/chat';
-import { getRandomElements } from '@/widgets/chat/lib/getRandomElements.ts';
+import { getRandomElements } from '@/widgets/chat/lib/utils/getRandomElements.ts';
 
 import examplePrompts from '../../mocks/example-prompts.json';
 import s from './ExamplePrompts.module.scss';

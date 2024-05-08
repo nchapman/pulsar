@@ -1,12 +1,10 @@
 import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
 
-import { chatsRepository } from '@/db';
 import { classNames } from '@/shared/lib/func';
 import { $theme, changeTheme, Theme } from '@/shared/theme';
 import { Button, Select } from '@/shared/ui';
-import { startNewChat } from '@/widgets/chat';
-import { updateChatHistory } from '@/widgets/sidebar';
+import { archiveAllChatsWithConfirm, deleteAllChatsWithConfirm } from '@/widgets/chat';
 
 import MonitorIcon from '../../../assets/monitor.svg';
 import MoonIcon from '../../../assets/moon.svg';
@@ -24,18 +22,6 @@ const options = [
   { label: 'Light', value: 'light', icon: SunIcon },
   { label: 'Dark', value: 'dark', icon: MoonIcon },
 ];
-
-const archiveAllChats = async () => {
-  await chatsRepository.archiveAll();
-  updateChatHistory();
-  startNewChat();
-};
-
-const deleteAllChats = async () => {
-  await chatsRepository.removeAll();
-  updateChatHistory();
-  startNewChat();
-};
 
 export const GeneralSettings = memo((props: Props) => {
   const { className, onChangeRoute } = props;
@@ -66,7 +52,7 @@ export const GeneralSettings = memo((props: Props) => {
       <SettingsItem
         title="Archive all chats"
         action={
-          <Button onClick={archiveAllChats} variant="secondary">
+          <Button onClick={archiveAllChatsWithConfirm} variant="secondary">
             Archive all
           </Button>
         }
@@ -75,7 +61,7 @@ export const GeneralSettings = memo((props: Props) => {
       <SettingsItem
         title="Delete all chats"
         action={
-          <Button onClick={deleteAllChats} variant="danger">
+          <Button onClick={deleteAllChatsWithConfirm} variant="danger">
             Delete all
           </Button>
         }

@@ -95,7 +95,7 @@ export class ChatsRepository {
 
   async archiveAll(): Promise<void> {
     await this.db.adapter.unsafeExecute({
-      sqls: [[`update ${chatsTable.name} set ${chatsTable.cols.isArchived} = true`, []]],
+      sqls: [[`update ${chatsTable.name} set ${chatsTable.cols.isArchived} = "true"`, []]],
     });
   }
 

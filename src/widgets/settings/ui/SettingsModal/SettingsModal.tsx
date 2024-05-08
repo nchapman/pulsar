@@ -4,7 +4,7 @@ import { memo } from 'preact/compat';
 import { classNames } from '@/shared/lib/func';
 import { Icon, Modal, TabItem, Tabs, Text } from '@/shared/ui';
 
-import MyModelsIcon from '../../assets/server.svg';
+// import MyModelsIcon from '../../assets/server.svg';
 import GeneralIcon from '../../assets/settings.svg';
 import { $isSettingsModalOpen, closeSettingsModal } from '../../model/settings.model.ts';
 import { SettingsGeneral } from '../general/SettingsGeneral/SettingsGeneral.tsx';
@@ -20,11 +20,11 @@ const items = [
     label: 'General',
     content: <SettingsGeneral />,
   },
-  {
-    icon: MyModelsIcon,
-    label: 'My Models',
-    content: <div>My Models</div>,
-  },
+  // {
+  //   icon: MyModelsIcon,
+  //   label: 'My Models',
+  //   content: <div>My Models</div>,
+  // },
 ];
 
 export const SettingsModal = memo((props: Props) => {

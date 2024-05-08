@@ -7,7 +7,7 @@ import { FileData } from '../types/upload-file.ts';
 const filters: Record<FileData['type'], { name: string; extensions: string[] }> = {
   image: {
     name: 'Image',
-    extensions: ['png', 'jpeg'],
+    extensions: ['png', 'jpeg', 'jpg'],
   },
   video: {
     name: 'Video',

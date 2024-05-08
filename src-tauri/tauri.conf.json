@@ -21,12 +21,7 @@
         }
       },
       "path": {
-        "all": true,
-        "scope": {
-          "allow": [
-            "**"
-          ]
-        }
+        "all": true
       },
       "window": {
         "all": true

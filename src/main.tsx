@@ -1,7 +1,6 @@
 import '@/shared/styles/index.scss';
 import 'react-toastify/dist/ReactToastify.min.css';
 
-import { appWindow } from '@tauri-apps/api/window';
 import { render } from 'preact';
 import { ToastContainer } from 'react-toastify';
 
@@ -21,10 +20,3 @@ render(
   </ErrorBoundary>,
   document.getElementById('root')!
 );
-
-//        "fullscreen": false,
-//        "resizable": true,
-//        "title": "Pulsar",
-//        "width": 1100,
-//        "height": 830,
-//        "titleBarStyle": "Overlay"

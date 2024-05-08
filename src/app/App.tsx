@@ -1,4 +1,3 @@
-import { appWindow } from '@tauri-apps/api/window';
 import { useEffect } from 'preact/hooks';
 
 import { initAppFolders } from '@/app/lib/initAppFolders.ts';
@@ -10,23 +9,15 @@ import { Toolbar } from '@/widgets/toolbar';
 import { checkUpdates } from './Updates';
 
 function App() {
-  initTheme();
   useEffect(() => {
+    initTheme();
     initAppFolders().then(() => getAvailableModelsEff());
     checkUpdates();
-
-    document
-      .getElementById('titlebar-minimize')
-      .addEventListener('click', () => appWindow.minimize());
-    document
-      .getElementById('titlebar-maximize')
-      .addEventListener('click', () => appWindow.toggleMaximize());
-    document.getElementById('titlebar-close').addEventListener('click', () => appWindow.close());
   }, []);
 
   return (
     <div className="app">
-      {/* <Toolbar onToggleSidebar={toggleSidebar} /> */}
+      <Toolbar onToggleSidebar={toggleSidebar} />
       <ChatPage />
     </div>
   );

@@ -51,7 +51,13 @@
     },
     "windows": [
       {
-        "decorations": false
+        "decorations": false,
+        "fullscreen": false,
+        "resizable": true,
+        "title": "Pulsar",
+        "width": 1100,
+        "height": 830,
+        "titleBarStyle": "Overlay"
       }
     ],
     "updater": {

@@ -17,7 +17,7 @@ function App() {
 
   return (
     <div className="app">
-      <Toolbar onToggleSidebar={toggleSidebar} />
+      {/* <Toolbar onToggleSidebar={toggleSidebar} /> */}
       <ChatPage />
     </div>
   );

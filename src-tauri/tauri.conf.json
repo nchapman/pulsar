@@ -24,7 +24,15 @@
         "all": true
       },
       "window": {
-        "all": true
+        "all": false,
+        "close": true,
+        "hide": true,
+        "show": true,
+        "maximize": true,
+        "minimize": true,
+        "unmaximize": true,
+        "unminimize": true,
+        "startDragging": true
       },
       "protocol": {
         "asset": true,
@@ -51,12 +59,7 @@
     },
     "windows": [
       {
-        "fullscreen": false,
-        "resizable": true,
-        "title": "Pulsar",
-        "width": 1100,
-        "height": 830,
-        "titleBarStyle": "Overlay"
+        "decorations": false
       }
     ],
     "updater": {

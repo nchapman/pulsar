@@ -99,9 +99,9 @@ jobs:
         if: matrix.platform == 'macos-14'
         run: rustup target add aarch64-apple-darwin
 
-      - name: install libomp for VSS
-        if: matrix.platform == 'macos-14'
-        run: brew install libomp
+      # - name: install libomp for VSS
+      #   if: matrix.platform == 'macos-14'
+      #   run: brew install libomp
 
       - name: install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-20.04'

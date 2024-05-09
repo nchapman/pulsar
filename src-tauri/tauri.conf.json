@@ -7,7 +7,7 @@
   },
   "package": {
     "productName": "Pulsar",
-    "version": "0.0.30"
+    "version": "0.0.31"
   },
   "tauri": {
     "allowlist": {
@@ -28,7 +28,9 @@
       },
       "protocol": {
         "asset": true,
-        "assetScope": ["**"]
+        "assetScope": [
+          "**"
+        ]
       }
     },
     "bundle": {

@@ -12,7 +12,7 @@ export async function stream(
     onStreamEnd: () => void;
     onTitleUpdate: (title: string) => void;
   },
-  maxPredictLen: number = 100
+  maxPredictLen: number = 10000
 ) {
   if (!model) {
     loge('chatApi', 'Model not loaded, cannot stream');

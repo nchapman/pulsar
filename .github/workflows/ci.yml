@@ -97,7 +97,7 @@ jobs:
 
       - name: install macos universal arch
         if: matrix.platform == 'macos-14'
-        run: rustup target add aarch64-apple-darwin
+        run: rustup target add x86_64-apple-darwin
 
       # - name: install libomp for VSS
       #   if: matrix.platform == 'macos-14'
@@ -128,5 +128,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
           TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
-        run: yarn tauri build -b app
+        run: yarn tauri build -b app --target universal-apple-darwin
 

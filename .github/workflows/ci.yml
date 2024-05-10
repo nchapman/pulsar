@@ -99,14 +99,6 @@ jobs:
         if: matrix.platform == 'macos-14'
         run: rustup target add x86_64-apple-darwin
 
-      - name: Print clang archs
-        if: matrix.platform == 'macos-14'
-        run: clang -print-targets
-
-      - name: Print clang homebrew archs
-        if: matrix.platform == 'macos-14'
-        run: $(brew --prefix llvm@15)/bin/clang -print-targets
-
       # - name: install libomp for VSS
       #   if: matrix.platform == 'macos-14'
       #   run: brew install libomp

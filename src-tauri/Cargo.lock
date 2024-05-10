@@ -2635,7 +2635,7 @@ checksum = "01cda141df6706de531b6c46c3a33ecca755538219bd484262fa09410c13539c"
 [[package]]
 name = "llama-cpp"
 version = "0.0.1"
-source = "git+https://github.com/nchapman/nebula.git#05953ee227d4022e87a563bed6535bc188b48da9"
+source = "git+https://github.com/nchapman/nebula.git#8cea184d10a89944ed827adcaa9b2a8f2bb90614"
 dependencies = [
  "llama-cpp-sys",
  "log",
@@ -2646,7 +2646,7 @@ dependencies = [
 [[package]]
 name = "llama-cpp-sys"
 version = "0.0.1"
-source = "git+https://github.com/nchapman/nebula.git#05953ee227d4022e87a563bed6535bc188b48da9"
+source = "git+https://github.com/nchapman/nebula.git#8cea184d10a89944ed827adcaa9b2a8f2bb90614"
 dependencies = [
  "bindgen",
  "cc",
@@ -2866,7 +2866,7 @@ dependencies = [
 [[package]]
 name = "nebula"
 version = "0.1.0"
-source = "git+https://github.com/nchapman/nebula.git#05953ee227d4022e87a563bed6535bc188b48da9"
+source = "git+https://github.com/nchapman/nebula.git#8cea184d10a89944ed827adcaa9b2a8f2bb90614"
 dependencies = [
  "clap",
  "hf-hub",
@@ -5070,9 +5070,9 @@ checksum = "e1fc403891a21bcfb7c37834ba66a547a8f402146eba7265b5a6d88059c9ff2f"
 
 [[package]]
 name = "tauri"
-version = "1.6.3"
+version = "1.6.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7a4fab012dcf1e72762561cef2c08a6538aec2ca44d282158128117f79eb9d39"
+checksum = "13ce04f77bcd40bb57ec7061725c9c415d30b2bf80257637b857ee067f2fa198"
 dependencies = [
  "anyhow",
  "base64 0.21.7",
@@ -5241,9 +5241,9 @@ dependencies = [
 
 [[package]]
 name = "tauri-runtime-wry"
-version = "0.14.6"
+version = "0.14.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a777eaa0d88ae47d8081cdc667eba8941b3a18af0f0ccb22640d8f0c3431d6d1"
+checksum = "ef2af45aeb15b1cadb4ca91248423f4438a0864b836298cecb436892afbfdff4"
 dependencies = [
  "arboard",
  "cocoa",

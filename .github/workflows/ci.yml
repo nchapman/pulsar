@@ -79,7 +79,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-14, ubuntu-20.04, windows-latest]
+        platform: [macos-latest, ubuntu-20.04, windows-latest]
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -95,9 +95,9 @@ jobs:
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
 
-      - name: install macos universal arch
-        if: matrix.platform == 'macos-14'
-        run: rustup target add aarch64-apple-darwin
+      - name: install macos intel arch
+        if: matrix.platform == 'macos-latest'
+        run: rustup target add x86_64-apple-darwin
 
       # - name: install libomp for VSS
       #   if: matrix.platform == 'macos-14'
@@ -114,7 +114,7 @@ jobs:
 
       - name: Build app for non macos
         id: restbuild
-        if: matrix.platform != 'macos-14'
+        if: matrix.platform != 'macos-latest'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
@@ -128,5 +128,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
           TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
-        run: yarn tauri build -b app
+        run: yarn tauri build -b app --target universal-apple-darwin
 

@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-14, ubuntu-20.04, windows-latest]
+        platform: [macos-latest, ubuntu-20.04, windows-latest]
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -30,7 +30,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: install macos universal arch
-        if: matrix.platform == 'macos-14'
+        if: matrix.platform == 'macos-latest'
         run: rustup target add x86_64-apple-darwin
 
       # - name: install libomp for VSS
@@ -46,7 +46,7 @@ jobs:
       #   run: ln -s $(brew --prefix llvm@15)/bin/clang++ /usr/local/bin/clang++
 
       - name: Print clang version
-        if: matrix.platform == 'macos-14'
+        if: matrix.platform == 'macos-latest'
         run: |
           clang --version
           clang++ --version
@@ -62,7 +62,7 @@ jobs:
 
       - name: Build app for non macos
         id: restbuild
-        if: matrix.platform != 'macos-14'
+        if: matrix.platform != 'macos-latest'
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -75,7 +75,7 @@ jobs:
 
       - name: Build for macos
         id: macosbuild
-        if: matrix.platform == 'macos-14'
+        if: matrix.platform == 'macos-latest'
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -99,4 +99,3 @@ jobs:
           S3_BUCKET: ${{ secrets.S3_BUCKET }}
           S3_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}
           S3_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}
-

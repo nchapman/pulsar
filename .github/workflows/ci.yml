@@ -79,7 +79,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-14, ubuntu-20.04, windows-latest]
+        platform: [macos-latest, ubuntu-20.04, windows-latest]
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -96,7 +96,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: install macos intel arch
-        if: matrix.platform == 'macos-14'
+        if: matrix.platform == 'macos-latest'
         run: rustup target add x86_64-apple-darwin
 
       # - name: install libomp for VSS
@@ -114,7 +114,7 @@ jobs:
 
       - name: Build app for non macos
         id: restbuild
-        if: matrix.platform != 'macos-14'
+        if: matrix.platform != 'macos-latest'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}

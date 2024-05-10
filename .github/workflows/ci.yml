@@ -123,7 +123,7 @@ jobs:
 
       - name: Build for macos
         id: macosbuild
-        if: matrix.platform == 'macos-14'
+        if: matrix.platform == 'macos-latest'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}

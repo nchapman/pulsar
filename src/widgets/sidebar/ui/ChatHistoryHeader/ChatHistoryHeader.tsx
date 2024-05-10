@@ -1,5 +1,5 @@
 import { memo } from 'preact/compat';
-import { useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 
 import CloseIcon from '@/shared/assets/icons/close.svg';
 import NewChatIcon from '@/shared/assets/icons/edit.svg';
@@ -19,6 +19,7 @@ interface Props {
 export const ChatHistoryHeader = memo((props: Props) => {
   const { className, onSearchChange, search } = props;
   const [isSearchActive, setIsSearchActive] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const onSearch = () => {
     setIsSearchActive(true);
@@ -28,6 +29,10 @@ export const ChatHistoryHeader = memo((props: Props) => {
     onSearchChange('');
     setIsSearchActive(false);
   };
+
+  useEffect(() => {
+    if (isSearchActive) inputRef.current?.focus();
+  }, [isSearchActive]);
 
   if (isSearchActive)
     return (
@@ -40,6 +45,7 @@ export const ChatHistoryHeader = memo((props: Props) => {
             className={s.searchIcon}
           />
           <Input
+            ref={inputRef}
             value={search}
             onChange={onSearchChange}
             className={s.searchInput}

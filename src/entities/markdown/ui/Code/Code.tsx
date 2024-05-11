@@ -34,7 +34,7 @@ export const Code = memo((props: Props) => {
     return () => clearTimeout(id);
   }, [copied, resetCopy]);
 
-  if (!match) return <strong>code</strong>;
+  if (!match) return null;
 
   return (
     <div className={classNames(s.code, [className])}>

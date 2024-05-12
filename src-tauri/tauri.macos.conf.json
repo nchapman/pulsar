@@ -3,7 +3,12 @@
     "windows": [
       {
         "decorations": true,
-        "titleBarStyle": "Overlay"
+        "titleBarStyle": "Overlay",
+        "fullscreen": false,
+        "resizable": true,
+        "title": "Pulsar",
+        "width": 1100,
+        "height": 830
       }
     ]
   }

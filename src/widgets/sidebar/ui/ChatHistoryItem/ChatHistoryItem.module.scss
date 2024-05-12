@@ -1,7 +1,7 @@
 @import './src/shared/styles/mixins';
 
 .chat-history-item {
-  width: 228px;
+  width: calc(100% - 10px);
   align-items: center;
   padding: 8px 16px;
   white-space: nowrap;

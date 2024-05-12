@@ -3,6 +3,7 @@ import { withObservables } from '@nozbe/watermelondb/react';
 import { useUnit } from 'effector-react/effector-react.mjs';
 import { memo } from 'preact/compat';
 import { useEffect, useMemo, useState } from 'preact/hooks';
+import Scrollbars from 'react-custom-scrollbars';
 
 import { chatsRepository } from '@/db';
 import { Chat } from '@/db/chat';
@@ -65,7 +66,9 @@ const ChatHistory = memo((props: Props) => {
     <div className={classNames(s.chatHistory, [className])}>
       <ChatHistoryHeader search={search} onSearchChange={setSearch} className={s.header} />
 
-      <div className={s.list}>{chatsList}</div>
+      <Scrollbars style={{ width: 'calc(100% + 10px)' }} className={s.list}>
+        {chatsList}
+      </Scrollbars>
     </div>
   );
 });

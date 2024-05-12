@@ -36,3 +36,4 @@ src-tauri/models/*
 !.yarn/versions
 
 scripts/manifest
+*storybook.log

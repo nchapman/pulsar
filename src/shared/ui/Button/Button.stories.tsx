@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/preact';
 
+import ArrowDownIcon from '@/shared/assets/icons/arrow-down.svg';
+
 import { Button } from './Button';
 
 const meta: Meta<typeof Button> = {
@@ -32,4 +34,16 @@ export const Clear: Story = {
 
 export const Danger: Story = {
   args: { variant: 'danger' },
+};
+
+export const IconPrimary: Story = {
+  args: { variant: 'primary', icon: ArrowDownIcon },
+};
+
+export const IconSecondary: Story = {
+  args: { variant: 'secondary', icon: ArrowDownIcon },
+};
+
+export const IconClear: Story = {
+  args: { variant: 'clear', icon: ArrowDownIcon },
 };

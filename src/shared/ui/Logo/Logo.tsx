@@ -7,13 +7,14 @@ import s from './Logo.module.scss';
 
 interface Props {
   className?: string;
+  size: 's' | 'm' | 'l';
 }
 
 export const Logo = memo((props: Props) => {
-  const { className } = props;
+  const { className, size } = props;
 
   return (
-    <div className={classNames(s.logo, [className])}>
+    <div className={classNames(s.logo, [className, s[size]])}>
       <img src={LogoIcon} alt="logo" />
     </div>
   );

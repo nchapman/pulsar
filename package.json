@@ -17,7 +17,8 @@
     "test:backend": "cd src-tauri && cargo test -- --test-threads=1 --nocapture",
     "release": "node ./scripts/release.cjs",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "deploy-storybook": "yarn build-storybook && cd storybook-static && vercel --prod --yes"
   },
   "dependencies": {
     "@nozbe/watermelondb": "https://github.com/ospfranco/tauri-watermelon#1a03ebe1a7ea4052405eb3f80486d82c52e46ed4",
@@ -63,6 +64,7 @@
     "@typescript-eslint/parser": "5.57.1",
     "aws-sdk": "^2.1584.0",
     "babel-plugin-module-resolver": "^5.0.0",
+    "chromatic": "^11.3.2",
     "eslint": "8.39.0",
     "eslint-config-airbnb": "19.0.4",
     "eslint-config-prettier": "8.8.0",

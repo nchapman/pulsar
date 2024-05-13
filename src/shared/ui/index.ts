@@ -5,7 +5,6 @@ export * from './Button/Button';
 export * from './Card/Card';
 export * from './Collapsible/Collapsible';
 export * from './ConfirmModal/ConfirmModal';
-export * from './CopySnack/CopySnack';
 export * from './Icon/Icon';
 export * from './Input/Input';
 export * from './LeftPanel/LeftPanel';

@@ -1,5 +1,4 @@
-import { memo, ReactNode, SVGProps } from 'preact/compat';
-import { FC } from 'react';
+import { FC, memo, ReactNode, SVGProps } from 'preact/compat';
 import { Popover } from 'react-tiny-popover';
 
 import ChevronDownIcon from '@/shared/assets/icons/chevron-down.svg';

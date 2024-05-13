@@ -10733,6 +10733,7 @@ __metadata:
     "@typescript-eslint/parser": "npm:5.57.1"
     aws-sdk: "npm:^2.1584.0"
     babel-plugin-module-resolver: "npm:^5.0.0"
+    chromatic: "npm:^11.3.2"
     effector: "npm:^23.2.0"
     effector-react: "npm:^23.2.0"
     eslint: "npm:8.39.0"

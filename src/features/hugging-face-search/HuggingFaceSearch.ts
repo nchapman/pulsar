@@ -39,10 +39,7 @@ const HUGGING_FACE_API_URL = `${HUGGING_FACE_BASE_URL}/api`;
 export const searchHuggingFaceModel = async (
   query: string
 ): Promise<HuggingFaceSearchModelResponse[]> => {
-  let q = query.trim();
-  if (!q.includes('gguf')) {
-    q += ' gguf';
-  }
+  const q = query.trim();
 
   const response = await fetch(`${HUGGING_FACE_API_URL}/models?search=${encodeURIComponent(q)}`);
   return response.json();

@@ -5,7 +5,7 @@ import { memo } from 'preact/compat';
 import {
   fetchHuggingFaceModel,
   searchHuggingFaceModel,
-} from '@/features/hugging-face-search/hugging-face-search';
+} from '@/features/hugging-face-search/HuggingFaceSearch';
 import { classNames } from '@/shared/lib/func';
 import { logi } from '@/shared/lib/Logger';
 import { Button } from '@/shared/ui';

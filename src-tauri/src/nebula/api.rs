@@ -253,7 +253,8 @@ struct PredictPayload {
 async fn model_context_predict<R: Runtime>(
     model_path: String,
     context_id: String,
-    max_len: usize,
+    max_len: Option<usize>,
+    temp: Option<f32>,
     app: AppHandle<R>,
     //    window: Window<R>,
     state: State<'_, NebulaState>,
@@ -275,24 +276,29 @@ async fn model_context_predict<R: Runtime>(
 
     ss.store(false, std::sync::atomic::Ordering::Relaxed);
 
-    cc.lock().await.predict_with_callback(
-        Box::new(move |token| {
-            app_clone
-                .emit_all(
-                    "nebula-predict",
-                    PredictPayload {
-                        model: model_path_clone.clone(),
-                        context: context_id_clone.clone(),
-                        token: Some(token),
-                        finished: false,
-                    },
-                )
-                .expect("Could not emit llm predict payload event");
+    let mut ctx = cc.lock().await;
+    let mut p = ctx.predict().with_token_callback(Box::new(move |token| {
+        app_clone
+            .emit_all(
+                "nebula-predict",
+                PredictPayload {
+                    model: model_path_clone.clone(),
+                    context: context_id_clone.clone(),
+                    token: Some(token),
+                    finished: false,
+                },
+            )
+            .expect("Could not emit llm predict payload event");
 
-            !ccc.load(std::sync::atomic::Ordering::Relaxed)
-        }),
-        max_len,
-    )?;
+        !ccc.load(std::sync::atomic::Ordering::Relaxed)
+    }));
+    if let Some(max_len) = max_len {
+        p = p.with_max_len(max_len);
+    }
+    if let Some(temp) = temp {
+        p = p.with_temp(temp);
+    }
+    p.predict()?;
 
     app.emit_all(
         "nebula-predict",

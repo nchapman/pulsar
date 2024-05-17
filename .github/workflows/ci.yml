@@ -99,6 +99,11 @@ jobs:
             src-tauri/target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-
+
+      # Tauri is stupid and requires this folder to be there, check: https://github.com/tauri-apps/tauri/issues/3142
+      - name: Create dist folder
+        run: mkdir -p dist
+
       - name: Lint
         working-directory: src-tauri
         run: cargo clippy --all-targets --all-features -- -D warnings

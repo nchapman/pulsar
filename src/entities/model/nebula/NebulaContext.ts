@@ -10,6 +10,8 @@ type NebulaPredictPayload = {
   finished: boolean;
 };
 
+const DEFAULT_TEMP = 0.5;
+
 export class NebulaContext {
   private model: NebulaModel;
 
@@ -76,6 +78,7 @@ export class NebulaContext {
       modelPath: this.model.model,
       contextId: this.contextId,
       maxLen: maxLength,
+      temp: DEFAULT_TEMP,
     });
 
     unlisten();

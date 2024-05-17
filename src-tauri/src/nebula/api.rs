@@ -214,7 +214,7 @@ async fn model_context_eval_image<R: Runtime>(
     let mut models = state.models.lock().await;
 
     let decoded_image = if base64_encoded_image.starts_with("data:") {
-        let data_start = base64_encoded_image.find(",").unwrap();
+        let data_start = base64_encoded_image.find(',').unwrap();
         let encoded_data = &base64_encoded_image[data_start + 1..];
         BASE64_STANDARD.decode(encoded_data.as_bytes())?
     } else {
@@ -361,9 +361,7 @@ mod tests {
         let model_path = model_dir.join("evolvedseeker_1_3.Q2_K.gguf");
 
         if !model_path.exists() {
-            if let Err(err) = fs::copy(source_path, model_path) {
-                return Err(err.into());
-            }
+            fs::copy(source_path, model_path)?;
         }
 
         Ok(app)

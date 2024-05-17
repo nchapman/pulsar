@@ -146,8 +146,7 @@ async fn execute(
         }
     }
     let result = query.execute(&*db).await?;
-    let r = Ok((result.rows_affected(), result.last_insert_rowid()));
-    r
+    Ok((result.rows_affected(), result.last_insert_rowid()))
 }
 
 #[command]

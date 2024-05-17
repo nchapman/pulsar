@@ -1,4 +1,4 @@
+mod api;
 mod error;
-mod nebula;
 
-pub use nebula::init_plugin;
+pub use api::init_plugin;

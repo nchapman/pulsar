@@ -2,6 +2,7 @@
   display: flex;
   justify-content: space-between;
   padding-left: 10px;
+  position: relative;
 }
 
 .controls {
@@ -9,4 +10,12 @@
   display: flex;
   gap: 4px;
   align-items: center;
+}
+
+
+.title {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
 }

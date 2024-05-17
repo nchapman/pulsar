@@ -46,7 +46,7 @@ export const ChatMessage = (props: Props) => {
     <div className={classNames(s.chatMessageWrapper, [className])}>
       <div className={s.chatMessage}>
         <div className={s.authorIcon}>
-          {isUser ? <img src={userImg} alt="author" /> : <Logo className={s.logo} />}
+          {isUser ? <img src={userImg} alt="author" /> : <Logo size="s" />}
         </div>
 
         <div className={s.body}>

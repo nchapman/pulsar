@@ -63,7 +63,7 @@ export const ChatHistoryHeader = memo((props: Props) => {
     <div className={classNames(s.wrapper, [className])}>
       <div className={s.chatHistoryHeader}>
         <div className={s.left}>
-          <Logo className={s.logo} />
+          <Logo className={s.logo} size="m" />
           <Text c="primary" s={14}>
             Pulsar
           </Text>

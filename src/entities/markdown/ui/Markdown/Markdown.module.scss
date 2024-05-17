@@ -58,31 +58,33 @@
     margin-bottom: 8px;
   }
 
+
   ol {
     list-style: none;
     counter-reset: item;
+    padding-left: 10px;
 
-    li {
+    & > li {
       counter-increment: item;
       margin-bottom: 8px;
       position: relative;
-    }
 
-    li:before {
-      margin-right: 8px;
-      content: counter(item);
-      background: var(--main-background-secondary);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 20px;
-      height: 20px;
-      position: absolute;
-      right: 100%;
-      top: 3px;
-      font-weight: 600;
-      font-size: 12px;
+      &:before {
+        margin-right: 8px;
+        content: counter(item);
+        background: var(--main-background-secondary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        right: 100%;
+        top: 3px;
+        font-weight: 600;
+        font-size: 12px;
+      }
     }
   }
 
@@ -93,6 +95,10 @@
       margin-bottom: 8px;
       position: relative;
     }
+  }
+
+  ul ol, ol ul, ul ul, ol ol {
+    padding-left: 18px;
   }
 
   span {

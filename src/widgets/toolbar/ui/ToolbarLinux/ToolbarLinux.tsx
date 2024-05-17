@@ -3,7 +3,7 @@ import { memo } from 'preact/compat';
 
 import SidebarIcon from '@/shared/assets/icons/sidebar.svg';
 import { classNames } from '@/shared/lib/func';
-import { Button } from '@/shared/ui';
+import { Button, Text } from '@/shared/ui';
 
 import CloseIcon from '../../assets/close.svg';
 import MaximizeIcon from '../../assets/maximize.svg';
@@ -21,6 +21,10 @@ export const ToolbarLinux = memo((props: Props) => {
   return (
     <div className={classNames(s.toolbarLinux, [className])}>
       <Button onClick={onToggleSidebar} variant="clear" className={s.button} icon={SidebarIcon} />
+
+      <Text c="secondary" w="medium" s={14} className={s.title}>
+        Pulsar
+      </Text>
 
       <div className={s.controls}>
         <Button

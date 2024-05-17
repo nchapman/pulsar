@@ -2,13 +2,13 @@ import { memo } from 'preact/compat';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
 import CloseIcon from '@/shared/assets/icons/close.svg';
-import NewChatIcon from '@/shared/assets/icons/edit.svg';
 import SearchIcon from '@/shared/assets/icons/search.svg';
 import { classNames } from '@/shared/lib/func';
 import { useKeyboardListener } from '@/shared/lib/hooks';
 import { Button, Input, Logo, Text, Tooltip } from '@/shared/ui';
 import { startNewChat } from '@/widgets/chat';
 
+import NewChatIcon from '../../assets/new-chat.svg';
 import s from './ChatHistoryHeader.module.scss';
 
 interface Props {

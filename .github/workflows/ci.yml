@@ -22,39 +22,6 @@ jobs:
       - name: Typecheck files
         run: yarn typecheck
 
-  rust_lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          lfs: true
-      - name: Fetch LFS objects
-        run: git lfs fetch --all
-      - name: Pull LFS objects
-        run: git lfs pull
-      - name: install Rust stable
-        uses: dtolnay/rust-toolchain@stable
-      - name: install dependencies (ubuntu only)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf libgomp1 libatlas-base-dev liblapack-dev libsqlite3-dev
-      - name: Set up cargo cache
-        uses: actions/cache@v3
-        continue-on-error: false
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            src-tauri/target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-cargo-
-      - name: Lint
-        working-directory: src-tauri
-        run: cargo clippy --all-targets --all-features -- -D warnings
-
   frontend_tests:
     runs-on: ubuntu-latest
     steps:
@@ -105,6 +72,36 @@ jobs:
       - name: Test
         working-directory: src-tauri
         run: cargo test -- --test-threads=1 --nocapture
+
+  rust_lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: install dependencies (ubuntu only)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf libgomp1 libatlas-base-dev liblapack-dev libsqlite3-dev
+
+      - name: Set up cargo cache
+        uses: actions/cache@v3
+        continue-on-error: false
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            src-tauri/target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+      - name: Lint
+        working-directory: src-tauri
+        run: cargo clippy --all-targets --all-features -- -D warnings
 
   build-tauri:
     permissions:

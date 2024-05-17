@@ -30,7 +30,7 @@ export const SidebarFooter = memo((props: Props) => {
       {/* @ts-ignore */}
       {process.env.NODE_ENV === 'development' && (
         <>
-          <Button className={s.btn} onClick={openAppData} variant="clear">
+          <Button className={s.btn} onClick={openAppData} variant="secondary">
             Open App Data
           </Button>
           <Button
@@ -42,7 +42,7 @@ export const SidebarFooter = memo((props: Props) => {
 
               logi('Hugging face model', JSON.stringify(model, null, 2));
             }}
-            variant="clear"
+            variant="secondary"
           >
             Hugging face test
           </Button>

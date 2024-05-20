@@ -1,3 +1,6 @@
+import { appWindow } from '@tauri-apps/api/window';
+import { createEvent, createStore } from 'effector';
+import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
 
 import SidebarIcon from '@/shared/assets/icons/sidebar.svg';
@@ -11,11 +14,20 @@ interface Props {
   onToggleSidebar: () => void;
 }
 
+const $isFullscreen = createStore(false);
+const setIsFullscreen = createEvent<boolean>();
+$isFullscreen.on(setIsFullscreen, (_, payload) => payload);
+
+appWindow.onResized(() => {
+  appWindow.isFullscreen().then(setIsFullscreen);
+});
+
 export const ToolbarMacOS = memo((props: Props) => {
   const { className, onToggleSidebar } = props;
+  const isFullscreen = useUnit($isFullscreen);
 
   return (
-    <div className={classNames(s.toolbarMacOs, [className])}>
+    <div className={classNames(s.toolbarMacOs, [className], { [s.fullscreen]: isFullscreen })}>
       <Button onClick={onToggleSidebar} variant="clear" className={s.button} icon={SidebarIcon} />
     </div>
   );

@@ -14,6 +14,11 @@
   flex-direction: column;
   gap: 8px;
   z-index: 10;
+
+
+  &.popover-bottom {
+    transform: translateY(-100%);
+  }
 }
 
 .divider {
@@ -37,4 +42,8 @@
 
 .delete-btn {
   color: var(--error);
+}
+
+.popover-container {
+
 }

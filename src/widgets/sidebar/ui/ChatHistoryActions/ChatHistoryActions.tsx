@@ -1,5 +1,5 @@
 import { memo } from 'preact/compat';
-import { useCallback } from 'preact/hooks';
+import { useCallback, useEffect, useRef } from 'preact/hooks';
 import { Popover } from 'react-tiny-popover';
 
 import { chatsRepository } from '@/db';
@@ -53,6 +53,7 @@ const showPinnedToast = (chatName: string) => {
 
 export const ChatHistoryActions = memo((props: Props) => {
   const { className, title, id, onClose, onOpen, isOpen, isPinned, isArchived, onRename } = props;
+  const popoverRef = useRef<HTMLDivElement>(null);
 
   const handleRenameChat = useCallback(() => {
     onRename();
@@ -86,7 +87,7 @@ export const ChatHistoryActions = memo((props: Props) => {
   }, [id, onClose]);
 
   const popover = (
-    <div className={s.popover}>
+    <div className={s.popover} ref={popoverRef}>
       <Button variant="clear" className={s.actionBtn} onClick={handleRenameChat}>
         <Icon svg={EditIcon} /> Rename Chat
       </Button>
@@ -117,6 +118,14 @@ export const ChatHistoryActions = memo((props: Props) => {
     </div>
   );
 
+  useEffect(() => {
+    const bottom = popoverRef.current?.getBoundingClientRect().bottom;
+    if (!bottom) return;
+    if (bottom > window.innerHeight) {
+      popoverRef.current.style.transform = `translateY(${window.innerHeight - bottom - 10}px)`;
+    }
+  }, [isOpen]);
+
   return (
     <div className={classNames(s.chatHistoryActions, [className])}>
       <Popover
@@ -126,6 +135,7 @@ export const ChatHistoryActions = memo((props: Props) => {
         align="start"
         padding={4}
         onClickOutside={onClose}
+        containerClassName={s.popoverContainer}
       >
         <div>
           <Button onClick={onOpen} className={s.trigger} variant="secondary" icon={DotsIcon} />

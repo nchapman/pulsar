@@ -138,7 +138,13 @@ export const ChatHistoryActions = memo((props: Props) => {
         containerClassName={s.popoverContainer}
       >
         <div>
-          <Button onClick={onOpen} className={s.trigger} variant="secondary" icon={DotsIcon} />
+          <Button
+            iconSize={18}
+            onClick={onOpen}
+            className={s.trigger}
+            variant="clear"
+            icon={DotsIcon}
+          />
         </div>
       </Popover>
     </div>

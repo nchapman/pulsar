@@ -2,7 +2,7 @@
 import { FC, ReactNode, useLayoutEffect } from 'preact/compat';
 import { useRef, useState } from 'preact/hooks';
 
-import ExpandIcon from '@/shared/assets/icons/expand.svg';
+import ExpandIcon from '@/shared/assets/icons/chevron-down.svg';
 import { classNames } from '@/shared/lib/func';
 import { Icon } from '@/shared/ui';
 
@@ -65,8 +65,7 @@ export const Collapsible: FC<CollapsibleProps> = ({
         onClick={!wholeClickable ? toggleCollapse : undefined}
       >
         {typeof head === 'string' ? <h2>{head}</h2> : head}
-        {/* @ts-ignore */}
-        {withIcon && <Icon className={s.icon} Svg={ExpandIcon} />}
+        {withIcon && <Icon className={s.icon} svg={ExpandIcon} />}
       </div>
       <div
         className={s.content}

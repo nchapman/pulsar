@@ -29,7 +29,7 @@ export type HuggingFaceModel = {
   };
   siblings: {
     rfilename: string;
-  };
+  }[];
   createdAt: string;
 };
 
@@ -47,7 +47,9 @@ export const searchHuggingFaceModel = async (
 
 export const fetchHuggingFaceModel = async (modelId: string): Promise<HuggingFaceModel> => {
   const response = await fetch(`${HUGGING_FACE_API_URL}/models/${modelId}`);
-  return response.json();
+  const model: HuggingFaceModel = await response.json();
+  model.siblings.filter((sibling) => sibling.rfilename.endsWith('.gguf'));
+  return model;
 };
 
 export const getHuggingFaceDownloadLink = (modelId: string, file: string): string =>

@@ -9,7 +9,7 @@ import { chatsRepository } from '@/db';
 import { Chat } from '@/db/chat';
 import { chatsTable } from '@/db/chat/chat.schema.ts';
 import { classNames, debounce } from '@/shared/lib/func';
-import { Text } from '@/shared/ui';
+import { Collapsible, Text } from '@/shared/ui';
 import { $chat } from '@/widgets/chat';
 import { groupChats } from '@/widgets/sidebar/lib/groupChats.ts';
 
@@ -48,16 +48,21 @@ const ChatHistory = memo((props: Props) => {
   const chatsList = useMemo(
     () =>
       groupChats(chats).map(({ chats, period }) => (
-        <div className={s.group}>
-          <Text w="medium" s={12} className={s.period}>
-            {period}
-          </Text>
+        <Collapsible
+          withIcon
+          defaultExpanded
+          head={
+            <Text w="medium" s={12} className={s.period}>
+              {period}
+            </Text>
+          }
+        >
           <div className={s.chats}>
             {chats.map((chat) => (
               <ChatHistoryItem key={chat.id} id={chat.id} isCurrent={currChatId === chat.id} />
             ))}
           </div>
-        </div>
+        </Collapsible>
       )),
     [chats, currChatId]
   );

@@ -5160,6 +5160,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chromatic@npm:^11.4.0":
+  version: 11.4.0
+  resolution: "chromatic@npm:11.4.0"
+  peerDependencies:
+    "@chromatic-com/cypress": ^0.*.* || ^1.0.0
+    "@chromatic-com/playwright": ^0.*.* || ^1.0.0
+  peerDependenciesMeta:
+    "@chromatic-com/cypress":
+      optional: true
+    "@chromatic-com/playwright":
+      optional: true
+  bin:
+    chroma: dist/bin.js
+    chromatic: dist/bin.js
+    chromatic-cli: dist/bin.js
+  checksum: 10c0/97ef0cfcc267f7da9946a8069345c31b8491fab329186f78cf5fce6b6d811d2105d1285c7b0b6ba76c2255682b720527f14070550d9c8cd17be26d00c3bf4ea3
+  languageName: node
+  linkType: hard
+
 "citty@npm:^0.1.6":
   version: 0.1.6
   resolution: "citty@npm:0.1.6"
@@ -10733,7 +10752,7 @@ __metadata:
     "@typescript-eslint/parser": "npm:5.57.1"
     aws-sdk: "npm:^2.1584.0"
     babel-plugin-module-resolver: "npm:^5.0.0"
-    chromatic: "npm:^11.3.2"
+    chromatic: "npm:^11.4.0"
     effector: "npm:^23.2.0"
     effector-react: "npm:^23.2.0"
     eslint: "npm:8.39.0"

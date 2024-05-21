@@ -21,6 +21,7 @@ $isFullscreen.on(setIsFullscreen, (_, payload) => payload);
 appWindow.onResized(() => {
   appWindow.isFullscreen().then(setIsFullscreen);
 });
+appWindow.isFullscreen().then(setIsFullscreen);
 
 export const ToolbarMacOS = memo((props: Props) => {
   const { className, onToggleSidebar } = props;

@@ -2114,7 +2114,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nozbe/watermelondb@https://github.com/ospfranco/tauri-watermelon#1a03ebe1a7ea4052405eb3f80486d82c52e46ed4":
+"@nozbe/watermelondb@git+https://github.com/ospfranco/tauri-watermelon.git#1a03ebe1a7ea4052405eb3f80486d82c52e46ed4":
   version: 0.27.1
   resolution: "@nozbe/watermelondb@https://github.com/ospfranco/tauri-watermelon.git#commit=1a03ebe1a7ea4052405eb3f80486d82c52e46ed4"
   dependencies:
@@ -5157,6 +5157,25 @@ __metadata:
     chromatic: dist/bin.js
     chromatic-cli: dist/bin.js
   checksum: 10c0/76a6f52ae5f43393fe6e16ec591ebe3bc6b71579b5842f5dc0100f76e29ecfc40479479db5fbb813eb29247645902c249ca8b75de50581a5d205fefd0c7f2561
+  languageName: node
+  linkType: hard
+
+"chromatic@npm:^11.4.0":
+  version: 11.4.0
+  resolution: "chromatic@npm:11.4.0"
+  peerDependencies:
+    "@chromatic-com/cypress": ^0.*.* || ^1.0.0
+    "@chromatic-com/playwright": ^0.*.* || ^1.0.0
+  peerDependenciesMeta:
+    "@chromatic-com/cypress":
+      optional: true
+    "@chromatic-com/playwright":
+      optional: true
+  bin:
+    chroma: dist/bin.js
+    chromatic: dist/bin.js
+    chromatic-cli: dist/bin.js
+  checksum: 10c0/97ef0cfcc267f7da9946a8069345c31b8491fab329186f78cf5fce6b6d811d2105d1285c7b0b6ba76c2255682b720527f14070550d9c8cd17be26d00c3bf4ea3
   languageName: node
   linkType: hard
 
@@ -10712,7 +10731,7 @@ __metadata:
     "@babel/plugin-transform-runtime": "npm:^7.23.9"
     "@babel/runtime": "npm:^7.24.0"
     "@chromatic-com/storybook": "npm:^1.3.5"
-    "@nozbe/watermelondb": "https://github.com/ospfranco/tauri-watermelon#1a03ebe1a7ea4052405eb3f80486d82c52e46ed4"
+    "@nozbe/watermelondb": "git+https://github.com/ospfranco/tauri-watermelon.git#1a03ebe1a7ea4052405eb3f80486d82c52e46ed4"
     "@preact/preset-vite": "npm:^2.5.0"
     "@storybook/addon-essentials": "npm:^8.0.10"
     "@storybook/addon-interactions": "npm:^8.0.10"
@@ -10733,7 +10752,7 @@ __metadata:
     "@typescript-eslint/parser": "npm:5.57.1"
     aws-sdk: "npm:^2.1584.0"
     babel-plugin-module-resolver: "npm:^5.0.0"
-    chromatic: "npm:^11.3.2"
+    chromatic: "npm:^11.4.0"
     effector: "npm:^23.2.0"
     effector-react: "npm:^23.2.0"
     eslint: "npm:8.39.0"
@@ -10765,9 +10784,9 @@ __metadata:
     sass: "npm:^1.70.0"
     semver: "npm:^7.6.0"
     storybook: "npm:^8.0.10"
-    tauri-plugin-log: "https://github.com/tauri-apps/tauri-plugin-log"
-    tauri-plugin-sql: "https://github.com/tauri-apps/tauri-plugin-sql#v1"
-    tauri-plugin-upload-api: "https://github.com/tauri-apps/tauri-plugin-upload#v1"
+    tauri-plugin-log: "git+https://github.com/tauri-apps/tauri-plugin-log.git"
+    tauri-plugin-sql: "git+https://github.com/tauri-apps/tauri-plugin-sql.git#v1"
+    tauri-plugin-upload-api: "git+https://github.com/tauri-apps/tauri-plugin-upload.git#v1"
     typescript: "npm:^5.0.2"
     vite: "npm:^5.1.5"
     vite-bundle-visualizer: "npm:^1.1.0"
@@ -12257,16 +12276,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tauri-plugin-log@https://github.com/tauri-apps/tauri-plugin-log":
+"tauri-plugin-log@git+https://github.com/tauri-apps/tauri-plugin-log.git":
   version: 0.0.0
-  resolution: "tauri-plugin-log@https://github.com/tauri-apps/tauri-plugin-log.git#commit=db7255ca2e07fc4d3e6cc5d93f9ccfceacb28901"
+  resolution: "tauri-plugin-log@https://github.com/tauri-apps/tauri-plugin-log.git#commit=752531f21f626c9f9f1716a28c4a37054c679657"
   dependencies:
     "@tauri-apps/api": "npm:1.5.3"
-  checksum: 10c0/2f8ff2e507c22e003b0735118591790b4029edb922dc086237692c30b233ef44e8d3a12385a4622a34fcd412fdbe59ba2fc9f65884be4968545dce252aef91c0
+  checksum: 10c0/9a23af3f489633faca6b8a8be339920d7154b18ba32dcb4ca0c635944039b80c0e436a88ac622592e6603d36054a4ac3156f4fcb5e4d85e06d8eb3b9329a66ea
   languageName: node
   linkType: hard
 
-"tauri-plugin-sql@https://github.com/tauri-apps/tauri-plugin-sql#v1":
+"tauri-plugin-sql@git+https://github.com/tauri-apps/tauri-plugin-sql.git#v1":
   version: 0.0.0
   resolution: "tauri-plugin-sql@https://github.com/tauri-apps/tauri-plugin-sql.git#commit=fe26880383d97d28ab0cc339773e75ce80730ced"
   dependencies:
@@ -12275,7 +12294,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tauri-plugin-upload-api@https://github.com/tauri-apps/tauri-plugin-upload#v1":
+"tauri-plugin-upload-api@git+https://github.com/tauri-apps/tauri-plugin-upload.git#v1":
   version: 0.0.0
   resolution: "tauri-plugin-upload-api@https://github.com/tauri-apps/tauri-plugin-upload.git#commit=bc69007a912fc0c0c9fe3e3d20f1a9773ae9c86b"
   dependencies:

@@ -18,11 +18,12 @@
     "release": "node ./scripts/release.cjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "deploy-storybook": "yarn build-storybook && cd storybook-static && vercel --prod --yes"
+    "deploy-storybook": "yarn build-storybook && cd storybook-static && vercel --prod --yes",
+    "chromatic": "npx chromatic"
   },
   "dependencies": {
     "@huggingface/hub": "^0.15.1",
-    "@nozbe/watermelondb": "https://github.com/ospfranco/tauri-watermelon#1a03ebe1a7ea4052405eb3f80486d82c52e46ed4",
+    "@nozbe/watermelondb": "git+https://github.com/ospfranco/tauri-watermelon.git#1a03ebe1a7ea4052405eb3f80486d82c52e46ed4",
     "@tauri-apps/api": "^1.5.2",
     "effector": "^23.2.0",
     "effector-react": "^23.2.0",
@@ -35,9 +36,9 @@
     "react-tiny-popover": "^8.0.4",
     "react-toastify": "^10.0.5",
     "remark-gfm": "^4.0.0",
-    "tauri-plugin-log": "https://github.com/tauri-apps/tauri-plugin-log",
-    "tauri-plugin-sql": "https://github.com/tauri-apps/tauri-plugin-sql#v1",
-    "tauri-plugin-upload-api": "https://github.com/tauri-apps/tauri-plugin-upload#v1"
+    "tauri-plugin-log": "git+https://github.com/tauri-apps/tauri-plugin-log.git",
+    "tauri-plugin-sql": "git+https://github.com/tauri-apps/tauri-plugin-sql.git#v1",
+    "tauri-plugin-upload-api": "git+https://github.com/tauri-apps/tauri-plugin-upload.git#v1"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
@@ -65,7 +66,7 @@
     "@typescript-eslint/parser": "5.57.1",
     "aws-sdk": "^2.1584.0",
     "babel-plugin-module-resolver": "^5.0.0",
-    "chromatic": "^11.3.2",
+    "chromatic": "^11.4.0",
     "eslint": "8.39.0",
     "eslint-config-airbnb": "19.0.4",
     "eslint-config-prettier": "8.8.0",

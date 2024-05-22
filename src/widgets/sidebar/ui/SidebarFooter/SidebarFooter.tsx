@@ -1,4 +1,3 @@
-import { invoke } from '@tauri-apps/api';
 import { appDataDir } from '@tauri-apps/api/path';
 import { open as openPath } from '@tauri-apps/api/shell';
 import { memo } from 'preact/compat';

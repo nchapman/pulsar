@@ -1960,6 +1960,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@huggingface/hub@npm:^0.15.1":
+  version: 0.15.1
+  resolution: "@huggingface/hub@npm:0.15.1"
+  dependencies:
+    "@huggingface/tasks": "npm:^0.10.6"
+    hash-wasm: "npm:^4.9.0"
+  checksum: 10c0/adc6128b9172c44b624f12bd39309c7a30d6f052e8c85b49f07475a4d433805f6f5ec27af79c055bbe0df7ebac29cfeb4fb13a3024fae7dd6061d790581b0e53
+  languageName: node
+  linkType: hard
+
+"@huggingface/tasks@npm:^0.10.6":
+  version: 0.10.6
+  resolution: "@huggingface/tasks@npm:0.10.6"
+  checksum: 10c0/1e4847e92c82673add8d6b16b4f5469c8fb84a3ac8c5ce77fa7fba91366d19107d718388ae3a15db2fad11af8d9dc01b017ec482e6153e50e80d93cec815a862
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.11.8":
   version: 0.11.14
   resolution: "@humanwhocodes/config-array@npm:0.11.14"
@@ -7576,6 +7593,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"hash-wasm@npm:^4.9.0":
+  version: 4.11.0
+  resolution: "hash-wasm@npm:4.11.0"
+  checksum: 10c0/ddf87ed2319fc7c9ba745fffccbf008a80e931b5913b4eef42b038efc10705e48458e2bf528601f78142774108dd7b151341721ce05aca9c431179fe5cefbb72
+  languageName: node
+  linkType: hard
+
 "hasown@npm:^2.0.0, hasown@npm:^2.0.1, hasown@npm:^2.0.2":
   version: 2.0.2
   resolution: "hasown@npm:2.0.2"
@@ -10712,6 +10736,7 @@ __metadata:
     "@babel/plugin-transform-runtime": "npm:^7.23.9"
     "@babel/runtime": "npm:^7.24.0"
     "@chromatic-com/storybook": "npm:^1.3.5"
+    "@huggingface/hub": "npm:^0.15.1"
     "@nozbe/watermelondb": "https://github.com/ospfranco/tauri-watermelon#1a03ebe1a7ea4052405eb3f80486d82c52e46ed4"
     "@preact/preset-vite": "npm:^2.5.0"
     "@storybook/addon-essentials": "npm:^8.0.10"

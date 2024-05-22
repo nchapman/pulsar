@@ -27,8 +27,7 @@ export const SidebarFooter = memo((props: Props) => {
 
   return (
     <div className={classNames(s.sidebarFooter, [className])}>
-      {/* @ts-ignore */}
-      {process.env.NODE_ENV === 'development' && (
+      {import.meta.env.DEV && import.meta.env.VITE_PULSAR_SHOW_DEV_MENU === 'true' && (
         <>
           <Button className={s.btn} onClick={openAppData} variant="secondary">
             Open App Data

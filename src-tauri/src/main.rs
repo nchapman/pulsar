@@ -3,6 +3,7 @@
 
 mod db;
 mod nebula;
+mod system;
 mod transfer;
 
 use tauri_plugin_log::LogTarget;
@@ -22,6 +23,7 @@ fn main() {
         .plugin(db::Builder::default().build())
         .plugin(nebula::init_plugin())
         .plugin(transfer::init_plugin())
+        .plugin(system::init_plugin())
         .plugin(tauri_plugin_window_state::Builder::default().build())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

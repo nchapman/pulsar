@@ -22,6 +22,7 @@
     "chromatic": "npx chromatic"
   },
   "dependencies": {
+    "@huggingface/hub": "^0.15.1",
     "@nozbe/watermelondb": "git+https://github.com/ospfranco/tauri-watermelon.git#1a03ebe1a7ea4052405eb3f80486d82c52e46ed4",
     "@tauri-apps/api": "^1.5.2",
     "effector": "^23.2.0",

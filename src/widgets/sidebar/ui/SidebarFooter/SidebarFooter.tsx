@@ -12,6 +12,7 @@ import { openSettingsModal, SettingsModal } from '@/widgets/settings';
 
 import s from './SidebarFooter.module.scss';
 import { getSystemInfo } from '@/features/system/system';
+import { getCuratedModels } from '@/features/hugging-face-search/CuratedHuggingFaceModels';
 
 interface Props {
   className?: string;
@@ -37,10 +38,12 @@ export const SidebarFooter = memo((props: Props) => {
   const testHuggingFace = async () => {
     const searchResults = await searchHuggingFaceModel('cjpais');
     const filesResults = await fetchHuggingFaceFiles(searchResults[0].name);
+    const generalFeaturedModels = await getCuratedModels('general');
 
     // const model = await fetchHuggingFaceModel(searchResults[0].modelId);
     logi('Hugging face search', JSON.stringify(searchResults, null, 2));
     logi('Hugging face model', JSON.stringify(filesResults, null, 2));
+    logi('Curated models', JSON.stringify(generalFeaturedModels, null, 2));
   };
 
   return (

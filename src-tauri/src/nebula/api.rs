@@ -22,6 +22,13 @@ struct NebulaState {
     models: Arc<Mutex<HashMap<String, NebulaModelState>>>,
 }
 
+#[tauri::command]
+async fn get_loaded_models(state: State<'_, NebulaState>) -> Result<Vec<String>, NebulaError> {
+    let models = state.models.lock().await;
+    let loaded_models: Vec<String> = models.keys().cloned().collect();
+    Ok(loaded_models)
+}
+
 /// initialize a model, loading it from disk and creating a new state
 /// if the model is already loaded, it will return the existing path and nothing will be created
 ///
@@ -315,7 +322,6 @@ async fn model_context_predict<R: Runtime>(
 }
 
 /// drop all loaded models
-///
 #[tauri::command]
 async fn drop<R: Runtime>(_app: AppHandle<R>, state: State<'_, NebulaState>) -> NebulaResult<()> {
     let mut models = state.models.lock().await;
@@ -335,7 +341,8 @@ pub fn init_plugin<R: Runtime>() -> TauriPlugin<R> {
             model_context_eval_string,
             model_context_eval_image,
             model_context_predict,
-            drop
+            drop,
+            get_loaded_models
         ])
         .setup(|app_handle| {
             app_handle.manage(NebulaState::default());
@@ -371,6 +378,65 @@ mod tests {
         }
 
         Ok(app)
+    }
+
+    #[test]
+    fn should_return_0_with_no_loaded_models() {
+        let app = setup().unwrap();
+        let window = app.get_window("main").unwrap();
+        let loaded_models_res = tauri::test::get_ipc_response::<Vec<String>>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|get_loaded_models".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({}),
+            },
+        );
+
+        assert!(loaded_models_res.is_ok());
+        assert_eq!(loaded_models_res.unwrap().len(), 0);
+    }
+
+    #[test]
+    fn should_return_1_with_loaded_model() {
+        let app = setup().unwrap();
+        let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
+        let model_path = app_data_dir
+            .join("models/evolvedseeker_1_3.Q2_K.gguf")
+            .to_string_lossy()
+            .to_string();
+        let window = app.get_window("main").unwrap();
+        let model_init_res = tauri::test::get_ipc_response::<String>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|init_model".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({
+                    "modelPath": model_path,
+                    "modelOptions": {}
+                }),
+            },
+        );
+
+        assert!(model_init_res.is_ok());
+
+        let loaded_models_res = tauri::test::get_ipc_response::<Vec<String>>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|get_loaded_models".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({}),
+            },
+        );
+
+        assert!(loaded_models_res.is_ok());
+        assert_eq!(loaded_models_res.unwrap().len(), 1);
     }
 
     #[test]
@@ -463,14 +529,11 @@ mod tests {
 
         let context_id = context_init_res.unwrap();
 
-        // setup listener to listen for predict events
-        let _id = app.listen_global("nebula-predict", |event| {
-            println!("Received event: {:?}", event.payload().unwrap());
-            // let payload: PredictPayload = event.payload().unwrap();
-            // assert_eq!(payload.model, model_path);
-            // assert_eq!(payload.context, context_id);
-            // assert_eq!(payload.finished, true);
-        });
+        // let _id = app.listen_global("nebula-predict", |event| {
+        //     // println!("Received event: {:?}", event.payload().unwrap());
+        //     let predicted_text = event.payload().unwrap();
+        //     assert_eq!(predicted_text, "How are you doing?".to_string());
+        // });
 
         let predict_res = tauri::test::get_ipc_response::<()>(
             &window,

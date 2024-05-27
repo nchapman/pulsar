@@ -28,7 +28,10 @@ export const ToolbarMacOS = memo((props: Props) => {
   const isFullscreen = useUnit($isFullscreen);
 
   return (
-    <div className={classNames(s.toolbarMacOs, [className], { [s.fullscreen]: isFullscreen })}>
+    <div
+      data-tauri-drag-region
+      className={classNames(s.toolbarMacOs, [className], { [s.fullscreen]: isFullscreen })}
+    >
       <Button onClick={onToggleSidebar} variant="clear" className={s.button} icon={SidebarIcon} />
     </div>
   );

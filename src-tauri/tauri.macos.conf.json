@@ -6,7 +6,7 @@
         "titleBarStyle": "Overlay",
         "fullscreen": false,
         "resizable": true,
-        "title": "Pulsar",
+        "title": "",
         "width": 1100,
         "height": 830
       }

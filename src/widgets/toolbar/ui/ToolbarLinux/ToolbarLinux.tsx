@@ -22,9 +22,7 @@ export const ToolbarLinux = memo((props: Props) => {
     <div className={classNames(s.toolbarLinux, [className])}>
       <Button onClick={onToggleSidebar} variant="clear" className={s.button} icon={SidebarIcon} />
 
-      <Text c="secondary" w="medium" s={14} className={s.title}>
-        Pulsar
-      </Text>
+      <Text c="secondary" w="medium" s={14} className={s.title}></Text>
 
       <div className={s.controls}>
         <Button

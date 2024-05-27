@@ -323,7 +323,10 @@ async fn model_context_predict<R: Runtime>(
 
 /// drop all loaded models
 #[tauri::command]
-async fn drop<R: Runtime>(_app: AppHandle<R>, state: State<'_, NebulaState>) -> NebulaResult<()> {
+async fn drop_all<R: Runtime>(
+    _app: AppHandle<R>,
+    state: State<'_, NebulaState>,
+) -> NebulaResult<()> {
     let mut models = state.models.lock().await;
 
     models.clear();
@@ -341,7 +344,7 @@ pub fn init_plugin<R: Runtime>() -> TauriPlugin<R> {
             model_context_eval_string,
             model_context_eval_image,
             model_context_predict,
-            drop,
+            drop_all,
             get_loaded_models
         ])
         .setup(|app_handle| {
@@ -455,6 +458,62 @@ mod tests {
         let loaded_models = loaded_models_res.unwrap();
         assert_eq!(loaded_models.len(), 1);
         assert_eq!(loaded_models[0], model_path);
+
+        after_each(app).await;
+    }
+
+    #[tokio::test]
+    async fn should_drop_all_models() {
+        let app = before_each().unwrap();
+        let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
+        let model_path = app_data_dir
+            .join("models/evolvedseeker_1_3.Q2_K.gguf")
+            .to_string_lossy()
+            .to_string();
+        let window = app.get_window("main").unwrap();
+        let model_init_res = tauri::test::get_ipc_response::<String>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|init_model".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({
+                    "modelPath": model_path,
+                    "modelOptions": {}
+                }),
+            },
+        );
+
+        assert!(model_init_res.is_ok());
+
+        let drop_all_res = tauri::test::get_ipc_response::<()>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|drop_all".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({}),
+            },
+        );
+
+        assert!(drop_all_res.is_ok());
+
+        let loaded_models_res = tauri::test::get_ipc_response::<Vec<String>>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|get_loaded_models".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({}),
+            },
+        );
+
+        assert!(loaded_models_res.is_ok());
+        let loaded_models = loaded_models_res.unwrap();
+        assert_eq!(loaded_models.len(), 0);
 
         after_each(app).await;
     }

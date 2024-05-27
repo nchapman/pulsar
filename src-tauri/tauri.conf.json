@@ -55,8 +55,8 @@
         "title": "",
         "width": 1100,
         "height": 830,
-        "minWidth": 1100,
-        "minHeight": 830,
+        "minWidth": 1060,
+        "minHeight": 740,
         "titleBarStyle": "Overlay"
       }
     ],

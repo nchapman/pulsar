@@ -356,9 +356,12 @@ mod tests {
     use super::*;
     use std::fs;
     use std::path::Path;
-    use tauri::test::{mock_context, noop_assets, MockRuntime};
+    use tauri::{
+        test::{mock_context, noop_assets, MockRuntime},
+        App,
+    };
 
-    fn setup() -> Result<tauri::App<MockRuntime>, std::io::Error> {
+    fn before_each() -> Result<tauri::App<MockRuntime>, std::io::Error> {
         let app = tauri::test::mock_builder()
             .plugin(super::init_plugin())
             .build(mock_context(noop_assets()))
@@ -380,9 +383,20 @@ mod tests {
         Ok(app)
     }
 
-    #[test]
-    fn should_return_0_with_no_loaded_models() {
-        let app = setup().unwrap();
+    async fn after_each(app: App<MockRuntime>) {
+        let state = app.state::<NebulaState>();
+        let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
+        let model_dir = app_data_dir.join("models");
+        fs::remove_dir_all(model_dir).unwrap();
+
+        let mut models = state.models.lock().await;
+
+        models.clear();
+    }
+
+    #[tokio::test]
+    async fn should_return_0_with_no_loaded_models() {
+        let app = before_each().unwrap();
         let window = app.get_window("main").unwrap();
         let loaded_models_res = tauri::test::get_ipc_response::<Vec<String>>(
             &window,
@@ -397,11 +411,13 @@ mod tests {
 
         assert!(loaded_models_res.is_ok());
         assert_eq!(loaded_models_res.unwrap().len(), 0);
+
+        after_each(app).await;
     }
 
-    #[test]
-    fn should_return_1_with_loaded_model() {
-        let app = setup().unwrap();
+    #[tokio::test]
+    async fn should_return_1_with_loaded_model() {
+        let app = before_each().unwrap();
         let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
         let model_path = app_data_dir
             .join("models/evolvedseeker_1_3.Q2_K.gguf")
@@ -436,12 +452,16 @@ mod tests {
         );
 
         assert!(loaded_models_res.is_ok());
-        assert_eq!(loaded_models_res.unwrap().len(), 1);
+        let loaded_models = loaded_models_res.unwrap();
+        assert_eq!(loaded_models.len(), 1);
+        assert_eq!(loaded_models[0], model_path);
+
+        after_each(app).await;
     }
 
-    #[test]
-    fn should_drop_model() {
-        let app = setup().unwrap();
+    #[tokio::test]
+    async fn should_drop_model() {
+        let app = before_each().unwrap();
         let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
         let model_path = app_data_dir
             .join("models/evolvedseeker_1_3.Q2_K.gguf")
@@ -480,11 +500,73 @@ mod tests {
         );
 
         assert!(model_drop_res.is_ok());
+
+        after_each(app).await;
     }
 
-    #[test]
-    fn should_predict_text() {
-        let app = setup().unwrap();
+    #[tokio::test]
+    async fn loading_same_model_not_throws_still_returns_1_loaded_model() {
+        let app = before_each().unwrap();
+        let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
+        let model_path = app_data_dir
+            .join("models/evolvedseeker_1_3.Q2_K.gguf")
+            .to_string_lossy()
+            .to_string();
+        let window = app.get_window("main").unwrap();
+        let model_init_res = tauri::test::get_ipc_response::<String>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|init_model".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({
+                    "modelPath": model_path,
+                    "modelOptions": {}
+                }),
+            },
+        );
+
+        assert!(model_init_res.is_ok());
+
+        let model_init_res_2 = tauri::test::get_ipc_response::<String>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|init_model".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({
+                    "modelPath": model_path,
+                    "modelOptions": {}
+                }),
+            },
+        );
+
+        assert!(model_init_res_2.is_ok());
+
+        let loaded_models_res = tauri::test::get_ipc_response::<Vec<String>>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|get_loaded_models".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({}),
+            },
+        );
+
+        assert!(loaded_models_res.is_ok());
+        let loaded_models = loaded_models_res.unwrap();
+        assert_eq!(loaded_models.len(), 1);
+        assert_eq!(loaded_models[0], model_path);
+
+        after_each(app).await;
+    }
+
+    #[tokio::test]
+    async fn should_predict_text() {
+        let app = before_each().unwrap();
         let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
         let model_path = app_data_dir
             .join("models/evolvedseeker_1_3.Q2_K.gguf")
@@ -566,5 +648,7 @@ mod tests {
         );
 
         assert!(model_drop_res.is_ok());
+
+        after_each(app).await;
     }
 }

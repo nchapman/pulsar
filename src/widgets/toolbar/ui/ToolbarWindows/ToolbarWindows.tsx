@@ -19,12 +19,10 @@ export const ToolbarWindows = memo((props: Props) => {
   const { className, onToggleSidebar } = props;
 
   return (
-    <div className={classNames(s.toolbarWindows, [className])}>
+    <div data-tauri-drag-region className={classNames(s.toolbarWindows, [className])}>
       <Button onClick={onToggleSidebar} variant="clear" className={s.button} icon={SidebarIcon} />
 
-      <Text c="secondary" w="medium" s={14} className={s.title}>
-        Pulsar
-      </Text>
+      <Text c="secondary" w="medium" s={14} className={s.title}></Text>
 
       <div className={s.controls}>
         <Button

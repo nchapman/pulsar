@@ -117,7 +117,7 @@ async fn download<R: Runtime>(
     );
 
     if let Some(size) = current_size {
-        if (size == total_size) {
+        if size == total_size {
             info!("File {} has been fully downloaded, skipping...", path);
             return Ok(id);
         }

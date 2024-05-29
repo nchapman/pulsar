@@ -1,18 +1,20 @@
 import { appDataDir } from '@tauri-apps/api/path';
 import { open as openPath } from '@tauri-apps/api/shell';
 import { memo } from 'preact/compat';
+
+import { Nebula } from '@/entities/model/nebula/Nebula';
+import { getCuratedModels } from '@/features/hugging-face-search/CuratedHuggingFaceModels';
 import {
   fetchHuggingFaceFiles,
   searchHuggingFaceModel,
 } from '@/features/hugging-face-search/HuggingFaceSearch';
+import { getSystemInfo } from '@/features/system/system';
 import { classNames } from '@/shared/lib/func';
 import { logi } from '@/shared/lib/Logger';
 import { Button } from '@/shared/ui';
 import { openSettingsModal, SettingsModal } from '@/widgets/settings';
 
 import s from './SidebarFooter.module.scss';
-import { getSystemInfo } from '@/features/system/system';
-import { getCuratedModels } from '@/features/hugging-face-search/CuratedHuggingFaceModels';
 
 interface Props {
   className?: string;
@@ -46,6 +48,11 @@ export const SidebarFooter = memo((props: Props) => {
     logi('Curated models', JSON.stringify(generalFeaturedModels, null, 2));
   };
 
+  const getNebulaLoadedModels = async () => {
+    const loadedModels = await Nebula.getLoadedModels();
+    logi('Nebula loaded models', loadedModels);
+  };
+
   return (
     <div className={classNames(s.sidebarFooter, [className])}>
       {import.meta.env.DEV && import.meta.env.VITE_PULSAR_SHOW_DEV_MENU === 'true' && (
@@ -55,6 +62,9 @@ export const SidebarFooter = memo((props: Props) => {
           </Button>
           <Button className={s.btn} onClick={getSystemInfoCallback} variant="secondary">
             Get System Info
+          </Button>
+          <Button className={s.btn} onClick={getNebulaLoadedModels} variant="secondary">
+            Get nebula loaded models
           </Button>
           <Button className={s.btn} onClick={testHuggingFace} variant="secondary">
             Hugging face test

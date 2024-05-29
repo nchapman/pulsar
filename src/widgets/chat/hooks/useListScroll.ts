@@ -54,6 +54,9 @@ export const useListScroll = () => {
       const { scrollHeight } = el;
       const { clientHeight } = el;
 
+      const isScrolledToBottom = el.scrollHeight - el.scrollTop === el.clientHeight;
+      setShowScrollBtn(!isScrolledToBottom);
+
       if (isProgrammaticScroll) {
         isProgrammaticScroll = false;
         return;
@@ -66,9 +69,6 @@ export const useListScroll = () => {
         // User scrolled somewhere else
         pinnedToBottom = false;
       }
-
-      const isScrolledToBottom = el.scrollHeight - el.scrollTop === el.clientHeight;
-      setShowScrollBtn(!isScrolledToBottom);
     };
 
     return { listRef, showScrollBtn, scrollToBottom, onStackScroll };

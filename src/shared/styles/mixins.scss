@@ -38,9 +38,9 @@ $desktop-width: 1080px;
   }
 
   /* Chrome, Edge, and Safari */
-  &::-webkit-scrollbar {
-    width: 12px;
-  }
+  //&::-webkit-scrollbar {
+  //  width:12px;
+  //}
 
   &::-webkit-scrollbar-track {
     background: transparent;

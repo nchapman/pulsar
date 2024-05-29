@@ -10,6 +10,7 @@ import PinIcon from '@/shared/assets/icons/pin.svg';
 import DeleteIcon from '@/shared/assets/icons/trash.svg';
 import { classNames } from '@/shared/lib/func';
 import { Button, Icon, showToast, Text } from '@/shared/ui';
+import { startNewChat } from '@/widgets/chat';
 import { deleteChatWithConfirm } from '@/widgets/chat/lib/deleteChat.tsx';
 
 import s from './ChatHistoryActions.module.scss';
@@ -78,6 +79,7 @@ export const ChatHistoryActions = memo((props: Props) => {
   const handleArchiveChat = useCallback(() => {
     chatsRepository.update(id, { isArchived: true });
     onClose();
+    startNewChat();
     showArchiveToast();
   }, [id, onClose]);
 

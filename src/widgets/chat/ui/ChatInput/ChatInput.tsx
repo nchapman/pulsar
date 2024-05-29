@@ -43,6 +43,9 @@ export const ChatInput = (props: Props) => {
     setInput('');
     resetFileData();
   }
+  function startNewLine() {
+    setInput((prev) => `${prev}\n`);
+  }
 
   useEffect(() => {
     autoResize(inputRef.current);
@@ -52,7 +55,8 @@ export const ChatInput = (props: Props) => {
     inputRef.current?.focus();
   }, [chatId]);
 
-  useKeyboardListener(() => handleSubmit(), 'Enter');
+  useKeyboardListener(() => handleSubmit(), 'Enter', undefined, ['shiftKey']);
+  useKeyboardListener(() => startNewLine(), 'Enter', ['shiftKey']);
 
   return (
     <form onSubmit={handleSubmit} className={classNames(s.chatForm, [className])}>

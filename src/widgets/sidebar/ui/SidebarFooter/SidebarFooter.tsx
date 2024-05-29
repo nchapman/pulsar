@@ -3,6 +3,7 @@ import { open as openPath } from '@tauri-apps/api/shell';
 import { memo } from 'preact/compat';
 
 import { Nebula } from '@/entities/model/nebula/Nebula';
+import { getCuratedModels } from '@/features/hugging-face-search/CuratedHuggingFaceModels';
 import {
   fetchHuggingFaceFiles,
   searchHuggingFaceModel,
@@ -39,10 +40,12 @@ export const SidebarFooter = memo((props: Props) => {
   const testHuggingFace = async () => {
     const searchResults = await searchHuggingFaceModel('cjpais');
     const filesResults = await fetchHuggingFaceFiles(searchResults[0].name);
+    const generalFeaturedModels = await getCuratedModels('general');
 
     // const model = await fetchHuggingFaceModel(searchResults[0].modelId);
     logi('Hugging face search', JSON.stringify(searchResults, null, 2));
     logi('Hugging face model', JSON.stringify(filesResults, null, 2));
+    logi('Curated models', JSON.stringify(generalFeaturedModels, null, 2));
   };
 
   const getNebulaLoadedModels = async () => {

@@ -50,7 +50,7 @@ export const ChatMessage = (props: Props) => {
         <div className={s.body}>
           <div className={s.authorName}>{isUser ? 'You' : 'Pulsar'}</div>
           <div className={s.text}>
-            <Markdown text={text} />
+            <Markdown text={text} isGenerating={isStreamed} />
           </div>
           {file?.type === 'image' && (
             <img src={convertFileSrc(file?.src)} alt="img" className={s.img} />

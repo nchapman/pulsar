@@ -1,14 +1,17 @@
 .progress {
   width: 100%;
   display: flex;
-  gap: 8px;
+  gap: 12px;
 }
 
 .bar {
+  width: 100%;
+  position: relative;
   flex-grow: 1;
   background: var(--sidebar-background-tertiary);
   border-radius: 8px;
   overflow: hidden;
+  height: 40px;
 }
 
 .inner {
@@ -16,7 +19,21 @@
   height: 100%;
 }
 
+.paused .inner {
+  background: var(--warning);
+}
+
 .percent {
-  width: 30px;
-  text-align: right;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+.btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid var(--border-light) !important;
+  flex-shrink: 0;
 }

@@ -3,3 +3,13 @@
   background: var(--sidebar-background-primary);
   padding: 32px 40px ;
 }
+
+.secondary {
+  border-radius: 16px;
+  border: 1px solid var(--border-heavy);
+  background: var(--gray-700);
+}
+
+.s {
+  padding: 12px
+}

@@ -1,5 +1,7 @@
 import { combine, createEffect, createEvent, createStore, sample } from 'effector';
 
+import { restoreWindowSize } from '@/pages/onboarding/lib/window-size.ts';
+
 import { downloadModel } from '../api/downloadModel';
 import { DEFAULT_LLM } from '../consts/model.const';
 import { LlmName, supportedLlms } from '../consts/supported-llms.const';
@@ -125,7 +127,10 @@ const loadModelEff = createEffect<{ llm: LlmName }, void>(({ llm }) => {
       setModelLoadError(false);
       loadModel(llm);
     })
-    .then(() => setModelReady(true))
+    .then(() => {
+      restoreWindowSize();
+      setModelReady(true);
+    })
     .catch(() => {
       setModelReady(false);
       setModelLoadError(true);

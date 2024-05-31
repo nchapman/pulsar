@@ -9,7 +9,7 @@ import { ToolbarWindows } from '@/widgets/toolbar/ui/ToolbarWindows/ToolbarWindo
 
 interface Props {
   className?: string;
-  onToggleSidebar: () => void;
+  onToggleSidebar?: () => void;
 }
 
 const toolbar: Record<os.OsType, FC<Props>> = {

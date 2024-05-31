@@ -12,7 +12,7 @@ import s from './ToolbarLinux.module.scss';
 
 interface Props {
   className?: string;
-  onToggleSidebar: () => void;
+  onToggleSidebar?: () => void;
 }
 
 export const ToolbarLinux = memo((props: Props) => {
@@ -20,7 +20,9 @@ export const ToolbarLinux = memo((props: Props) => {
 
   return (
     <div data-tauri-drag-region className={classNames(s.toolbarLinux, [className])}>
-      <Button onClick={onToggleSidebar} variant="clear" className={s.button} icon={SidebarIcon} />
+      {onToggleSidebar && (
+        <Button onClick={onToggleSidebar} variant="clear" className={s.button} icon={SidebarIcon} />
+      )}
 
       <Text c="secondary" w="medium" s={14} className={s.title}></Text>
 

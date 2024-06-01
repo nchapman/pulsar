@@ -1,4 +1,28 @@
 .markdown {
+  table {
+    border-collapse: collapse;
+    border-radius: 6px;
+    overflow: hidden;
+    color: var(--text-primary);
+    border-style: hidden;
+    box-shadow: 0 0 0 1px var(--gray-500);
+    margin-bottom: 12px;
+    font-size: 14px;
+
+    td, th {
+      padding: 12px;
+      border: 1px solid var(--gray-500);
+    }
+
+    th {
+      font-weight: 600;
+    }
+
+    thead {
+      background: var(--main-background-tertiary);
+    }
+  }
+
   h1, h2, h3, h4, h5, h6 {
     margin-top: 8px;
     margin-bottom: 12px;
@@ -104,4 +128,6 @@
   span {
     display: inline;
   }
+
+
 }

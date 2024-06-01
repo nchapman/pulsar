@@ -16,6 +16,11 @@ interface Props {
 const components: Partial<Components> = {
   code: Code,
   progress: () => <span className={s.cursor} />,
+  // table: ({ children }) => (
+  //   <div className={s.table}>
+  //     <table>{children}</table>
+  //   </div>
+  // ),
 };
 
 // const caret = ' ```cursor```';

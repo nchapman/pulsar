@@ -21,10 +21,11 @@ interface Props {
   className?: string;
   chatsCount?: number;
   status?: any;
+  pinnedChatsCount?: number;
 }
 
 const ChatHistory = memo((props: Props) => {
-  const { className, chatsCount, status } = props;
+  const { className, chatsCount, status, pinnedChatsCount } = props;
   const [search, setSearch] = useState('');
 
   const [chats, setChats] = useState<Chat[]>([]);
@@ -32,11 +33,13 @@ const ChatHistory = memo((props: Props) => {
 
   useEffect(() => {
     setSearch('');
-    chatsRepository.getAll({ limit: 28 }).then(setChats);
-  }, [chatsCount, status]);
+    chatsRepository.getAll({ limit: 1000 }).then(setChats);
+  }, [chatsCount, status, pinnedChatsCount]);
+
+  // useLog(chats, 'chats');
 
   useEffect(() => {
-    const getHistoryItems = () => chatsRepository.getAll({ limit: 28, search }).then(setChats);
+    const getHistoryItems = () => chatsRepository.getAll({ limit: 1000, search }).then(setChats);
 
     const [getHistoryItemsDebounced, teardown] = debounce(getHistoryItems, 500);
 
@@ -51,6 +54,7 @@ const ChatHistory = memo((props: Props) => {
         <Collapsible
           withIcon
           defaultExpanded
+          updateHeightFlag={chats.length}
           head={
             <Text w="medium" s={12} className={s.period}>
               {period}
@@ -81,6 +85,9 @@ const ChatHistory = memo((props: Props) => {
 const enhance = withObservables([], () => ({
   chatsCount: chatsRepository.chatsCollection
     .query(Q.where(chatsTable.cols.isArchived, Q.eq('false')))
+    .observeCount(),
+  pinnedChatsCount: chatsRepository.chatsCollection
+    .query(Q.where(chatsTable.cols.isPinned, Q.eq('true')))
     .observeCount(),
   status: chatsRepository.chatsCollection
     .query()

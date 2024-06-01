@@ -52,8 +52,6 @@ function groupChatsByDate(chats: Chat[]) {
   // Format years object into array of objects
   const formattedYears = Object.keys(years).map((key) => ({ year: key, chats: years[key] }));
 
-  console.log(pinned);
-
   return {
     pinned,
     today,

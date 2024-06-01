@@ -8,6 +8,7 @@ export async function minimizeWindowSize() {
 }
 
 export async function restoreWindowSize() {
+  if ((await appWindow.innerSize()).width > 600) return;
   appWindow.setSize(new LogicalSize(1060, 740));
   appWindow.setMinSize(new LogicalSize(1060, 740));
   appWindow.setResizable(true);

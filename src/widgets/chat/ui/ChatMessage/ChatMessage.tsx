@@ -28,7 +28,9 @@ export const ChatMessage = (props: Props) => {
     fn: (msgMap, [msgId]) => msgMap[msgId],
   });
 
-  const { text, isUser, file } = msg;
+  const { isUser, file } = msg;
+  let { text } = msg;
+  if (isUser) text = text.replace(/\n/g, '\n\n');
 
   const actions = useMemo(() => {
     const actions = [];

@@ -9,10 +9,12 @@ import { chatsRepository } from '@/db';
 import { Chat } from '@/db/chat';
 import { chatsTable } from '@/db/chat/chat.schema.ts';
 import { classNames, debounce } from '@/shared/lib/func';
+import { fallbackFn } from '@/shared/storybook';
 import { Collapsible, Text } from '@/shared/ui';
 import { $chat } from '@/widgets/chat';
-import { groupChats } from '@/widgets/sidebar/lib/groupChats.ts';
 
+import { groupChats } from '../../lib/groupChats.ts';
+import { chatsMock } from '../../mocks/chats.mock.ts';
 import { ChatHistoryHeader } from '../ChatHistoryHeader/ChatHistoryHeader.tsx';
 import { ChatHistoryItem } from '../ChatHistoryItem/ChatHistoryItem';
 import s from './ChatHistory.module.scss';
@@ -24,6 +26,11 @@ interface Props {
   pinnedChatsCount?: number;
 }
 
+const getDBChats = fallbackFn(
+  (search?: string) => chatsRepository.getAll({ limit: 1000, search }),
+  (_?: string) => Promise.resolve(chatsMock)
+);
+
 const ChatHistory = memo((props: Props) => {
   const { className, chatsCount, status, pinnedChatsCount } = props;
   const [search, setSearch] = useState('');
@@ -33,13 +40,11 @@ const ChatHistory = memo((props: Props) => {
 
   useEffect(() => {
     setSearch('');
-    chatsRepository.getAll({ limit: 1000 }).then(setChats);
+    getDBChats!().then(setChats);
   }, [chatsCount, status, pinnedChatsCount]);
 
-  // useLog(chats, 'chats');
-
   useEffect(() => {
-    const getHistoryItems = () => chatsRepository.getAll({ limit: 1000, search }).then(setChats);
+    const getHistoryItems = () => getDBChats(search).then(setChats);
 
     const [getHistoryItemsDebounced, teardown] = debounce(getHistoryItems, 500);
 
@@ -97,4 +102,4 @@ const enhance = withObservables([], () => ({
 // @ts-ignore
 const EnhancedChatHistory = enhance(ChatHistory);
 
-export { EnhancedChatHistory as ChatHistory };
+export { EnhancedChatHistory as ChatHistory, ChatHistory as ChatHistoryUI };

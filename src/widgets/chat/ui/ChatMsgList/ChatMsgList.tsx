@@ -23,8 +23,7 @@ export const ChatMsgList = (props: Props) => {
   const { listRef, scrollToBottom, showScrollBtn, onStackScroll } = useListScroll();
 
   useEffect(() => {
-    setTimeout(() => scrollToBottom(true));
-    // scrollToBottom(true);
+    scrollToBottom(true);
   }, [scrollToBottom, chatId]);
 
   if (!(list as any).length) return <ChatFirstScreen className={classNames('', [className])} />;

@@ -2,9 +2,9 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod db;
+mod file_transfer;
 mod nebula;
 mod system;
-mod transfer;
 
 use tauri_plugin_log::LogTarget;
 
@@ -22,7 +22,7 @@ fn main() {
         )
         .plugin(db::Builder::default().build())
         .plugin(nebula::init_plugin())
-        .plugin(transfer::init_plugin())
+        .plugin(file_transfer::init_plugin())
         .plugin(system::init_plugin())
         .plugin(tauri_plugin_window_state::Builder::default().build())
         .run(tauri::generate_context!())

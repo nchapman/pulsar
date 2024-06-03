@@ -10811,7 +10811,6 @@ __metadata:
     storybook: "npm:^8.0.10"
     tauri-plugin-log: "git+https://github.com/tauri-apps/tauri-plugin-log.git"
     tauri-plugin-sql: "git+https://github.com/tauri-apps/tauri-plugin-sql.git#v1"
-    tauri-plugin-upload-api: "git+https://github.com/tauri-apps/tauri-plugin-upload.git#v1"
     typescript: "npm:^5.0.2"
     vite: "npm:^5.1.5"
     vite-bundle-visualizer: "npm:^1.1.0"
@@ -12316,15 +12315,6 @@ __metadata:
   dependencies:
     "@tauri-apps/api": "npm:1.5.3"
   checksum: 10c0/5fb79202afe99f490513f2bc6be6de15ca2bc75013f16ec99daf098dcd6df0f6eeac0c23a0f8b9d5a6af73d92e3f329d39f4876eded1c136565e5417a87b0300
-  languageName: node
-  linkType: hard
-
-"tauri-plugin-upload-api@git+https://github.com/tauri-apps/tauri-plugin-upload.git#v1":
-  version: 0.0.0
-  resolution: "tauri-plugin-upload-api@https://github.com/tauri-apps/tauri-plugin-upload.git#commit=bc69007a912fc0c0c9fe3e3d20f1a9773ae9c86b"
-  dependencies:
-    "@tauri-apps/api": "npm:1.5.3"
-  checksum: 10c0/bddd169b45d4ddc0d85bcb0576aef5cee4c3d3c4478afa69d1987b23f3a12e69f7be675453cc63af8d93d3483f9f7570ba91d18c16ce099e35de555dcaae3b71
   languageName: node
   linkType: hard
 

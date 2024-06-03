@@ -17,7 +17,7 @@ sample({
   clock: changeTheme,
   fn: (theme) => {
     const method = theme === 'system' ? 'removeAttribute' : 'setAttribute';
-    document.documentElement[method](THEME_BODY_ATTR, theme);
+    document.body[method](THEME_BODY_ATTR, theme);
 
     localStorage.setItem('theme', theme);
 

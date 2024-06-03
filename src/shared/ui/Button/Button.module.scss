@@ -77,9 +77,9 @@
     transition: background 0.2s;
     background: linear-gradient(90deg, rgb(255, 255, 255, 0) 0%, var(--sidebar-background-primary) 50%, var(--sidebar-background-primary) 100%);
 
-    @media (prefers-color-scheme: dark) {
-      background: linear-gradient(90deg, #17171700, var(--sidebar-background-primary) 50%, var(--sidebar-background-primary) 100%);
-    }
+    //@media (prefers-color-scheme: dark) {
+    //  background: linear-gradient(90deg, #17171700, var(--sidebar-background-primary) 50%, var(--sidebar-background-primary) 100%);
+    //}
   }
 
   &:hover,

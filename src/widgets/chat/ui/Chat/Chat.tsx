@@ -10,15 +10,16 @@ import s from './Chat.module.scss';
 
 interface Props {
   className?: string;
+  isChatArchived?: boolean;
 }
 
 export const Chat = (props: Props) => {
-  const { className } = props;
+  const { className, isChatArchived } = props;
 
   const isArchived = useStoreMap({
     keys: [],
     store: $chat.data,
-    fn: (data) => data?.isArchived,
+    fn: (data) => isChatArchived || data?.isArchived,
   });
 
   return (

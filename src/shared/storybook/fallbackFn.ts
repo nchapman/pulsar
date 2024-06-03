@@ -1,5 +1,8 @@
-export function fallbackFn<T>(fn: T, fallback: T) {
-  if (import.meta.env.STORYBOOK) return fallback;
+export function fallbackFn<T, F>(fn: T, fallback: F): T {
+  if (import.meta.env.STORYBOOK) {
+    // @ts-ignore
+    return fallback;
+  }
 
   return fn;
 }

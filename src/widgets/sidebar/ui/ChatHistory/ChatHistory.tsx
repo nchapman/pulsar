@@ -3,6 +3,7 @@ import { withObservables } from '@nozbe/watermelondb/react';
 import { useUnit } from 'effector-react/effector-react.mjs';
 import { memo } from 'preact/compat';
 import { useEffect, useMemo, useState } from 'preact/hooks';
+import { FC } from 'react';
 import Scrollbars from 'react-custom-scrollbars';
 
 import { chatsRepository } from '@/db';
@@ -14,7 +15,6 @@ import { Collapsible, Text } from '@/shared/ui';
 import { $chat } from '@/widgets/chat';
 
 import { groupChats } from '../../lib/groupChats.ts';
-import { chatsMock } from '../../mocks/chats.mock.ts';
 import { ChatHistoryHeader } from '../ChatHistoryHeader/ChatHistoryHeader.tsx';
 import { ChatHistoryItem } from '../ChatHistoryItem/ChatHistoryItem';
 import s from './ChatHistory.module.scss';
@@ -26,11 +26,6 @@ interface Props {
   pinnedChatsCount?: number;
 }
 
-const getDBChats = fallbackFn(
-  (search?: string) => chatsRepository.getAll({ limit: 1000, search }),
-  (_?: string) => Promise.resolve(chatsMock)
-);
-
 const ChatHistory = memo((props: Props) => {
   const { className, chatsCount, status, pinnedChatsCount } = props;
   const [search, setSearch] = useState('');
@@ -40,11 +35,11 @@ const ChatHistory = memo((props: Props) => {
 
   useEffect(() => {
     setSearch('');
-    getDBChats!().then(setChats);
+    chatsRepository.getAll({ limit: 1000 }).then(setChats);
   }, [chatsCount, status, pinnedChatsCount]);
 
   useEffect(() => {
-    const getHistoryItems = () => getDBChats(search).then(setChats);
+    const getHistoryItems = () => chatsRepository.getAll({ limit: 1000, search }).then(setChats);
 
     const [getHistoryItemsDebounced, teardown] = debounce(getHistoryItems, 500);
 
@@ -87,7 +82,7 @@ const ChatHistory = memo((props: Props) => {
   );
 });
 
-const enhance = withObservables([], () => ({
+const enhanceDB = withObservables([], () => ({
   chatsCount: chatsRepository.chatsCollection
     .query(Q.where(chatsTable.cols.isArchived, Q.eq('false')))
     .observeCount(),
@@ -98,6 +93,10 @@ const enhance = withObservables([], () => ({
     .query()
     .observeWithColumns([chatsTable.cols.isArchived, chatsTable.cols.isPinned]),
 }));
+
+const enhanceMock = (C: FC<Props>) => (props: Props) => <C {...props} />;
+
+const enhance = fallbackFn(enhanceDB, enhanceMock);
 
 // @ts-ignore
 const EnhancedChatHistory = enhance(ChatHistory);

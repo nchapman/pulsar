@@ -8,6 +8,7 @@ import {
   searchHuggingFaceModel,
 } from '@/features/hugging-face-search/HuggingFaceSearch';
 import { getSystemInfo } from '@/features/system/system';
+import { __IS_STORYBOOK__ } from '@/shared/consts';
 import { classNames } from '@/shared/lib/func';
 import { logi } from '@/shared/lib/Logger';
 import { Button } from '@/shared/ui';
@@ -52,22 +53,24 @@ export const SidebarFooter = memo((props: Props) => {
 
   return (
     <div className={classNames(s.sidebarFooter, [className])}>
-      {import.meta.env.DEV && import.meta.env.VITE_PULSAR_SHOW_DEV_MENU === 'true' && (
-        <>
-          <Button className={s.btn} onClick={openAppData} variant="secondary">
-            Open App Data
-          </Button>
-          <Button className={s.btn} onClick={getSystemInfoCallback} variant="secondary">
-            Get System Info
-          </Button>
-          <Button className={s.btn} onClick={getNebulaLoadedModels} variant="secondary">
-            Get nebula loaded models
-          </Button>
-          <Button className={s.btn} onClick={testHuggingFace} variant="secondary">
-            Hugging face test
-          </Button>
-        </>
-      )}
+      {import.meta.env.DEV &&
+        import.meta.env.VITE_PULSAR_SHOW_DEV_MENU === 'true' &&
+        !__IS_STORYBOOK__ && (
+          <>
+            <Button className={s.btn} onClick={openAppData} variant="secondary">
+              Open App Data
+            </Button>
+            <Button className={s.btn} onClick={getSystemInfoCallback} variant="secondary">
+              Get System Info
+            </Button>
+            <Button className={s.btn} onClick={getNebulaLoadedModels} variant="secondary">
+              Get nebula loaded models
+            </Button>
+            <Button className={s.btn} onClick={testHuggingFace} variant="secondary">
+              Hugging face test
+            </Button>
+          </>
+        )}
 
       <Button className={s.btn} onClick={openSettingsModal} variant="secondary">
         Settings

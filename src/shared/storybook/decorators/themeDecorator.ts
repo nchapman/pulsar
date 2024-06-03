@@ -7,4 +7,5 @@ export const themeDecorator = withThemeByDataAttribute({
   },
   defaultTheme: 'dark',
   attributeName: 'data-theme',
+  parentSelector: 'body',
 });

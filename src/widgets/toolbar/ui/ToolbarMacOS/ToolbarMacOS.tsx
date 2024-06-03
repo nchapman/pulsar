@@ -11,7 +11,7 @@ import s from './ToolbarMacOS.module.scss';
 
 interface Props {
   className?: string;
-  onToggleSidebar: () => void;
+  onToggleSidebar?: () => void;
 }
 
 const $isFullscreen = createStore(false);
@@ -32,7 +32,9 @@ export const ToolbarMacOS = memo((props: Props) => {
       data-tauri-drag-region
       className={classNames(s.toolbarMacOs, [className], { [s.fullscreen]: isFullscreen })}
     >
-      <Button onClick={onToggleSidebar} variant="clear" className={s.button} icon={SidebarIcon} />
+      {onToggleSidebar && (
+        <Button onClick={onToggleSidebar} variant="clear" className={s.button} icon={SidebarIcon} />
+      )}
     </div>
   );
 });

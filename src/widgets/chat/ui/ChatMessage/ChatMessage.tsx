@@ -28,7 +28,9 @@ export const ChatMessage = (props: Props) => {
     fn: (msgMap, [msgId]) => msgMap[msgId],
   });
 
-  const { text, isUser, file } = msg;
+  const { isUser, file } = msg;
+  let { text } = msg;
+  if (isUser) text = text.replace(/\n/g, '\n\n');
 
   const actions = useMemo(() => {
     const actions = [];
@@ -50,7 +52,7 @@ export const ChatMessage = (props: Props) => {
         <div className={s.body}>
           <div className={s.authorName}>{isUser ? 'You' : 'Pulsar'}</div>
           <div className={s.text}>
-            <Markdown text={text} />
+            <Markdown text={text} isGenerating={isStreamed} />
           </div>
           {file?.type === 'image' && (
             <img src={convertFileSrc(file?.src)} alt="img" className={s.img} />

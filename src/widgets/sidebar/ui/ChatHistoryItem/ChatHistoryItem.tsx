@@ -1,11 +1,13 @@
 import { withObservables } from '@nozbe/watermelondb/react';
-import { memo } from 'preact/compat';
+import { FC, memo } from 'preact/compat';
 import { useCallback, useState } from 'preact/hooks';
 
 import { chatsRepository } from '@/db';
 import { ChatModel } from '@/db/chat';
+import { chatsMock } from '@/db/chat/chats.mock.ts';
 import { classNames } from '@/shared/lib/func';
 import { useKeyboardListener, useToggle } from '@/shared/lib/hooks';
+import { fallbackFn } from '@/shared/storybook';
 import { Button, Input } from '@/shared/ui';
 import { switchChat } from '@/widgets/chat';
 
@@ -75,9 +77,13 @@ const ChatHistoryItem = (props: Props) => {
   );
 };
 
-const enhance = withObservables(['id'], ({ id }: Props) => ({
-  chat: chatsRepository.chatsCollection.findAndObserve(id),
-}));
+const enhance = fallbackFn(
+  withObservables(['id'], ({ id }: Props) => ({
+    chat: chatsRepository.chatsCollection.findAndObserve(id),
+  })),
+  (C: FC<Props>) => (props: Props) =>
+    <C {...props} chat={chatsMock.find((i) => i.id === props?.id) as ChatModel} />
+);
 
 // @ts-ignore
 const EnhancedChatHistoryItem = memo(enhance(ChatHistoryItem));

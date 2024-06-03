@@ -1,6 +1,5 @@
 .logo {
   border-radius: 50%;
-  background: var(--brand);
   display: flex;
 
   img {
@@ -22,4 +21,9 @@
 .l {
   width: 48px;
   height: 48px;
+}
+
+.xl {
+  width: 64px;
+  height: 64px;
 }

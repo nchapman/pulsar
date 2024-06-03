@@ -10,6 +10,7 @@ import {
   searchHuggingFaceModel,
 } from '@/features/hugging-face-search/HuggingFaceSearch';
 import { getSystemInfo } from '@/features/system/system';
+import { __IS_STORYBOOK__ } from '@/shared/consts';
 import { classNames } from '@/shared/lib/func';
 import { loge, logi } from '@/shared/lib/Logger';
 import { Button } from '@/shared/ui';
@@ -73,7 +74,9 @@ export const SidebarFooter = memo((props: Props) => {
 
   return (
     <div className={classNames(s.sidebarFooter, [className])}>
-      {import.meta.env.DEV && import.meta.env.VITE_PULSAR_SHOW_DEV_MENU === 'true' && (
+      {import.meta.env.DEV &&
+        import.meta.env.VITE_PULSAR_SHOW_DEV_MENU === 'true' &&
+        !__IS_STORYBOOK__ && (
         <>
           <Button className={s.btn} onClick={openAppData} variant="secondary">
             Open App Data

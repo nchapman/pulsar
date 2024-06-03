@@ -24,8 +24,6 @@ export const Code = memo((props: Props) => {
 
   const lang = match?.[1] || '';
 
-  console.log(match, lang, className);
-
   const { copy, copied, resetCopy } = useCopy();
 
   useEffect(() => {
@@ -35,6 +33,10 @@ export const Code = memo((props: Props) => {
 
     return () => clearTimeout(id);
   }, [copied, resetCopy]);
+
+  console.log(props);
+
+  if (!lang && children === 'cursor') return <span className={s.cursor} />;
 
   return (
     <div className={classNames(s.code, [className])}>

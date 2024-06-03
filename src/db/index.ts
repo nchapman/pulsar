@@ -1,15 +1,20 @@
 import { Database, Model } from '@nozbe/watermelondb';
 import { Class } from '@nozbe/watermelondb/types';
 
-import { ChatModel, ChatsRepository } from './chat';
-import { adapter } from './nativeAdapter';
-import { PostModel, PostsRepository } from './post';
+import { __IS_STORYBOOK__ } from '@/shared/consts';
 
-const database = new Database({
-  adapter,
-  modelClasses: [PostModel, ChatModel] as Class<Model>[],
-});
+import { ChatModel, ChatsRepository } from './chat';
+import { ChatsRepositoryMock } from './chat/chat.repository.mock.ts';
+import { adapter } from './nativeAdapter';
+
+const database = __IS_STORYBOOK__
+  ? undefined
+  : new Database({
+      adapter,
+      modelClasses: [ChatModel] as Class<Model>[],
+    });
 
 // Repositories
-export const postsRepository = new PostsRepository(database);
-export const chatsRepository = new ChatsRepository(database);
+export const chatsRepository = (
+  __IS_STORYBOOK__ ? new ChatsRepositoryMock() : new ChatsRepository(database!)
+) as ChatsRepository;

@@ -44,7 +44,7 @@ sample({
   target: $availableModels,
 });
 
-const $currentModel = createStore<LlmName>(DEFAULT_LLM);
+export const $currentModel = createStore<LlmName>(DEFAULT_LLM);
 const $currentMmp = $currentModel.map(
   (currentModel) => supportedLlms[currentModel]?.mmp?.localName
 );

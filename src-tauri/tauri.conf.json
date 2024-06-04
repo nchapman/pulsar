@@ -7,7 +7,7 @@
   },
   "package": {
     "productName": "Pulsar",
-    "version": "0.0.34"
+    "version": "0.0.35"
   },
   "tauri": {
     "allowlist": {
@@ -15,7 +15,9 @@
       "fs": {
         "all": true,
         "scope": {
-          "allow": ["**"]
+          "allow": [
+            "**"
+          ]
         }
       },
       "path": {
@@ -26,7 +28,9 @@
       },
       "protocol": {
         "asset": true,
-        "assetScope": ["**"]
+        "assetScope": [
+          "**"
+        ]
       }
     },
     "bundle": {
@@ -62,7 +66,9 @@
     ],
     "updater": {
       "active": true,
-      "endpoints": ["https://updates.getpulsar.ai/latest.json"],
+      "endpoints": [
+        "https://updates.getpulsar.ai/latest.json"
+      ],
       "dialog": false,
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDIzOUFENEQ3NDY4MjM2MzAKUldRd05vSkcxOVNhSS9NeWlSRDlTTG8veGVPbkk4VERCc0EwWk5zTXRESU9ORjRMb1pMM2gwUTUK"
     }

@@ -5252,7 +5252,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-log"
 version = "0.0.0"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v1#10a4d76fb3e76dc0fe240dcb4530886985c45135"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v1#7093a4d9ff82422aab9c7d2abd84195a83f72d96"
 dependencies = [
  "byte-unit",
  "fern",
@@ -5267,7 +5267,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-window-state"
 version = "0.1.1"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v1#10a4d76fb3e76dc0fe240dcb4530886985c45135"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v1#7093a4d9ff82422aab9c7d2abd84195a83f72d96"
 dependencies = [
  "bincode",
  "bitflags 2.5.0",

@@ -405,7 +405,6 @@ mod tests {
             &window,
             tauri::InvokePayload {
                 cmd: "plugin:nebula|get_loaded_models".into(),
-                invoke_key: None,
                 tauri_module: None,
                 callback: tauri::api::ipc::CallbackFn(0),
                 error: tauri::api::ipc::CallbackFn(1),
@@ -419,310 +418,296 @@ mod tests {
         after_each(app).await;
     }
 
-    // #[tokio::test]
-    // async fn should_return_1_with_loaded_model() {
-    //     let app = before_each().unwrap();
-    //     let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
-    //     let model_path = app_data_dir
-    //         .join("models/evolvedseeker_1_3.Q2_K.gguf")
-    //         .to_string_lossy()
-    //         .to_string();
-    //     let window = app.get_window("main").unwrap();
-    //     let model_init_res = tauri::test::get_ipc_response::<String>(
-    //         &window,
-    //         tauri::InvokePayload {
-    //             cmd: "plugin:nebula|init_model".into(),
-    //             tauri_module: None,
-    //             invoke_key: Some("key".to_string()),
-    //             callback: tauri::api::ipc::CallbackFn(0),
-    //             error: tauri::api::ipc::CallbackFn(1),
-    //             inner: serde_json::json!({
-    //                 "modelPath": model_path,
-    //                 "modelOptions": {}
-    //             }),
-    //         },
-    //     );
+    #[tokio::test]
+    async fn should_return_1_with_loaded_model() {
+        let app = before_each().unwrap();
+        let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
+        let model_path = app_data_dir
+            .join("models/evolvedseeker_1_3.Q2_K.gguf")
+            .to_string_lossy()
+            .to_string();
+        let window = app.get_window("main").unwrap();
+        let model_init_res = tauri::test::get_ipc_response::<String>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|init_model".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({
+                    "modelPath": model_path,
+                    "modelOptions": {}
+                }),
+            },
+        );
 
-    //     assert!(model_init_res.is_ok());
+        assert!(model_init_res.is_ok());
 
-    //     let loaded_models_res = tauri::test::get_ipc_response::<Vec<String>>(
-    //         &window,
-    //         tauri::InvokePayload {
-    //             cmd: "plugin:nebula|get_loaded_models".into(),
-    //             tauri_module: None,
-    //             invoke_key: Some("key".to_string()),
-    //             callback: tauri::api::ipc::CallbackFn(0),
-    //             error: tauri::api::ipc::CallbackFn(1),
-    //             inner: serde_json::json!({}),
-    //         },
-    //     );
+        let loaded_models_res = tauri::test::get_ipc_response::<Vec<String>>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|get_loaded_models".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({}),
+            },
+        );
 
-    //     assert!(loaded_models_res.is_ok());
-    //     let loaded_models = loaded_models_res.unwrap();
-    //     assert_eq!(loaded_models.len(), 1);
-    //     assert_eq!(loaded_models[0], model_path);
+        assert!(loaded_models_res.is_ok());
+        let loaded_models = loaded_models_res.unwrap();
+        assert_eq!(loaded_models.len(), 1);
+        assert_eq!(loaded_models[0], model_path);
 
-    //     after_each(app).await;
-    // }
+        after_each(app).await;
+    }
 
-    // #[tokio::test]
-    // async fn should_drop_all_models() {
-    //     let app = before_each().unwrap();
-    //     let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
-    //     let model_path = app_data_dir
-    //         .join("models/evolvedseeker_1_3.Q2_K.gguf")
-    //         .to_string_lossy()
-    //         .to_string();
-    //     let window = app.get_window("main").unwrap();
-    //     let model_init_res = tauri::test::get_ipc_response::<String>(
-    //         &window,
-    //         tauri::InvokePayload {
-    //             cmd: "plugin:nebula|init_model".into(),
-    //             tauri_module: None,
-    //             invoke_key: Some("key".to_string()),
-    //             callback: tauri::api::ipc::CallbackFn(0),
-    //             error: tauri::api::ipc::CallbackFn(1),
-    //             inner: serde_json::json!({
-    //                 "modelPath": model_path,
-    //                 "modelOptions": {}
-    //             }),
-    //         },
-    //     );
+    #[tokio::test]
+    async fn should_drop_all_models() {
+        let app = before_each().unwrap();
+        let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
+        let model_path = app_data_dir
+            .join("models/evolvedseeker_1_3.Q2_K.gguf")
+            .to_string_lossy()
+            .to_string();
+        let window = app.get_window("main").unwrap();
+        let model_init_res = tauri::test::get_ipc_response::<String>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|init_model".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({
+                    "modelPath": model_path,
+                    "modelOptions": {}
+                }),
+            },
+        );
 
-    //     assert!(model_init_res.is_ok());
+        assert!(model_init_res.is_ok());
 
-    //     let drop_all_res = tauri::test::get_ipc_response::<()>(
-    //         &window,
-    //         tauri::InvokePayload {
-    //             cmd: "plugin:nebula|drop_all".into(),
-    //             tauri_module: None,
-    //             invoke_key: Some("key".to_string()),
-    //             callback: tauri::api::ipc::CallbackFn(0),
-    //             error: tauri::api::ipc::CallbackFn(1),
-    //             inner: serde_json::json!({}),
-    //         },
-    //     );
+        let drop_all_res = tauri::test::get_ipc_response::<()>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|drop_all".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({}),
+            },
+        );
 
-    //     assert!(drop_all_res.is_ok());
+        assert!(drop_all_res.is_ok());
 
-    //     let loaded_models_res = tauri::test::get_ipc_response::<Vec<String>>(
-    //         &window,
-    //         tauri::InvokePayload {
-    //             cmd: "plugin:nebula|get_loaded_models".into(),
-    //             tauri_module: None,
-    //             invoke_key: Some("key".to_string()),
-    //             callback: tauri::api::ipc::CallbackFn(0),
-    //             error: tauri::api::ipc::CallbackFn(1),
-    //             inner: serde_json::json!({}),
-    //         },
-    //     );
+        let loaded_models_res = tauri::test::get_ipc_response::<Vec<String>>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|get_loaded_models".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({}),
+            },
+        );
 
-    //     assert!(loaded_models_res.is_ok());
-    //     let loaded_models = loaded_models_res.unwrap();
-    //     assert_eq!(loaded_models.len(), 0);
+        assert!(loaded_models_res.is_ok());
+        let loaded_models = loaded_models_res.unwrap();
+        assert_eq!(loaded_models.len(), 0);
 
-    //     after_each(app).await;
-    // }
+        after_each(app).await;
+    }
 
-    // #[tokio::test]
-    // async fn should_drop_model() {
-    //     let app = before_each().unwrap();
-    //     let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
-    //     let model_path = app_data_dir
-    //         .join("models/evolvedseeker_1_3.Q2_K.gguf")
-    //         .to_string_lossy()
-    //         .to_string();
-    //     let window = app.get_window("main").unwrap();
-    //     let model_init_res = tauri::test::get_ipc_response::<String>(
-    //         &window,
-    //         tauri::InvokePayload {
-    //             cmd: "plugin:nebula|init_model".into(),
-    //             tauri_module: None,
-    //             invoke_key: Some("key".to_string()),
-    //             callback: tauri::api::ipc::CallbackFn(0),
-    //             error: tauri::api::ipc::CallbackFn(1),
-    //             inner: serde_json::json!({
-    //                 "modelPath": model_path,
-    //                 "modelOptions": {}
-    //             }),
-    //         },
-    //     );
+    #[tokio::test]
+    async fn should_drop_model() {
+        let app = before_each().unwrap();
+        let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
+        let model_path = app_data_dir
+            .join("models/evolvedseeker_1_3.Q2_K.gguf")
+            .to_string_lossy()
+            .to_string();
+        let window = app.get_window("main").unwrap();
+        let model_init_res = tauri::test::get_ipc_response::<String>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|init_model".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({
+                    "modelPath": model_path,
+                    "modelOptions": {}
+                }),
+            },
+        );
 
-    //     assert!(model_init_res.is_ok());
+        assert!(model_init_res.is_ok());
 
-    //     let model = model_init_res.unwrap();
+        let model = model_init_res.unwrap();
 
-    //     let model_drop_res = tauri::test::get_ipc_response::<()>(
-    //         &window,
-    //         tauri::InvokePayload {
-    //             cmd: "plugin:nebula|drop_model".into(),
-    //             tauri_module: None,
-    //             invoke_key: Some("key".to_string()),
-    //             callback: tauri::api::ipc::CallbackFn(0),
-    //             error: tauri::api::ipc::CallbackFn(1),
-    //             inner: serde_json::json!({
-    //                 "modelPath": model,
-    //             }),
-    //         },
-    //     );
+        let model_drop_res = tauri::test::get_ipc_response::<()>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|drop_model".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({
+                    "modelPath": model,
+                }),
+            },
+        );
 
-    //     assert!(model_drop_res.is_ok());
+        assert!(model_drop_res.is_ok());
 
-    //     after_each(app).await;
-    // }
+        after_each(app).await;
+    }
 
-    // #[tokio::test]
-    // async fn loading_same_model_not_throws_still_returns_1_loaded_model() {
-    //     let app = before_each().unwrap();
-    //     let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
-    //     let model_path = app_data_dir
-    //         .join("models/evolvedseeker_1_3.Q2_K.gguf")
-    //         .to_string_lossy()
-    //         .to_string();
-    //     let window = app.get_window("main").unwrap();
-    //     let model_init_res = tauri::test::get_ipc_response::<String>(
-    //         &window,
-    //         tauri::InvokePayload {
-    //             cmd: "plugin:nebula|init_model".into(),
-    //             tauri_module: None,
-    //             invoke_key: Some("key".to_string()),
-    //             callback: tauri::api::ipc::CallbackFn(0),
-    //             error: tauri::api::ipc::CallbackFn(1),
-    //             inner: serde_json::json!({
-    //                 "modelPath": model_path,
-    //                 "modelOptions": {}
-    //             }),
-    //         },
-    //     );
+    #[tokio::test]
+    async fn loading_same_model_not_throws_still_returns_1_loaded_model() {
+        let app = before_each().unwrap();
+        let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
+        let model_path = app_data_dir
+            .join("models/evolvedseeker_1_3.Q2_K.gguf")
+            .to_string_lossy()
+            .to_string();
+        let window = app.get_window("main").unwrap();
+        let model_init_res = tauri::test::get_ipc_response::<String>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|init_model".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({
+                    "modelPath": model_path,
+                    "modelOptions": {}
+                }),
+            },
+        );
 
-    //     assert!(model_init_res.is_ok());
+        assert!(model_init_res.is_ok());
 
-    //     let model_init_res_2 = tauri::test::get_ipc_response::<String>(
-    //         &window,
-    //         tauri::InvokePayload {
-    //             cmd: "plugin:nebula|init_model".into(),
-    //             tauri_module: None,
-    //             invoke_key: Some("key".to_string()),
-    //             callback: tauri::api::ipc::CallbackFn(0),
-    //             error: tauri::api::ipc::CallbackFn(1),
-    //             inner: serde_json::json!({
-    //                 "modelPath": model_path,
-    //                 "modelOptions": {}
-    //             }),
-    //         },
-    //     );
+        let model_init_res_2 = tauri::test::get_ipc_response::<String>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|init_model".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({
+                    "modelPath": model_path,
+                    "modelOptions": {}
+                }),
+            },
+        );
 
-    //     assert!(model_init_res_2.is_ok());
+        assert!(model_init_res_2.is_ok());
 
-    //     let loaded_models_res = tauri::test::get_ipc_response::<Vec<String>>(
-    //         &window,
-    //         tauri::InvokePayload {
-    //             cmd: "plugin:nebula|get_loaded_models".into(),
-    //             tauri_module: None,
-    //             invoke_key: Some("key".to_string()),
-    //             callback: tauri::api::ipc::CallbackFn(0),
-    //             error: tauri::api::ipc::CallbackFn(1),
-    //             inner: serde_json::json!({}),
-    //         },
-    //     );
+        let loaded_models_res = tauri::test::get_ipc_response::<Vec<String>>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|get_loaded_models".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({}),
+            },
+        );
 
-    //     assert!(loaded_models_res.is_ok());
-    //     let loaded_models = loaded_models_res.unwrap();
-    //     assert_eq!(loaded_models.len(), 1);
-    //     assert_eq!(loaded_models[0], model_path);
+        assert!(loaded_models_res.is_ok());
+        let loaded_models = loaded_models_res.unwrap();
+        assert_eq!(loaded_models.len(), 1);
+        assert_eq!(loaded_models[0], model_path);
 
-    //     after_each(app).await;
-    // }
+        after_each(app).await;
+    }
 
-    // #[tokio::test]
-    // async fn should_predict_text() {
-    //     let app = before_each().unwrap();
-    //     let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
-    //     let model_path = app_data_dir
-    //         .join("models/evolvedseeker_1_3.Q2_K.gguf")
-    //         .to_string_lossy()
-    //         .to_string();
-    //     let window = app.get_window("main").unwrap();
-    //     let model_init_res = tauri::test::get_ipc_response::<String>(
-    //         &window,
-    //         tauri::InvokePayload {
-    //             cmd: "plugin:nebula|init_model".into(),
-    //             tauri_module: None,
-    //             invoke_key: Some("key".to_string()),
-    //             callback: tauri::api::ipc::CallbackFn(0),
-    //             error: tauri::api::ipc::CallbackFn(1),
-    //             inner: serde_json::json!({
-    //                 "modelPath": model_path,
-    //                 "modelOptions": {}
-    //             }),
-    //         },
-    //     );
+    #[tokio::test]
+    async fn should_predict_text() {
+        let app = before_each().unwrap();
+        let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
+        let model_path = app_data_dir
+            .join("models/evolvedseeker_1_3.Q2_K.gguf")
+            .to_string_lossy()
+            .to_string();
+        let window = app.get_window("main").unwrap();
+        let model_init_res = tauri::test::get_ipc_response::<String>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|init_model".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({
+                    "modelPath": model_path,
+                    "modelOptions": {}
+                }),
+            },
+        );
 
-    //     assert!(model_init_res.is_ok());
+        assert!(model_init_res.is_ok());
 
-    //     let model_path = model_init_res.unwrap();
+        let model_path = model_init_res.unwrap();
 
-    //     let context_init_res = tauri::test::get_ipc_response::<String>(
-    //         &window,
-    //         tauri::InvokePayload {
-    //             cmd: "plugin:nebula|model_init_context".into(),
-    //             tauri_module: None,
-    //             invoke_key: Some("key".to_string()),
-    //             callback: tauri::api::ipc::CallbackFn(0),
-    //             error: tauri::api::ipc::CallbackFn(1),
-    //             inner: serde_json::json!({
-    //                 "modelPath": model_path,
-    //                 "contextOptions": {
-    //                     "ctx": [{"message": "Hello, world!", "is_user": true}, {"message": "How are you doing?", "is_user": false}]
-    //                 }
-    //             }),
-    //         },
-    //     );
+        let context_init_res = tauri::test::get_ipc_response::<String>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|model_init_context".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({
+                    "modelPath": model_path,
+                    "contextOptions": {
+                        "ctx": [{"message": "Hello, world!", "is_user": true}, {"message": "How are you doing?", "is_user": false}]
+                    }
+                }),
+            },
+        );
 
-    //     assert!(context_init_res.is_ok());
+        assert!(context_init_res.is_ok());
 
-    //     let context_id = context_init_res.unwrap();
+        let context_id = context_init_res.unwrap();
 
-    //     // let _id = app.listen_global("nebula-predict", |event| {
-    //     //     // println!("Received event: {:?}", event.payload().unwrap());
-    //     //     let predicted_text = event.payload().unwrap();
-    //     //     assert_eq!(predicted_text, "How are you doing?".to_string());
-    //     // });
+        // let _id = app.listen_global("nebula-predict", |event| {
+        //     // println!("Received event: {:?}", event.payload().unwrap());
+        //     let predicted_text = event.payload().unwrap();
+        //     assert_eq!(predicted_text, "How are you doing?".to_string());
+        // });
 
-    //     let predict_res = tauri::test::get_ipc_response::<()>(
-    //         &window,
-    //         tauri::InvokePayload {
-    //             cmd: "plugin:nebula|model_context_predict".into(),
-    //             tauri_module: None,
-    //             invoke_key: Some("key".to_string()),
-    //             callback: tauri::api::ipc::CallbackFn(0),
-    //             error: tauri::api::ipc::CallbackFn(1),
-    //             inner: serde_json::json!({
-    //                 "modelPath": model_path,
-    //                 "contextId": context_id,
-    //                 "maxLen": 10
-    //             }),
-    //         },
-    //     );
+        let predict_res = tauri::test::get_ipc_response::<()>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|model_context_predict".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({
+                    "modelPath": model_path,
+                    "contextId": context_id,
+                    "maxLen": 10
+                }),
+            },
+        );
 
-    //     assert!(predict_res.is_ok());
+        assert!(predict_res.is_ok());
 
-    //     let model_drop_res = tauri::test::get_ipc_response::<()>(
-    //         &window,
-    //         tauri::InvokePayload {
-    //             cmd: "plugin:nebula|drop_model".into(),
-    //             tauri_module: None,
-    //             invoke_key: Some("key".to_string()),
-    //             callback: tauri::api::ipc::CallbackFn(0),
-    //             error: tauri::api::ipc::CallbackFn(1),
-    //             inner: serde_json::json!({
-    //                 "modelPath": model_path,
-    //             }),
-    //         },
-    //     );
+        let model_drop_res = tauri::test::get_ipc_response::<()>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|drop_model".into(),
+                tauri_module: None,
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: serde_json::json!({
+                    "modelPath": model_path,
+                }),
+            },
+        );
 
-    //     assert!(model_drop_res.is_ok());
+        assert!(model_drop_res.is_ok());
 
-    //     after_each(app).await;
-    // }
+        after_each(app).await;
+    }
 }

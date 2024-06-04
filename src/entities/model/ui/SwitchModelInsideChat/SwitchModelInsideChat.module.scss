@@ -1,0 +1,70 @@
+.switch-model-inside-chat {
+  position: relative;
+  z-index: 1000000;
+  height: 100%;
+  font-size: 12px;
+  font-weight: 600;
+
+  .icon {
+    transition: transform 0.2s;
+  }
+}
+
+.open .icon {
+  transform: rotate(-180deg);
+}
+
+.popover {
+  padding: 8px;
+  background: var(--main-background-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  outline: none;
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+.hint {
+  flex-shrink: 0;
+}
+
+.model {
+  padding: 8px;
+  width: 100%;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.popover-head {
+  padding: 8px;
+  margin-bottom: 2px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.explore {
+  padding: 0;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 0;
+
+  &:hover {
+    background: none;
+    text-decoration: underline;
+  }
+}
+
+.default {
+  border-radius: 4px;
+  border: 1px solid var(--border-light);
+  padding: 4px 8px;
+}
+
+.model-info {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  margin-left: auto;
+}

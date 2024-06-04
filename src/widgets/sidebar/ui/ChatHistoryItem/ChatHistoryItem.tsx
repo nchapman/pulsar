@@ -1,6 +1,8 @@
 import { withObservables } from '@nozbe/watermelondb/react';
+import { createEvent, createStore } from 'effector';
+import { useUnit } from 'effector-react';
 import { FC, memo } from 'preact/compat';
-import { useCallback, useState } from 'preact/hooks';
+import { useCallback, useEffect, useState } from 'preact/hooks';
 
 import { chatsRepository } from '@/db';
 import { ChatModel } from '@/db/chat';
@@ -21,11 +23,23 @@ interface Props {
   id: string;
 }
 
+const $shownPopoverId = createStore<string | null>(null);
+const changeShownPopoverId = createEvent<string | null>();
+$shownPopoverId.on(changeShownPopoverId, (_, id) => id);
+
 const ChatHistoryItem = (props: Props) => {
   const { className, chat, id, isCurrent } = props;
-  const { isOn: isPopoverShown, off: hidePopover, toggle: togglePopover } = useToggle();
+  const { isOn: isPopoverShown, off: hidePopover, on: openPopover } = useToggle();
   const [newTitle, setNewTitle] = useState(chat?.title);
   const { isOn: isRenaming, toggle: toggleRename, off: stopRenaming } = useToggle();
+
+  const shownPopoverId = useUnit($shownPopoverId);
+
+  useEffect(() => {
+    if (id !== shownPopoverId) {
+      hidePopover();
+    }
+  }, [hidePopover, id, shownPopoverId]);
   const handleChatClick = () => switchChat(id);
 
   const handleChatUpdate = useCallback(() => {
@@ -36,6 +50,16 @@ const ChatHistoryItem = (props: Props) => {
     }
     stopRenaming();
   }, [chat?.title, id, isRenaming, newTitle, stopRenaming]);
+
+  const handleOpenPopover = useCallback(() => {
+    openPopover();
+    changeShownPopoverId(id);
+  }, [id, openPopover]);
+
+  const handleClosePopover = useCallback(() => {
+    hidePopover();
+    changeShownPopoverId(null);
+  }, [hidePopover]);
 
   useKeyboardListener(handleChatUpdate, 'Enter');
 
@@ -51,8 +75,8 @@ const ChatHistoryItem = (props: Props) => {
       activeSuffix={
         <ChatHistoryActions
           isOpen={isPopoverShown}
-          onClose={hidePopover}
-          onOpen={togglePopover}
+          onClose={handleClosePopover}
+          onOpen={handleOpenPopover}
           isCurrent={isCurrent}
           id={id}
           isPinned={chat?.isPinned}

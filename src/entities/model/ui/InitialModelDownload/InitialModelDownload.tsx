@@ -18,7 +18,7 @@ const model = DEFAULT_LLM;
 
 export const InitialModelDownload = memo((props: Props) => {
   const { className } = props;
-  const { on, off, isOn } = useToggle();
+  const { on: pause, off: resume, isOn: isPaused } = useToggle();
 
   const downloadInfo = useStoreMap($modelsDownload, (s) => s[model]);
 
@@ -34,7 +34,12 @@ export const InitialModelDownload = memo((props: Props) => {
 
       <div className={s.action}>
         {downloadInfo?.percent ? (
-          <Progress onPause={off} isPaused={!isOn} onResume={on} percent={downloadInfo?.percent} />
+          <Progress
+            onPause={pause}
+            isPaused={isPaused}
+            onResume={resume}
+            percent={downloadInfo?.percent}
+          />
         ) : (
           <Button onClick={handleModelDownload} variant="primary">
             <Icon svg={DownloadIcon} />

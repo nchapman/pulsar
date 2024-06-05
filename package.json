@@ -15,6 +15,7 @@
     "tauri": "tauri",
     "test:frontend": "vitest run",
     "test:backend": "cd src-tauri && cargo test -- --test-threads=1 --color=auto",
+    "test:backend:nocap": "cd src-tauri && cargo test -- --test-threads=1 --color=auto --nocapture",
     "release": "node ./scripts/release.cjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
@@ -100,3 +101,4 @@
   },
   "packageManager": "yarn@4.1.0"
 }
+

@@ -406,6 +406,7 @@ mod tests {
             tauri::InvokePayload {
                 cmd: "plugin:nebula|get_loaded_models".into(),
                 tauri_module: None,
+                invoke_key: Some(tauri::test::INVOKE_KEY.into()),
                 callback: tauri::api::ipc::CallbackFn(0),
                 error: tauri::api::ipc::CallbackFn(1),
                 inner: serde_json::json!({}),
@@ -432,6 +433,7 @@ mod tests {
             tauri::InvokePayload {
                 cmd: "plugin:nebula|init_model".into(),
                 tauri_module: None,
+                invoke_key: Some(tauri::test::INVOKE_KEY.into()),
                 callback: tauri::api::ipc::CallbackFn(0),
                 error: tauri::api::ipc::CallbackFn(1),
                 inner: serde_json::json!({
@@ -448,6 +450,7 @@ mod tests {
             tauri::InvokePayload {
                 cmd: "plugin:nebula|get_loaded_models".into(),
                 tauri_module: None,
+                invoke_key: Some(tauri::test::INVOKE_KEY.into()),
                 callback: tauri::api::ipc::CallbackFn(0),
                 error: tauri::api::ipc::CallbackFn(1),
                 inner: serde_json::json!({}),
@@ -476,6 +479,7 @@ mod tests {
             tauri::InvokePayload {
                 cmd: "plugin:nebula|init_model".into(),
                 tauri_module: None,
+                invoke_key: Some(tauri::test::INVOKE_KEY.into()),
                 callback: tauri::api::ipc::CallbackFn(0),
                 error: tauri::api::ipc::CallbackFn(1),
                 inner: serde_json::json!({
@@ -492,6 +496,7 @@ mod tests {
             tauri::InvokePayload {
                 cmd: "plugin:nebula|drop_all".into(),
                 tauri_module: None,
+                invoke_key: Some(tauri::test::INVOKE_KEY.into()),
                 callback: tauri::api::ipc::CallbackFn(0),
                 error: tauri::api::ipc::CallbackFn(1),
                 inner: serde_json::json!({}),
@@ -505,6 +510,7 @@ mod tests {
             tauri::InvokePayload {
                 cmd: "plugin:nebula|get_loaded_models".into(),
                 tauri_module: None,
+                invoke_key: Some(tauri::test::INVOKE_KEY.into()),
                 callback: tauri::api::ipc::CallbackFn(0),
                 error: tauri::api::ipc::CallbackFn(1),
                 inner: serde_json::json!({}),
@@ -532,6 +538,7 @@ mod tests {
             tauri::InvokePayload {
                 cmd: "plugin:nebula|init_model".into(),
                 tauri_module: None,
+                invoke_key: Some(tauri::test::INVOKE_KEY.into()),
                 callback: tauri::api::ipc::CallbackFn(0),
                 error: tauri::api::ipc::CallbackFn(1),
                 inner: serde_json::json!({
@@ -550,6 +557,7 @@ mod tests {
             tauri::InvokePayload {
                 cmd: "plugin:nebula|drop_model".into(),
                 tauri_module: None,
+                invoke_key: Some(tauri::test::INVOKE_KEY.into()),
                 callback: tauri::api::ipc::CallbackFn(0),
                 error: tauri::api::ipc::CallbackFn(1),
                 inner: serde_json::json!({
@@ -577,6 +585,7 @@ mod tests {
             tauri::InvokePayload {
                 cmd: "plugin:nebula|init_model".into(),
                 tauri_module: None,
+                invoke_key: Some(tauri::test::INVOKE_KEY.into()),
                 callback: tauri::api::ipc::CallbackFn(0),
                 error: tauri::api::ipc::CallbackFn(1),
                 inner: serde_json::json!({
@@ -593,6 +602,7 @@ mod tests {
             tauri::InvokePayload {
                 cmd: "plugin:nebula|init_model".into(),
                 tauri_module: None,
+                invoke_key: Some(tauri::test::INVOKE_KEY.into()),
                 callback: tauri::api::ipc::CallbackFn(0),
                 error: tauri::api::ipc::CallbackFn(1),
                 inner: serde_json::json!({
@@ -609,6 +619,7 @@ mod tests {
             tauri::InvokePayload {
                 cmd: "plugin:nebula|get_loaded_models".into(),
                 tauri_module: None,
+                invoke_key: Some(tauri::test::INVOKE_KEY.into()),
                 callback: tauri::api::ipc::CallbackFn(0),
                 error: tauri::api::ipc::CallbackFn(1),
                 inner: serde_json::json!({}),
@@ -637,6 +648,7 @@ mod tests {
             tauri::InvokePayload {
                 cmd: "plugin:nebula|init_model".into(),
                 tauri_module: None,
+                invoke_key: Some(tauri::test::INVOKE_KEY.into()),
                 callback: tauri::api::ipc::CallbackFn(0),
                 error: tauri::api::ipc::CallbackFn(1),
                 inner: serde_json::json!({
@@ -655,6 +667,7 @@ mod tests {
             tauri::InvokePayload {
                 cmd: "plugin:nebula|model_init_context".into(),
                 tauri_module: None,
+                invoke_key: Some(tauri::test::INVOKE_KEY.into()),
                 callback: tauri::api::ipc::CallbackFn(0),
                 error: tauri::api::ipc::CallbackFn(1),
                 inner: serde_json::json!({
@@ -681,6 +694,7 @@ mod tests {
             tauri::InvokePayload {
                 cmd: "plugin:nebula|model_context_predict".into(),
                 tauri_module: None,
+                invoke_key: Some(tauri::test::INVOKE_KEY.into()),
                 callback: tauri::api::ipc::CallbackFn(0),
                 error: tauri::api::ipc::CallbackFn(1),
                 inner: serde_json::json!({
@@ -698,6 +712,7 @@ mod tests {
             tauri::InvokePayload {
                 cmd: "plugin:nebula|drop_model".into(),
                 tauri_module: None,
+                invoke_key: Some(tauri::test::INVOKE_KEY.into()),
                 callback: tauri::api::ipc::CallbackFn(0),
                 error: tauri::api::ipc::CallbackFn(1),
                 inner: serde_json::json!({

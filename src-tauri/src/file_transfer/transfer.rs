@@ -1,22 +1,21 @@
 use futures_util::TryStreamExt;
 use log::info;
+use read_progress_stream::ReadProgressStream;
 use serde::{ser::Serializer, Serialize};
+use std::collections::HashMap;
+use std::sync::Arc;
 use std::time::Duration;
 use tauri::{
-    command,
+    async_runtime::Mutex,
     plugin::{Builder as PluginBuilder, TauriPlugin},
-    Runtime, Window,
+    Manager, Runtime, State, Window,
 };
+use tokio::fs;
 use tokio::{
     fs::{File, OpenOptions},
     io::{AsyncWriteExt, BufWriter},
 };
 use tokio_util::codec::{BytesCodec, FramedRead};
-
-use read_progress_stream::ReadProgressStream;
-
-use std::{collections::HashMap, sync::Mutex};
-use tokio::fs;
 
 type Result<T> = std::result::Result<T, Error>;
 
@@ -48,18 +47,31 @@ struct ProgressPayload {
     total: u64,
 }
 
-#[command]
+#[derive(Default)]
+struct TransferState {
+    interruption_flags: Arc<Mutex<HashMap<u32, bool>>>,
+}
+
+#[tauri::command]
 async fn download<R: Runtime>(
     window: Window<R>,
     id: u32,
     url: &str,
     path: &str,
     headers: HashMap<String, String>,
+    state: State<'_, TransferState>,
 ) -> Result<u32> {
     let client = reqwest::Client::builder()
         .read_timeout(Duration::from_secs(30))
         .build()
         .unwrap();
+
+    let mut interruption_flags = state.interruption_flags.lock().await;
+
+    interruption_flags.insert(id, false);
+
+    // release the lock
+    drop(interruption_flags);
 
     let mut current_size: Option<u64> = None;
 
@@ -78,7 +90,6 @@ async fn download<R: Runtime>(
         File::create(file_path).await?
     };
 
-    info!("Doing initial request to get file size: {}", url);
     // Do an initial header request to get the file size
     let mut head_request = client.head(url);
 
@@ -109,16 +120,8 @@ async fn download<R: Runtime>(
         request = request.header(&key, value);
     }
 
-    info!(
-        "File: {}, Total size: {}, Current size: {}",
-        path,
-        total_size,
-        current_size.unwrap_or(0)
-    );
-
     if let Some(size) = current_size {
         if size == total_size {
-            info!("File {} has been fully downloaded, skipping...", path);
             return Ok(id);
         }
 
@@ -135,8 +138,17 @@ async fn download<R: Runtime>(
     let mut file = BufWriter::new(file);
     let mut stream = response.bytes_stream();
 
-    info!("Starting download for {}", url);
     loop {
+        // Check if the download has been interrupted
+        let interruption_flags = state.interruption_flags.lock().await;
+        if *interruption_flags.get(&id).unwrap() {
+            return Err(Error::Io(std::io::Error::new(
+                std::io::ErrorKind::Interrupted,
+                "Download interrupted",
+            )));
+        }
+        drop(interruption_flags);
+
         let next = stream.try_next().await;
         match next {
             Ok(chunk) => match chunk {
@@ -179,7 +191,14 @@ async fn download<R: Runtime>(
     Ok(id)
 }
 
-#[command]
+#[tauri::command]
+async fn interrupt(id: u32, state: State<'_, TransferState>) -> Result<()> {
+    let mut interruption_flags = state.interruption_flags.lock().await;
+    interruption_flags.insert(id, true);
+    Ok(())
+}
+
+#[tauri::command]
 async fn upload<R: Runtime>(
     window: Window<R>,
     id: u32,
@@ -217,11 +236,11 @@ async fn upload<R: Runtime>(
 
 fn file_to_body<R: Runtime>(id: u32, window: Window<R>, file: File) -> reqwest::Body {
     let stream = FramedRead::new(file, BytesCodec::new()).map_ok(|r| r.freeze());
-    let window = Mutex::new(window);
+
     reqwest::Body::wrap_stream(ReadProgressStream::new(
         stream,
         Box::new(move |progress, total| {
-            let _ = window.lock().unwrap().emit(
+            let _ = window.emit(
                 "file_transfer://progress",
                 ProgressPayload {
                     id,
@@ -235,6 +254,10 @@ fn file_to_body<R: Runtime>(id: u32, window: Window<R>, file: File) -> reqwest::
 
 pub fn init_plugin<R: Runtime>() -> TauriPlugin<R> {
     PluginBuilder::new("file_transfer")
-        .invoke_handler(tauri::generate_handler![download, upload])
+        .invoke_handler(tauri::generate_handler![download, upload, interrupt])
+        .setup(|app_handle| {
+            app_handle.manage(TransferState::default());
+            Ok(())
+        })
         .build()
 }

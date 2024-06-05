@@ -7,7 +7,9 @@ interface ProgressPayload {
   total: number;
 }
 
-type ProgressHandler = (progress: number, total: number) => void;
+let id = 0;
+
+type ProgressHandler = (id: number, progress: number, total: number) => void;
 const handlers: Map<number, ProgressHandler> = new Map();
 let listening = false;
 
@@ -21,22 +23,24 @@ function listenToEventIfNeeded(event: string): void {
   appWindow.listen<ProgressPayload>(event, ({ payload }) => {
     const handler = handlers.get(payload.id);
     if (handler != null) {
-      handler(payload.progress, payload.total);
+      handler(payload.id, payload.progress, payload.total);
     }
   });
 
   listening = true;
 }
 
-async function upload(
+export function interrupt(id: number): void {
+  invoke('plugin:file_transfer|interrupt', { id });
+}
+
+export async function upload(
   url: string,
   filePath: string,
   progressHandler?: ProgressHandler,
   headers?: Map<string, string>
 ): Promise<string> {
-  const ids = new Uint32Array(1);
-  window.crypto.getRandomValues(ids);
-  const id = ids[0];
+  id += 1;
 
   if (progressHandler != null) {
     handlers.set(id, progressHandler);
@@ -56,15 +60,13 @@ async function upload(
 ///
 /// Note that `filePath` currently must include the file name.
 /// Furthermore the progress events will report a total length of 0 if the server did not sent a `Content-Length` header or if the file is compressed.
-async function download(
+export async function download(
   url: string,
   path: string,
   progressHandler?: ProgressHandler,
   headers?: Map<string, string>
 ): Promise<void> {
-  const ids = new Uint32Array(1);
-  window.crypto.getRandomValues(ids);
-  const id = ids[0];
+  id += 1;
 
   if (progressHandler != null) {
     handlers.set(id, progressHandler);
@@ -79,6 +81,4 @@ async function download(
     headers: headers ?? {},
   });
 }
-
-export { download, upload };
 

@@ -26,8 +26,6 @@ function App() {
 
   if (modelLoadError) return <div>Failed to load model! Contact support</div>;
 
-  // if (missingModel) return <WelcomeScreen model={DEFAULT_LLM} />;
-
   return <div className="app">{missingModel ? <OnboardingPage /> : <ChatPage />}</div>;
 }
 

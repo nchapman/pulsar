@@ -1,15 +1,26 @@
 import { appWindow, LogicalSize } from '@tauri-apps/api/window';
 
+const windowSize = {
+  onboarding: {
+    width: 600,
+    height: 784,
+  },
+  main: {
+    width: 1060,
+    height: 740,
+  },
+};
+
 export async function minimizeWindowSize() {
-  appWindow.setMinSize(new LogicalSize(600, 784));
-  appWindow.setSize(new LogicalSize(600, 784));
+  appWindow.setMinSize(new LogicalSize(windowSize.onboarding.width, windowSize.onboarding.height));
+  appWindow.setSize(new LogicalSize(windowSize.onboarding.width, windowSize.onboarding.height));
   appWindow.setFullscreen(false);
   appWindow.setResizable(false);
 }
 
 export async function restoreWindowSize() {
-  if ((await appWindow.innerSize()).width > 600) return;
-  appWindow.setSize(new LogicalSize(1060, 740));
-  appWindow.setMinSize(new LogicalSize(1060, 740));
+  if (window.innerWidth > windowSize.onboarding.width) return;
+  await appWindow.setMinSize(new LogicalSize(windowSize.main.width, windowSize.main.height));
+  appWindow.setSize(new LogicalSize(windowSize.main.width, windowSize.main.height));
   appWindow.setResizable(true);
 }

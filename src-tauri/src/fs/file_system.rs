@@ -1,5 +1,6 @@
 use serde::{ser::Serializer, Serialize};
-use std::fs;
+use sha2::{Digest, Sha256};
+use std::{fs, io};
 
 use tauri::{
     command,
@@ -30,9 +31,19 @@ fn get_byte_size(path: String) -> Result<u64> {
     Ok(metadata.len())
 }
 
+#[command]
+async fn get_file_sha_256(path: String) -> Result<String> {
+    let mut hasher = Sha256::new();
+    let mut file = fs::File::open(path)?;
+
+    io::copy(&mut file, &mut hasher)?;
+    let hash_bytes = hasher.finalize();
+    Ok(format!("{:x}", hash_bytes))
+}
+
 pub fn init_plugin<R: Runtime>() -> TauriPlugin<R> {
     PluginBuilder::new("fs")
-        .invoke_handler(tauri::generate_handler![get_byte_size])
+        .invoke_handler(tauri::generate_handler![get_byte_size, get_file_sha_256])
         .build()
 }
 
@@ -48,17 +59,13 @@ mod tests {
             .build(mock_context(noop_assets()))
             .unwrap();
 
-        let source_path = Path::new("tests/evolvedseeker_1_3.Q2_K.gguf");
+        let source_path = Path::new("tests/smallFile.txt");
         let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
-        let model_dir = app_data_dir.join("models");
-        if !model_dir.exists() {
-            fs::create_dir_all(model_dir.clone()).unwrap();
-        }
 
-        let model_path = model_dir.join("evolvedseeker_1_3.Q2_K.gguf");
+        let dest_path = app_data_dir.join("smallFile.txt");
 
-        if !model_path.exists() {
-            fs::copy(source_path, model_path).unwrap();
+        if !dest_path.exists() {
+            fs::copy(source_path, dest_path).unwrap();
         }
 
         app
@@ -69,17 +76,39 @@ mod tests {
         let app = before_each();
         let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
         let model_path = app_data_dir
-            .join("models/evolvedseeker_1_3.Q2_K.gguf")
+            .join("smallFile.txt")
             .to_string_lossy()
             .to_string();
         let result = super::get_byte_size(model_path).unwrap();
-        assert_eq!(result, 631706592);
+        assert_eq!(result, 50);
     }
 
     #[test]
     fn test_get_byte_size_invalid_path() {
         let model_path = "invalid_path".to_string();
         let result = super::get_byte_size(model_path);
+        assert!(result.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_sample_model_sha_256() {
+        let app = before_each();
+        let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
+        let model_path = app_data_dir
+            .join("smallFile.txt")
+            .to_string_lossy()
+            .to_string();
+        let result = super::get_file_sha_256(model_path).await.unwrap();
+        assert_eq!(
+            result,
+            "7c4df6533de1d94d4d862f3472255e92e2292180b027819e60ebb51fcdc50c4e"
+        );
+    }
+
+    #[tokio::test]
+    async fn test_sample_model_sha_256_invalid_path() {
+        let model_path = "invalid_path".to_string();
+        let result = super::get_file_sha_256(model_path).await;
         assert!(result.is_err());
     }
 }

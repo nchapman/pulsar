@@ -10,7 +10,7 @@ import {
   searchHuggingFaceModel,
 } from '@/features/hugging-face-search/HuggingFaceSearch';
 import { getSystemInfo } from '@/features/system/system';
-import { getFileSizeBytes } from '@/libs/file-system';
+import { getFileSha256, getFileSizeBytes } from '@/libs/file-system';
 import { __IS_STORYBOOK__ } from '@/shared/consts';
 import { classNames } from '@/shared/lib/func';
 import { loge, logi } from '@/shared/lib/Logger';
@@ -74,17 +74,27 @@ export const SidebarFooter = memo((props: Props) => {
   };
 
   const testGetFileSize = async () => {
-    logi('fileSize', 'Getting file size');
     const appDataDirPath = await appDataDir();
-    logi('fileSize', `App data dir path ${appDataDirPath}`);
     // eslint-disable-next-line max-len
     const modelPath = `${appDataDirPath}models/llava-v1.6-mistral-7b.Q4_K_M.gguf`;
-    logi('fileSize', `Model path ${modelPath}`);
     try {
       const size = await getFileSizeBytes(modelPath);
       logi('fileSize', `File size ${size}`);
     } catch (e) {
       loge('fileSize', `Failed to get file size ${e}`);
+    }
+  };
+
+  const testGetFileSHA256 = async () => {
+    const appDataDirPath = await appDataDir();
+    // eslint-disable-next-line max-len
+    const modelPath = `${appDataDirPath}models/llava-v1.6-mistral-7b.Q4_K_M.gguf`;
+    try {
+      logi('fileSHA256', 'Starting SHA calculation...');
+      const sha256 = await getFileSha256(modelPath);
+      logi('fileSHA256', `File SHA256 ${sha256}`);
+    } catch (e) {
+      loge('fileSHA256', `Failed to get file SHA256 ${e}`);
     }
   };
 
@@ -108,6 +118,9 @@ export const SidebarFooter = memo((props: Props) => {
             </Button>
             <Button className={s.btn} onClick={testGetFileSize} variant="secondary">
               Get file size test
+            </Button>
+            <Button className={s.btn} onClick={testGetFileSHA256} variant="secondary">
+              Get file sha 256 test
             </Button>
             <Button className={s.btn} onClick={testResumeDownload} variant="secondary">
               Resume download

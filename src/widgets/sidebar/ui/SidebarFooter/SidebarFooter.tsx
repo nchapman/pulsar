@@ -90,6 +90,7 @@ export const SidebarFooter = memo((props: Props) => {
     // eslint-disable-next-line max-len
     const modelPath = `${appDataDirPath}models/llava-v1.6-mistral-7b.Q4_K_M.gguf`;
     try {
+      logi('fileSHA256', 'Starting SHA calculation...');
       const sha256 = await getFileSha256(modelPath);
       logi('fileSHA256', `File SHA256 ${sha256}`);
     } catch (e) {

@@ -32,7 +32,7 @@ fn get_byte_size(path: String) -> Result<u64> {
 }
 
 #[command]
-fn get_file_sha_256(path: String) -> Result<String> {
+async fn get_file_sha_256(path: String) -> Result<String> {
     let mut hasher = Sha256::new();
     let mut file = fs::File::open(path)?;
 
@@ -59,17 +59,13 @@ mod tests {
             .build(mock_context(noop_assets()))
             .unwrap();
 
-        let source_path = Path::new("tests/evolvedseeker_1_3.Q2_K.gguf");
+        let source_path = Path::new("tests/smallFile.txt");
         let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
-        let model_dir = app_data_dir.join("models");
-        if !model_dir.exists() {
-            fs::create_dir_all(model_dir.clone()).unwrap();
-        }
 
-        let model_path = model_dir.join("evolvedseeker_1_3.Q2_K.gguf");
+        let dest_path = app_data_dir.join("smallFile.txt");
 
-        if !model_path.exists() {
-            fs::copy(source_path, model_path).unwrap();
+        if !dest_path.exists() {
+            fs::copy(source_path, dest_path).unwrap();
         }
 
         app
@@ -80,11 +76,11 @@ mod tests {
         let app = before_each();
         let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
         let model_path = app_data_dir
-            .join("models/evolvedseeker_1_3.Q2_K.gguf")
+            .join("smallFile.txt")
             .to_string_lossy()
             .to_string();
         let result = super::get_byte_size(model_path).unwrap();
-        assert_eq!(result, 631706592);
+        assert_eq!(result, 50);
     }
 
     #[test]
@@ -94,25 +90,25 @@ mod tests {
         assert!(result.is_err());
     }
 
-    #[test]
-    fn test_sample_model_sha_256() {
+    #[tokio::test]
+    async fn test_sample_model_sha_256() {
         let app = before_each();
         let app_data_dir = app.handle().path_resolver().app_data_dir().unwrap();
         let model_path = app_data_dir
-            .join("models/evolvedseeker_1_3.Q2_K.gguf")
+            .join("smallFile.txt")
             .to_string_lossy()
             .to_string();
-        let result = super::get_file_sha_256(model_path).unwrap();
+        let result = super::get_file_sha_256(model_path).await.unwrap();
         assert_eq!(
             result,
-            "b6c747ccf3fab32e376c938753bb00674fe7085dc2ab5c8a4b699fe4b26317f2"
+            "7c4df6533de1d94d4d862f3472255e92e2292180b027819e60ebb51fcdc50c4e"
         );
     }
 
-    #[test]
-    fn test_sample_model_sha_256_invalid_path() {
+    #[tokio::test]
+    async fn test_sample_model_sha_256_invalid_path() {
         let model_path = "invalid_path".to_string();
-        let result = super::get_file_sha_256(model_path);
+        let result = super::get_file_sha_256(model_path).await;
         assert!(result.is_err());
     }
 }

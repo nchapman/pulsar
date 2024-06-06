@@ -12,7 +12,7 @@ import {
 } from '@/features/hugging-face-search/HuggingFaceSearch';
 import { getSystemInfo } from '@/features/system/system';
 import { getFileSha256, getFileSizeBytes } from '@/libs/file-system';
-import { download, interrupt } from '@/libs/file-transfer';
+import { download, getRandomInt, interruptFileTransfer } from '@/libs/file-transfer';
 import { __IS_STORYBOOK__ } from '@/shared/consts';
 import { classNames } from '@/shared/lib/func';
 import { loge, logi } from '@/shared/lib/Logger';
@@ -112,20 +112,25 @@ export const SidebarFooter = memo((props: Props) => {
     }
 
     logi('download', 'Starting download');
-    download(
-      'https://huggingface.co/cjpais/llava-1.6-mistral-7b-gguf/resolve/main/llava-v1.6-mistral-7b.Q4_K_M.gguf?download=true',
-      modelPath,
-      (id, _progress, _total) => {
-        logi(
-          'download',
-          `Progress: ${Math.round(_progress / _total)} %. bytes ${_progress} of ${_total}`
-        );
-        if (_progress > 2) {
-          logi('download', 'Interrupting download');
-          interrupt(id);
-        }
-      }
-    );
+    try {
+      const id = getRandomInt();
+      setTimeout(() => {
+        interruptFileTransfer(id);
+      }, 1000);
+      await download({
+        id,
+        url: 'https://huggingface.co/cjpais/llava-1.6-mistral-7b-gguf/resolve/main/llava-v1.6-mistral-7b.Q4_K_M.gguf?download=true',
+        path: modelPath,
+        progressHandler: (_id, progress, total) => {
+          logi(
+            'download',
+            `Progress: ${Math.round(progress / total)} %. bytes ${progress} of ${total}`
+          );
+        },
+      });
+    } catch (e) {
+      loge('download', `Failed to download ${e}`);
+    }
   };
 
   return (

@@ -25,6 +25,8 @@ pub enum Error {
     Io(#[from] std::io::Error),
     #[error(transparent)]
     Request(#[from] reqwest::Error),
+    #[error("Download interrupted")]
+    Interrupted,
     // #[error("{0}")]
     // ContentLength(String),
     #[error("request failed with status code {0}: {1}")]
@@ -142,10 +144,7 @@ async fn download<R: Runtime>(
         // Check if the download has been interrupted
         let interruption_flags = state.interruption_flags.lock().await;
         if *interruption_flags.get(&id).unwrap() {
-            return Err(Error::Io(std::io::Error::new(
-                std::io::ErrorKind::Interrupted,
-                "Download interrupted",
-            )));
+            return Err(Error::Interrupted);
         }
         drop(interruption_flags);
 
@@ -203,11 +202,11 @@ async fn upload<R: Runtime>(
     window: Window<R>,
     id: u32,
     url: &str,
-    file_path: &str,
+    path: &str,
     headers: HashMap<String, String>,
 ) -> Result<String> {
     // Read the file
-    let file = File::open(file_path).await?;
+    let file = File::open(path).await?;
     let file_len = file.metadata().await.unwrap().len();
 
     // Create the request and attach the file to the body

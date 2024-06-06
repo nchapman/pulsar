@@ -7,8 +7,6 @@ interface ProgressPayload {
   total: number;
 }
 
-let id = 0;
-
 type ProgressHandler = (id: number, progress: number, total: number) => void;
 const handlers: Map<number, ProgressHandler> = new Map();
 let listening = false;
@@ -30,18 +28,29 @@ function listenToEventIfNeeded(event: string): void {
   listening = true;
 }
 
-export function interrupt(id: number): void {
+export function interruptFileTransfer(id: number): void {
   invoke('plugin:file_transfer|interrupt', { id });
 }
 
-export async function upload(
-  url: string,
-  filePath: string,
-  progressHandler?: ProgressHandler,
-  headers?: Map<string, string>
-): Promise<string> {
-  id += 1;
+export function getRandomInt(): number {
+  const ids = new Uint32Array(1);
+  window.crypto.getRandomValues(ids);
+  return ids[0];
+}
 
+export async function upload({
+  id = getRandomInt(),
+  url,
+  path,
+  progressHandler,
+  headers,
+}: {
+  id: number;
+  url: string;
+  path: string;
+  progressHandler?: ProgressHandler;
+  headers?: Map<string, string>;
+}): Promise<string> {
   if (progressHandler != null) {
     handlers.set(id, progressHandler);
   }
@@ -51,7 +60,7 @@ export async function upload(
   return invoke('plugin:file_transfer|upload', {
     id,
     url,
-    filePath,
+    path,
     headers: headers ?? {},
   });
 }
@@ -60,14 +69,19 @@ export async function upload(
 ///
 /// Note that `filePath` currently must include the file name.
 /// Furthermore the progress events will report a total length of 0 if the server did not sent a `Content-Length` header or if the file is compressed.
-export async function download(
-  url: string,
-  path: string,
-  progressHandler?: ProgressHandler,
-  headers?: Map<string, string>
-): Promise<void> {
-  id += 1;
-
+export async function download({
+  id = getRandomInt(),
+  url,
+  path,
+  progressHandler,
+  headers,
+}: {
+  id: number;
+  url: string;
+  path: string;
+  progressHandler?: ProgressHandler;
+  headers?: Map<string, string>;
+}): Promise<void> {
   if (progressHandler != null) {
     handlers.set(id, progressHandler);
   }

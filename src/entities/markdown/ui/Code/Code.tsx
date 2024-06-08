@@ -34,8 +34,6 @@ export const Code = memo((props: Props) => {
     return () => clearTimeout(id);
   }, [copied, resetCopy]);
 
-  console.log(props);
-
   if (!lang && children === 'cursor') return <span className={s.cursor} />;
 
   return (

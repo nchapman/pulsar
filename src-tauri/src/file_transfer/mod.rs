@@ -1,3 +1,3 @@
-mod file_transfer;
+mod transfer;
 
-pub use file_transfer::init_plugin;
+pub use transfer::init_plugin;

@@ -1,3 +1,4 @@
+import { fs } from '@tauri-apps/api';
 import { appDataDir } from '@tauri-apps/api/path';
 import { open as openPath } from '@tauri-apps/api/shell';
 import { memo } from 'preact/compat';
@@ -11,6 +12,7 @@ import {
 } from '@/features/hugging-face-search/HuggingFaceSearch';
 import { getSystemInfo } from '@/features/system/system';
 import { getFileSha256, getFileSizeBytes } from '@/libs/file-system';
+import { download, getRandomInt, interruptFileTransfer } from '@/libs/file-transfer';
 import { __IS_STORYBOOK__ } from '@/shared/consts';
 import { classNames } from '@/shared/lib/func';
 import { loge, logi } from '@/shared/lib/Logger';
@@ -98,6 +100,39 @@ export const SidebarFooter = memo((props: Props) => {
     }
   };
 
+  const testInterruptDownload = async () => {
+    // delete any existing file
+    const appDataDirPath = await appDataDir();
+    // eslint-disable-next-line max-len
+    const modelPath = `${appDataDirPath}/test-interrupt-download.gguf`;
+    try {
+      fs.removeFile(modelPath);
+    } catch (e) {
+      // ignore
+    }
+
+    logi('download', 'Starting download');
+    try {
+      const id = getRandomInt();
+      setTimeout(() => {
+        interruptFileTransfer(id);
+      }, 1000);
+      await download({
+        id,
+        url: 'https://huggingface.co/cjpais/llava-1.6-mistral-7b-gguf/resolve/main/llava-v1.6-mistral-7b.Q4_K_M.gguf?download=true',
+        path: modelPath,
+        progressHandler: (_id, progress, total) => {
+          logi(
+            'download',
+            `Progress: ${Math.round(progress / total)} %. bytes ${progress} of ${total}`
+          );
+        },
+      });
+    } catch (e) {
+      loge('download', `Failed to download ${e}`);
+    }
+  };
+
   return (
     <div className={classNames(s.sidebarFooter, [className])}>
       {import.meta.env.DEV &&
@@ -121,6 +156,9 @@ export const SidebarFooter = memo((props: Props) => {
             </Button>
             <Button className={s.btn} onClick={testGetFileSHA256} variant="secondary">
               Get file sha 256 test
+            </Button>
+            <Button className={s.btn} onClick={testInterruptDownload} variant="secondary">
+              Test interrupt download
             </Button>
             <Button className={s.btn} onClick={testResumeDownload} variant="secondary">
               Resume download

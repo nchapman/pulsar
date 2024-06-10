@@ -11,9 +11,13 @@ export const downloadModel = async (
   const pathToSave = await getModelPath(localName);
   logi('downloadModel', `Downloading model to ${pathToSave}`);
   try {
-    await download(url, pathToSave, (progress, total) => {
-      const percent = !total ? 0 : (progress / total) * 100;
-      onProgress(percent);
+    await download({
+      url,
+      path: pathToSave,
+      progressHandler: (_id, progress, total) => {
+        const percent = !total ? 0 : (progress / total) * 100;
+        onProgress(percent);
+      },
     });
   } catch (e) {
     loge('downloadModel', `Error downloading model: ${e}`);

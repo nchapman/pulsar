@@ -3,6 +3,7 @@ import { memo } from 'preact/compat';
 import { Popover } from 'react-tiny-popover';
 
 import { DEFAULT_LLM } from '@/entities/model';
+import { goToModelStore } from '@/pages/chat';
 import CheckIcon from '@/shared/assets/icons/check-circle-broken.svg';
 import ChevronDownIcon from '@/shared/assets/icons/chevron-down.svg';
 import CubeIcon from '@/shared/assets/icons/cube.svg';
@@ -33,7 +34,7 @@ export const SwitchModelInsideChat = memo((props: Props) => {
           Choose Model
         </Text>
 
-        <Button className={s.explore} variant="clear" onClick={() => undefined}>
+        <Button className={s.explore} variant="clear" onClick={goToModelStore}>
           Explore models
           <Icon svg={CubeIcon} className={s.icon} />
         </Button>

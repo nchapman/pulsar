@@ -1,0 +1,21 @@
+.model-search-input {
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  border: 1px solid var(--border-x-heavy);
+  background: var(--main-background-secondary);
+  gap: 8px;
+  width: 480px;
+  padding: 12px;
+}
+
+.input {
+  color: var(--text-primary);
+  font-size: 14px;
+  padding: 0;
+  font-weight: 400;
+
+  &::placeholder {
+    color: var(--text-secondary);
+  }
+}

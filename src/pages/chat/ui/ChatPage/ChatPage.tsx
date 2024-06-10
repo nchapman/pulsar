@@ -1,7 +1,9 @@
 import { useUnit } from 'effector-react';
 
+import { $widget, Widgets } from '@/pages/chat/model/widgets.ts';
 import { Page } from '@/shared/ui';
 import { Chat } from '@/widgets/chat';
+import { ModelStore } from '@/widgets/model-store';
 import { Navbar } from '@/widgets/navbar';
 import { Sidebar } from '@/widgets/sidebar';
 import { Toolbar } from '@/widgets/toolbar';
@@ -9,8 +11,15 @@ import { Toolbar } from '@/widgets/toolbar';
 import { $sidebarOpened, toggleSidebar } from '../../model/chat.ts';
 import s from './ChatPage.module.scss';
 
+const WidgetComponent = {
+  [Widgets.CHAT]: Chat,
+  [Widgets.MODEL_STORE]: ModelStore,
+};
+
 export const ChatPage = () => {
   const sidebarOpened = useUnit($sidebarOpened);
+  const widget = useUnit($widget);
+  const W = WidgetComponent[widget];
 
   return (
     <Page className={s.chatPage}>
@@ -20,7 +29,7 @@ export const ChatPage = () => {
 
       <main className={s.main}>
         <Navbar />
-        <Chat />
+        <W />
       </main>
     </Page>
   );

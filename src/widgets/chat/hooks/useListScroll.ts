@@ -60,7 +60,6 @@ export const useListScroll = () => {
 
       const isScrolledToBottom = el.scrollHeight - el.scrollTop === el.clientHeight;
       setShowScrollBtn(!isScrolledToBottom);
-      console.log(isScrolledToBottom, 'isScrolledToBottom');
 
       if (isProgrammaticScroll) {
         isProgrammaticScroll = false;

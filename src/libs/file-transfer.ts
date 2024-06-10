@@ -76,7 +76,7 @@ export async function download({
   progressHandler,
   headers,
 }: {
-  id: number;
+  id?: number;
   url: string;
   path: string;
   progressHandler?: ProgressHandler;

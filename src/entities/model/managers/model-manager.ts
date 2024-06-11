@@ -1,20 +1,11 @@
 import { getUserSettings } from '@/app/user-settings';
+import { modelsRepository } from '@/db';
+import { Model } from '@/db/model';
+import { deleteModel } from '@/entities/model/lib/deleteModel.ts';
 import { getAvailableModels } from '@/entities/model/lib/getAvailableModels.ts';
 
 import { moveToModelsDir } from '../lib/moveToModelsDir.ts';
 import { dropModel, loadModel } from '../model/model-state.ts';
-
-interface Model {
-  id: string;
-  name: string;
-  description: string;
-  size: number;
-  localName: string;
-  mmp?: {
-    localName: string;
-    size: number;
-  };
-}
 
 export class ModelManager {
   private models: Record<string, Model> = {};
@@ -41,33 +32,36 @@ export class ModelManager {
     await this.loadCurrentModel();
   }
 
-  async addModel(modelDto: Omit<Model, 'id'>, filePath: string) {
+  async addModel(modelDto: Model['data'], filePath: string) {
     // move file to models folder
     await moveToModelsDir(filePath, modelDto.localName);
 
-    // todo: save model to the db
-    const model: Model = { id: '1', ...modelDto };
+    // save model to the db
+    const model = await modelsRepository.create({ data: modelDto, name: modelDto.name });
 
     // save model to the list
     this.models[model.id] = model;
   }
 
-  async deleteModel(modelName: string) {
-    if (!this.models[modelName]) {
-      throw new Error(`Model "${modelName}" not found`);
+  async deleteModel(modelId: string) {
+    if (!this.models[modelId]) {
+      throw new Error(`Model "${modelId}" not found`);
     }
 
     // if the model is the current model, drop it
-    if (this.currentModel === modelName) {
+    if (this.currentModel === modelId) {
       await dropModel();
       this.currentModel = null;
     }
 
-    // todo remove model from the db
-    // todo: delete model from the disk
+    // remove model from the db
+    await modelsRepository.remove(this.models[modelId].id);
 
-    // todo: remove model from the list
-    delete this.models[modelName];
+    // delete model from the disk
+    await deleteModel(this.models[modelId].data.localName);
+
+    // remove model from the list
+    delete this.models[modelId];
   }
 
   private async loadCurrentModel() {
@@ -75,7 +69,7 @@ export class ModelManager {
       throw new Error('No model selected');
     }
 
-    const { localName, mmp } = this.models[this.currentModel];
+    const { localName, mmp } = this.models[this.currentModel].data;
 
     await loadModel(localName, mmp?.localName);
     this.isReady = true;
@@ -86,9 +80,30 @@ export class ModelManager {
     const [availableModels] = await getAvailableModels();
 
     // get all from db
+    let models = await modelsRepository.getAll();
+
     // delete missing in local
+    await Promise.all(
+      models.map(async (model) => {
+        if (availableModels.includes(model.data.localName)) return;
+        await modelsRepository.remove(model.id);
+      })
+    );
+
+    models = await modelsRepository.getAll();
+
     // delete missing in db
+    await Promise.all(
+      availableModels.map(async (localName) => {
+        if (models.some((model) => model.data.localName === localName)) return;
+        await deleteModel(localName);
+      })
+    );
+
     // update memory list
-    this.models = {};
+    this.models = models.reduce<Record<string, Model>>((acc, model) => {
+      acc[model.id] = model;
+      return acc;
+    }, {});
   }
 }

@@ -1,4 +1,3 @@
-import { LlmName, supportedLlms } from '@/entities/model/consts/supported-llms.const.ts';
 import { loge } from '@/shared/lib/Logger.ts';
 
 import { getModelPath } from '../lib/getModelPath.ts';
@@ -7,11 +6,10 @@ import { NebulaModel } from '../nebula/NebulaModel.ts';
 // eslint-disable-next-line import/no-mutable-exports
 export let model: NebulaModel | null = null;
 
-export async function loadModel(llmName: LlmName) {
+export async function loadModel(llmLocalName: string, mmpLocalName?: string) {
   try {
-    const { localName, mmp } = supportedLlms[llmName];
-    const modelPath = await getModelPath(localName);
-    const multiModalPath = await getModelPath(mmp!.localName);
+    const modelPath = await getModelPath(llmLocalName);
+    const multiModalPath = mmpLocalName ? await getModelPath(mmpLocalName) : undefined;
 
     model = await NebulaModel.initModel(modelPath, multiModalPath);
   } catch (e) {

@@ -15,7 +15,7 @@ import { dropModel, loadModel } from './model-state';
 const $availableModels = createStore<Record<string, boolean> | null>(null);
 export const getAvailableModelsEff = createEffect(getAvailableModels);
 
-$availableModels.on(getAvailableModelsEff.doneData, (_, availableModels) => availableModels);
+$availableModels.on(getAvailableModelsEff.doneData, (_, [, availableModels]) => availableModels);
 
 export const $modelsDownload = createStore<OptionalRecord<LlmName, ModelDownloadInfo>>({});
 const updateDownloadInfo = createEvent<{ model: LlmName; info: ModelDownloadInfo }>();
@@ -125,7 +125,9 @@ const loadModelEff = createEffect<{ llm: LlmName }, void>(({ llm }) => {
   dropModel()
     .then(() => {
       setModelLoadError(false);
-      loadModel(llm);
+      const { localName, mmp } = supportedLlms[llm];
+
+      loadModel(localName, mmp?.localName);
     })
     .then(() => {
       restoreWindowSize();

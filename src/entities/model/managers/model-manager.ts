@@ -1,67 +1,104 @@
-import { getUserSettings } from '@/app/user-settings';
 import { modelsRepository } from '@/db';
 import { Model } from '@/db/model';
-import { deleteModel } from '@/entities/model/lib/deleteModel.ts';
-import { getAvailableModels } from '@/entities/model/lib/getAvailableModels.ts';
+import {
+  UserSettingsManager,
+  userSettingsManager,
+} from '@/entities/model/managers/user-settings-manager.ts';
 
+import { deleteModel } from '../lib/deleteModel.ts';
+import { getAvailableModels } from '../lib/getAvailableModels.ts';
 import { moveToModelsDir } from '../lib/moveToModelsDir.ts';
 import { dropModel, loadModel } from '../model/model-state.ts';
 
-export class ModelManager {
+class ModelManager {
   private models: Record<string, Model> = {};
 
   private isReady = false;
 
   private currentModel: string | null = null;
 
-  constructor() {
-    this.readLocalModels();
+  private hasNoModels = false;
 
-    this.currentModel = getUserSettings('models').defaultModel;
-    this.loadCurrentModel();
+  constructor(private readonly userSettings: UserSettingsManager) {
+    this.initManager();
   }
 
-  async switchModel(modelName: string) {
+  // api methods
+
+  async switchModel(modelId: string) {
     await dropModel();
-    const model = this.models[modelName];
+    const model = this.models[modelId];
 
     if (!model) {
-      throw new Error(`Model "${modelName}" not found`);
+      throw new Error(`Model with Id "${modelId}" not found`);
     }
+
+    this.currentModel = model.id;
 
     await this.loadCurrentModel();
   }
 
   async addModel(modelDto: Model['data'], filePath: string) {
     // move file to models folder
+
     await moveToModelsDir(filePath, modelDto.localName);
 
     // save model to the db
-    const model = await modelsRepository.create({ data: modelDto, name: modelDto.name });
+    const dbModel = await modelsRepository.create({ data: modelDto, name: modelDto.name });
 
     // save model to the list
-    this.models[model.id] = model;
+    this.models[dbModel.id] = dbModel;
+
+    // if first model, set as default
+    if (this.hasNoModels) {
+      console.log('adding first model');
+
+      this.userSettings.set('defaultModel', dbModel.id);
+      this.currentModel = dbModel.id;
+      this.hasNoModels = false;
+      await this.switchModel(dbModel.id);
+    }
   }
 
   async deleteModel(modelId: string) {
-    if (!this.models[modelId]) {
+    const model = this.models[modelId];
+
+    if (!model) {
       throw new Error(`Model "${modelId}" not found`);
     }
+
+    // remove model from the list
+    delete this.models[modelId];
+
+    // remove model from the db
+    await modelsRepository.remove(modelId);
 
     // if the model is the current model, drop it
     if (this.currentModel === modelId) {
       await dropModel();
-      this.currentModel = null;
+      await this.onCurrentModelUnavailable();
     }
 
-    // remove model from the db
-    await modelsRepository.remove(this.models[modelId].id);
-
     // delete model from the disk
-    await deleteModel(this.models[modelId].data.localName);
+    await deleteModel(model.data.localName);
+  }
 
-    // remove model from the list
-    delete this.models[modelId];
+  get ready() {
+    return this.isReady;
+  }
+
+  // private methods
+
+  private getFirstAvailableModel() {
+    return Object.keys(this.models)[0] || null;
+  }
+
+  private async initManager() {
+    await this.readLocalModels();
+    if (this.hasNoModels) return;
+
+    this.currentModel = this.userSettings.get('defaultModel');
+    await this.loadCurrentModel();
   }
 
   private async loadCurrentModel() {
@@ -69,10 +106,41 @@ export class ModelManager {
       throw new Error('No model selected');
     }
 
+    const model = this.models[this.currentModel];
+
+    if (!model) {
+      await this.onCurrentModelUnavailable();
+      return;
+    }
+
     const { localName, mmp } = this.models[this.currentModel].data;
 
-    await loadModel(localName, mmp?.localName);
-    this.isReady = true;
+    try {
+      await loadModel(localName, mmp?.localName);
+      this.isReady = true;
+
+      console.info('Model ready!');
+    } catch (e) {
+      console.error('Failed to load model', e);
+    }
+  }
+
+  private async onCurrentModelUnavailable() {
+    console.log('Current model not available');
+
+    // set default/current model to first available
+    const newModel = this.getFirstAvailableModel();
+
+    this.currentModel = newModel;
+    this.userSettings.set('defaultModel', newModel);
+
+    if (!newModel) {
+      this.isReady = false;
+      this.hasNoModels = true;
+      return;
+    }
+
+    await this.switchModel(newModel);
   }
 
   private async readLocalModels() {
@@ -100,6 +168,16 @@ export class ModelManager {
       })
     );
 
+    // if has no local models
+    if (!models.length) {
+      console.log('has no local models');
+
+      this.hasNoModels = true;
+      this.userSettings.set('defaultModel', null);
+      this.currentModel = null;
+      return;
+    }
+
     // update memory list
     this.models = models.reduce<Record<string, Model>>((acc, model) => {
       acc[model.id] = model;
@@ -107,3 +185,5 @@ export class ModelManager {
     }, {});
   }
 }
+
+export const modelManager = new ModelManager(userSettingsManager);

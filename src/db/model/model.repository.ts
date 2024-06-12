@@ -6,7 +6,6 @@ import { ModelModel } from './model.model.ts';
 import { modelsTable } from './model.schema.ts';
 
 export interface ModelData {
-  id: Id;
   name: string;
   localName: string;
   description: string;

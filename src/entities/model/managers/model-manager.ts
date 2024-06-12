@@ -1,3 +1,5 @@
+import { createEvent, createStore } from 'effector';
+
 import { modelsRepository } from '@/db';
 import { Model } from '@/db/model';
 import {
@@ -10,10 +12,14 @@ import { getAvailableModels } from '../lib/getAvailableModels.ts';
 import { moveToModelsDir } from '../lib/moveToModelsDir.ts';
 import { dropModel, loadModel } from '../model/model-state.ts';
 
-class ModelManager {
-  private models: Record<string, Model> = {};
+export const $ready = createStore(false);
+const setReady = createEvent<boolean>();
+$ready.on(setReady, (_, val) => val);
 
-  private isReady = false;
+class ModelManager {
+  #models: Record<string, Model> = {};
+
+  #isReady = false;
 
   private currentModel: string | null = null;
 
@@ -21,6 +27,25 @@ class ModelManager {
 
   constructor(private readonly userSettings: UserSettingsManager) {
     this.initManager();
+  }
+
+  // getters/setters
+
+  get models() {
+    return this.#models;
+  }
+
+  set models(models: Record<string, Model>) {
+    this.#models = models;
+  }
+
+  get isReady() {
+    return this.#isReady;
+  }
+
+  set isReady(val: boolean) {
+    this.#isReady = val;
+    setReady(val);
   }
 
   // api methods
@@ -75,7 +100,6 @@ class ModelManager {
 
     // if the model is the current model, drop it
     if (this.currentModel === modelId) {
-      await dropModel();
       await this.onCurrentModelUnavailable();
     }
 
@@ -127,6 +151,8 @@ class ModelManager {
 
   private async onCurrentModelUnavailable() {
     console.log('Current model not available');
+
+    await dropModel();
 
     // set default/current model to first available
     const newModel = this.getFirstAvailableModel();

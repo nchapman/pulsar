@@ -17,7 +17,7 @@ interface Props {
 }
 
 export const ModelsList = memo((props: Props) => {
-  const { className, view, models, withViewSwitch, title, icon } = props;
+  const { className, view, models, title, icon } = props;
 
   return (
     <div className={classNames(s.modelsList, [className, s[view]])}>

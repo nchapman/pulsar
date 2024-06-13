@@ -3,10 +3,7 @@ import { createEvent, createStore } from 'effector';
 import { initAppFolders } from '@/app/lib/initAppFolders.ts';
 import { modelsRepository } from '@/db';
 import { Model } from '@/db/model';
-import {
-  UserSettingsManager,
-  userSettingsManager,
-} from '@/entities/model/managers/user-settings-manager.ts';
+import { UserSettingsManager, userSettingsManager } from '@/entities/settings';
 
 import { deleteModel } from '../lib/deleteModel.ts';
 import { getAvailableModels } from '../lib/getAvailableModels.ts';
@@ -48,6 +45,10 @@ class ModelManager {
   }
 
   // public API methods
+
+  getModelData(modelId: string) {
+    return this.models[modelId]?.data;
+  }
 
   async switchModel(modelId: string) {
     await dropModel();

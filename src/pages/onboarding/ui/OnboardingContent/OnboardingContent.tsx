@@ -2,7 +2,7 @@ import { memo } from 'preact/compat';
 
 import { modelManager } from '@/entities/model';
 import { getDownloadPath } from '@/entities/model/lib/getDownloadPath.ts';
-import { userSettingsManager } from '@/entities/model/managers/user-settings-manager.ts';
+import { userSettingsManager } from '@/entities/settings';
 import { classNames } from '@/shared/lib/func';
 import { Button, Logo, Text } from '@/shared/ui';
 

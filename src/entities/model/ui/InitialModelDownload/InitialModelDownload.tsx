@@ -1,28 +1,24 @@
-import { useStoreMap } from 'effector-react';
 import { memo, useLayoutEffect } from 'preact/compat';
 
-import { DEFAULT_LLM, ModelCard } from '@/entities/model';
 import DownloadIcon from '@/shared/assets/icons/download.svg';
 import { classNames } from '@/shared/lib/func';
 import { useToggle } from '@/shared/lib/hooks';
 import { changeTheme } from '@/shared/theme';
-import { Button, Icon, Progress, Text } from '@/shared/ui';
+import { Button, Icon, Text } from '@/shared/ui';
 
-import { $modelsDownload, downloadModelEff } from '../../model/manage-models-model.ts';
+import { ModelCard } from '../ModelCard/ModelCard';
 import s from './InitialModelDownload.module.scss';
 
 interface Props {
   className?: string;
 }
 
-const model = DEFAULT_LLM;
-
 export const InitialModelDownload = memo((props: Props) => {
   const { className } = props;
-  const { on: pause, off: resume, isOn: isPaused } = useToggle();
+  // const { on: pause, off: resume, isOn: isPaused } = useToggle();
   const { on: startDownload, isOn: isDownloading } = useToggle();
 
-  const downloadInfo = useStoreMap($modelsDownload, (s) => s[model]);
+  // const downloadInfo = useStoreMap($modelsDownload, (s) => s[model]);
 
   useLayoutEffect(() => {
     changeTheme('dark');
@@ -30,7 +26,7 @@ export const InitialModelDownload = memo((props: Props) => {
 
   const handleModelDownload = () => {
     startDownload();
-    downloadModelEff(model);
+    // downloadModelEff(model);
   };
 
   return (
@@ -39,22 +35,22 @@ export const InitialModelDownload = memo((props: Props) => {
         Required model
       </Text>
 
-      <ModelCard model={model} className={s.modelCard} />
+      <ModelCard model={'a' as any} className={s.modelCard} />
 
       <div className={s.action}>
-        {downloadInfo?.percent ? (
-          <Progress
-            onPause={pause}
-            isPaused={isPaused}
-            onResume={resume}
-            percent={downloadInfo?.percent}
-          />
-        ) : (
-          <Button onClick={handleModelDownload} variant="primary" loading={isDownloading}>
-            <Icon svg={DownloadIcon} />
-            Download model
-          </Button>
-        )}
+        {/* {downloadInfo?.percent ? ( */}
+        {/*  <Progress */}
+        {/*    onPause={pause} */}
+        {/*    isPaused={isPaused} */}
+        {/*    onResume={resume} */}
+        {/*    percent={downloadInfo?.percent} */}
+        {/*  /> */}
+        {/* ) : ( */}
+        <Button onClick={handleModelDownload} variant="primary" loading={isDownloading}>
+          <Icon svg={DownloadIcon} />
+          Download model
+        </Button>
+        {/* )} */}
       </div>
     </div>
   );

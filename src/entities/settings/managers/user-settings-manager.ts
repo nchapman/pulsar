@@ -1,3 +1,5 @@
+import { createEvent, createStore, StoreWritable } from 'effector';
+
 interface UserSettings {
   defaultModel: string | null;
 }
@@ -11,8 +13,16 @@ const LS_KEY = 'user-settings';
 class UserSettingsManager {
   private settings: UserSettings;
 
+  $settings: StoreWritable<UserSettings>;
+
+  events = {
+    set: createEvent<Partial<UserSettings>>(),
+  };
+
   constructor() {
     this.settings = this.getLSValue();
+    this.$settings = createStore(this.settings);
+    this.$settings.on(this.events.set, (old, changed) => ({ ...old, ...changed }));
   }
 
   get(key: keyof UserSettings) {
@@ -42,5 +52,7 @@ class UserSettingsManager {
 }
 
 export const userSettingsManager = new UserSettingsManager();
+
+export const $defaultModel = userSettingsManager.$settings.map((settings) => settings.defaultModel);
 
 export type { UserSettingsManager };

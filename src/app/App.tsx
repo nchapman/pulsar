@@ -1,12 +1,7 @@
 import { useUnit } from 'effector-react';
 import { useEffect } from 'preact/hooks';
 
-import { initAppFolders } from '@/app/lib/initAppFolders.ts';
-import {
-  $missingModel,
-  $modelLoadError,
-  getAvailableModelsEff,
-} from '@/entities/model/model/manage-models-model.ts';
+import { modelManager } from '@/entities/model';
 import { ChatPage } from '@/pages/chat';
 import { OnboardingPage } from '@/pages/onboarding';
 import { initTheme } from '@/shared/theme';
@@ -14,19 +9,21 @@ import { initTheme } from '@/shared/theme';
 import { checkUpdates } from './Updates';
 
 function App() {
-  const missingModel = useUnit($missingModel);
+  const hasNoModels = useUnit(modelManager.state.$hasNoModels);
+  const modelLoadError = useUnit(modelManager.state.$loadError);
 
   useEffect(() => {
     initTheme();
-    initAppFolders().then(() => getAvailableModelsEff());
     checkUpdates();
   }, []);
 
-  const modelLoadError = useUnit($modelLoadError);
+  function getComponent() {
+    if (modelLoadError) return <div>Failed to load model: {modelLoadError}! Contact support</div>;
+    if (hasNoModels) return <OnboardingPage />;
+    return <ChatPage />;
+  }
 
-  if (modelLoadError) return <div>Failed to load model! Contact support</div>;
-
-  return <div className="app">{missingModel ? <OnboardingPage /> : <ChatPage />}</div>;
+  return <div className="app">{getComponent()}</div>;
 }
 
 export default App;

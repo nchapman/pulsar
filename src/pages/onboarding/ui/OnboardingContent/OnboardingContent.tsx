@@ -1,12 +1,9 @@
-import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
 
 import { modelManager } from '@/entities/model';
 import { getDownloadPath } from '@/entities/model/lib/getDownloadPath.ts';
-import { $ready } from '@/entities/model/managers/model-manager.ts';
 import { userSettingsManager } from '@/entities/model/managers/user-settings-manager.ts';
 import { classNames } from '@/shared/lib/func';
-import { useLog } from '@/shared/lib/hooks';
 import { Button, Logo, Text } from '@/shared/ui';
 
 import s from './OnboardingContent.module.scss';
@@ -37,10 +34,6 @@ function deleteModel() {
 
 export const OnboardingContent = memo((props: Props) => {
   const { className } = props;
-
-  const ready = useUnit($ready);
-
-  useLog(ready, 'ready!!!!!!!!');
 
   return (
     <div className={classNames(s.onboardingContent, [className])}>

@@ -1,5 +1,6 @@
 import { createEvent, createStore } from 'effector';
 
+import { initAppFolders } from '@/app/lib/initAppFolders.ts';
 import { modelsRepository } from '@/db';
 import { Model } from '@/db/model';
 import {
@@ -12,43 +13,41 @@ import { getAvailableModels } from '../lib/getAvailableModels.ts';
 import { moveToModelsDir } from '../lib/moveToModelsDir.ts';
 import { dropModel, loadModel } from '../model/model-state.ts';
 
-export const $ready = createStore(false);
-const setReady = createEvent<boolean>();
-$ready.on(setReady, (_, val) => val);
+type ModelIdMap = Record<string, Model>;
 
 class ModelManager {
-  #models: Record<string, Model> = {};
+  #models: ModelIdMap = {};
 
   #isReady = false;
 
-  private currentModel: string | null = null;
+  #currentModel: string | null = null;
 
-  private hasNoModels = false;
+  #hasNoModels = false;
+
+  #loadError: string | null = null;
+
+  state = {
+    $ready: createStore(false),
+    $models: createStore<ModelIdMap>({}),
+    $currentModel: createStore<string | null>(null),
+    $hasNoModels: createStore(false),
+    $loadError: createStore<string | null>(null),
+  };
+
+  events = {
+    setReady: createEvent<boolean>(),
+    setModels: createEvent<ModelIdMap>(),
+    setCurrentModels: createEvent<string | null>(),
+    setHasNoModels: createEvent<boolean>(),
+    setLoadError: createEvent<string | null>(),
+  };
 
   constructor(private readonly userSettings: UserSettingsManager) {
-    this.initManager();
+    this.initState();
+    initAppFolders().then(() => this.initManager());
   }
 
-  // getters/setters
-
-  get models() {
-    return this.#models;
-  }
-
-  set models(models: Record<string, Model>) {
-    this.#models = models;
-  }
-
-  get isReady() {
-    return this.#isReady;
-  }
-
-  set isReady(val: boolean) {
-    this.#isReady = val;
-    setReady(val);
-  }
-
-  // api methods
+  // public API methods
 
   async switchModel(modelId: string) {
     await dropModel();
@@ -107,10 +106,6 @@ class ModelManager {
     await deleteModel(model.data.localName);
   }
 
-  get ready() {
-    return this.isReady;
-  }
-
   // private methods
 
   private getFirstAvailableModel() {
@@ -118,11 +113,16 @@ class ModelManager {
   }
 
   private async initManager() {
-    await this.readLocalModels();
+    await this.readLocalModels().catch(() => {
+      this.loadError = 'Failed to read local models';
+    });
+
     if (this.hasNoModels) return;
 
     this.currentModel = this.userSettings.get('defaultModel');
-    await this.loadCurrentModel();
+    await this.loadCurrentModel().catch(() => {
+      this.loadError = 'Failed to load current model';
+    });
   }
 
   private async loadCurrentModel() {
@@ -209,6 +209,60 @@ class ModelManager {
       acc[model.id] = model;
       return acc;
     }, {});
+  }
+
+  private initState() {
+    this.state.$ready.on(this.events.setReady, (_, val) => val);
+    this.state.$models.on(this.events.setModels, (_, models) => models);
+    this.state.$currentModel.on(this.events.setCurrentModels, (_, model) => model);
+    this.state.$hasNoModels.on(this.events.setHasNoModels, (_, val) => val);
+    this.state.$loadError.on(this.events.setLoadError, (_, val) => val);
+  }
+
+  // getters/setters
+
+  private get hasNoModels() {
+    return this.#hasNoModels;
+  }
+
+  private set hasNoModels(val: boolean) {
+    this.#hasNoModels = val;
+  }
+
+  private get models() {
+    return this.#models;
+  }
+
+  private set models(models: Record<string, Model>) {
+    this.#models = models;
+    this.events.setModels(models);
+  }
+
+  private get isReady() {
+    return this.#isReady;
+  }
+
+  private set isReady(val: boolean) {
+    this.#isReady = val;
+    this.events.setReady(val);
+  }
+
+  private get currentModel() {
+    return this.#currentModel;
+  }
+
+  private set currentModel(val: string | null) {
+    this.#currentModel = val;
+    this.events.setCurrentModels(val);
+  }
+
+  private get loadError() {
+    return this.#loadError;
+  }
+
+  private set loadError(val: string | null) {
+    this.#loadError = val;
+    this.events.setLoadError(val);
   }
 }
 

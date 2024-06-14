@@ -1,5 +1,6 @@
 import { memo } from 'preact/compat';
 
+import { ModelData } from '@/db/model';
 import { modelManager } from '@/entities/model';
 import { getDownloadPath } from '@/entities/model/lib/getDownloadPath.ts';
 import { userSettingsManager } from '@/entities/settings';
@@ -14,18 +15,37 @@ interface Props {
 
 function loadFirstModel() {
   const localName = 'llava-v1.6-mistral-7b.Q4_K_M.gguf';
+  const mmpLocalName = 'mmproj-model-f16.gguf';
 
-  getDownloadPath(localName).then((path) => {
-    modelManager.addModel(
-      {
-        name: localName,
-        localName,
-        description: 'Some description',
-        size: 12000,
-      },
-      path
-    );
-  });
+  const llm: ModelData = {
+    name: localName,
+    localName,
+    description: 'Some description',
+    size: 12000,
+    mmpName: mmpLocalName,
+  };
+
+  const mmp = {
+    name: mmpLocalName,
+    localName: mmpLocalName,
+    description: 'Some description',
+    size: 12000,
+    llmName: localName,
+  };
+
+  getDownloadPath(localName)
+    .then(async (path) => {
+      await modelManager.addModel({ modelDto: llm, filePath: path, type: 'llm' });
+
+      return getDownloadPath(mmpLocalName);
+    })
+    .then((path) => {
+      modelManager.addModel({
+        modelDto: mmp,
+        filePath: path,
+        type: 'mmp',
+      });
+    });
 }
 
 function deleteModel() {

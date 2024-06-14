@@ -9,6 +9,8 @@ export class ModelModel extends Model {
 
   @text(modelsTable.cols.name) name;
 
+  @text(modelsTable.cols.type) type;
+
   @json(modelsTable.cols.data, (json) => json) data;
 
   @readonly @date(modelsTable.cols.createdAt) createdAt;

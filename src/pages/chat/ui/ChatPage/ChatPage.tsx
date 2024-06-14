@@ -1,8 +1,6 @@
 import { useUnit } from 'effector-react';
-import { useEffect } from 'preact/hooks';
 
 import { $widget, Widgets } from '@/pages/chat/model/widgets.ts';
-import { restoreWindowSize } from '@/pages/onboarding/lib/window-size.ts';
 import { Page } from '@/shared/ui';
 import { Chat } from '@/widgets/chat';
 import { ModelStore } from '@/widgets/model-store';
@@ -22,10 +20,6 @@ export const ChatPage = () => {
   const sidebarOpened = useUnit($sidebarOpened);
   const widget = useUnit($widget);
   const W = WidgetComponent[widget];
-
-  useEffect(() => {
-    restoreWindowSize();
-  }, []);
 
   return (
     <Page className={s.chatPage}>

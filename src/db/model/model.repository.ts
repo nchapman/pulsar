@@ -5,21 +5,22 @@ import { assignValues, serialize } from '@/shared/lib/func';
 import { ModelModel } from './model.model.ts';
 import { modelsTable } from './model.schema.ts';
 
+export type ModelType = 'llm' | 'mmp';
+
 export interface ModelData {
   name: string;
   localName: string;
   description: string;
   size: number;
-  mmp?: {
-    localName: string;
-    size: number;
-  };
+  mmpName?: string | null;
+  llmName?: string | null;
 }
 
 export interface Model {
   id: Id;
   name: string;
   data: ModelData;
+  type: ModelType;
   createdAt: number;
   updatedAt: number;
 }
@@ -75,7 +76,7 @@ export class ModelsRepository {
   }
 
   private serialize(model: ModelModel): Model {
-    return serialize(model, ['id', 'name', 'data', 'createdAt', 'updatedAt']);
+    return serialize(model, ['id', 'name', 'type', 'data', 'createdAt', 'updatedAt']);
   }
 
   private mapSerialize(models: ModelModel[]): Model[] {

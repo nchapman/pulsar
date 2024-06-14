@@ -13,6 +13,12 @@ interface Props {
   className?: string;
 }
 
+const modelData = {
+  name: 'Model name',
+  desc: 'Model description',
+  size: '1.2 GB',
+};
+
 export const InitialModelDownload = memo((props: Props) => {
   const { className } = props;
   // const { on: pause, off: resume, isOn: isPaused } = useToggle();
@@ -35,7 +41,7 @@ export const InitialModelDownload = memo((props: Props) => {
         Required model
       </Text>
 
-      <ModelCard model={'a' as any} className={s.modelCard} />
+      <ModelCard modelData={modelData} className={s.modelCard} />
 
       <div className={s.action}>
         {/* {downloadInfo?.percent ? ( */}

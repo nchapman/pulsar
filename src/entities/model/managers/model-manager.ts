@@ -2,7 +2,7 @@ import { createEvent, createStore } from 'effector';
 
 import { initAppFolders } from '@/app/lib/initAppFolders.ts';
 import { modelsRepository } from '@/db';
-import { Model, ModelType } from '@/db/model';
+import { Model, ModelsRepository, ModelType } from '@/db/model';
 import { UserSettingsManager, userSettingsManager } from '@/entities/settings';
 import { loge, logi } from '@/shared/lib/Logger.ts';
 
@@ -12,10 +12,10 @@ import { getModelPath } from '../lib/getModelPath.ts';
 import { moveToModelsDir } from '../lib/moveToModelsDir.ts';
 import { NebulaModel } from '../nebula/NebulaModel.ts';
 
-type ModelIdMap = Record<string, Model>;
-type ModelNameIdMap = Record<string, string>;
+type ModelIdMap = Record<Id, Model>;
+type ModelNameIdMap = Record<string, Id>;
 
-const logTag = 'Model Manager';
+const LOG_TAG = 'Model Manager';
 
 class ModelManager {
   #model: NebulaModel | null = null;
@@ -54,13 +54,17 @@ class ModelManager {
     setAppStarted: createEvent<boolean>(),
   };
 
-  constructor(private readonly userSettings: UserSettingsManager) {
+  constructor(
+    private readonly userSettings: UserSettingsManager,
+    private readonly modelsRepository: ModelsRepository
+  ) {
     this.initState();
-    initAppFolders()
-      .then(() => this.initManager())
-      .then(() => {
-        this.appStarted = true;
-      });
+
+    (async () => {
+      await initAppFolders();
+      await this.initManager();
+      this.appStarted = true;
+    })();
   }
 
   // public API methods
@@ -92,7 +96,7 @@ class ModelManager {
     await moveToModelsDir(filePath, modelDto.localName);
 
     // save model to the db
-    const dbModel = await modelsRepository.create({
+    const dbModel = await this.modelsRepository.create({
       data: modelDto,
       name: modelDto.name,
       type,
@@ -103,7 +107,7 @@ class ModelManager {
 
     // if first model, set as default
     if (this.hasNoModels) {
-      logi(logTag, 'adding first model');
+      logi(LOG_TAG, 'adding first model');
 
       this.userSettings.set('defaultModel', dbModel.id);
       this.hasNoModels = false;
@@ -121,7 +125,7 @@ class ModelManager {
     delete this.models[modelId];
 
     // remove model from the db
-    await modelsRepository.remove(modelId);
+    await this.modelsRepository.remove(modelId);
 
     // if the model is the current model, drop it
     if (this.currentModel === modelId) {
@@ -133,9 +137,7 @@ class ModelManager {
   }
 
   async loadFirstAvailableModel() {
-    logi(logTag, 'Loading first available model');
-
-    console.log(this);
+    logi(LOG_TAG, 'Loading first available model');
 
     // set default/current model to first available
     const newModel = this.getFirstAvailableModel();
@@ -186,8 +188,6 @@ class ModelManager {
     }
 
     if (model.type !== 'llm') {
-      console.log(model);
-
       throw new Error('Model type not supported');
     }
 
@@ -199,9 +199,9 @@ class ModelManager {
       await this.loadModel(localName, isMmpPresent ? mmpName : undefined);
       this.isReady = true;
 
-      logi(logTag, 'Model ready!');
+      logi(LOG_TAG, 'Model ready!');
     } catch (e) {
-      loge(logTag, `Failed to load model: ${e}`);
+      loge(LOG_TAG, `Failed to load model: ${e}`);
     }
   }
 
@@ -210,17 +210,17 @@ class ModelManager {
     const [availableModels] = await getAvailableModels();
 
     // get all from db
-    let models = await modelsRepository.getAll();
+    let models = await this.modelsRepository.getAll();
 
     // delete missing in local
     await Promise.all(
       models.map(async (model) => {
         if (availableModels.includes(model.data.localName)) return;
-        await modelsRepository.remove(model.id);
+        await this.modelsRepository.remove(model.id);
       })
     );
 
-    models = await modelsRepository.getAll();
+    models = await this.modelsRepository.getAll();
 
     // delete missing in db
     await Promise.all(
@@ -232,7 +232,7 @@ class ModelManager {
 
     // if has no local models
     if (!models.length) {
-      logi(logTag, 'has no local models');
+      logi(LOG_TAG, 'has no local models');
 
       this.hasNoModels = true;
       this.userSettings.set('defaultModel', null);
@@ -365,4 +365,4 @@ class ModelManager {
   }
 }
 
-export const modelManager = new ModelManager(userSettingsManager);
+export const modelManager = new ModelManager(userSettingsManager, modelsRepository);

@@ -2,8 +2,8 @@ import { BaseDirectory, readDir } from '@tauri-apps/api/fs';
 
 import { APP_DIRS } from '@/app/consts/app.const.ts';
 
-export async function getAvailableModels() {
-  const entries = await readDir(APP_DIRS.MODELS, { dir: BaseDirectory.AppData });
+export async function getAvailableModels(folder = APP_DIRS.MODELS) {
+  const entries = await readDir(folder, { dir: BaseDirectory.AppData });
 
   // TODO: VERIFY HASHES
 

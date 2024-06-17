@@ -3,6 +3,7 @@
 
 mod db;
 mod file_transfer;
+mod fs;
 mod nebula;
 mod system;
 
@@ -24,6 +25,7 @@ fn main() {
         .plugin(nebula::init_plugin())
         .plugin(file_transfer::init_plugin())
         .plugin(system::init_plugin())
+        .plugin(fs::init_plugin())
         .plugin(tauri_plugin_window_state::Builder::default().build())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

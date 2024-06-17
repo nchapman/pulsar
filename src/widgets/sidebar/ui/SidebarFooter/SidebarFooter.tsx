@@ -1,3 +1,4 @@
+import { fs } from '@tauri-apps/api';
 import { appDataDir } from '@tauri-apps/api/path';
 import { open as openPath } from '@tauri-apps/api/shell';
 import { memo } from 'preact/compat';
@@ -11,6 +12,8 @@ import {
 } from '@/features/hugging-face-search/HuggingFaceSearch';
 import { getSystemInfo } from '@/features/system/system';
 import { __IS_STORYBOOK__ } from '@/shared/consts';
+import { getFileSha256, getFileSizeBytes } from '@/shared/lib/file-system';
+import { download, getRandomInt, interruptFileTransfer } from '@/shared/lib/file-transfer';
 import { classNames } from '@/shared/lib/func';
 import { loge, logi } from '@/shared/lib/Logger';
 import { Button } from '@/shared/ui';
@@ -72,29 +75,96 @@ export const SidebarFooter = memo((props: Props) => {
     }
   };
 
+  const testGetFileSize = async () => {
+    const appDataDirPath = await appDataDir();
+    // eslint-disable-next-line max-len
+    const modelPath = `${appDataDirPath}models/llava-v1.6-mistral-7b.Q4_K_M.gguf`;
+    try {
+      const size = await getFileSizeBytes(modelPath);
+      logi('fileSize', `File size ${size}`);
+    } catch (e) {
+      loge('fileSize', `Failed to get file size ${e}`);
+    }
+  };
+
+  const testGetFileSHA256 = async () => {
+    const appDataDirPath = await appDataDir();
+    // eslint-disable-next-line max-len
+    const modelPath = `${appDataDirPath}models/llava-v1.6-mistral-7b.Q4_K_M.gguf`;
+    try {
+      logi('fileSHA256', 'Starting SHA calculation...');
+      const sha256 = await getFileSha256(modelPath);
+      logi('fileSHA256', `File SHA256 ${sha256}`);
+    } catch (e) {
+      loge('fileSHA256', `Failed to get file SHA256 ${e}`);
+    }
+  };
+
+  const testInterruptDownload = async () => {
+    // delete any existing file
+    const appDataDirPath = await appDataDir();
+    // eslint-disable-next-line max-len
+    const modelPath = `${appDataDirPath}/test-interrupt-download.gguf`;
+    try {
+      fs.removeFile(modelPath);
+    } catch (e) {
+      // ignore
+    }
+
+    logi('download', 'Starting download');
+    try {
+      const id = getRandomInt();
+      setTimeout(() => {
+        interruptFileTransfer(id);
+      }, 1000);
+      await download({
+        id,
+        url: 'https://huggingface.co/cjpais/llava-1.6-mistral-7b-gguf/resolve/main/llava-v1.6-mistral-7b.Q4_K_M.gguf?download=true',
+        path: modelPath,
+        progressHandler: (_id, progress, total) => {
+          logi(
+            'download',
+            `Progress: ${Math.round(progress / total)} %. bytes ${progress} of ${total}`
+          );
+        },
+      });
+    } catch (e) {
+      loge('download', `Failed to download ${e}`);
+    }
+  };
+
   return (
     <div className={classNames(s.sidebarFooter, [className])}>
       {import.meta.env.DEV &&
         import.meta.env.VITE_PULSAR_SHOW_DEV_MENU === 'true' &&
         !__IS_STORYBOOK__ && (
-        <>
-          <Button className={s.btn} onClick={openAppData} variant="secondary">
-            Open App Data
-          </Button>
-          <Button className={s.btn} onClick={getSystemInfoCallback} variant="secondary">
-            Get System Info
-          </Button>
-          <Button className={s.btn} onClick={getNebulaLoadedModels} variant="secondary">
-            Get nebula loaded models
-          </Button>
-          <Button className={s.btn} onClick={testHuggingFace} variant="secondary">
-            Hugging face test
-          </Button>
-          <Button className={s.btn} onClick={testResumeDownload} variant="secondary">
-            Resume download
-          </Button>
-        </>
-      )}
+          <>
+            <Button className={s.btn} onClick={openAppData} variant="secondary">
+              Open App Data
+            </Button>
+            <Button className={s.btn} onClick={getSystemInfoCallback} variant="secondary">
+              Get System Info
+            </Button>
+            <Button className={s.btn} onClick={getNebulaLoadedModels} variant="secondary">
+              Get nebula loaded models
+            </Button>
+            <Button className={s.btn} onClick={testHuggingFace} variant="secondary">
+              Hugging face test
+            </Button>
+            <Button className={s.btn} onClick={testGetFileSize} variant="secondary">
+              Get file size test
+            </Button>
+            <Button className={s.btn} onClick={testGetFileSHA256} variant="secondary">
+              Get file sha 256 test
+            </Button>
+            <Button className={s.btn} onClick={testInterruptDownload} variant="secondary">
+              Test interrupt download
+            </Button>
+            <Button className={s.btn} onClick={testResumeDownload} variant="secondary">
+              Resume download
+            </Button>
+          </>
+        )}
 
       <Button className={s.btn} onClick={openSettingsModal} variant="secondary">
         Settings

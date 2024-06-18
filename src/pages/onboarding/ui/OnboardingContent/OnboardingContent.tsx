@@ -18,7 +18,7 @@ function loadFirstModel() {
   const mmpLocalName = 'mmproj-model-f16.gguf';
 
   const llm: ModelData = {
-    name: localName,
+    name: 'LLava v1.6 (Mistral 7b)',
     localName,
     description: 'Some description',
     size: 12000,
@@ -46,6 +46,19 @@ function loadFirstModel() {
         type: 'mmp',
       });
     });
+
+  const localName2 = 'nous-hermes-2-solar-10.7b.Q4_K_M.gguf';
+
+  const llm2: ModelData = {
+    name: 'Nous Hermes 2 (Solar 10.7b)',
+    localName: localName2,
+    description: 'Some description',
+    size: 12000,
+  };
+
+  getDownloadPath(localName2).then(async (path) => {
+    await modelManager.addModel({ modelDto: llm2, filePath: path, type: 'llm' });
+  });
 }
 
 function deleteModel() {

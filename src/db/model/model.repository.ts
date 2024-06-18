@@ -11,7 +11,8 @@ export interface ModelData {
   name: string;
   localName: string;
   description: string;
-  size: number;
+  size?: number;
+  hash?: string;
   mmpName?: string | null;
   llmName?: string | null;
 }

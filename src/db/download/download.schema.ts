@@ -3,10 +3,8 @@ import { tableSchema } from '@nozbe/watermelondb';
 export const downloadsTable = {
   name: 'download',
   cols: {
+    downloadingData: 'downloading_data',
     remoteUrl: 'remote_url',
-    progress: 'progress',
-    isFinished: 'is_finished',
-    isPaused: 'is_paused',
     type: 'type',
     localName: 'local_name',
     dto: 'dto',
@@ -19,10 +17,8 @@ export const downloadsTable = {
 export const downloadSchema = tableSchema({
   name: downloadsTable.name,
   columns: [
+    { name: downloadsTable.cols.downloadingData, type: 'string' },
     { name: downloadsTable.cols.remoteUrl, type: 'string' },
-    { name: downloadsTable.cols.progress, type: 'number' },
-    { name: downloadsTable.cols.isFinished, type: 'string' },
-    { name: downloadsTable.cols.isPaused, type: 'string' },
     { name: downloadsTable.cols.localName, type: 'string' },
     { name: downloadsTable.cols.dto, type: 'string' },
     { name: downloadsTable.cols.type, type: 'string' },

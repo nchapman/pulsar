@@ -1,7 +1,7 @@
 import { Database, Model } from '@nozbe/watermelondb';
 import { Class } from '@nozbe/watermelondb/types';
 
-import { DownloadsRepository } from '@/db/download';
+import { DownloadModel, DownloadsRepository } from '@/db/download';
 import { ModelsRepositoryMock } from '@/db/model/model.repository.mock.ts';
 import { __IS_STORYBOOK__ } from '@/shared/consts';
 
@@ -13,7 +13,7 @@ const database = __IS_STORYBOOK__
   ? undefined
   : new Database({
       adapter,
-      modelClasses: [ChatModel, ModelModel] as Class<Model>[],
+      modelClasses: [ChatModel, ModelModel, DownloadModel] as Class<Model>[],
     });
 
 // Repositories

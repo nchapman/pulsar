@@ -42,25 +42,27 @@ export const SwitchModelInsideChat = memo((props: Props) => {
       </div>
 
       <div>
-        {Object.values(availableModels).map((m) => (
-          <Button
-            active={m.id === currentModel}
-            key={m.name}
-            className={s.model}
-            variant="clear"
-            onClick={() => undefined}
-          >
-            {m.name}
-            <div className={s.modelInfo}>
-              {m.id === defaultModel && (
-                <div className={s.default}>
-                  <Text s={12}>Set as default</Text>
-                </div>
-              )}
-              {m.id === currentModel && <Icon svg={CheckIcon} className={s.selectedIcon} />}
-            </div>
-          </Button>
-        ))}
+        {Object.values(availableModels)
+          .filter((m) => m.type === 'llm')
+          .map((m) => (
+            <Button
+              active={m.id === currentModel}
+              key={m.name}
+              className={s.model}
+              variant="clear"
+              onClick={() => modelManager.switchModel(m.id)}
+            >
+              {m.name}
+              <div className={s.modelInfo}>
+                {m.id === defaultModel && (
+                  <div className={s.default}>
+                    <Text s={12}>Set as default</Text>
+                  </div>
+                )}
+                {m.id === currentModel && <Icon svg={CheckIcon} className={s.selectedIcon} />}
+              </div>
+            </Button>
+          ))}
       </div>
     </div>
   );

@@ -1,8 +1,6 @@
 // @ts-nocheck
 import { Model } from '@nozbe/watermelondb';
-import { date, json, readonly, relation, text } from '@nozbe/watermelondb/decorators';
-
-import { modelsTable } from '@/db/model/model.schema.ts';
+import { date, json, readonly, text } from '@nozbe/watermelondb/decorators';
 
 import { downloadsTable } from './download.schema.ts';
 
@@ -11,11 +9,7 @@ export class DownloadModel extends Model {
 
   @text(downloadsTable.cols.remoteUrl) remoteUrl;
 
-  @text(downloadsTable.cols.progress) progress;
-
-  @json(downloadsTable.cols.isFinished, (json) => json) isFinished;
-
-  @json(downloadsTable.cols.isPaused, (json) => json) isPaused;
+  @json(downloadsTable.cols.downloadingData, (json) => json) downloadingData;
 
   @text(downloadsTable.cols.localName) localName;
 
@@ -23,7 +17,7 @@ export class DownloadModel extends Model {
 
   @text(downloadsTable.cols.type) type;
 
-  @relation(modelsTable.name, downloadsTable.cols.modelId) model;
+  @text(downloadsTable.cols.modelId) modelId;
 
   @readonly @date(downloadsTable.cols.createdAt) createdAt;
 

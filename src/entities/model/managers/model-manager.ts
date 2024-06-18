@@ -4,7 +4,9 @@ import { initAppFolders } from '@/app/lib/initAppFolders.ts';
 import { modelsRepository } from '@/db';
 import { Model, ModelsRepository, ModelType } from '@/db/model';
 import { UserSettingsManager, userSettingsManager } from '@/entities/settings';
+import { promiseAll } from '@/shared/lib/func';
 import { loge, logi } from '@/shared/lib/Logger.ts';
+import { startNewChat } from '@/widgets/chat';
 
 import { deleteModel } from '../lib/deleteModel.ts';
 import { getAvailableModels } from '../lib/getAvailableModels.ts';
@@ -80,6 +82,8 @@ class ModelManager {
       throw new Error(`Model with Id "${modelId}" not found`);
     }
 
+    startNewChat();
+
     this.currentModel = model.id;
 
     await this.loadCurrentModel();
@@ -112,6 +116,8 @@ class ModelManager {
       this.userSettings.set('defaultModel', dbModel.id);
       this.hasNoModels = false;
     }
+
+    return dbModel;
   }
 
   async deleteModel(modelId: string) {
@@ -213,22 +219,18 @@ class ModelManager {
     let models = await this.modelsRepository.getAll();
 
     // delete missing in local
-    await Promise.all(
-      models.map(async (model) => {
-        if (availableModels.includes(model.data.localName)) return;
-        await this.modelsRepository.remove(model.id);
-      })
-    );
+    await promiseAll(models, async (model) => {
+      if (availableModels.includes(model.data.localName)) return;
+      await this.modelsRepository.remove(model.id);
+    });
 
     models = await this.modelsRepository.getAll();
 
     // delete missing in db
-    await Promise.all(
-      availableModels.map(async (localName) => {
-        if (models.some((model) => model.data.localName === localName)) return;
-        await deleteModel(localName);
-      })
-    );
+    await promiseAll(availableModels, async (localName) => {
+      if (models.some((model) => model.data.localName === localName)) return;
+      await deleteModel(localName);
+    });
 
     // if has no local models
     if (!models.length) {
@@ -317,6 +319,7 @@ class ModelManager {
 
   private set models(models: Record<string, Model>) {
     this.#models = models;
+    Object.values(models);
     this.events.setModels(models);
   }
 
@@ -366,3 +369,5 @@ class ModelManager {
 }
 
 export const modelManager = new ModelManager(userSettingsManager, modelsRepository);
+
+export { type ModelManager };

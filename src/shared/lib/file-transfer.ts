@@ -28,8 +28,12 @@ function listenToEventIfNeeded(event: string): void {
   listening = true;
 }
 
-export function interruptFileTransfer(id: number): void {
-  invoke('plugin:file_transfer|interrupt', { id });
+export async function interruptFileTransfer(id: number): Promise<void> {
+  try {
+    await invoke('plugin:file_transfer|interrupt', { id });
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 export function getRandomInt(): number {

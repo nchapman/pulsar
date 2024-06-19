@@ -107,7 +107,7 @@ class ModelManager {
     });
 
     // save model to the list
-    this.models[dbModel.id] = dbModel;
+    this.models = { ...this.models, [dbModel.id]: dbModel };
 
     // if first model, set as default
     if (this.hasNoModels) {

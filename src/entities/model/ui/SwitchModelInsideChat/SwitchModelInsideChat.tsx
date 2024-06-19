@@ -35,7 +35,14 @@ export const SwitchModelInsideChat = memo((props: Props) => {
           Choose Model
         </Text>
 
-        <Button className={s.explore} variant="clear" onClick={goToModelStore}>
+        <Button
+          className={s.explore}
+          variant="clear"
+          onClick={() => {
+            goToModelStore();
+            hidePopover();
+          }}
+        >
           Explore models
           <Icon svg={CubeIcon} className={s.icon} />
         </Button>

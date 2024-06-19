@@ -5,11 +5,6 @@ import { memo } from 'preact/compat';
 
 import { downloadModel } from '@/entities/model';
 import { Nebula } from '@/entities/model/nebula/Nebula';
-import { getCuratedModels } from '@/features/hugging-face-search/CuratedHuggingFaceModels';
-import {
-  fetchHuggingFaceFiles,
-  searchHuggingFaceModel,
-} from '@/features/hugging-face-search/HuggingFaceSearch';
 import { getSystemInfo } from '@/features/system/system';
 import { __IS_STORYBOOK__ } from '@/shared/consts';
 import { getFileSha256, getFileSizeBytes } from '@/shared/lib/file-system';
@@ -17,6 +12,11 @@ import { download, getRandomInt, interruptFileTransfer } from '@/shared/lib/file
 import { classNames } from '@/shared/lib/func';
 import { loge, logi } from '@/shared/lib/Logger';
 import { Button } from '@/shared/ui';
+import { getCuratedModels } from '@/widgets/model-store/api/curated-hugging-face-models.ts';
+import {
+  fetchHuggingFaceFiles,
+  searchHuggingFaceModels,
+} from '@/widgets/model-store/api/search-hugging-face.ts';
 import { openSettingsModal, SettingsModal } from '@/widgets/settings';
 
 import s from './SidebarFooter.module.scss';
@@ -43,8 +43,10 @@ export const SidebarFooter = memo((props: Props) => {
   };
 
   const testHuggingFace = async () => {
-    const searchResults = await searchHuggingFaceModel('cjpais');
+    const searchResults = await searchHuggingFaceModels('cjpais');
+
     const filesResults = await fetchHuggingFaceFiles(searchResults[0].name);
+
     const generalFeaturedModels = await getCuratedModels('general');
 
     // const model = await fetchHuggingFaceModel(searchResults[0].modelId);

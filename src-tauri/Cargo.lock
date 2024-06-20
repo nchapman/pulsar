@@ -3740,6 +3740,7 @@ dependencies = [
  "base64 0.22.1",
  "futures-core",
  "futures-util",
+ "libsqlite3-sys",
  "log",
  "nebula",
  "once_cell",
@@ -3748,6 +3749,7 @@ dependencies = [
  "serde",
  "serde_json",
  "sha2",
+ "sqlite-vec",
  "sqlx",
  "sysinfo",
  "tauri",
@@ -4656,6 +4658,15 @@ dependencies = [
  "itertools",
  "nom",
  "unicode_categories",
+]
+
+[[package]]
+name = "sqlite-vec"
+version = "0.0.1-alpha.10"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cd64775cbd566229b2f6a39e8bcda80fa8f10baa266ecf5843a4c849d6e6702b"
+dependencies = [
+ "cc",
 ]
 
 [[package]]

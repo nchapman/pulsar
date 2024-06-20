@@ -3304,6 +3304,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tauri-apps/api@npm:1.5.6":
+  version: 1.5.6
+  resolution: "@tauri-apps/api@npm:1.5.6"
+  checksum: 10c0/0573a8bb04b376129f87e5ce4088df6992a2162fd0ae7edc19c5d42ef43f173c2f2f48a190472c9cb0ea1649f0abea2d647fe2d3e9f28bd70d96e32f0b2d0556
+  languageName: node
+  linkType: hard
+
 "@tauri-apps/cli-darwin-arm64@npm:1.5.11":
   version: 1.5.11
   resolution: "@tauri-apps/cli-darwin-arm64@npm:1.5.11"
@@ -10811,6 +10818,7 @@ __metadata:
     storybook: "npm:^8.0.10"
     tauri-plugin-log: "git+https://github.com/tauri-apps/tauri-plugin-log.git"
     tauri-plugin-sql: "git+https://github.com/tauri-apps/tauri-plugin-sql.git#v1"
+    tauri-plugin-sql-api: "https://github.com/tauri-apps/tauri-plugin-sql#v1"
     typescript: "npm:^5.0.2"
     vite: "npm:^5.1.5"
     vite-bundle-visualizer: "npm:^1.1.0"
@@ -12306,6 +12314,15 @@ __metadata:
   dependencies:
     "@tauri-apps/api": "npm:1.5.3"
   checksum: 10c0/9a23af3f489633faca6b8a8be339920d7154b18ba32dcb4ca0c635944039b80c0e436a88ac622592e6603d36054a4ac3156f4fcb5e4d85e06d8eb3b9329a66ea
+  languageName: node
+  linkType: hard
+
+"tauri-plugin-sql-api@https://github.com/tauri-apps/tauri-plugin-sql#v1":
+  version: 0.0.0
+  resolution: "tauri-plugin-sql-api@https://github.com/tauri-apps/tauri-plugin-sql.git#commit=6a4a14c36b1ad49c9f468351706d104a54e0540c"
+  dependencies:
+    "@tauri-apps/api": "npm:1.5.6"
+  checksum: 10c0/f1b58827e89846bc040adbc4dac9cc225cbe9828e45da364167d846939a7528e27f18f85a1ba1bcfb6aa595b6b12d807e547a82f033201054aedb9a908ffbd54
   languageName: node
   linkType: hard
 

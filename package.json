@@ -38,7 +38,8 @@
     "react-toastify": "^10.0.5",
     "remark-gfm": "^4.0.0",
     "tauri-plugin-log": "git+https://github.com/tauri-apps/tauri-plugin-log.git",
-    "tauri-plugin-sql": "git+https://github.com/tauri-apps/tauri-plugin-sql.git#v1"
+    "tauri-plugin-sql": "git+https://github.com/tauri-apps/tauri-plugin-sql.git#v1",
+    "tauri-plugin-sql-api": "https://github.com/tauri-apps/tauri-plugin-sql#v1"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
@@ -101,4 +102,3 @@
   },
   "packageManager": "yarn@4.1.0"
 }
-

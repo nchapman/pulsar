@@ -1,5 +1,6 @@
 use serde::{ser::Serializer, Deserialize, Serialize};
 use serde_json::Value as JsonValue;
+use sqlite_vec::sqlite3_vec_init;
 use sqlx::{migrate::MigrateDatabase, Column, Pool, Row};
 use tauri::{
     command,
@@ -124,6 +125,34 @@ async fn close(db_instances: State<'_, DbInstances>, db: Option<String>) -> Resu
     Ok(true)
 }
 
+#[command]
+async fn test_sqlite_vec(db_instances: State<'_, DbInstances>, db: String) -> Result<()> {
+    // let v: Vec<f32> = vec![0.1, 0.2, 0.3];
+    let mut instances = db_instances.0.lock().await;
+    let db = instances.get_mut(&db).ok_or(Error::DatabaseNotLoaded(db))?;
+    // let query = "select sqlite_version(), vec_version(), vec_to_json(?)";
+    let query = "select sqlite_version(), vec_version()";
+    let query = sqlx::query(&query);
+
+    let rows = query.fetch_all(&*db).await?;
+    let mut values = Vec::new();
+    for row in rows {
+        let mut value: HashMap<String, JsonValue> = HashMap::default();
+        for (i, column) in row.columns().iter().enumerate() {
+            let v = row.try_get_raw(i)?;
+            let v = decode::to_json(v)?;
+
+            value.insert(column.name().to_string(), v);
+        }
+
+        values.push(value);
+    }
+
+    log::info!("values: {:?}", values);
+
+    Ok(())
+}
+
 /// Execute a command against the database
 #[command]
 async fn execute(
@@ -193,30 +222,24 @@ impl Builder {
     pub fn build<R: Runtime>(self) -> TauriPlugin<R, Option<PluginConfig>> {
         // Create an auto extension for the VSS functions
         // Everytime a new connection is created, the VSS functions will be loaded
-        // unsafe {
-        //     let vss_vector_init = sqlite3_vector_init as *const ();
-        //     let vss_vector_init_correct: extern "C" fn(
-        //         db: *mut sqlite3,
-        //         pzErrMsg: *mut *const c_char,
-        //         pThunk: *const sqlite3_api_routines,
-        //     ) -> i32 = std::mem::transmute(vss_vector_init);
-        //     libsqlite3_sys::sqlite3_auto_extension(Some(vss_vector_init_correct));
-
-        //     let vss_init = sqlite3_vss_init as *const ();
-        //     let vss_init_correct: extern "C" fn(
-        //         db: *mut sqlite3,
-        //         pzErrMsg: *mut *const c_char,
-        //         pThunk: *const sqlite3_api_routines,
-        //     ) -> i32 = std::mem::transmute(vss_init);
-        //     libsqlite3_sys::sqlite3_auto_extension(Some(vss_init_correct));
-        // }
+        unsafe {
+            libsqlite3_sys::sqlite3_auto_extension(Some(std::mem::transmute(
+                sqlite3_vec_init as *const (),
+            )));
+        }
 
         PluginBuilder::new("sql")
-            .invoke_handler(tauri::generate_handler![load, execute, select, close])
+            .invoke_handler(tauri::generate_handler![
+                load,
+                execute,
+                select,
+                close,
+                test_sqlite_vec
+            ])
             .setup_with_config(|app, config: Option<PluginConfig>| {
                 let config = config.unwrap_or_default();
 
-                create_dir_all(app_path(app)).expect("problems creating App directory!");
+                create_dir_all(app_path(app)).expect("Could not create App directory!");
 
                 tauri::async_runtime::block_on(async move {
                     let instances = DbInstances::default();

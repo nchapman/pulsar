@@ -1,11 +1,10 @@
-import { ModelEntry } from '@huggingface/hub';
 import { createEffect, createEvent, createStore, sample } from 'effector';
 
 import { fetchHuggingFaceFiles, searchHuggingFaceModels } from '../api/search-hugging-face.ts';
-import { ModelFile } from '../types/hugging-face-model.ts';
+import { HuggingFaceModel, ModelFile } from '../types/hugging-face-model.ts';
 
 export const $modelStoreState = {
-  models: createStore<ModelEntry[]>([]),
+  models: createStore<HuggingFaceModel[]>([]),
   currModel: createStore<string | null>(null),
   currModelFiles: createStore<ModelFile[]>([]),
 };
@@ -16,7 +15,7 @@ export const modelStoreEvents = {
   closeModelDetails: createEvent(),
 };
 
-const fetchHFModels = createEffect<string, ModelEntry[]>(searchHuggingFaceModels);
+const fetchHFModels = createEffect<string, HuggingFaceModel[]>(searchHuggingFaceModels);
 const fetchHFFiles = createEffect<string, ModelFile[]>(fetchHuggingFaceFiles);
 
 // fetchHFModels is triggered by searchHF

@@ -1,6 +1,7 @@
 import { listFiles, listModels } from '@huggingface/hub';
 
 import { getSystemInfo } from '@/features/system/system.ts';
+import { HuggingFaceModel } from '@/widgets/model-store/types/hugging-face-model.ts';
 
 const HUGGING_FACE_BASE_URL = 'https://huggingface.co';
 
@@ -30,7 +31,7 @@ export const searchHuggingFaceModels = async (query: string) => {
     models.push(model);
   }
 
-  return models;
+  return models as HuggingFaceModel[];
 };
 
 export const fetchHuggingFaceFiles = async (modelId: string): Promise<any> => {

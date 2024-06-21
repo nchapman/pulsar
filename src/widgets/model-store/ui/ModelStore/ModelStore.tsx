@@ -26,7 +26,11 @@ export const ModelStore = memo((props: Props) => {
 
       <ModelSearchInput className={s.input} />
 
-      <ModelsList view="list" models={searchedModels} title="Models" />
+      <ModelsList
+        view="list"
+        models={searchedModels}
+        title={`${searchedModels.length} results from Hugging Face`}
+      />
     </div>
   );
 });

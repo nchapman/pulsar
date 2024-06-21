@@ -20,7 +20,7 @@ const curatedModels: Record<string, CuratedModel[]> = {
 
 type curatedModelsKeys = keyof typeof curatedModels;
 
-// In order to display the laterst info about the models this function should iterate over the models and fetch the latest info from the Hugging Face API and merge them with our own descriptions
+// In order to display the latest info about the models this function should iterate over the models and fetch the latest info from the Hugging Face API and merge them with our own descriptions
 export async function getCuratedModels(key: curatedModelsKeys): Promise<ModelEntry[]> {
   const baseModels = curatedModels[key];
   let res = [];

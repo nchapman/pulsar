@@ -1,3 +1,18 @@
 .models-list {
-  // styles here
+  width: 100%;
+
+  & > div:first-child {
+    transform: translateY(1px);
+  }
 }
+
+.header {
+  margin-bottom: 16px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+

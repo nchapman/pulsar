@@ -2,15 +2,14 @@ use serde::{ser::Serializer, Deserialize, Serialize};
 use serde_json::Value as JsonValue;
 use sqlite_vec::sqlite3_vec_init;
 use sqlx::{migrate::MigrateDatabase, Column, Pool, Row};
+use std::collections::HashMap;
+use std::{fs::create_dir_all, path::PathBuf};
 use tauri::{
     command,
     plugin::{Builder as PluginBuilder, TauriPlugin},
     AppHandle, Manager, RunEvent, Runtime, State,
 };
 use tokio::sync::Mutex;
-
-use std::collections::HashMap;
-use std::{fs::create_dir_all, path::PathBuf};
 
 // TODO part of vss, replace with sqlite-vec once it is out
 // use std::{collections::HashMap, ffi::c_char};
@@ -127,6 +126,7 @@ async fn close(db_instances: State<'_, DbInstances>, db: Option<String>) -> Resu
 
 #[command]
 async fn test_sqlite_vec(db_instances: State<'_, DbInstances>, db: String) -> Result<()> {
+    // https://github.com/asg017/sqlite-vec/blob/main/examples/simple-rust/demo.rs
     // let v: Vec<f32> = vec![0.1, 0.2, 0.3];
     let mut instances = db_instances.0.lock().await;
     let db = instances.get_mut(&db).ok_or(Error::DatabaseNotLoaded(db))?;
@@ -148,7 +148,56 @@ async fn test_sqlite_vec(db_instances: State<'_, DbInstances>, db: String) -> Re
         values.push(value);
     }
 
-    log::info!("values: {:?}", values);
+    log::info!("versions: {:?}", values);
+
+    // Create a sample table and add some embeddings into it
+    let query = sqlx::query("DROP TABLE IF EXISTS vec_items");
+    query.execute(&*db).await?;
+    log::info!("table dropped!");
+    let query = sqlx::query("CREATE VIRTUAL TABLE vec_items USING vec0(embedding float[4])");
+    query.execute(&*db).await?;
+    log::info!("table created!");
+
+    // let items: Vec<(i64, Vec<f32>)> = vec![
+    //     (1, vec![0.1, 0.1, 0.1, 0.1]),
+    //     (2, vec![0.2, 0.2, 0.2, 0.2]),
+    //     (3, vec![0.3, 0.3, 0.3, 0.3]),
+    //     (4, vec![0.4, 0.4, 0.4, 0.4]),
+    //     (5, vec![0.5, 0.5, 0.5, 0.5]),
+    // ];
+
+    // let mut query = sqlx::query("INSERT INTO vec_items(rowid, embedding) VALUES (?, ?)");
+    // for (id, embedding) in &items {
+    //     query = query.bind(id);
+    //     let embedding_json = serde_json::to_string(embedding).unwrap();
+    //     log::info!("embedding_json: {:?}", embedding_json);
+    //     query = query.bind(embedding_json);
+    // }
+    // query.execute(&*db).await?;
+
+    // log::info!("inserted items");
+
+    // let query_values: Vec<f32> = vec![0.3, 0.3, 0.3, 0.3];
+    // let mut query = sqlx::query(
+    //     "SELECT rowid, distance FROM vec_items WHERE embedding MATCH ?1 ORDER BY distance LIMIT 3",
+    // );
+    // query = query.bind(serde_json::to_string(&query_values).unwrap());
+
+    // let rows = query.fetch_all(&*db).await?;
+    // let mut values = Vec::new();
+    // for row in rows {
+    //     let mut value: HashMap<String, JsonValue> = HashMap::default();
+    //     for (i, column) in row.columns().iter().enumerate() {
+    //         let v = row.try_get_raw(i)?;
+    //         let v = decode::to_json(v)?;
+
+    //         value.insert(column.name().to_string(), v);
+    //     }
+
+    //     values.push(value);
+    // }
+
+    // log::info!("query result: {:?}", values);
 
     Ok(())
 }

@@ -9,6 +9,7 @@ import LikeIcon from '../../assets/heart.svg';
 import { formatDate } from '../../lib/formatDate';
 import { formatNumber } from '../../lib/formatNumber.ts';
 import { getTagsFromName } from '../../lib/getTagsFromName.ts';
+import { modelStoreEvents } from '../../model/model-store.model.ts';
 import { HuggingFaceModel } from '../../types/hugging-face-model.ts';
 import { ModelTag } from '../ModelTag/ModelTag.tsx';
 import s from './ModelCard.module.scss';
@@ -23,8 +24,6 @@ export const ModelCard = memo((props: Props) => {
   const { className, model } = props;
 
   const { name } = model;
-
-  console.log(model);
 
   const stats = [
     {
@@ -41,8 +40,12 @@ export const ModelCard = memo((props: Props) => {
     },
   ];
 
+  const handeClick = () => {
+    modelStoreEvents.openModelDetails(model.name);
+  };
+
   return (
-    <div className={classNames(s.modelCard, [className])}>
+    <div className={classNames(s.modelCard, [className])} onClick={handeClick}>
       <div>
         <Text className={s.name} s={20} w="medium" c="primary">
           {name}

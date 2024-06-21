@@ -6,10 +6,11 @@ export type ModelTagType =
   | 'has-vision'
   | 'full-precision'
   | 'too-large'
+  | 'recommended'
   | 'size'
   | 'quantization';
 
 export interface Tag {
-  value: string;
+  value: string | number;
   type: ModelTagType;
 }

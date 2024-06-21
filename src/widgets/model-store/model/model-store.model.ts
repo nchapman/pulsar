@@ -1,12 +1,31 @@
-import { createEffect, createEvent, createStore, sample } from 'effector';
+import { combine, createEffect, createEvent, createStore, sample } from 'effector';
 
 import { fetchHuggingFaceFiles, searchHuggingFaceModels } from '../api/search-hugging-face.ts';
 import { HuggingFaceModel, ModelFile } from '../types/hugging-face-model.ts';
 
+const models = createStore<HuggingFaceModel[]>([]);
+const currModel = createStore<string | null>(null);
+const currModelFiles = createStore<ModelFile[]>([]);
+const modelsNameMap = models.map((models) =>
+  models.reduce<Record<string, HuggingFaceModel>>(
+    (acc, model) => ({ ...acc, [model.name]: model }),
+    {}
+  )
+);
+
+const currModelData = combine(
+  {
+    currModel,
+    modelsNameMap,
+  },
+  ({ currModel, modelsNameMap }) => (currModel ? modelsNameMap[currModel] : null)
+);
+
 export const $modelStoreState = {
-  models: createStore<HuggingFaceModel[]>([]),
-  currModel: createStore<string | null>(null),
-  currModelFiles: createStore<ModelFile[]>([]),
+  models,
+  currModel,
+  currModelFiles,
+  currModelData,
 };
 
 export const modelStoreEvents = {

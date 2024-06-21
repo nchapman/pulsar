@@ -21,7 +21,7 @@ export const ModelsList = memo((props: Props) => {
   const { className, view, models, title, icon } = props;
 
   return (
-    <Scrollbars className={classNames(s.modelsList, [className, s[view]])}>
+    <div className={classNames(s.modelsList, [className, s[view]])}>
       <div className={s.header}>
         <div>
           {icon && <Icon svg={icon} className={s.icon} />}
@@ -31,11 +31,11 @@ export const ModelsList = memo((props: Props) => {
         </div>
       </div>
 
-      <div className={s.list}>
+      <Scrollbars className={s.list}>
         {models.map((i) => (
           <ModelCard view={view} model={i} />
         ))}
-      </div>
-    </Scrollbars>
+      </Scrollbars>
+    </div>
   );
 });

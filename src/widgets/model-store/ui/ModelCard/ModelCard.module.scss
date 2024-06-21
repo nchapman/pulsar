@@ -6,6 +6,12 @@
   justify-content: space-between;
   border-radius: 8px;
   gap: 20px;
+  border: 1px solid transparent;
+
+  &:hover {
+    border-color: var(--link-hover);
+    cursor: pointer;
+  }
 }
 
 .meta {

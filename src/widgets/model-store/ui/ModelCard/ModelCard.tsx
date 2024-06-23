@@ -18,10 +18,11 @@ interface Props {
   className?: string;
   view: 'grid' | 'list';
   model: HuggingFaceModel;
+  info?: boolean;
 }
 
 export const ModelCard = memo((props: Props) => {
-  const { className, model } = props;
+  const { className, model, info } = props;
 
   const { name } = model;
 
@@ -41,11 +42,12 @@ export const ModelCard = memo((props: Props) => {
   ];
 
   const handeClick = () => {
+    if (info) return;
     modelStoreEvents.openModelDetails(model.name);
   };
 
   return (
-    <div className={classNames(s.modelCard, [className])} onClick={handeClick}>
+    <div className={classNames(s.modelCard, [className], { [s.info]: info })} onClick={handeClick}>
       <div>
         <Text className={s.name} s={20} w="medium" c="primary">
           {name}

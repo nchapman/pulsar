@@ -1,37 +1,22 @@
-import { HuggingFaceModel } from '@/widgets/model-store/types/hugging-face-model.ts';
+import { HuggingFaceModel, ModelFile } from '@/widgets/model-store/types/hugging-face-model.ts';
 
-export const huggingFaceModelsMock: HuggingFaceModel[] = [
-  // {
-  //   id: '1',
-  //   name: 'GPT-3',
-  //   description: 'GPT-3 is a language model developed by OpenAI.',
-  //   producer: 'OpenAI',
-  //   params: '175B',
-  //   downloads: '100K',
-  //   likes: '100K',
-  //   lastUpdated: '1 day ago',
-  //   publishedBy: 'OpenAI',
-  // },
-  // {
-  //   id: '2',
-  //   name: 'GPT-2',
-  //   description: 'GPT-2 is a language model developed by OpenAI.',
-  //   producer: 'OpenAI',
-  //   params: '1.5B',
-  //   downloads: '1M',
-  //   likes: '1M',
-  //   lastUpdated: '1 week ago',
-  //   publishedBy: 'OpenAI',
-  // },
-  // {
-  //   id: '3',
-  //   name: 'BERT',
-  //   description: 'BERT is a language model developed by Google.',
-  //   producer: 'Google',
-  //   params: '340M',
-  //   downloads: '500K',
-  //   likes: '500K',
-  //   lastUpdated: '2 weeks ago',
-  //   publishedBy: 'Google',
-  // },
-];
+export const huggingFaceModelMock: HuggingFaceModel = {
+  author: 'Lewdiculous',
+  downloads: 20040,
+  downloadsAllTime: 20040,
+  gated: false,
+  id: '6660ac8cc3fc813841f84b53',
+  likes: 57,
+  name: 'Lewdiculous/L3-8B-Stheno-v3.2-GGUF-IQ-Imatrix',
+  private: false,
+  sha: 'c8d3a9bf1654e10a813815f8b18faf8db65ae1d0',
+  tags: ['gguf', 'roleplay', 'llama3', 'sillytavern', 'en', 'license:cc-by-nc-4.0', 'region:us'],
+  task: undefined,
+  updatedAt: new Date(),
+};
+
+export const modelFileMock: ModelFile = {
+  name: 'DeepSeek-Coder-V2-Lite-Instruct-f32.gguf',
+  size: 6328456960,
+  fitsInMemory: true,
+};

@@ -13,6 +13,9 @@ const modelsNameMap = models.map((models) =>
   )
 );
 
+models.watch(console.log);
+currModelFiles.watch(console.log);
+
 const currModelData = combine(
   {
     currModel,

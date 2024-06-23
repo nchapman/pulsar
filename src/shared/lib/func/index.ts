@@ -1,5 +1,6 @@
 export { addHasOwn } from './addHasOwn.ts';
 export { assignValues } from './assignValues/assignValues.ts';
+export { bytesToSize } from './bytesToSize.ts';
 export { capitalize } from './capitalize/capitalize.ts';
 export { classNames } from './classNames/classNames';
 export { debounce } from './debounce.ts';

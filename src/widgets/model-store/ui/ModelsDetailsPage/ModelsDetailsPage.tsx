@@ -25,7 +25,7 @@ export const ModelsDetailsPage = memo((props: Props) => {
 
   return (
     <div className={classNames(s.modelsDetailsPage, [className])}>
-      <ModelCard model={modelData} view="list" />
+      <ModelCard info model={modelData} view="list" />
 
       <div className={s.header}>
         <Text w="medium" c="primary">

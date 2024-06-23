@@ -23,3 +23,26 @@
 .size {
   background: var(--main-background-quaternary);
 }
+
+.quantization {
+  background: #412E6C;
+
+  &.q2 {
+    background: #412E6C;
+  }
+  &.q4 {
+    background: #2B365C;
+  }
+  &.q6 {
+    background: #184456;
+  }
+  &.q8 {
+    background: #234540;
+  }
+}
+
+.info-icon {
+  display: flex;
+  width: 16px;
+  height: 16px;
+}

@@ -10,7 +10,9 @@ export interface HuggingFaceModel extends ModelEntry {
 export interface ModelFile {
   name: string;
   size: number;
-  fitsInMemory: boolean;
+  isGguf: boolean;
+  fitsInMemory?: boolean;
+  isMmproj: boolean;
 }
 
 export type HuggingFaceTask =

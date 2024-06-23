@@ -9,7 +9,7 @@ interface TextProps {
   children?: string | number | (string | number)[] | ReactNode;
   style?: CSSProperties;
   s?: number;
-  c?: 'primary' | 'secondary' | 'tertiary';
+  c?: 'primary' | 'secondary' | 'tertiary' | 'error';
   w?: 'bold' | 'semi' | 'normal' | 'medium';
 }
 

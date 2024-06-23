@@ -16,7 +16,7 @@ interface Props {
 
 export const ModelFile = memo((props: Props) => {
   const { className, data } = props;
-  const { name, size, fitsInMemory } = data;
+  const { name, size, fitsInMemory, isGguf } = data;
   const quantization = getQuantization(name);
 
   return (
@@ -33,9 +33,11 @@ export const ModelFile = memo((props: Props) => {
         </div>
       </div>
       <div className={s.rightSide}>
-        <div className={classNames(s.memoryFit, [fitsInMemory ? s.recommended : s.tooLarge])}>
-          <Text s={14}>{fitsInMemory ? 'Recommended' : 'Too large for this machine'}</Text>
-        </div>
+        {isGguf && (
+          <div className={classNames(s.memoryFit, [fitsInMemory ? s.recommended : s.tooLarge])}>
+            <Text s={14}>{fitsInMemory ? 'Recommended' : 'Too large for this machine'}</Text>
+          </div>
+        )}
         <Button variant="secondary" className={s.downloadBtn}>
           <Icon svg={DownloadIcon} className={s.downloadIcon} />
           Download

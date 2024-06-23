@@ -2,11 +2,11 @@ import { useUnit } from 'effector-react';
 import { useEffect } from 'preact/hooks';
 
 import { modelManager } from '@/entities/model';
-import { ChatPage } from '@/pages/chat';
-import { OnboardingPage } from '@/pages/onboarding';
-import { restoreWindowSize } from '@/pages/onboarding/lib/window-size.ts';
 import { initTheme } from '@/shared/theme';
+import { PageError, PageLoader } from '@/shared/ui';
+import { OnboardingPage, restoreWindowSize } from '@/widgets/onboarding';
 
+import { Layout } from './Layout/Layout.tsx';
 import { checkUpdates } from './Updates';
 
 function App() {
@@ -27,11 +27,11 @@ function App() {
   }, [ready]);
 
   function getComponent() {
-    if (!appStarted) return <div>Loading...</div>;
-    if (modelLoadError) return <div>Failed to load model: {modelLoadError}! Contact support</div>;
+    if (!appStarted) return <PageLoader />;
+    if (modelLoadError) return <PageError errorText={`Failed to load model: ${modelLoadError}.`} />;
     if (hasNoModels) return <OnboardingPage />;
-    if (ready) return <ChatPage />;
     if (!ready && !hasNoModels) return <OnboardingPage ready />;
+    if (ready) return <Layout />;
 
     return null;
   }

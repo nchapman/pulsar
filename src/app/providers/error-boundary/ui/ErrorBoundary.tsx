@@ -1,5 +1,6 @@
-import { Component, ReactNode, Suspense } from 'preact/compat';
 import { ErrorInfo } from 'preact';
+import { Component, ReactNode, Suspense } from 'preact/compat';
+
 import { PageError } from '@/shared/ui';
 
 interface ErrorBoundaryProps {

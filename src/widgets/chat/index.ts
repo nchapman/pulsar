@@ -7,3 +7,4 @@ export {
 } from './lib/deleteChat.tsx';
 export { $chat, askQuestion, startNewChat, switchChat } from './model/chat';
 export { Chat } from './ui/Chat/Chat';
+export { ChatNavbar } from './ui/ChatNavbar/ChatNavbar';

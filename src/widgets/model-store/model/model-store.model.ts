@@ -1,5 +1,7 @@
 import { combine, createEffect, createEvent, createStore, sample } from 'effector';
 
+import { goToStore, goToStoreModel } from '@/app/routes';
+
 import { fetchHuggingFaceFiles, searchHuggingFaceModels } from '../api/search-hugging-face.ts';
 import { HuggingFaceModel, ModelFile } from '../types/hugging-face-model.ts';
 
@@ -62,3 +64,15 @@ $modelStoreState.currModelFiles.on(fetchHFFiles.doneData, (_, data) => data);
 $modelStoreState.currModel.on(modelStoreEvents.openModelDetails, (_, modelId) => modelId);
 $modelStoreState.currModel.on(modelStoreEvents.closeModelDetails, () => null);
 $modelStoreState.currModelFiles.reset(modelStoreEvents.closeModelDetails);
+
+// goToStore is triggered by openModelDetails
+sample({
+  clock: modelStoreEvents.openModelDetails,
+  target: createEffect(goToStoreModel),
+});
+
+// goToStore is triggered by closeModelDetails
+sample({
+  clock: modelStoreEvents.closeModelDetails,
+  target: createEffect(goToStore),
+});

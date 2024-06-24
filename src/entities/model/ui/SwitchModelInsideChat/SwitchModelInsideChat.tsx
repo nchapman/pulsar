@@ -2,7 +2,7 @@ import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
 import { Popover } from 'react-tiny-popover';
 
-import { Route, setRoute } from '@/app/routes';
+import { goToStore } from '@/app/routes';
 import { modelManager } from '@/entities/model';
 import { $defaultModel } from '@/entities/settings/managers/user-settings-manager.ts';
 import CheckIcon from '@/shared/assets/icons/check-circle-broken.svg';
@@ -39,7 +39,7 @@ export const SwitchModelInsideChat = memo((props: Props) => {
           className={s.explore}
           variant="clear"
           onClick={() => {
-            setRoute(Route.Store);
+            goToStore();
             hidePopover();
           }}
         >

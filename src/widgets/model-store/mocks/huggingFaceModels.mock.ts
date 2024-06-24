@@ -1,4 +1,4 @@
-import { HuggingFaceModel, ModelFile } from '@/widgets/model-store/types/hugging-face-model.ts';
+import { HuggingFaceModel } from '../types/hugging-face-model.ts';
 
 export const huggingFaceModelMock: HuggingFaceModel = {
   author: 'Lewdiculous',
@@ -13,10 +13,4 @@ export const huggingFaceModelMock: HuggingFaceModel = {
   tags: ['gguf', 'roleplay', 'llama3', 'sillytavern', 'en', 'license:cc-by-nc-4.0', 'region:us'],
   task: undefined,
   updatedAt: new Date(),
-};
-
-export const modelFileMock: ModelFile = {
-  name: 'DeepSeek-Coder-V2-Lite-Instruct-f32.gguf',
-  size: 6328456960,
-  fitsInMemory: true,
 };

@@ -24,7 +24,7 @@ export const ModelsDetailsPage = memo(() => {
   const files = useUnit($modelStoreState.currModelFiles)
     .filter((f) => (fileType === 'model' ? f.isGguf : true))
     .sort((a, b) => {
-      if (a.isGguf && !b.isGguf) return 1;
+      if (!a.isGguf && b.isGguf) return -1;
       if (a.isMmproj && !b.isMmproj) return -1;
       return 0;
     });

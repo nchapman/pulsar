@@ -31,7 +31,13 @@ export const ModelSearchInput = memo((props: Props) => {
   return (
     <div className={classNames(s.modelSearchInput, [className])}>
       <Icon svg={LensIcon} className={s.icon} />
-      <Input placeholder={placeholder} className={s.input} value={value} onChange={setValue} />
+      <Input
+        autofocus
+        placeholder={placeholder}
+        className={s.input}
+        value={value}
+        onChange={setValue}
+      />
       <Button variant="clear" className={s.go} icon={GoIcon} />
     </div>
   );

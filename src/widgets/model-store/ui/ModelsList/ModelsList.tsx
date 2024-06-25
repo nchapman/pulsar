@@ -28,6 +28,7 @@ export const ModelsList = memo((props: Props) => {
             {title}
           </Text>
         </div>
+        {withViewSwitch && <div className={s.viewSwitch}></div>}
       </div>
 
       <div className={s.list}>

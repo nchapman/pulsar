@@ -170,7 +170,7 @@ async fn test_sqlite_vec(db_instances: State<'_, DbInstances>, db: String) -> Re
     for (id, embedding) in &items {
         query = query.bind(id);
         let embedding_json = serde_json::to_string(embedding).unwrap();
-        log::info!("embedding_json: {:?}", embedding_json);
+        log::info!("inserting: {:?}", embedding_json);
         query = query.bind(embedding_json);
     }
     query.execute(&*db).await?;
@@ -178,12 +178,16 @@ async fn test_sqlite_vec(db_instances: State<'_, DbInstances>, db: String) -> Re
     log::info!("inserted items");
 
     let query_values: Vec<f32> = vec![0.3, 0.3, 0.3, 0.3];
-    let mut query = sqlx::query(
-        "SELECT rowid, distance FROM vec_items WHERE embedding MATCH ?1 ORDER BY distance LIMIT 3",
-    );
+    // let mut query = sqlx::query(
+    //     "SELECT rowid, distance FROM vec_items WHERE embedding MATCH ?1 ORDER BY distance LIMIT 3",
+    // );
+    let mut query = sqlx::query("SELECT rowid, distance FROM vec_items");
     query = query.bind(serde_json::to_string(&query_values).unwrap());
 
     let rows = query.fetch_all(&*db).await?;
+
+    log::info!("query rows length {:?}", rows.len());
+
     let mut values = Vec::new();
     for row in rows {
         let mut value: HashMap<String, JsonValue> = HashMap::default();

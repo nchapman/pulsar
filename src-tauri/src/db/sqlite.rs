@@ -158,46 +158,46 @@ async fn test_sqlite_vec(db_instances: State<'_, DbInstances>, db: String) -> Re
     query.execute(&*db).await?;
     log::info!("table created!");
 
-    // let items: Vec<(i64, Vec<f32>)> = vec![
-    //     (1, vec![0.1, 0.1, 0.1, 0.1]),
-    //     (2, vec![0.2, 0.2, 0.2, 0.2]),
-    //     (3, vec![0.3, 0.3, 0.3, 0.3]),
-    //     (4, vec![0.4, 0.4, 0.4, 0.4]),
-    //     (5, vec![0.5, 0.5, 0.5, 0.5]),
-    // ];
+    let items: Vec<(i64, Vec<f32>)> = vec![
+        (1, vec![0.1, 0.1, 0.1, 0.1]),
+        (2, vec![0.2, 0.2, 0.2, 0.2]),
+        (3, vec![0.3, 0.3, 0.3, 0.3]),
+        (4, vec![0.4, 0.4, 0.4, 0.4]),
+        (5, vec![0.5, 0.5, 0.5, 0.5]),
+    ];
 
-    // let mut query = sqlx::query("INSERT INTO vec_items(rowid, embedding) VALUES (?, ?)");
-    // for (id, embedding) in &items {
-    //     query = query.bind(id);
-    //     let embedding_json = serde_json::to_string(embedding).unwrap();
-    //     log::info!("embedding_json: {:?}", embedding_json);
-    //     query = query.bind(embedding_json);
-    // }
-    // query.execute(&*db).await?;
+    let mut query = sqlx::query("INSERT INTO vec_items(rowid, embedding) VALUES (?, ?)");
+    for (id, embedding) in &items {
+        query = query.bind(id);
+        let embedding_json = serde_json::to_string(embedding).unwrap();
+        log::info!("embedding_json: {:?}", embedding_json);
+        query = query.bind(embedding_json);
+    }
+    query.execute(&*db).await?;
 
-    // log::info!("inserted items");
+    log::info!("inserted items");
 
-    // let query_values: Vec<f32> = vec![0.3, 0.3, 0.3, 0.3];
-    // let mut query = sqlx::query(
-    //     "SELECT rowid, distance FROM vec_items WHERE embedding MATCH ?1 ORDER BY distance LIMIT 3",
-    // );
-    // query = query.bind(serde_json::to_string(&query_values).unwrap());
+    let query_values: Vec<f32> = vec![0.3, 0.3, 0.3, 0.3];
+    let mut query = sqlx::query(
+        "SELECT rowid, distance FROM vec_items WHERE embedding MATCH ?1 ORDER BY distance LIMIT 3",
+    );
+    query = query.bind(serde_json::to_string(&query_values).unwrap());
 
-    // let rows = query.fetch_all(&*db).await?;
-    // let mut values = Vec::new();
-    // for row in rows {
-    //     let mut value: HashMap<String, JsonValue> = HashMap::default();
-    //     for (i, column) in row.columns().iter().enumerate() {
-    //         let v = row.try_get_raw(i)?;
-    //         let v = decode::to_json(v)?;
+    let rows = query.fetch_all(&*db).await?;
+    let mut values = Vec::new();
+    for row in rows {
+        let mut value: HashMap<String, JsonValue> = HashMap::default();
+        for (i, column) in row.columns().iter().enumerate() {
+            let v = row.try_get_raw(i)?;
+            let v = decode::to_json(v)?;
 
-    //         value.insert(column.name().to_string(), v);
-    //     }
+            value.insert(column.name().to_string(), v);
+        }
 
-    //     values.push(value);
-    // }
+        values.push(value);
+    }
 
-    // log::info!("query result: {:?}", values);
+    log::info!("query result: {:?}", values);
 
     Ok(())
 }

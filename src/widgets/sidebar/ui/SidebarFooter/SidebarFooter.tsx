@@ -2,6 +2,7 @@ import { invoke } from '@tauri-apps/api';
 import { appDataDir } from '@tauri-apps/api/path';
 import { open as openPath } from '@tauri-apps/api/shell';
 import { memo } from 'preact/compat';
+import { error } from 'tauri-plugin-log';
 import Database from 'tauri-plugin-sql-api';
 
 import { __IS_STORYBOOK__ } from '@/shared/consts';
@@ -27,9 +28,14 @@ export const SidebarFooter = memo((props: Props) => {
     const path = 'sqlite:vec.db';
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const db = await Database.load(path);
-    await invoke('plugin:sql|test_sqlite_vec', {
-      db: path,
-    });
+
+    try {
+      await invoke('plugin:sql|test_sqlite_vec', {
+        db: path,
+      });
+    } catch (e) {
+      error(`${e}`);
+    }
   };
 
   return (

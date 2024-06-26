@@ -182,7 +182,7 @@ async fn test_sqlite_vec(db_instances: State<'_, DbInstances>, db: String) -> Re
     //     "SELECT rowid, distance FROM vec_items WHERE embedding MATCH ?1 ORDER BY distance LIMIT 3",
     // );
     let mut query = sqlx::query("SELECT rowid, distance FROM vec_items");
-    query = query.bind(serde_json::to_string(&query_values).unwrap());
+    // query = query.bind(serde_json::to_string(&query_values).unwrap());
 
     let rows = query.fetch_all(&*db).await?;
 

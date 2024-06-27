@@ -11,11 +11,6 @@ use tauri::{
 };
 use tokio::sync::Mutex;
 
-// TODO part of vss, replace with sqlite-vec once it is out
-// use std::{collections::HashMap, ffi::c_char};
-// use libsqlite3_sys::{sqlite3, sqlite3_api_routines};
-// use sqlite_vss::{sqlite3_vector_init, sqlite3_vss_init};
-
 use super::decode;
 
 type Db = sqlx::sqlite::Sqlite;
@@ -166,22 +161,22 @@ async fn test_sqlite_vec(db_instances: State<'_, DbInstances>, db: String) -> Re
         (5, vec![0.5, 0.5, 0.5, 0.5]),
     ];
 
-    let mut query = sqlx::query("INSERT INTO vec_items(rowid, embedding) VALUES (?, ?)");
     for (id, embedding) in &items {
+        sqlx::query("BEGIN").execute(&*db).await?;
+        let mut query = sqlx::query("INSERT INTO vec_items(rowid, embedding) VALUES (?, ?)");
         query = query.bind(id);
         let embedding_json = serde_json::to_string(embedding).unwrap();
-        log::info!("inserting: {:?}", embedding_json);
         query = query.bind(embedding_json);
+        query.execute(&*db).await?;
+        log::info!("inserted item {}", id);
+        sqlx::query("COMMIT").execute(&*db).await?;
     }
-    query.execute(&*db).await?;
 
-    log::info!("inserted items");
-
-    let query_values: Vec<f32> = vec![0.3, 0.3, 0.3, 0.3];
+    // let query_values: Vec<f32> = vec![0.3, 0.3, 0.3, 0.3];
     // let mut query = sqlx::query(
     //     "SELECT rowid, distance FROM vec_items WHERE embedding MATCH ?1 ORDER BY distance LIMIT 3",
     // );
-    let mut query = sqlx::query("SELECT rowid, distance FROM vec_items");
+    let query = sqlx::query("SELECT rowid, distance FROM vec_items");
     // query = query.bind(serde_json::to_string(&query_values).unwrap());
 
     let rows = query.fetch_all(&*db).await?;
@@ -214,6 +209,7 @@ async fn execute(
     query: String,
     values: Vec<JsonValue>,
 ) -> Result<(u64, LastInsertId)> {
+    log::info!("🟥 execute");
     let mut instances = db_instances.0.lock().await;
 
     let db = instances.get_mut(&db).ok_or(Error::DatabaseNotLoaded(db))?;
@@ -238,6 +234,7 @@ async fn select(
     query: String,
     values: Vec<JsonValue>,
 ) -> Result<Vec<HashMap<String, JsonValue>>> {
+    log::info!("🟥 select");
     let mut instances = db_instances.0.lock().await;
     let db = instances.get_mut(&db).ok_or(Error::DatabaseNotLoaded(db))?;
     let mut query = sqlx::query(&query);
@@ -274,7 +271,7 @@ pub struct Builder {}
 impl Builder {
     pub fn build<R: Runtime>(self) -> TauriPlugin<R, Option<PluginConfig>> {
         // Create an auto extension for the VSS functions
-        // Everytime a new connection is created, the VSS functions will be loaded
+        // Every time a new connection is created, the VSS functions will be loaded
         unsafe {
             libsqlite3_sys::sqlite3_auto_extension(Some(std::mem::transmute(
                 sqlite3_vec_init as *const (),

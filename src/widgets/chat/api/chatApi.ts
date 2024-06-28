@@ -44,7 +44,7 @@ export async function stream(
 
     onStreamStart();
 
-    await context.predict(maxPredictLen);
+    await context.predict({ maxLength: maxPredictLen });
   } catch (e) {
     loge('chatApi', `Failed to stream: ${e}`);
   } finally {

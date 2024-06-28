@@ -26,13 +26,18 @@ export class NebulaContext {
     this.contextId = ctx;
   }
 
-  public static async initContext(
-    model: NebulaModel,
-    cctx: { message: string; is_user: boolean }[] = []
-  ): Promise<NebulaContext> {
+  public static async initContext({
+    model,
+    cctx = [],
+    stopTokens = [],
+  }: {
+    model: NebulaModel;
+    cctx: { message: string; is_user: boolean }[];
+    stopTokens?: string[];
+  }): Promise<NebulaContext> {
     const ctx = await invoke<string>('plugin:nebula|model_init_context', {
       modelPath: model.model,
-      contextOptions: { ctx: cctx, n_ctx: 20000 },
+      contextOptions: { ctx: cctx, n_ctx: 20000, stop_tokens: stopTokens },
     });
 
     return new NebulaContext(model, ctx);
@@ -63,8 +68,16 @@ export class NebulaContext {
     });
   }
 
-  public async predict(maxLength: number) {
-    const unlisten = await listen<NebulaPredictPayload>('nebula-predict', (event) => {
+  public async predict({
+    maxLength,
+    temp = DEFAULT_TEMP,
+    topP,
+  }: {
+    maxLength: number;
+    temp?: number;
+    topP?: number;
+  }) {
+    const unsubscribe = await listen<NebulaPredictPayload>('nebula-predict', (event) => {
       if (event.payload.model === this.model.model && event.payload.context === this.contextId) {
         if (!event.payload.finished) {
           this.onToken?.({ token: event.payload.token, finished: event.payload.finished });
@@ -78,9 +91,10 @@ export class NebulaContext {
       modelPath: this.model.model,
       contextId: this.contextId,
       maxLen: maxLength,
-      temp: DEFAULT_TEMP,
+      temp,
+      topP,
     });
 
-    unlisten();
+    unsubscribe();
   }
 }

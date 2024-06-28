@@ -26,13 +26,18 @@ export class NebulaContext {
     this.contextId = ctx;
   }
 
-  public static async initContext(
-    model: NebulaModel,
-    cctx: { message: string; is_user: boolean }[] = []
-  ): Promise<NebulaContext> {
+  public static async initContext({
+    model,
+    cctx = [],
+    stopTokens = [],
+  }: {
+    model: NebulaModel;
+    cctx: { message: string; is_user: boolean }[];
+    stopTokens?: string[];
+  }): Promise<NebulaContext> {
     const ctx = await invoke<string>('plugin:nebula|model_init_context', {
       modelPath: model.model,
-      contextOptions: { ctx: cctx, n_ctx: 20000 },
+      contextOptions: { ctx: cctx, n_ctx: 20000, stop_tokens: stopTokens },
     });
 
     return new NebulaContext(model, ctx);

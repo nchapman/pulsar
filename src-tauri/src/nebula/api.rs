@@ -262,8 +262,9 @@ async fn model_context_predict<R: Runtime>(
     context_id: String,
     max_len: Option<usize>,
     temp: Option<f32>,
+    top_p: Option<f32>,
+    // stop_tokens: Option<Vec<String>>,
     app: AppHandle<R>,
-    //    window: Window<R>,
     state: State<'_, NebulaState>,
 ) -> NebulaResult<()> {
     let lock = state.models.lock().await;
@@ -305,6 +306,13 @@ async fn model_context_predict<R: Runtime>(
     if let Some(temp) = temp {
         p = p.with_temp(temp);
     }
+    if let Some(top_p) = top_p {
+        p = p.with_top_p(top_p);
+    }
+    // if let Some(stop_tokens) = stop_tokens {
+    //     p = p.with_stop_tokens(stop_tokens);
+    // }
+
     p.predict()?;
 
     app.emit_all(

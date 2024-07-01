@@ -1,22 +1,22 @@
 import { combine, createEffect, createEvent, createStore, sample } from 'effector';
 
 import { goToStore, goToStoreModel } from '@/app/routes';
+import { ModelFileType } from '@/db/download/download.repository.ts';
+import { HuggingFaceModel } from '@/entities/model/types/hugging-face-model.ts';
 
 import { fetchHuggingFaceFiles, searchHuggingFaceModels } from '../api/search-hugging-face.ts';
-import { HuggingFaceModel, ModelFile } from '../types/hugging-face-model.ts';
 
 const models = createStore<HuggingFaceModel[]>([]);
 const currModel = createStore<string | null>(null);
-const currModelFiles = createStore<ModelFile[]>([]);
+const currModelFiles = createStore<ModelFileType[]>([]);
+const showCurated = createStore(true);
+const searchValue = createStore('');
 const modelsNameMap = models.map((models) =>
   models.reduce<Record<string, HuggingFaceModel>>(
     (acc, model) => ({ ...acc, [model.name]: model }),
     {}
   )
 );
-
-models.watch(console.log);
-currModelFiles.watch(console.log);
 
 const currModelData = combine(
   {
@@ -27,6 +27,8 @@ const currModelData = combine(
 );
 
 export const $modelStoreState = {
+  searchValue,
+  showCurated,
   models,
   currModel,
   currModelFiles,
@@ -34,17 +36,19 @@ export const $modelStoreState = {
 };
 
 export const modelStoreEvents = {
-  searchHF: createEvent<string>(),
+  setSearchValue: createEvent<string>(),
+  searchHF: createEvent(),
   openModelDetails: createEvent<string>(),
   closeModelDetails: createEvent(),
 };
 
-const fetchHFModels = createEffect<string, HuggingFaceModel[]>(searchHuggingFaceModels);
-const fetchHFFiles = createEffect<string, ModelFile[]>(fetchHuggingFaceFiles);
+export const fetchHFModels = createEffect<string, HuggingFaceModel[]>(searchHuggingFaceModels);
+const fetchHFFiles = createEffect<string, ModelFileType[]>(fetchHuggingFaceFiles);
 
 // fetchHFModels is triggered by searchHF
 sample({
-  source: modelStoreEvents.searchHF,
+  source: $modelStoreState.searchValue,
+  clock: modelStoreEvents.searchHF,
   target: fetchHFModels,
 });
 
@@ -55,8 +59,12 @@ sample({
   filter: (modelId) => !!modelId,
 });
 
+$modelStoreState.searchValue.on(modelStoreEvents.setSearchValue, (_, v) => v);
+
 // modelsList is updated by fetchHFModels
 $modelStoreState.models.on(fetchHFModels.doneData, (_, data) => data);
+
+$modelStoreState.showCurated.on(fetchHFModels, () => false);
 
 // currModel is updated by openModelDetails
 $modelStoreState.currModelFiles.on(fetchHFFiles.doneData, (_, data) => data);
@@ -76,3 +84,4 @@ sample({
   clock: modelStoreEvents.closeModelDetails,
   target: createEffect(goToStore),
 });
+$modelStoreState.models.watch(console.log);

@@ -4,13 +4,16 @@ import { memo } from 'preact/compat';
 import { classNames } from '@/shared/lib/func';
 import { Text } from '@/shared/ui';
 
-import { $modelStoreState } from '../../model/model-store.model.ts';
+import { $modelStoreState, fetchHFModels } from '../../model/model-store.model.ts';
+import { CuratedModels } from '../CuratedModels/CuratedModels.tsx';
 import { ModelSearchInput } from '../ModelSearchInput/ModelSearchInput.tsx';
 import { ModelsList } from '../ModelsList/ModelsList.tsx';
 import s from './ModelsSearchPage.module.scss';
 
 export const ModelsSearchPage = memo(() => {
   const searchedModels = useUnit($modelStoreState.models);
+  const showCurated = useUnit($modelStoreState.showCurated);
+  const isLoading = useUnit(fetchHFModels.pending);
 
   return (
     <div className={classNames(s.modelsSearchPage)}>
@@ -20,11 +23,16 @@ export const ModelsSearchPage = memo(() => {
 
       <ModelSearchInput className={s.input} />
 
-      <ModelsList
-        view="list"
-        models={searchedModels}
-        title={`${searchedModels.length} results from Hugging Face`}
-      />
+      {showCurated ? (
+        <CuratedModels />
+      ) : (
+        <ModelsList
+          loading={isLoading}
+          view="list"
+          models={searchedModels}
+          title={`${searchedModels.length} results from Hugging Face`}
+        />
+      )}
     </div>
   );
 });

@@ -12,7 +12,7 @@ import { getAvailableModels } from '../lib/getAvailableModels.ts';
 import { getDownloadPath } from '../lib/getDownloadPath.ts';
 import { ModelManager, modelManager } from './model-manager.ts';
 
-type DownloadsData = Record<Id, DownloadItem>;
+export type DownloadsData = Record<Id, DownloadItem>;
 
 class DownloadsManager {
   #downloadsIdsList: Id[] = [];
@@ -136,7 +136,7 @@ class DownloadsManager {
 
     if (isNew) {
       newData.downloadingData.total = total;
-      newData.dto.size = total;
+      newData.dto.file.size = total;
     }
 
     newData.downloadingData.progress = newData.downloadingData.total - total + progress;
@@ -218,7 +218,11 @@ class DownloadsManager {
   }
 
   private async onItemDownloaded(id: Id) {
-    const { localName, type, dto: modelDto } = this.downloadsData[id];
+    const {
+      localName,
+      type,
+      dto: { model: modelDto },
+    } = this.downloadsData[id];
 
     const filePath = await getDownloadPath(localName);
 

@@ -1,7 +1,8 @@
 import { listFiles, listModels } from '@huggingface/hub';
 
+import { ModelFileType } from '@/db/download/download.repository.ts';
+import { HuggingFaceModel } from '@/entities/model/types/hugging-face-model.ts';
 import { getSystemInfo } from '@/features/system/system.ts';
-import { HuggingFaceModel, ModelFile } from '@/widgets/model-store/types/hugging-face-model.ts';
 
 const HUGGING_FACE_BASE_URL = 'https://huggingface.co';
 
@@ -40,11 +41,11 @@ export const fetchHuggingFaceFiles = async (modelId: string): Promise<any> => {
     repo: modelId,
   });
 
-  const files: ModelFile[] = [];
+  const files: ModelFileType[] = [];
 
   // eslint-disable-next-line no-restricted-syntax
   for await (const file of filesGenerator) {
-    const data: ModelFile = {
+    const data: ModelFileType = {
       name: file.path,
       size: file.size,
       isGguf: file.path.endsWith('.gguf'),

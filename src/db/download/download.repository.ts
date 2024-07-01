@@ -6,6 +6,14 @@ import { assignValues, serialize } from '@/shared/lib/func';
 import { DownloadModel } from './download.model.ts';
 import { downloadsTable } from './download.schema.ts';
 
+export interface ModelFileType {
+  name: string;
+  size: number;
+  isGguf: boolean;
+  fitsInMemory?: boolean;
+  isMmproj: boolean;
+}
+
 export interface DownloadItem {
   id: Id;
   remoteUrl: string;
@@ -23,7 +31,10 @@ export interface DownloadItem {
   type: ModelType;
   localName: string;
 
-  dto: ModelData;
+  dto: {
+    file: ModelFileType;
+    model: ModelData;
+  };
 
   modelId?: Id;
 

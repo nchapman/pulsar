@@ -1,12 +1,17 @@
+import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
-import { useEffect, useState } from 'preact/hooks';
+import { useCallback } from 'preact/hooks';
 
 import GoIcon from '@/shared/assets/icons/arrow-right.svg';
 import LensIcon from '@/shared/assets/icons/search.svg';
-import { classNames, debounce } from '@/shared/lib/func';
+import { classNames } from '@/shared/lib/func';
 import { Button, Icon, Input } from '@/shared/ui';
 
-import { modelStoreEvents } from '../../model/model-store.model.ts';
+import {
+  $modelStoreState,
+  fetchHFModels,
+  modelStoreEvents,
+} from '../../model/model-store.model.ts';
 import s from './ModelSearchInput.module.scss';
 
 interface Props {
@@ -15,30 +20,35 @@ interface Props {
 
 const placeholder = 'Search for models on Hugging Face';
 
-const [debouncedSearch, clearFn] = debounce(modelStoreEvents.searchHF, 400);
-
 export const ModelSearchInput = memo((props: Props) => {
   const { className } = props;
-  const [value, setValue] = useState('');
+  const value = useUnit($modelStoreState.searchValue);
+  const isLoading = useUnit(fetchHFModels.pending);
 
-  useEffect(() => {
-    if (value && value.length < 4) return undefined;
-    debouncedSearch(value);
-
-    return clearFn;
-  }, [value]);
+  const handleSubmit = useCallback((e: any) => {
+    e.preventDefault();
+    modelStoreEvents.searchHF();
+  }, []);
 
   return (
-    <div className={classNames(s.modelSearchInput, [className])}>
+    <form onSubmit={handleSubmit} className={classNames(s.modelSearchInput, [className])}>
       <Icon svg={LensIcon} className={s.icon} />
       <Input
         autofocus
         placeholder={placeholder}
         className={s.input}
         value={value}
-        onChange={setValue}
+        disabled={isLoading}
+        onChange={modelStoreEvents.setSearchValue}
       />
-      <Button variant="clear" className={s.go} icon={GoIcon} />
-    </div>
+      <Button
+        disabled={isLoading}
+        loading={isLoading}
+        variant="clear"
+        type="submit"
+        className={s.go}
+        icon={GoIcon}
+      />
+    </form>
   );
 });

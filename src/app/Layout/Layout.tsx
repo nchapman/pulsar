@@ -4,6 +4,7 @@ import { FC, memo } from 'preact/compat';
 import { $currRoute, Route } from '@/app/routes';
 import { Page } from '@/shared/ui';
 import { Chat, ChatNavbar } from '@/widgets/chat';
+import { DownloadsNavbar, DownloadsPage } from '@/widgets/downloads';
 import { ModelsDetailsPage, ModelsSearchPage, ModelStoreNavbar } from '@/widgets/model-store';
 import { Navbar } from '@/widgets/navbar';
 import { $sidebarOpened, Sidebar, toggleSidebar } from '@/widgets/sidebar';
@@ -15,14 +16,14 @@ const Widgets: Record<Route, FC> = {
   [Route.Chat]: Chat,
   [Route.Store]: ModelsSearchPage,
   [Route.StoreModel]: ModelsDetailsPage,
-  [Route.Downloads]: Chat,
+  [Route.Downloads]: DownloadsPage,
 };
 
 const Nav: Record<Route, FC> = {
   [Route.Chat]: ChatNavbar,
   [Route.Store]: ModelStoreNavbar,
   [Route.StoreModel]: ModelStoreNavbar,
-  [Route.Downloads]: () => null,
+  [Route.Downloads]: DownloadsNavbar,
 };
 
 export const Layout = memo(() => {

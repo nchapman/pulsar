@@ -1,4 +1,4 @@
-import { HuggingFaceModel } from '../types/hugging-face-model.ts';
+import { HuggingFaceModel } from '@/entities/model/types/hugging-face-model.ts';
 
 export const huggingFaceModelMock: HuggingFaceModel = {
   author: 'Lewdiculous',

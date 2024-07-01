@@ -1,4 +1,4 @@
-import { Tag } from '@/widgets/model-store/types/tag.type.ts';
+import { Tag } from '@/entities/model/types/tag.type.ts';
 
 export function getTagsFromName(name: string): Tag[] {
   const tags: Tag[] = [];

@@ -2,7 +2,7 @@ import { useStoreMap, useUnit } from 'effector-react';
 import { memo, useLayoutEffect } from 'preact/compat';
 import { useState } from 'preact/hooks';
 
-import { ModelData } from '@/db/model';
+import { DownloadModel } from '@/db/download';
 import { supportedLlms } from '@/entities/model/consts/supported-llms.const.ts';
 import { downloadsManager } from '@/entities/model/managers/downloads-manager.ts';
 import DownloadIcon from '@/shared/assets/icons/download.svg';
@@ -46,13 +46,9 @@ export const InitialModelDownload = memo((props: Props) => {
   const handleModelDownload = async () => {
     const llama7b = supportedLlms['nous-hermes-2-solar-10.7b.Q4_K_M.gguf'];
 
-    const { localName, name, desc, url } = llama7b;
+    const { localName, url } = llama7b;
 
-    const llm: ModelData = {
-      name,
-      localName,
-      description: desc,
-    };
+    const llm: DownloadModel['dto'] = {};
 
     const res = await downloadsManager.addDownload({
       dto: llm,

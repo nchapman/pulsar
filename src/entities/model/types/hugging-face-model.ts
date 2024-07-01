@@ -7,12 +7,9 @@ export interface HuggingFaceModel extends ModelEntry {
   tags: string[];
 }
 
-export interface ModelFile {
-  name: string;
-  size: number;
-  isGguf: boolean;
-  fitsInMemory?: boolean;
-  isMmproj: boolean;
+export interface CuratedModel extends HuggingFaceModel {
+  description: string;
+  logo: string;
 }
 
 export type HuggingFaceTask =

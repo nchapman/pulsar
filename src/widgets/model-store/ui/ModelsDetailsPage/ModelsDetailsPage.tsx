@@ -1,14 +1,15 @@
 import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
-import { useState } from 'preact/hooks';
+import { useMemo, useState } from 'preact/hooks';
 import Scrollbars from 'react-custom-scrollbars';
 
+import { ModelFileType } from '@/db/download/download.repository.ts';
 import { classNames } from '@/shared/lib/func';
 import { MultiSwitch, Text } from '@/shared/ui';
+import { ModelStoreFile } from '@/widgets/model-store/ui/ModelStoreFile/ModelStoreFile.tsx';
 
 import { $modelStoreState } from '../../model/model-store.model.ts';
 import { ModelCard } from '../ModelCard/ModelCard';
-import { ModelFile } from '../ModelFile/ModelFile.tsx';
 import s from './ModelsDetailsPage.module.scss';
 
 const fileTypeOptions = [
@@ -16,18 +17,24 @@ const fileTypeOptions = [
   { label: 'All Files', value: 'all' },
 ];
 
-export const ModelsDetailsPage = memo(() => {
-  const [fileType, setFileType] = useState(fileTypeOptions[0].value);
-
-  const modelData = useUnit($modelStoreState.currModelData);
-
-  const files = useUnit($modelStoreState.currModelFiles)
+function processModelFiles(files: ModelFileType[], fileType: string) {
+  return files
     .filter((f) => (fileType === 'model' ? f.isGguf : true))
     .sort((a, b) => {
       if (!a.isGguf && b.isGguf) return -1;
       if (a.isMmproj && !b.isMmproj) return -1;
       return 0;
     });
+}
+
+export const ModelsDetailsPage = memo(() => {
+  const [fileType, setFileType] = useState(fileTypeOptions[0].value);
+
+  const modelData = useUnit($modelStoreState.currModelData);
+
+  const files = useUnit($modelStoreState.currModelFiles);
+
+  const modelsToShow = useMemo(() => processModelFiles(files, fileType), [fileType, files]);
 
   if (!modelData) return null;
 
@@ -45,9 +52,9 @@ export const ModelsDetailsPage = memo(() => {
 
       <div className={s.fileListWrapper}>
         <Scrollbars className={s.filesList}>
-          {files.map((file, idx) => (
+          {modelsToShow.map((file, idx) => (
             <>
-              <ModelFile key={file.name} data={file} />
+              <ModelStoreFile key={file.name} data={file} />
               {idx !== files.length - 1 && <div className={s.divider} />}
             </>
           ))}

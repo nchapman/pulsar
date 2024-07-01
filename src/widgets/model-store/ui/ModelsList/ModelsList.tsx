@@ -1,10 +1,10 @@
 import { memo } from 'preact/compat';
 import Scrollbars from 'react-custom-scrollbars';
 
+import { HuggingFaceModel } from '@/entities/model/types/hugging-face-model.ts';
 import { classNames } from '@/shared/lib/func';
 import { Icon, Text } from '@/shared/ui';
 
-import { HuggingFaceModel } from '../../types/hugging-face-model.ts';
 import { ModelCard } from '../ModelCard/ModelCard.tsx';
 import s from './ModelsList.module.scss';
 
@@ -15,10 +15,15 @@ interface Props {
   withViewSwitch?: boolean;
   title: string;
   icon?: any;
+  loading?: boolean;
 }
 
 export const ModelsList = memo((props: Props) => {
-  const { className, view, models, title, icon } = props;
+  const { className, view, models, title, icon, loading } = props;
+
+  if (loading) {
+    return <Text>Searching...</Text>;
+  }
 
   return (
     <div className={classNames(s.modelsList, [className, s[view]])}>

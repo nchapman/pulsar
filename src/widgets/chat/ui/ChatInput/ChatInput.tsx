@@ -1,7 +1,7 @@
 import { useUnit } from 'effector-react';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
-import { $modelReady } from '@/entities/model/model/manage-models-model.ts';
+import { modelManager } from '@/entities/model';
 import { UploadFile, useUploadFile } from '@/features/upload-file';
 import { VoiceInput } from '@/features/voice-input';
 import SendIcon from '@/shared/assets/icons/send.svg';
@@ -27,7 +27,7 @@ export const ChatInput = (props: Props) => {
 
   const chatId = useUnit($chat.id);
 
-  const isModelReady = useUnit($modelReady);
+  const isModelReady = useUnit(modelManager.state.$ready);
 
   const isStreaming = useUnit($streamedMsgId);
   const disabledSend = useUnit($isInputDisabled) || !input || !isModelReady;

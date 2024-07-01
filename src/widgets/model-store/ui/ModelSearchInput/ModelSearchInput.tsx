@@ -1,11 +1,17 @@
+import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
-import { useState } from 'preact/hooks';
+import { useCallback } from 'preact/hooks';
 
 import GoIcon from '@/shared/assets/icons/arrow-right.svg';
 import LensIcon from '@/shared/assets/icons/search.svg';
 import { classNames } from '@/shared/lib/func';
 import { Button, Icon, Input } from '@/shared/ui';
 
+import {
+  $modelStoreState,
+  fetchHFModels,
+  modelStoreEvents,
+} from '../../model/model-store.model.ts';
 import s from './ModelSearchInput.module.scss';
 
 interface Props {
@@ -16,13 +22,33 @@ const placeholder = 'Search for models on Hugging Face';
 
 export const ModelSearchInput = memo((props: Props) => {
   const { className } = props;
-  const [value, setValue] = useState('aw ed');
+  const value = useUnit($modelStoreState.searchValue);
+  const isLoading = useUnit(fetchHFModels.pending);
+
+  const handleSubmit = useCallback((e: any) => {
+    e.preventDefault();
+    modelStoreEvents.searchHF();
+  }, []);
 
   return (
-    <div className={classNames(s.modelSearchInput, [className])}>
+    <form onSubmit={handleSubmit} className={classNames(s.modelSearchInput, [className])}>
       <Icon svg={LensIcon} className={s.icon} />
-      <Input placeholder={placeholder} className={s.input} value={value} onChange={setValue} />
-      <Button variant="clear" className={s.go} icon={GoIcon} />
-    </div>
+      <Input
+        autofocus
+        placeholder={placeholder}
+        className={s.input}
+        value={value}
+        disabled={isLoading}
+        onChange={modelStoreEvents.setSearchValue}
+      />
+      <Button
+        disabled={isLoading}
+        loading={isLoading}
+        variant="clear"
+        type="submit"
+        className={s.go}
+        icon={GoIcon}
+      />
+    </form>
   );
 });

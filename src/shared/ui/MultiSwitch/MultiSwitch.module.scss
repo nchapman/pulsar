@@ -1,0 +1,30 @@
+.multi-switch {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 8px;
+  padding: 4px;
+  background: var(--main-background-secondary);
+}
+
+.option {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 6px;
+
+  &:not(.active):hover span {
+    text-decoration: underline;
+  }
+}
+
+.active {
+  background: var(--sidebar-background-secondary);
+  cursor: initial;
+
+  span {
+    color: var(--text-primary);
+  }
+}
+

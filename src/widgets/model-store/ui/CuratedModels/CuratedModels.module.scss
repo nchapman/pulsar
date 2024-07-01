@@ -1,0 +1,21 @@
+.curated-models {
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.list {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.item {
+  flex-basis: calc((100% - 32px) / 3);
+}

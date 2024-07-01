@@ -19,7 +19,7 @@ interface Props {
 }
 
 export const ModelsList = memo((props: Props) => {
-  const { className, view, models, title, icon, loading } = props;
+  const { className, view, models, title, icon, loading, withViewSwitch } = props;
 
   if (loading) {
     return <Text>Searching...</Text>;
@@ -34,6 +34,7 @@ export const ModelsList = memo((props: Props) => {
             {title}
           </Text>
         </div>
+        {withViewSwitch && <div className={s.viewSwitch}></div>}
       </div>
 
       <Scrollbars className={s.list}>

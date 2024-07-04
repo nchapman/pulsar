@@ -74,8 +74,9 @@ export async function upload({
 ///
 /// Note that `filePath` currently must include the file name.
 /// Furthermore the progress events will report a total length of 0 if the server did not sent a `Content-Length` header or if the file is compressed.
-/// VerifyHash will automatically try to extract the x-linked-etag header and compare it to the sha256 of the downloaded file.
+/// `verifyHash` will automatically try to extract the x-linked-etag header and compare it to the sha256 of the downloaded file.
 /// If the hashes do not match, an error will be thrown but the file will still be on disk. Same if the header is not present.
+/// The `x-linked-etag` as a hash is NOT standard practice and might only work with hugging face responses.
 export async function download({
   id = getRandomInt(),
   url,

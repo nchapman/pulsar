@@ -26,13 +26,13 @@ impl Serialize for Error {
 type Result<T> = std::result::Result<T, Error>;
 
 #[command]
-fn get_byte_size(path: String) -> Result<u64> {
+fn get_byte_size(path: &str) -> Result<u64> {
     let metadata = fs::metadata(path)?;
     Ok(metadata.len())
 }
 
 #[command]
-async fn get_file_sha_256(path: String) -> Result<String> {
+pub async fn get_file_sha_256(path: &str) -> Result<String> {
     let mut hasher = Sha256::new();
     let mut file = fs::File::open(path)?;
 
@@ -79,14 +79,14 @@ mod tests {
             .join("smallFile.txt")
             .to_string_lossy()
             .to_string();
-        let result = super::get_byte_size(model_path).unwrap();
+        let result = super::get_byte_size(&model_path).unwrap();
         assert_eq!(result, 50);
     }
 
     #[test]
     fn test_get_byte_size_invalid_path() {
         let model_path = "invalid_path".to_string();
-        let result = super::get_byte_size(model_path);
+        let result = super::get_byte_size(&model_path);
         assert!(result.is_err());
     }
 
@@ -98,7 +98,7 @@ mod tests {
             .join("smallFile.txt")
             .to_string_lossy()
             .to_string();
-        let result = super::get_file_sha_256(model_path).await.unwrap();
+        let result = super::get_file_sha_256(&model_path).await.unwrap();
         assert_eq!(
             result,
             "7c4df6533de1d94d4d862f3472255e92e2292180b027819e60ebb51fcdc50c4e"
@@ -108,7 +108,7 @@ mod tests {
     #[tokio::test]
     async fn test_sample_model_sha_256_invalid_path() {
         let model_path = "invalid_path".to_string();
-        let result = super::get_file_sha_256(model_path).await;
+        let result = super::get_file_sha_256(&model_path).await;
         assert!(result.is_err());
     }
 }

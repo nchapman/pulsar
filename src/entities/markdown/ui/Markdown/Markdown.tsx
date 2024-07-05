@@ -10,12 +10,17 @@ import s from './Markdown.module.scss';
 interface Props {
   className?: string;
   text: string;
+  isGenerating: boolean;
 }
 
-const components: Partial<Components> = { code: Code };
+const components: Partial<Components> = {
+  code: Code,
+  progress: () => <span className={s.cursor} />,
+};
 
 export const Markdown = memo((props: Props) => {
-  const { className, text } = props;
+  const { className, text, isGenerating } = props;
+  console.log(text);
 
   return (
     <ReactMarkdown
@@ -23,7 +28,7 @@ export const Markdown = memo((props: Props) => {
       remarkPlugins={[remarkGfm]}
       className={classNames(s.markdown, [className])}
     >
-      {text}
+      {`${text}${isGenerating || !text ? '|' : ''}`}
     </ReactMarkdown>
   );
 });

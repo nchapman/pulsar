@@ -30,14 +30,14 @@ function groupChatsByDate(chats: Chat[]) {
       prev7days.push(chat);
     } else if (daysDiff <= 30) {
       prev30days.push(chat);
-    } else {
+    } else if (updatedAt.getFullYear() === new Date().getFullYear()) {
       // TODO: redo this part
       const monthKey = updatedAt.toLocaleString('default', { month: 'long' });
       if (!months[monthKey]) {
         months[monthKey] = [];
       }
       months[monthKey].push(chat);
-
+    } else {
       const yearKey = updatedAt.getFullYear().toString();
       if (!years[yearKey]) {
         years[yearKey] = [];

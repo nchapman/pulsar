@@ -1,4 +1,5 @@
-import { download } from 'tauri-plugin-upload-api';
+import { download } from '@/libs/file-transfer.ts';
+import { loge, logi } from '@/shared/lib/Logger.ts';
 
 import { getModelPath } from '../lib/getModelPath.ts';
 
@@ -7,12 +8,18 @@ export const downloadModel = async (
   localName: string,
   onProgress: (p: number) => void
 ) => {
-  let total = 0;
   const pathToSave = await getModelPath(localName);
-
-  download(url, pathToSave, (progress, totalCur) => {
-    total = totalCur;
-    const percent = !total ? 0 : (progress / total) * 100;
-    onProgress(percent);
-  });
+  logi('downloadModel', `Downloading model to ${pathToSave}`);
+  try {
+    await download({
+      url,
+      path: pathToSave,
+      progressHandler: (_id, progress, total) => {
+        const percent = !total ? 0 : (progress / total) * 100;
+        onProgress(percent);
+      },
+    });
+  } catch (e) {
+    loge('downloadModel', `Error downloading model: ${e}`);
+  }
 };

@@ -1,0 +1,11 @@
+.onboarding-page {
+  padding: 84px 64px 64px;
+  background-color: var(--gray-950);
+  background-image: url("../../assets/onboarding.png");
+  height: 100vh;
+  background-size: cover;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}

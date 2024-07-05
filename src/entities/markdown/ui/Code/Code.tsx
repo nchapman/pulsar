@@ -34,31 +34,30 @@ export const Code = memo((props: Props) => {
     return () => clearTimeout(id);
   }, [copied, resetCopy]);
 
-  if (!match) return <strong>code</strong>;
+  if (!lang && children === 'cursor') return <span className={s.cursor} />;
 
   return (
     <div className={classNames(s.code, [className])}>
-      {lang && (
-        <div className={s.header}>
-          <Text s={12} w="medium" c="primary">
-            {lang}
-          </Text>
+      <div className={s.header}>
+        <Text s={12} w="medium" c="primary">
+          {lang}
+        </Text>
 
-          <Tooltip text="Copy">
-            <Button onClick={() => copy(children)} variant="clear" className={s.copyBtn}>
-              <Text s={12} w="medium">
-                {copied ? 'Copied!' : 'Copy code'}
-              </Text>
-              <Icon size={16} svg={copied ? CheckIcon : CopyIcon} />
-            </Button>
-          </Tooltip>
-        </div>
-      )}
+        <Tooltip text="Copy">
+          <Button onClick={() => copy(children)} variant="clear" className={s.copyBtn}>
+            <Text s={12} w="medium">
+              {copied ? 'Copied!' : 'Copy code'}
+            </Text>
+            <Icon size={16} svg={copied ? CheckIcon : CopyIcon} />
+          </Button>
+        </Tooltip>
+      </div>
+
       <div className={s.body}>
         <SyntaxHighlighter
           {...rest}
           PreTag="div"
-          language={match[1]}
+          language={match?.[1] || 'plaintext'}
           style={codeTheme}
           customStyle={{ margin: 0 }}
         >

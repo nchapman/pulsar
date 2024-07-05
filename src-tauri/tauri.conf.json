@@ -7,7 +7,7 @@
   },
   "package": {
     "productName": "Pulsar",
-    "version": "0.0.34"
+    "version": "0.0.35"
   },
   "tauri": {
     "allowlist": {
@@ -56,9 +56,11 @@
         "decorations": false,
         "fullscreen": false,
         "resizable": true,
-        "title": "Pulsar",
+        "title": "",
         "width": 1100,
         "height": 830,
+        "minWidth": 1060,
+        "minHeight": 740,
         "titleBarStyle": "Overlay"
       }
     ],

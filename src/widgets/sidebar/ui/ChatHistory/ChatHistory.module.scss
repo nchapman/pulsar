@@ -1,27 +1,17 @@
 @import './src/shared/styles/mixins';
 
 .chat-history {
-  height: 100%;
   position: relative;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
-.header {
-  width: calc(100% + 16px);
-  margin-left: -8px;;
-  padding: 6px 8px 4px;
-  border-bottom: 1px solid var(--sidebar-background-secondary);
-}
 
 .list {
-  position: absolute;
-  top: 54px;
-  left: 0;
-  height: 100%;
+  flex: 1;
+  overflow-y: scroll;
   width: calc(100%);
-
-  @include scrollbar;
-  overflow-y: auto;
 }
 
 .period {
@@ -33,7 +23,7 @@
   margin-top: 20px;
 
   &:first-child {
-      margin-top: 0;
+    margin-top: 0;
   }
 }
 

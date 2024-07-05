@@ -3,13 +3,13 @@ import { FC, memo } from 'preact/compat';
 import { useEffect, useState } from 'preact/hooks';
 import { createPortal } from 'react';
 
-import { ToolbarLinux } from '@/widgets/toolbar/ui/ToolbarLinux/ToolbarLinux.tsx';
-import { ToolbarMacOS } from '@/widgets/toolbar/ui/ToolbarMacOS/ToolbarMacOS.tsx';
-import { ToolbarWindows } from '@/widgets/toolbar/ui/ToolbarWindows/ToolbarWindows.tsx';
+import { ToolbarLinux } from '../ToolbarLinux/ToolbarLinux.tsx';
+import { ToolbarMacOS } from '../ToolbarMacOS/ToolbarMacOS.tsx';
+import { ToolbarWindows } from '../ToolbarWindows/ToolbarWindows.tsx';
 
 interface Props {
   className?: string;
-  onToggleSidebar: () => void;
+  onToggleSidebar?: () => void;
 }
 
 const toolbar: Record<os.OsType, FC<Props>> = {

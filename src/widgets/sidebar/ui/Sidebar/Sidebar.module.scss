@@ -1,15 +1,10 @@
 .sidebar {
   display: flex;
+  height: 100%;
   flex-direction: column;
-  justify-content: stretch;
-  padding-top: 20px;
+  padding-top: 32px;
 }
 
 .chat-history {
-  flex: 1 1 auto;
-}
-
-.sidebar-footer {
-  flex: 0 1 auto;
-  flex-shrink: 0;
+  flex: 1;
 }

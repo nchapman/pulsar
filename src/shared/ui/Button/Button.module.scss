@@ -2,8 +2,9 @@
   cursor: pointer;
 
   display: flex;
-
+  gap: 4px;
   align-items: center;
+
   background: none;
   border: none;
   padding: 8px 16px;
@@ -73,23 +74,20 @@
   color: var(--text-primary);
 
   .end-fade {
+    transition: background 0.2s;
     background: linear-gradient(90deg, rgb(255, 255, 255, 0) 0%, var(--sidebar-background-primary) 50%, var(--sidebar-background-primary) 100%);
 
-    @media (prefers-color-scheme: dark) {
-      background: linear-gradient(90deg, #17171700, var(--sidebar-background-primary) 50%, var(--sidebar-background-primary) 100%);
-    }
+    //@media (prefers-color-scheme: dark) {
+    //  background: linear-gradient(90deg, #17171700, var(--sidebar-background-primary) 50%, var(--sidebar-background-primary) 100%);
+    //}
   }
 
   &:hover,
   &.active {
-    background: var(--gray-800);
+    background: var(--chat-history-btn);
 
     .end-fade {
-      background: linear-gradient(90deg, #CDCDCD00 0%, var(--gray-800) 50%, var(--gray-800) 100%);
-
-      @media (prefers-color-scheme: dark) {
-        background: linear-gradient(90deg, #21212100 0%, var(--gray-800) 50%, var(--gray-800) 100%);
-      }
+      background: linear-gradient(90deg, var(--chat-history-btn-0) 0%, var(--chat-history-btn) 50%, var(--chat-history-btn) 100%);
     }
 
     .icon {
@@ -148,7 +146,7 @@
 
     &.active,
     &:hover {
-      color: var(--gray-900);
+      color: var(--brand);
       background: var(--gray-600);
     }
   }
@@ -180,8 +178,6 @@
 }
 
 
-
-
 .suffix {
   display: none;
   position: absolute;
@@ -192,6 +188,16 @@
   background: transparent;
 
   z-index: 10;
+
+  .button.clear {
+    color: var(--brand);
+    opacity: 0.6;
+
+    &:hover {
+      color: var(--brand);
+      opacity: 1;
+    }
+  }
 }
 
 .active,

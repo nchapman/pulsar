@@ -45,6 +45,10 @@ export const useListScroll = () => {
     updateScroll(listRef.current);
   }, [streamedText]);
 
+  useEffect(() => {
+    setShowScrollBtn(false);
+  }, [chatId]);
+
   return useMemo(() => {
     const onStackScroll: JSX.UIEventHandler<HTMLDivElement> = (e) => {
       const el = e.currentTarget;
@@ -53,6 +57,9 @@ export const useListScroll = () => {
       const { scrollTop } = el;
       const { scrollHeight } = el;
       const { clientHeight } = el;
+
+      const isScrolledToBottom = el.scrollHeight - el.scrollTop === el.clientHeight;
+      setShowScrollBtn(!isScrolledToBottom);
 
       if (isProgrammaticScroll) {
         isProgrammaticScroll = false;
@@ -66,9 +73,6 @@ export const useListScroll = () => {
         // User scrolled somewhere else
         pinnedToBottom = false;
       }
-
-      const isScrolledToBottom = el.scrollHeight - el.scrollTop === el.clientHeight;
-      setShowScrollBtn(!isScrolledToBottom);
     };
 
     return { listRef, showScrollBtn, scrollToBottom, onStackScroll };

@@ -16,7 +16,7 @@ export const ChatFirstScreen = memo((props: Props) => {
   return (
     <div className={classNames(s.chatFirstScreen, [className])}>
       <div className={s.question}>
-        <Logo className={s.logo} />
+        <Logo size="l" className={s.logo} />
         <Text w="medium" s={24} c="primary">
           How can I help you today?
         </Text>

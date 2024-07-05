@@ -17,6 +17,10 @@
   --gray-900: #ECECEC;
   --gray-950: #F9F9F9;
 
+  // gray with opacity
+  --chat-history-btn-0: #ECECEC00;
+  --chat-history-btn: #ECECEC;
+
   // Text
   --text-primary: var(--gray-50);
   --text-secondary: var(--gray-500);
@@ -93,6 +97,10 @@
     --gray-900: #171717;
     --gray-950: #0D0D0D;
 
+    // gray with opacity
+    --chat-history-btn-0: #21212100;
+    --chat-history-btn: #212121;
+
     // Text
     --text-primary: var(--gray-100);
     --text-secondary: var(--gray-300);
@@ -151,7 +159,7 @@
     --button-text-secondary-disabled: #ECECEC26;
   }
 
-  &[data-theme="light"] {
+  [data-theme="light"] {
     // Root
     --white: #fff;
     --black: #000;
@@ -169,6 +177,10 @@
     --gray-800: #CDCDCD;
     --gray-900: #ECECEC;
     --gray-950: #F9F9F9;
+
+    // gray with opacity
+    --chat-history-btn-0: #ECECEC00;
+    --chat-history-btn: #ECECEC;
 
     // Text
     --text-primary: var(--gray-50);
@@ -246,6 +258,10 @@
     --gray-800: #212121;
     --gray-900: #171717;
     --gray-950: #0D0D0D;
+
+    // gray with opacity
+    --chat-history-btn-0: #21212100;
+    --chat-history-btn: #212121;
 
     // Text
     --text-primary: var(--gray-100);

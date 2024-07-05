@@ -3,7 +3,7 @@ import { memo } from 'preact/compat';
 
 import SidebarIcon from '@/shared/assets/icons/sidebar.svg';
 import { classNames } from '@/shared/lib/func';
-import { Button } from '@/shared/ui';
+import { Button, Text } from '@/shared/ui';
 
 import CloseIcon from '../../assets/close.svg';
 import MaximizeIcon from '../../assets/maximize.svg';
@@ -12,15 +12,19 @@ import s from './ToolbarLinux.module.scss';
 
 interface Props {
   className?: string;
-  onToggleSidebar: () => void;
+  onToggleSidebar?: () => void;
 }
 
 export const ToolbarLinux = memo((props: Props) => {
   const { className, onToggleSidebar } = props;
 
   return (
-    <div className={classNames(s.toolbarLinux, [className])}>
-      <Button onClick={onToggleSidebar} variant="clear" className={s.button} icon={SidebarIcon} />
+    <div data-tauri-drag-region className={classNames(s.toolbarLinux, [className])}>
+      {onToggleSidebar && (
+        <Button onClick={onToggleSidebar} variant="clear" className={s.button} icon={SidebarIcon} />
+      )}
+
+      <Text c="secondary" w="medium" s={14} className={s.title}></Text>
 
       <div className={s.controls}>
         <Button

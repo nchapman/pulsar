@@ -3,12 +3,12 @@ import { useStoreMap, useUnit } from 'effector-react';
 import { useMemo } from 'preact/hooks';
 
 import { Markdown } from '@/entities/markdown';
+import UserIcon from '@/shared/assets/icons/user-circle.svg';
 import { classNames } from '@/shared/lib/func';
-import { Logo } from '@/shared/ui';
+import { Icon, Logo } from '@/shared/ui';
 import { CopyMsgText } from '@/widgets/chat/ui/actions/CopyMsgText/CopyMsgText.tsx';
 import { Regenerate } from '@/widgets/chat/ui/actions/Regenerate/Regenerate.tsx';
 
-import userImg from '../../assets/user.jpeg';
 import { $messages, $streamedMsgId } from '../../model/chat.ts';
 import s from './ChatMessage.module.scss';
 
@@ -28,7 +28,9 @@ export const ChatMessage = (props: Props) => {
     fn: (msgMap, [msgId]) => msgMap[msgId],
   });
 
-  const { text, isUser, file } = msg;
+  const { isUser, file } = msg;
+  let { text } = msg;
+  if (isUser) text = text.replace(/\n/g, '\n\n');
 
   const actions = useMemo(() => {
     const actions = [];
@@ -45,14 +47,12 @@ export const ChatMessage = (props: Props) => {
   return (
     <div className={classNames(s.chatMessageWrapper, [className])}>
       <div className={s.chatMessage}>
-        <div className={s.authorIcon}>
-          {isUser ? <img src={userImg} alt="author" /> : <Logo className={s.logo} />}
-        </div>
+        <div className={s.authorIcon}>{isUser ? <Icon svg={UserIcon} /> : <Logo size="s" />}</div>
 
         <div className={s.body}>
           <div className={s.authorName}>{isUser ? 'You' : 'Pulsar'}</div>
           <div className={s.text}>
-            <Markdown text={text} />
+            <Markdown text={text} isGenerating={isStreamed} />
           </div>
           {file?.type === 'image' && (
             <img src={convertFileSrc(file?.src)} alt="img" className={s.img} />

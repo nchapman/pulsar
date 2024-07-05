@@ -1,12 +1,12 @@
 .toolbar-mac-os {
   width: var(--sidebar-width);
   height: 100%;
-  justify-content: flex-end;
-  padding-right: 12px;
+  justify-content: flex-start;
+  padding-left: 62px;
   display: flex;
   align-items: center;
 }
 
 .fullscreen {
-  padding-left: 0;
+  padding-left: 10px;
 }

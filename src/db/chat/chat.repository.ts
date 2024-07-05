@@ -16,6 +16,8 @@ export interface ChatMsg {
     userMsgId: Id;
     input: string;
   };
+  options?: string[];
+  currentOption?: number;
 }
 
 export interface Chat {

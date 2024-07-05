@@ -2,8 +2,9 @@ import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
 import { Popover } from 'react-tiny-popover';
 
-import { DEFAULT_LLM } from '@/entities/model';
-import { goToModelStore } from '@/pages/chat';
+import { goToStore } from '@/app/routes';
+import { modelManager } from '@/entities/model';
+import { $defaultModel } from '@/entities/settings/managers/user-settings-manager.ts';
 import CheckIcon from '@/shared/assets/icons/check-circle-broken.svg';
 import ChevronDownIcon from '@/shared/assets/icons/chevron-down.svg';
 import CubeIcon from '@/shared/assets/icons/cube.svg';
@@ -11,8 +12,6 @@ import { classNames } from '@/shared/lib/func';
 import { useToggle } from '@/shared/lib/hooks';
 import { Button, Icon, Text } from '@/shared/ui';
 
-import { LlmName, supportedLlms } from '../../consts/supported-llms.const.ts';
-import { $currentModel } from '../../model/manage-models-model.ts';
 import s from './SwitchModelInsideChat.module.scss';
 
 interface Props {
@@ -21,11 +20,13 @@ interface Props {
 
 export const SwitchModelInsideChat = memo((props: Props) => {
   const { className } = props;
-  const currentModel = useUnit($currentModel);
+  const currentModel = useUnit(modelManager.state.$currentModel);
+  const availableModels = useUnit(modelManager.state.$models);
+  const defaultModel = useUnit($defaultModel);
   const { off: hidePopover, toggle: togglePopover, isOn: isPopoverShown } = useToggle();
 
   if (!currentModel) return null;
-  const { name } = supportedLlms[currentModel];
+  const { name } = modelManager.getModelData(currentModel);
 
   const popover = (
     <div className={s.popover}>
@@ -34,36 +35,41 @@ export const SwitchModelInsideChat = memo((props: Props) => {
           Choose Model
         </Text>
 
-        <Button className={s.explore} variant="clear" onClick={goToModelStore}>
+        <Button
+          className={s.explore}
+          variant="clear"
+          onClick={() => {
+            goToStore();
+            hidePopover();
+          }}
+        >
           Explore models
           <Icon svg={CubeIcon} className={s.icon} />
         </Button>
       </div>
 
       <div>
-        {Object.keys(supportedLlms).map((i) => {
-          const { name } = supportedLlms[i as LlmName];
-
-          return (
+        {Object.values(availableModels)
+          .filter((m) => m.type === 'llm')
+          .map((m) => (
             <Button
-              active={i === currentModel}
-              key={name}
+              active={m.id === currentModel}
+              key={m.name}
               className={s.model}
               variant="clear"
-              onClick={() => undefined}
+              onClick={() => modelManager.switchModel(m.id)}
             >
-              {name}
+              {m.name}
               <div className={s.modelInfo}>
-                {i === DEFAULT_LLM && (
+                {m.id === defaultModel && (
                   <div className={s.default}>
                     <Text s={12}>Set as default</Text>
                   </div>
                 )}
-                {i === currentModel && <Icon svg={CheckIcon} className={s.selectedIcon} />}
+                {m.id === currentModel && <Icon svg={CheckIcon} className={s.selectedIcon} />}
               </div>
             </Button>
-          );
-        })}
+          ))}
       </div>
     </div>
   );

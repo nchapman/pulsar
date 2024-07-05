@@ -24,6 +24,7 @@ interface ButtonProps {
   suffixClassName?: string;
   onClick?: () => void;
   notActive?: boolean;
+  withInactive?: boolean;
 }
 
 export const Button = memo((props: ButtonProps) => {
@@ -40,6 +41,7 @@ export const Button = memo((props: ButtonProps) => {
     suffixClassName,
     endFade,
     notActive,
+    withInactive,
     ...otherProps
   } = props;
 
@@ -60,6 +62,7 @@ export const Button = memo((props: ButtonProps) => {
         [s.active]: active,
         [s.loading]: loading,
         [s.notActive]: notActive,
+        [s.withInactive]: withInactive,
       })}
       disabled={props.disabled || loading}
     >

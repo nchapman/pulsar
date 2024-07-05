@@ -3,8 +3,11 @@
   flex-direction: column;
   justify-content: flex-end;
   gap: 8px;
+  border-top: 1px solid var(--border-disabled);
+  padding-top: 12px;
 }
 
 .btn {
-  justify-content: center;
+  justify-content: flex-start;
+  align-items: center;
 }

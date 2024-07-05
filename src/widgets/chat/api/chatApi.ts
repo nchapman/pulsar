@@ -1,5 +1,5 @@
 import { ChatMsg } from '@/db/chat';
-import { model } from '@/entities/model';
+import { modelManager } from '@/entities/model';
 import { loge } from '@/shared/lib/Logger.ts';
 
 import { urlToBase64 } from '../lib/utils/urlToBase64.ts';
@@ -14,7 +14,7 @@ export async function stream(
   },
   maxPredictLen: number = 10000
 ) {
-  if (!model) {
+  if (!modelManager.model) {
     loge('chatApi', 'Model not loaded, cannot stream');
     return;
   }
@@ -23,7 +23,7 @@ export async function stream(
   const { onStreamStart, onTextChunkReceived, onTitleUpdate, onStreamEnd } = config;
 
   try {
-    const context = await model.createContext(
+    const context = await modelManager.model.createContext(
       messages.slice(0, -1).map((msg) => ({ message: msg.text, is_user: !!msg.isUser }))
     );
 

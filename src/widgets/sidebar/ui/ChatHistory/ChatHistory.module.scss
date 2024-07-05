@@ -12,6 +12,10 @@
   flex: 1;
   overflow-y: scroll;
   width: calc(100%);
+
+  & > div:first-child {
+    transform: translateY(1px);
+  }
 }
 
 .period {

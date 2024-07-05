@@ -15,7 +15,7 @@
   position: relative;
   line-height: 1.4;
   overflow: hidden;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, color 0.2s;
 
   &:disabled {
     cursor: unset;
@@ -73,6 +73,10 @@
   background: transparent;
   color: var(--text-primary);
 
+  &.with-inactive {
+    color: var(--text-secondary);
+  }
+
   .end-fade {
     transition: background 0.2s;
     background: linear-gradient(90deg, rgb(255, 255, 255, 0) 0%, var(--sidebar-background-primary) 50%, var(--sidebar-background-primary) 100%);
@@ -84,6 +88,7 @@
 
   &:hover,
   &.active {
+    color: var(--text-primary);
     background: var(--chat-history-btn);
 
     .end-fade {

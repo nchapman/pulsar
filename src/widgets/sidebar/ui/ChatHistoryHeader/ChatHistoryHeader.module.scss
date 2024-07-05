@@ -6,6 +6,8 @@
   justify-content: space-between;
   border-radius: 8px;
 
+
+
   &:hover {
     background-color: var(--gray-800);
   }
@@ -13,6 +15,8 @@
 
 .wrapper {
   gap: 6px 8px;
+  //padding-bottom: 12px;
+  //border-bottom: 1px solid var(--border-disabled);
 }
 
 .left,

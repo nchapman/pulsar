@@ -1,0 +1,22 @@
+.onboarding-ready {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.title {
+  margin-top: 24px;
+  margin-bottom: 52px;
+}
+
+.start-btn {
+  margin-bottom: 36px;
+  width: 460px;
+  padding: 20px;
+  font-weight: 500;
+  font-size: 24px;
+  justify-content: center;
+  gap: 16px;
+}

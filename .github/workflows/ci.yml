@@ -42,9 +42,6 @@ jobs:
         with:
           lfs: true
 
-      - name: Setup upterm session
-        uses: lhotari/action-upterm@v1
-
       - name: Fetch LFS objects
         run: git lfs fetch --all
 
@@ -71,6 +68,9 @@ jobs:
             src-tauri/target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-
+
+      - name: Setup upterm session
+        uses: lhotari/action-upterm@v1
 
       - name: Test
         working-directory: src-tauri

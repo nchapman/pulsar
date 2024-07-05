@@ -1,18 +1,11 @@
 import { Collection, Database } from '@nozbe/watermelondb';
 
-import { ModelData, ModelType } from '@/db/model';
+import { ModelType } from '@/db/model';
+import { ModelDto } from '@/entities/model';
 import { assignValues, serialize } from '@/shared/lib/func';
 
 import { DownloadModel } from './download.model.ts';
 import { downloadsTable } from './download.schema.ts';
-
-export interface ModelFileType {
-  name: string;
-  size: number;
-  isGguf: boolean;
-  fitsInMemory?: boolean;
-  isMmproj: boolean;
-}
 
 export interface DownloadItem {
   id: Id;
@@ -27,14 +20,9 @@ export interface DownloadItem {
     isFinished: boolean;
     isPaused: boolean;
   };
-
   type: ModelType;
-  localName: string;
-
-  dto: {
-    file: ModelFileType;
-    model: ModelData;
-  };
+  name: string;
+  dto: ModelDto;
 
   modelId?: Id;
 
@@ -97,7 +85,7 @@ export class DownloadsRepository {
       'id',
       'downloadingData',
       'remoteUrl',
-      'localName',
+      'name',
       'type',
       'dto',
       'modelId',

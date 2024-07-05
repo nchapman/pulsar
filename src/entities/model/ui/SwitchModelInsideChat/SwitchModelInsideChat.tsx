@@ -26,7 +26,7 @@ export const SwitchModelInsideChat = memo((props: Props) => {
   const { off: hidePopover, toggle: togglePopover, isOn: isPopoverShown } = useToggle();
 
   if (!currentModel) return null;
-  const { name } = modelManager.getModelData(currentModel);
+  const modelData = modelManager.getModelData(currentModel);
 
   const popover = (
     <div className={s.popover}>
@@ -89,7 +89,7 @@ export const SwitchModelInsideChat = memo((props: Props) => {
           className={classNames(s.switchModelInsideChat, [className], { [s.open]: isPopoverShown })}
           variant="clear"
         >
-          {name}
+          {modelData?.model.name}
           <Icon svg={ChevronDownIcon} className={s.icon} />
         </Button>
       </div>

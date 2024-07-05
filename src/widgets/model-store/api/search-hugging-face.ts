@@ -1,6 +1,6 @@
 import { listFiles, listModels } from '@huggingface/hub';
 
-import { ModelFileType } from '@/db/download/download.repository.ts';
+import { ModelFileData } from '@/entities/model';
 import { HuggingFaceModel } from '@/entities/model/types/hugging-face-model.ts';
 import { getSystemInfo } from '@/features/system/system.ts';
 
@@ -41,11 +41,11 @@ export const fetchHuggingFaceFiles = async (modelId: string): Promise<any> => {
     repo: modelId,
   });
 
-  const files: ModelFileType[] = [];
+  const files: ModelFileData[] = [];
 
   // eslint-disable-next-line no-restricted-syntax
   for await (const file of filesGenerator) {
-    const data: ModelFileType = {
+    const data: ModelFileData = {
       name: file.path,
       size: file.size,
       isGguf: file.path.endsWith('.gguf'),

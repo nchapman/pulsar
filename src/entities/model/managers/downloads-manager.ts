@@ -40,15 +40,17 @@ class DownloadsManager {
 
   // public API methods
 
-  async addDownload(d: Pick<DownloadItem, 'dto' | 'localName' | 'type' | 'remoteUrl'>) {
+  async addDownload(d: Pick<DownloadItem, 'dto' | 'name' | 'type' | 'remoteUrl'>) {
     const existingDownload = Object.values(this.downloadsData).find(
-      (download) => download.localName === d.localName
+      (download) => download.name === d.name
     );
 
     if (existingDownload) {
       this.start(existingDownload.id);
       return existingDownload;
     }
+
+    console.log('dto', d);
 
     // save download to the db
     const download = await this.downloadsRepository.create({
@@ -62,6 +64,8 @@ class DownloadsManager {
         isPaused: false,
       },
     });
+
+    console.log('download', download);
 
     // save download to the state
     this.downloadsIdsList = [download.id, ...this.#downloadsIdsList];
@@ -87,11 +91,11 @@ class DownloadsManager {
     delete this.downloadsData[id];
 
     // delete file from the disk
-    await deleteDownload(download.localName);
+    await deleteDownload(download.name);
   }
 
   async start(id: Id) {
-    const { remoteUrl: url, localName, downloadingData } = this.downloadsData[id];
+    const { remoteUrl: url, name, downloadingData } = this.downloadsData[id];
 
     const { downloadId, progress, isPaused } = downloadingData;
 
@@ -99,7 +103,7 @@ class DownloadsManager {
       return;
     }
 
-    const path = await getDownloadPath(localName);
+    const path = await getDownloadPath(name);
     await this.updateDownloadData(id, { downloadingData: { ...downloadingData, isPaused: false } });
 
     await download({
@@ -135,6 +139,7 @@ class DownloadsManager {
     const newData = { ...download };
 
     if (isNew) {
+      console.log(newData);
       newData.downloadingData.total = total;
       newData.dto.file.size = total;
     }
@@ -181,10 +186,7 @@ class DownloadsManager {
 
     // delete missing in local and unfinished
     await promiseAll(downloads, async (download) => {
-      if (
-        !availableDownloads.includes(download.localName) &&
-        !download.downloadingData.isFinished
-      ) {
+      if (!availableDownloads.includes(download.name) && !download.downloadingData.isFinished) {
         await this.downloadsRepository.remove(download.id);
       }
     });
@@ -218,18 +220,14 @@ class DownloadsManager {
   }
 
   private async onItemDownloaded(id: Id) {
-    const {
-      localName,
-      type,
-      dto: { model: modelDto },
-    } = this.downloadsData[id];
+    const { name, type, dto } = this.downloadsData[id];
 
-    const filePath = await getDownloadPath(localName);
+    const filePath = await getDownloadPath(name);
 
     const model = await this.modelManager.addModel({
       type,
       filePath,
-      modelDto,
+      dto,
     });
 
     // save to the db

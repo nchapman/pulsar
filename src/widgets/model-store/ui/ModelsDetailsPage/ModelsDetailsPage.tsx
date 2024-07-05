@@ -3,13 +3,13 @@ import { memo } from 'preact/compat';
 import { useMemo, useState } from 'preact/hooks';
 import Scrollbars from 'react-custom-scrollbars';
 
-import { ModelFileType } from '@/db/download/download.repository.ts';
+import { ModelFileData } from '@/entities/model';
 import { classNames } from '@/shared/lib/func';
 import { MultiSwitch, Text } from '@/shared/ui';
-import { ModelStoreFile } from '@/widgets/model-store/ui/ModelStoreFile/ModelStoreFile.tsx';
 
 import { $modelStoreState } from '../../model/model-store.model.ts';
 import { ModelCard } from '../ModelCard/ModelCard';
+import { ModelStoreFile } from '../ModelStoreFile/ModelStoreFile.tsx';
 import s from './ModelsDetailsPage.module.scss';
 
 const fileTypeOptions = [
@@ -17,7 +17,7 @@ const fileTypeOptions = [
   { label: 'All Files', value: 'all' },
 ];
 
-function processModelFiles(files: ModelFileType[], fileType: string) {
+function processModelFiles(files: ModelFileData[], fileType: string) {
   return files
     .filter((f) => (fileType === 'model' ? f.isGguf : true))
     .sort((a, b) => {

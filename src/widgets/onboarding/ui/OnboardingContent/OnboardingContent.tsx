@@ -1,8 +1,5 @@
 import { memo } from 'preact/compat';
 
-import { curatedModels, modelManager } from '@/entities/model';
-import { getDownloadPath } from '@/entities/model/lib/getDownloadPath.ts';
-import { userSettingsManager } from '@/entities/settings';
 import { classNames } from '@/shared/lib/func';
 import { Logo, Text } from '@/shared/ui';
 
@@ -12,32 +9,32 @@ interface Props {
   className?: string;
 }
 
-function loadFirstModel() {
-  const llava = curatedModels['llava-v1.6-mistral-7b'];
-  const llvaMmp = curatedModels['mmproj-model-f16'];
-
-  getDownloadPath(llava.file.name)
-    .then(async (path) => {
-      await modelManager.addModel({
-        dto: llava,
-        filePath: path,
-        type: 'llm',
-      });
-
-      return getDownloadPath(llvaMmp.file.name);
-    })
-    .then((path) => {
-      modelManager.addModel({
-        dto: llvaMmp,
-        filePath: path,
-        type: 'mmp',
-      });
-    });
-}
-
-function deleteModel() {
-  modelManager.deleteModel(userSettingsManager.get('defaultModel')!);
-}
+// function loadFirstModel() {
+//   const llava = curatedModels['llava-v1.6-mistral-7b'];
+//   const llvaMmp = curatedModels['mmproj-model-f16'];
+//
+//   getDownloadPath(llava.file.name)
+//     .then(async (path) => {
+//       await modelManager.addModel({
+//         dto: llava,
+//         filePath: path,
+//         type: 'llm',
+//       });
+//
+//       return getDownloadPath(llvaMmp.file.name);
+//     })
+//     .then((path) => {
+//       modelManager.addModel({
+//         dto: llvaMmp,
+//         filePath: path,
+//         type: 'mmp',
+//       });
+//     });
+// }
+//
+// function deleteModel() {
+//   modelManager.deleteModel(userSettingsManager.get('defaultModel')!);
+// }
 
 export const OnboardingContent = memo((props: Props) => {
   const { className } = props;

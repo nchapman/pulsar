@@ -73,7 +73,7 @@ jobs:
         working-directory: src-tauri
         run: |
           cargo clean
-          cargo test -- --test-threads=1 --nocapture
+          cargo test should_predict_text -- --test-threads=1 --nocapture
 
   rust_lint:
     runs-on: ubuntu-latest

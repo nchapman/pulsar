@@ -1,14 +1,14 @@
 import { combine, createEffect, createEvent, createStore, sample } from 'effector';
 
 import { goToStore, goToStoreModel } from '@/app/routes';
-import { ModelFileType } from '@/db/download/download.repository.ts';
+import { ModelFileData } from '@/entities/model';
 import { HuggingFaceModel } from '@/entities/model/types/hugging-face-model.ts';
 
 import { fetchHuggingFaceFiles, searchHuggingFaceModels } from '../api/search-hugging-face.ts';
 
 const models = createStore<HuggingFaceModel[]>([]);
 const currModel = createStore<string | null>(null);
-const currModelFiles = createStore<ModelFileType[]>([]);
+const currModelFiles = createStore<ModelFileData[]>([]);
 const showCurated = createStore(true);
 const searchValue = createStore('');
 const modelsNameMap = models.map((models) =>
@@ -43,7 +43,7 @@ export const modelStoreEvents = {
 };
 
 export const fetchHFModels = createEffect<string, HuggingFaceModel[]>(searchHuggingFaceModels);
-const fetchHFFiles = createEffect<string, ModelFileType[]>(fetchHuggingFaceFiles);
+const fetchHFFiles = createEffect<string, ModelFileData[]>(fetchHuggingFaceFiles);
 
 // fetchHFModels is triggered by searchHF
 sample({
@@ -85,3 +85,4 @@ sample({
   target: createEffect(goToStore),
 });
 $modelStoreState.models.watch(console.log);
+$modelStoreState.currModelFiles.watch(console.log);

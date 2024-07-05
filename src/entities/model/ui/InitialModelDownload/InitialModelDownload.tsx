@@ -2,13 +2,13 @@ import { useStoreMap, useUnit } from 'effector-react';
 import { memo, useLayoutEffect } from 'preact/compat';
 import { useState } from 'preact/hooks';
 
-import { DownloadModel } from '@/db/download';
-import { supportedLlms } from '@/entities/model/consts/supported-llms.const.ts';
+import { curatedModels } from '@/entities/model';
 import { downloadsManager } from '@/entities/model/managers/downloads-manager.ts';
 import DownloadIcon from '@/shared/assets/icons/download.svg';
 import { classNames } from '@/shared/lib/func';
 import { changeTheme } from '@/shared/theme';
 import { Button, Icon, Progress, Text } from '@/shared/ui';
+import { getHuggingFaceDownloadLink } from '@/widgets/model-store/api/search-hugging-face.ts';
 
 import { ModelCard } from '../ModelCard/ModelCard';
 import s from './InitialModelDownload.module.scss';
@@ -44,17 +44,13 @@ export const InitialModelDownload = memo((props: Props) => {
   }, []);
 
   const handleModelDownload = async () => {
-    const llama7b = supportedLlms['nous-hermes-2-solar-10.7b.Q4_K_M.gguf'];
-
-    const { localName, url } = llama7b;
-
-    const llm: DownloadModel['dto'] = {};
+    const llava = curatedModels['llava-v1.6-mistral-7b'];
 
     const res = await downloadsManager.addDownload({
-      dto: llm,
-      localName,
+      dto: llava,
+      name: llava.file.name,
       type: 'llm',
-      remoteUrl: url,
+      remoteUrl: getHuggingFaceDownloadLink(llava.model.name, llava.file.name),
     });
 
     setDownloadId(res.id);

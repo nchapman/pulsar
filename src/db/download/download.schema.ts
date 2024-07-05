@@ -6,7 +6,7 @@ export const downloadsTable = {
     downloadingData: 'downloading_data',
     remoteUrl: 'remote_url',
     type: 'type',
-    localName: 'local_name',
+    name: 'name',
     dto: 'dto',
     modelId: 'model_id',
     createdAt: 'created_at',
@@ -19,7 +19,7 @@ export const downloadSchema = tableSchema({
   columns: [
     { name: downloadsTable.cols.downloadingData, type: 'string' },
     { name: downloadsTable.cols.remoteUrl, type: 'string' },
-    { name: downloadsTable.cols.localName, type: 'string' },
+    { name: downloadsTable.cols.name, type: 'string' },
     { name: downloadsTable.cols.dto, type: 'string' },
     { name: downloadsTable.cols.type, type: 'string' },
     { name: downloadsTable.cols.modelId, type: 'string', isOptional: true },

@@ -1,6 +1,6 @@
 import { memo, ReactNode } from 'preact/compat';
 
-import { ModelFileType } from '@/db/download/download.repository.ts';
+import { ModelFileData } from '@/entities/model';
 import { getQuantization } from '@/entities/model/lib/getQuantization.ts';
 import { ModelTag } from '@/entities/model/ui/ModelTag/ModelTag.tsx';
 import { classNames } from '@/shared/lib/func';
@@ -11,7 +11,7 @@ import s from './ModelFile.module.scss';
 interface Props {
   className?: string;
   children: ReactNode;
-  data: ModelFileType;
+  data: ModelFileData;
 }
 
 export const ModelFile = memo((props: Props) => {

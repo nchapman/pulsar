@@ -1,5 +1,6 @@
 import { Collection, Database } from '@nozbe/watermelondb';
 
+import { ModelDto } from '@/entities/model';
 import { assignValues, serialize } from '@/shared/lib/func';
 
 import { ModelModel } from './model.model.ts';
@@ -7,20 +8,10 @@ import { modelsTable } from './model.schema.ts';
 
 export type ModelType = 'llm' | 'mmp';
 
-export interface ModelData {
-  name: string;
-  localName: string;
-  description: string;
-  size?: number;
-  hash?: string;
-  mmpName?: string | null;
-  llmName?: string | null;
-}
-
 export interface Model {
   id: Id;
   name: string;
-  data: ModelData;
+  data: ModelDto;
   type: ModelType;
   createdAt: number;
   updatedAt: number;

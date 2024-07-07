@@ -3,3 +3,21 @@
   height: 100%;
   padding: 40px;
 }
+
+.header {
+  margin-bottom: 24px;
+}
+
+.file-list-wrapper {
+  height: calc(100vh - 140px);
+
+}
+
+.files-list {
+  & > div:first-child {
+    margin-right: -14px;
+    padding-right: 14px;
+    padding-bottom: 1px;
+    transform: translateY(1px);
+  }
+}

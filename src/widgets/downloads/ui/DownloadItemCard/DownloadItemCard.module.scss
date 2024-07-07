@@ -1,3 +1,25 @@
 .download-item-card {
-  // styles here
+  &:not(:last-child) {
+    margin-bottom: 24px;
+  }
+}
+
+.author-header {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.model-card {
+  padding: 12px 8px;
+  border-radius: 12px;
+
+  border: 1px solid var(--border-light);
+  background: var(--main-background-quaternary);
+}
+
+.model-header {
+  padding-left: 12px;
+  margin-bottom: 16px;
 }

@@ -1,47 +1,61 @@
 import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
-import { useMemo, useState } from 'preact/hooks';
+import { useMemo } from 'preact/hooks';
 import Scrollbars from 'react-custom-scrollbars';
 
+import { DownloadItem } from '@/db/download';
+import { modelManager, Models } from '@/entities/model';
 import { DownloadsData, downloadsManager } from '@/entities/model/managers/downloads-manager.ts';
 import { classNames } from '@/shared/lib/func';
 import { Text } from '@/shared/ui';
-import { DownloadItemCard } from '@/widgets/downloads/ui/DownloadItemCard/DownloadItemCard.tsx';
 
+import { DownloadItemCard } from '../DownloadItemCard/DownloadItemCard.tsx';
 import s from './DownloadsPage.module.scss';
 
-enum SortBy {
-  RECENT = 'recent',
-}
+function groupDownloads(data: DownloadsData, models: Models) {
+  const res: Record<string, Record<string, DownloadItem[]>> = {};
 
-function formatList(data: DownloadsData, sortBy = SortBy.RECENT) {
-  return Object.values(data).sort((a, b) => {
-    if (sortBy === SortBy.RECENT) {
-      return a.createdAt - b.createdAt;
-    }
+  Object.values(data).forEach((d) => {
+    const model = models[d.modelName];
+    if (!model) return;
 
-    return 0;
+    const { author } = model.data;
+
+    if (!res[author]) res[author] = {};
+
+    if (!res[author][d.modelName]) res[author][d.modelName] = [];
+
+    res[author][d.modelName].push(d);
   });
+
+  return Object.entries(res);
 }
 
 export const DownloadsPage = memo(() => {
   const items = useUnit(downloadsManager.state.$downloadsData);
-  const [sortBy] = useState<SortBy>(SortBy.RECENT);
+  const models = useUnit(modelManager.state.$models);
+
+  const downloadsNumber = Object.keys(items).length;
 
   const downloads = useMemo(
-    () => formatList(items, sortBy).map((i) => <DownloadItemCard key={i.id} data={i} />),
-    [items, sortBy]
+    () =>
+      groupDownloads(items, models).map(([author, data]) => (
+        <DownloadItemCard key={author} author={author} data={data} />
+      )),
+    [items, models]
   );
 
   return (
     <div className={classNames(s.downloadsPage, [])}>
       <div className={s.header}>
         <Text c="primary" w="medium" s={14}>
-          {downloads.length} installed models
+          {downloadsNumber} installed files
         </Text>
       </div>
 
-      <Scrollbars className={s.list}></Scrollbars>
+      <div className={s.fileListWrapper}>
+        <Scrollbars className={s.filesList}>{downloads}</Scrollbars>
+      </div>
     </div>
   );
 });

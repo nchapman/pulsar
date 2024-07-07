@@ -17,6 +17,7 @@ import { NebulaModel } from '../nebula/NebulaModel.ts';
 
 type ModelFileIdMap = Record<Id, ModelFile>;
 type ModelFileNameIdMap = Record<string, Id>;
+export type Models = Record<string, Model>;
 
 const LOG_TAG = 'Model Manager';
 
@@ -25,7 +26,7 @@ class ModelManager {
 
   #modelFiles: ModelFileIdMap = {};
 
-  #models: Record<string, Model> = {};
+  #models: Models = {};
 
   #llmNameIdMap: ModelFileNameIdMap = {};
 
@@ -43,6 +44,7 @@ class ModelManager {
 
   state = {
     $ready: createStore(false),
+    $models: createStore<Models>({}),
     $modelFiles: createStore<ModelFileIdMap>({}),
     $currentModel: createStore<string | null>(null),
     $hasNoModels: createStore(false),
@@ -53,7 +55,7 @@ class ModelManager {
   events = {
     setReady: createEvent<boolean>(),
     setModelFiles: createEvent<ModelFileIdMap>(),
-    setModels: createEvent<ModelFileIdMap>(),
+    setModels: createEvent<Models>(),
     setCurrentModels: createEvent<string | null>(),
     setHasNoModels: createEvent<boolean>(),
     setLoadError: createEvent<string | null>(),
@@ -293,6 +295,7 @@ class ModelManager {
     this.state.$hasNoModels.on(this.events.setHasNoModels, (_, val) => val);
     this.state.$loadError.on(this.events.setLoadError, (_, val) => val);
     this.state.$appStarted.on(this.events.setAppStarted, (_, val) => val);
+    this.state.$models.on(this.events.setModels, (_, models) => models);
   }
 
   private async loadModel(llmLocalName: string, mmpLocalName?: string) {
@@ -353,6 +356,7 @@ class ModelManager {
 
   private set models(models: Record<string, Model>) {
     this.#models = models;
+    this.events.setModels(models);
   }
 
   get isReady() {

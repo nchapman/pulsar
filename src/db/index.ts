@@ -2,24 +2,28 @@ import { Database, Model } from '@nozbe/watermelondb';
 import { Class } from '@nozbe/watermelondb/types';
 
 import { DownloadModel, DownloadsRepository } from '@/db/download';
-import { ModelsRepositoryMock } from '@/db/model/model.repository.mock.ts';
 import { __IS_STORYBOOK__ } from '@/shared/consts';
 
 import { ChatModel, ChatsRepository, ChatsRepositoryMock } from './chat';
-import { ModelModel, ModelsRepository } from './model';
+import { ModelModel, ModelsRepository, ModelsRepositoryMock } from './model';
+import { ModelFileModel, ModelFilesRepositoryMock, ModelsFilesRepository } from './model-file';
 import { adapter } from './nativeAdapter';
 
 const database = __IS_STORYBOOK__
   ? undefined
   : new Database({
       adapter,
-      modelClasses: [ChatModel, ModelModel, DownloadModel] as Class<Model>[],
+      modelClasses: [ChatModel, ModelFileModel, DownloadModel, ModelModel] as Class<Model>[],
     });
 
 // Repositories
 export const chatsRepository = (
   __IS_STORYBOOK__ ? new ChatsRepositoryMock() : new ChatsRepository(database!)
 ) as ChatsRepository;
+
+export const modelFilesRepository = (
+  __IS_STORYBOOK__ ? new ModelFilesRepositoryMock() : new ModelsFilesRepository(database!)
+) as ModelsFilesRepository;
 
 export const modelsRepository = (
   __IS_STORYBOOK__ ? new ModelsRepositoryMock() : new ModelsRepository(database!)

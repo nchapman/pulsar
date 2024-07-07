@@ -1,8 +1,10 @@
 import { createEvent, createStore } from 'effector';
 
 import { APP_DIRS } from '@/app/consts/app.const.ts';
-import { downloadsRepository } from '@/db';
+import { downloadsRepository, modelsRepository } from '@/db';
 import { DownloadItem, DownloadsRepository } from '@/db/download';
+import { ModelsRepository } from '@/db/model';
+import { ModelDto } from '@/entities/model';
 import { UserSettingsManager, userSettingsManager } from '@/entities/settings';
 import { download, getRandomInt, interruptFileTransfer } from '@/shared/lib/file-transfer.ts';
 import { getPercent, promiseAll } from '@/shared/lib/func';
@@ -41,6 +43,7 @@ class DownloadsManager {
 
   constructor(
     private readonly downloadsRepository: DownloadsRepository,
+    private readonly modelsRepository: ModelsRepository,
     private readonly modelManager: ModelManager,
     private readonly userSettings: UserSettingsManager
   ) {
@@ -51,10 +54,19 @@ class DownloadsManager {
 
   // public API methods
 
-  async addDownload(d: Pick<DownloadItem, 'dto' | 'name' | 'type' | 'remoteUrl'>) {
+  async addDownload(
+    d: Pick<DownloadItem, 'dto' | 'name' | 'type' | 'remoteUrl' | 'modelName'>,
+    modelDto: ModelDto
+  ) {
+    this.modelsRepository.createOrUpdate(modelDto);
+
     const existingDownload = Object.values(this.downloadsData).find(
       (download) => download.name === d.name
     );
+
+    if (this.modelManager.availableLlms.includes(d.name)) {
+      console.log('Llm already downloaded, skipping...');
+    }
 
     if (existingDownload) {
       this.start(existingDownload.id);
@@ -253,14 +265,15 @@ class DownloadsManager {
   }
 
   private async onItemDownloaded(id: Id) {
-    const { name, type, dto } = this.downloadsData[id];
+    const { name, type, dto, modelName } = this.downloadsData[id];
 
     const filePath = await getDownloadPath(name);
 
-    const model = await this.modelManager.addModel({
+    const modelFile = await this.modelManager.addModel({
       type,
       filePath,
       dto,
+      modelName,
     });
 
     // save to the db
@@ -270,7 +283,7 @@ class DownloadsManager {
         isFinished: true,
         status: 'finished',
       },
-      modelId: model.id,
+      modelFileId: modelFile.id,
     });
 
     this.downloadNextFromQueue();
@@ -353,6 +366,7 @@ class DownloadsManager {
 
 export const downloadsManager = new DownloadsManager(
   downloadsRepository,
+  modelsRepository,
   modelManager,
   userSettingsManager
 );

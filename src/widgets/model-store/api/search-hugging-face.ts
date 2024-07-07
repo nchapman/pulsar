@@ -35,7 +35,7 @@ export const searchHuggingFaceModels = async (query: string) => {
   return models as HuggingFaceModel[];
 };
 
-export const fetchHuggingFaceFiles = async (modelId: string): Promise<any> => {
+export const fetchHuggingFaceFiles = async (modelId: string): Promise<ModelFileData[]> => {
   const systemInfo = await getSystemInfo();
   const filesGenerator = listFiles({
     repo: modelId,

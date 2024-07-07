@@ -17,7 +17,7 @@ export const curatedModels: CuratedModel[] = [
     updatedAt: new Date(),
     logo: '',
     description:
-      "Luna AI 7B (Q4_K_M) is Alibaba Group's latest language model. Trained for decoding tasks, it excels across domains and matches human preferences. ",
+      "Luna AI 7B (Q4_K_M) is Alibaba Group's latest language model-file. Trained for decoding tasks, it excels across domains and matches human preferences. ",
   },
 ];
 

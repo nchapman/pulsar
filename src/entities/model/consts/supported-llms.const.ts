@@ -30,7 +30,7 @@ export const supportedLlms: Record<LlmName, ModelMetaData> = {
     imgSupport: true,
     mmp: {
       name: 'MultiModal Projector (F16)',
-      localName: 'mmproj-model-f16.gguf',
+      localName: 'mmproj-model-file-f16.gguf',
       byteSize: 624451168,
       url: 'https://huggingface.co/cjpais/llava-1.6-mistral-7b-gguf/resolve/main/mmproj-model-f16.gguf?download=true',
     },

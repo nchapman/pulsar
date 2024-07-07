@@ -11,7 +11,7 @@ interface Props {
 
 // function loadFirstModel() {
 //   const llava = curatedModels['llava-v1.6-mistral-7b'];
-//   const llvaMmp = curatedModels['mmproj-model-f16'];
+//   const llvaMmp = curatedModels['mmproj-model-file-f16'];
 //
 //   getDownloadPath(llava.file.name)
 //     .then(async (path) => {
@@ -48,11 +48,11 @@ export const OnboardingContent = memo((props: Props) => {
       </Text>
 
       {/* <Button variant="primary" onClick={loadFirstModel}> */}
-      {/*  Load first model */}
+      {/*  Load first model-file */}
       {/* </Button> */}
 
       {/* <Button variant="primary" onClick={deleteModel}> */}
-      {/*  Delete current model */}
+      {/*  Delete current model-file */}
       {/* </Button> */}
 
       <Text>

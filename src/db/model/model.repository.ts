@@ -1,4 +1,4 @@
-import { Collection, Database } from '@nozbe/watermelondb';
+import { Collection, Database, Q } from '@nozbe/watermelondb';
 
 import { ModelDto } from '@/entities/model';
 import { assignValues, serialize } from '@/shared/lib/func';
@@ -6,13 +6,10 @@ import { assignValues, serialize } from '@/shared/lib/func';
 import { ModelModel } from './model.model.ts';
 import { modelsTable } from './model.schema.ts';
 
-export type ModelType = 'llm' | 'mmp';
-
 export interface Model {
   id: Id;
   name: string;
   data: ModelDto;
-  type: ModelType;
   createdAt: number;
   updatedAt: number;
 }
@@ -38,6 +35,16 @@ export class ModelsRepository {
     );
 
     return this.serialize(newModel);
+  }
+
+  async createOrUpdate(data: ModelDto): Promise<Model> {
+    const model = (await this.modelsCollection.query(Q.where('name', Q.eq(data.name))))[0];
+
+    if (model) {
+      return this.update(model.id, data);
+    }
+
+    return this.create({ name: data.name, data });
   }
 
   async update(id: Id, data: UpdateDto<Model>): Promise<Model> {
@@ -68,7 +75,7 @@ export class ModelsRepository {
   }
 
   private serialize(model: ModelModel): Model {
-    return serialize(model, ['id', 'name', 'type', 'data', 'createdAt', 'updatedAt']);
+    return serialize(model, ['id', 'name', 'data', 'createdAt', 'updatedAt']);
   }
 
   private mapSerialize(models: ModelModel[]): Model[] {

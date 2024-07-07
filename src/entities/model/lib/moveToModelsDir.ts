@@ -7,6 +7,6 @@ export async function moveToModelsDir(curFilePath: string, localName: string) {
     await renameFile(curFilePath, await getModelPath(localName));
   } catch (e) {
     console.error(`Failed to move model file: ${e}`);
-    throw new Error('Failed to move model file');
+    throw new Error('Failed to move model-file file');
   }
 }

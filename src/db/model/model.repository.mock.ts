@@ -1,9 +1,8 @@
-import { Model } from '@/db/model/model.repository.ts';
-
-import { modelMock } from './model.mock.ts';
+import { modelsMock } from './model.mock.ts';
+import { Model } from './model.repository.ts';
 
 export class ModelsRepositoryMock {
-  models: Model[] = modelMock;
+  models: Model[] = modelsMock;
 
   async getById(id: Id): Promise<Model> {
     return Promise.resolve(this.models.find((model) => model.id === id) as Model);

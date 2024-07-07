@@ -8,18 +8,16 @@ export interface ModelFileData {
   isMmproj: boolean;
 }
 
-export interface ModelData {
+export interface ModelDto {
   huggingFaceId: string;
   name: string;
-  mmpName?: string | null;
-  llmName?: string | null;
   author: string;
-  sha: string;
   task?: string;
+  llms: string[];
+  mmps: string[];
 }
 
-export interface ModelDto {
-  model: ModelData;
+export interface ModelFileDto {
   file: ModelFileData;
 }
 

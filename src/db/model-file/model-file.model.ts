@@ -2,12 +2,16 @@
 import { Model } from '@nozbe/watermelondb';
 import { date, json, readonly, text } from '@nozbe/watermelondb/decorators';
 
-import { modelsTable } from './model.schema.ts';
+import { modelsTable } from './model-file.schema.ts';
 
-export class ModelModel extends Model {
+export class ModelFileModel extends Model {
   static table = modelsTable.name;
 
   @text(modelsTable.cols.name) name;
+
+  @text(modelsTable.cols.modelName) modelName;
+
+  @text(modelsTable.cols.type) type;
 
   @json(modelsTable.cols.data, (json) => json) data;
 

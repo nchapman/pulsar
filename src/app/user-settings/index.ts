@@ -5,7 +5,7 @@ export interface UserSettings {
 }
 
 export function getUserSettings(key: keyof UserSettings) {
-  const settings: UserSettings = { models: { defaultModel: 'some-model' } };
+  const settings: UserSettings = { models: { defaultModel: 'some-model-file' } };
 
   return settings[key];
 }

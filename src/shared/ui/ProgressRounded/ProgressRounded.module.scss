@@ -1,0 +1,87 @@
+.progress-rounded {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  width: 134px;
+
+  &:hover .single-chart {
+    transform: scale(1.1);
+  }
+}
+
+.single-chart {
+  transition: transform 0.2s;
+
+  position: relative;
+  width: 40px;
+  justify-content: space-around;
+}
+
+.circular-chart {
+  display: block;
+  margin: 10px auto;
+  max-width: 80%;
+  max-height: 250px;
+}
+
+.circle-bg {
+  fill: none;
+  stroke-width: 3.8;
+  opacity: 0.2;
+}
+
+.circle {
+  fill: none;
+  stroke-width: 3.8;
+  stroke-linecap: round;
+  // animation: progress 1s ease-out forwards;
+}
+
+.single-chart{
+  svg {
+    color: var(--success);
+  }
+
+  .circular-chart {
+    .circle {
+      stroke: var(--success);
+    }
+
+    .circle-bg {
+      stroke: var(--success);
+    }
+  }
+}
+
+
+
+.single-chart.paused {
+  .circular-chart {
+    .circle {
+      stroke: var(--warning);
+    }
+
+    .circle-bg {
+      stroke: var(--warning);
+    }
+  }
+
+  svg {
+    color: var(--warning);
+  }
+}
+
+.icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes progress {
+  0% {
+    stroke-dasharray: 0 100;
+  }
+}
+

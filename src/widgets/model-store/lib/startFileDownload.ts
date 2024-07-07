@@ -8,7 +8,7 @@ export async function startFileDownload(fileData: ModelFileData) {
   const modelData = $modelStoreState.currModelData.getState();
   if (!modelData) return;
 
-  const { name, author, id, sha, task } = modelData;
+  const { author, id, sha, task } = modelData;
   const { isGguf, isMmproj } = fileData;
 
   const type = isGguf && isMmproj ? 'mmp' : 'llm';
@@ -18,7 +18,7 @@ export async function startFileDownload(fileData: ModelFileData) {
     dto: {
       file: fileData,
       model: {
-        name,
+        name: modelData.name,
         author,
         sha,
         task,
@@ -26,6 +26,6 @@ export async function startFileDownload(fileData: ModelFileData) {
       },
     },
     type,
-    name,
+    name: fileData.name,
   });
 }

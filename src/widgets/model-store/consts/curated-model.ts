@@ -1,4 +1,5 @@
-import { CuratedModel } from '@/entities/model/types/hugging-face-model.ts';
+import { CuratedModel, HuggingFaceModel } from '@/entities/model/types/hugging-face-model.ts';
+import { searchHuggingFaceModels } from '@/widgets/model-store/api/search-hugging-face.ts';
 
 export const curatedModels: CuratedModel[] = [
   {
@@ -19,3 +20,12 @@ export const curatedModels: CuratedModel[] = [
       "Luna AI 7B (Q4_K_M) is Alibaba Group's latest language model. Trained for decoding tasks, it excels across domains and matches human preferences. ",
   },
 ];
+
+export const curatedModelsData: Record<string, HuggingFaceModel> = {};
+
+curatedModels.forEach((i) =>
+  searchHuggingFaceModels(i.name).then((res) => {
+    const [model] = res;
+    curatedModelsData[model.name] = model;
+  })
+);

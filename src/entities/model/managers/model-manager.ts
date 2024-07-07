@@ -173,7 +173,7 @@ class ModelManager {
 
     if (this.hasNoModels) return;
 
-    this.currentModel = this.userSettings.get('defaultModel');
+    this.currentModel = this.userSettings.get('defaultModel') as Id;
 
     await this.loadCurrentModel().catch(() => {
       this.loadError = 'Failed to load current model';

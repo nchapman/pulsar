@@ -19,6 +19,7 @@ export * from './PageError/PageError';
 export * from './PageLoader/PageLoader';
 export * from './Portal/Portal';
 export * from './Progress/Progress';
+export * from './ProgressRounded/ProgressRounded';
 export * from './Select/Select';
 export * from './Skeleton/Skeleton';
 export * from './Spinner/Spinner';

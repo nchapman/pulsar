@@ -2,10 +2,14 @@ import { createEvent, createStore, StoreWritable } from 'effector';
 
 interface UserSettings {
   defaultModel: string | null;
+  downloadsQueue: Id[];
+  downloadsCurrent: Id | null;
 }
 
 const defaultSettings: UserSettings = {
   defaultModel: null,
+  downloadsQueue: [],
+  downloadsCurrent: null,
 };
 
 const LS_KEY = 'user-settings';

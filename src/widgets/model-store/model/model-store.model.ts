@@ -5,6 +5,7 @@ import { ModelFileData } from '@/entities/model';
 import { HuggingFaceModel } from '@/entities/model/types/hugging-face-model.ts';
 
 import { fetchHuggingFaceFiles, searchHuggingFaceModels } from '../api/search-hugging-face.ts';
+import { curatedModelsData } from '../consts/curated-model.ts';
 
 const models = createStore<HuggingFaceModel[]>([]);
 const currModel = createStore<string | null>(null);
@@ -23,7 +24,8 @@ const currModelData = combine(
     currModel,
     modelsNameMap,
   },
-  ({ currModel, modelsNameMap }) => (currModel ? modelsNameMap[currModel] : null)
+  ({ currModel, modelsNameMap }) =>
+    currModel ? modelsNameMap[currModel] || curatedModelsData[currModel] : null
 );
 
 export const $modelStoreState = {

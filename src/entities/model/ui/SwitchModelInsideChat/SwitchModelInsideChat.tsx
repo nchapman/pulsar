@@ -59,7 +59,9 @@ export const SwitchModelInsideChat = memo((props: Props) => {
               variant="clear"
               onClick={() => modelManager.switchModel(m.id)}
             >
-              {m.name}
+              <Text w="semi" s={12} c="primary" className={s.modelName}>
+                {m.name}
+              </Text>
               <div className={s.modelInfo}>
                 {m.id === defaultModel && (
                   <div className={s.default}>
@@ -76,7 +78,7 @@ export const SwitchModelInsideChat = memo((props: Props) => {
 
   return (
     <Popover
-      isOpen={isPopoverShown}
+      isOpen
       positions={['bottom']}
       content={popover}
       align="start"

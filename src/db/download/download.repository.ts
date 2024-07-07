@@ -11,6 +11,7 @@ export interface DownloadItem {
   id: Id;
   remoteUrl: string;
   downloadingData: {
+    status: 'queued' | 'downloading' | 'paused' | 'finished';
     downloadId: number;
 
     progress: number;
@@ -54,6 +55,7 @@ export class DownloadsRepository {
   }
 
   async update(id: Id, data: UpdateDto<DownloadItem>): Promise<DownloadItem> {
+    console.log('update', id, data.downloadingData?.percent);
     const download = await this.downloadsCollection.find(id);
 
     try {

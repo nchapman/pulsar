@@ -46,14 +46,18 @@ export const InitialModelDownload = memo((props: Props) => {
   const handleModelDownload = async () => {
     const llava = curatedModels['llava-v1.6-mistral-7b'];
 
-    const res = await downloadsManager.addDownload({
-      dto: llava,
-      name: llava.file.name,
-      type: 'llm',
-      remoteUrl: getHuggingFaceDownloadLink(llava.model.name, llava.file.name),
-    });
+    const res = await downloadsManager.addDownload(
+      {
+        dto: llava,
+        name: llava.file.name,
+        type: 'llm',
+        remoteUrl: getHuggingFaceDownloadLink(llava.model.name, llava.file.name),
+        modelName: llava.model.name,
+      },
+      llava.model
+    );
 
-    setDownloadId(res.id);
+    setDownloadId(res!.id);
   };
 
   const handlePause = () => {

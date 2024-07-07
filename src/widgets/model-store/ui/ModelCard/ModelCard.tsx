@@ -19,6 +19,7 @@ interface Props {
   view: 'grid' | 'list';
   model: HuggingFaceModel;
   info?: boolean;
+  withVision?: boolean;
 }
 
 export const ModelCard = memo((props: Props) => {
@@ -70,6 +71,7 @@ export const ModelCard = memo((props: Props) => {
           {getTagsFromName(name).map((tag) => (
             <ModelTag key={tag.value} data={tag} />
           ))}
+          {props.withVision && <ModelTag data={{ type: 'hasVision' }} />}
         </div>
         <div className={s.publisher}>
           <Text s={12}>Published by {model.author} on Hugging Face</Text>

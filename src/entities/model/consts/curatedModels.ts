@@ -1,14 +1,14 @@
-import { ModelFileDto } from '../types/model.types.ts';
+import { ModelDto, ModelFileData } from '../types/model.types.ts';
 
-export const curatedModels: Record<string, ModelFileDto> = {
+export const curatedModels: Record<string, { file: ModelFileData; model: ModelDto }> = {
   'llava-v1.6-mistral-7b': {
     model: {
       name: 'cjpais/llava-1.6-mistral-7b-gguf',
-      sha: '6019df415777605a8364e2668aa08b7e354bf0ba',
-      mmpName: 'mmproj-model-file-f16.gguf',
       task: 'image-text-to-text',
       huggingFaceId: '65bc02cbb54ab5b37d4bd060',
       author: 'cjpais',
+      llms: ['llava-v1.6-mistral-7b.Q4_K_M.gguf'],
+      mmps: ['mmproj-model-file-f16.gguf'],
     },
     file: {
       isGguf: true,
@@ -21,11 +21,11 @@ export const curatedModels: Record<string, ModelFileDto> = {
   'mmproj-model-f16': {
     model: {
       name: 'cjpais/llava-1.6-mistral-7b-gguf',
-      sha: '6019df415777605a8364e2668aa08b7e354bf0ba',
-      mmpName: 'mmproj-model-file-f16.gguf',
       task: 'image-text-to-text',
       huggingFaceId: '65bc02cbb54ab5b37d4bd060',
       author: 'cjpais',
+      llms: ['llava-v1.6-mistral-7b.Q4_K_M.gguf'],
+      mmps: ['mmproj-model-file-f16.gguf'],
     },
     file: {
       isGguf: true,

@@ -31,6 +31,8 @@ const meta: OptionalRecord<
     ),
     tagClass: (val: string) => val.split(/[-_]/)[0]?.toLowerCase(),
   },
+  vision: { formatter: () => 'Vision Adapter' },
+  hasVision: { formatter: () => 'Has Vision Adapter' },
 };
 
 export const ModelTag = memo((props: Props) => {

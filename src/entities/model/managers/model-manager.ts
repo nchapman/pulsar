@@ -4,6 +4,7 @@ import { initAppFolders } from '@/app/lib/initAppFolders.ts';
 import { modelFilesRepository, modelsRepository } from '@/db';
 import { Model, ModelsRepository } from '@/db/model';
 import { ModelFile, ModelFilesRepository, ModelFileType } from '@/db/model-file';
+import { ModelDto } from '@/entities/model';
 import { UserSettingsManager, userSettingsManager } from '@/entities/settings';
 import { promiseAll } from '@/shared/lib/func';
 import { loge, logi } from '@/shared/lib/Logger.ts';
@@ -317,7 +318,16 @@ class ModelManager {
     }
   }
 
+  async updateOrCreateModel(data: ModelDto) {
+    const dbModel = await this.modelsRepository.createOrUpdate(data);
+    this.models = { ...this.models, [dbModel.name]: dbModel };
+  }
+
   // getters/setters
+
+  get llmNameIdMap() {
+    return this.#mmpNameIdMap;
+  }
 
   private get hasNoModels() {
     return this.#hasNoModels;

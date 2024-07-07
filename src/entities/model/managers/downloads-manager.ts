@@ -1,9 +1,8 @@
 import { createEvent, createStore } from 'effector';
 
 import { APP_DIRS } from '@/app/consts/app.const.ts';
-import { downloadsRepository, modelsRepository } from '@/db';
+import { downloadsRepository } from '@/db';
 import { DownloadItem, DownloadsRepository } from '@/db/download';
-import { ModelsRepository } from '@/db/model';
 import { ModelDto } from '@/entities/model';
 import { UserSettingsManager, userSettingsManager } from '@/entities/settings';
 import { download, getRandomInt, interruptFileTransfer } from '@/shared/lib/file-transfer.ts';
@@ -43,7 +42,6 @@ class DownloadsManager {
 
   constructor(
     private readonly downloadsRepository: DownloadsRepository,
-    private readonly modelsRepository: ModelsRepository,
     private readonly modelManager: ModelManager,
     private readonly userSettings: UserSettingsManager
   ) {
@@ -58,7 +56,7 @@ class DownloadsManager {
     d: Pick<DownloadItem, 'dto' | 'name' | 'type' | 'remoteUrl' | 'modelName'>,
     modelDto: ModelDto
   ) {
-    this.modelsRepository.createOrUpdate(modelDto);
+    await this.modelManager.updateOrCreateModel(modelDto);
 
     const existingDownload = Object.values(this.downloadsData).find(
       (download) => download.name === d.name
@@ -66,6 +64,7 @@ class DownloadsManager {
 
     if (this.modelManager.availableLlms.includes(d.name)) {
       console.log('Llm already downloaded, skipping...');
+      return undefined;
     }
 
     if (existingDownload) {
@@ -366,7 +365,6 @@ class DownloadsManager {
 
 export const downloadsManager = new DownloadsManager(
   downloadsRepository,
-  modelsRepository,
   modelManager,
   userSettingsManager
 );

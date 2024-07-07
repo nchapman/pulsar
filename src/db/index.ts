@@ -6,7 +6,7 @@ import { __IS_STORYBOOK__ } from '@/shared/consts';
 
 import { ChatModel, ChatsRepository, ChatsRepositoryMock } from './chat';
 import { ModelModel, ModelsRepository, ModelsRepositoryMock } from './model';
-import { ModelFileModel, ModelFilesRepositoryMock, ModelsFilesRepository } from './model-file';
+import { ModelFileModel, ModelFilesRepository, ModelFilesRepositoryMock } from './model-file';
 import { adapter } from './nativeAdapter';
 
 const database = __IS_STORYBOOK__
@@ -22,8 +22,8 @@ export const chatsRepository = (
 ) as ChatsRepository;
 
 export const modelFilesRepository = (
-  __IS_STORYBOOK__ ? new ModelFilesRepositoryMock() : new ModelsFilesRepository(database!)
-) as ModelsFilesRepository;
+  __IS_STORYBOOK__ ? new ModelFilesRepositoryMock() : new ModelFilesRepository(database!)
+) as ModelFilesRepository;
 
 export const modelsRepository = (
   __IS_STORYBOOK__ ? new ModelsRepositoryMock() : new ModelsRepository(database!)

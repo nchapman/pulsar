@@ -25,9 +25,7 @@ export interface DownloadItem {
   name: string;
   modelName: string;
   dto: ModelFileDto;
-
   modelFileId?: Id;
-
   createdAt: number;
   updatedAt: number;
 }
@@ -56,7 +54,6 @@ export class DownloadsRepository {
   }
 
   async update(id: Id, data: UpdateDto<DownloadItem>): Promise<DownloadItem> {
-    console.log('update', id, data.downloadingData?.percent);
     const download = await this.downloadsCollection.find(id);
 
     try {

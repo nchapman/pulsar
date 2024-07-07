@@ -3,7 +3,7 @@ export type ModelTagType =
   | 'arch'
   | 'params'
   | 'vision'
-  | 'has-vision'
+  | 'hasVision'
   | 'full-precision'
   | 'too-large'
   | 'recommended'
@@ -11,6 +11,6 @@ export type ModelTagType =
   | 'quantization';
 
 export interface Tag {
-  value: string | number;
+  value?: string | number;
   type: ModelTagType;
 }

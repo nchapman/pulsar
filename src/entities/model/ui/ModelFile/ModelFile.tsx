@@ -16,7 +16,7 @@ interface Props {
 
 export const ModelFile = memo((props: Props) => {
   const { className, children, data } = props;
-  const { name, size } = data;
+  const { name, size, isMmproj } = data;
   const quantization = getQuantization(name);
 
   return (
@@ -28,6 +28,8 @@ export const ModelFile = memo((props: Props) => {
 
         <div className={s.tags}>
           <ModelTag data={{ value: size, type: 'size' }} />
+
+          {isMmproj && <ModelTag data={{ type: 'vision' }} />}
 
           {quantization && <ModelTag data={{ value: quantization, type: 'quantization' }} />}
         </div>

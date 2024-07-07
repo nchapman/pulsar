@@ -18,7 +18,7 @@ interface Props {
 
 export const ModelStoreFile = memo((props: Props) => {
   const { className, data } = props;
-  const { fitsInMemory, isGguf } = data;
+  const { fitsInMemory, isGguf, isMmproj } = data;
 
   const fileName = data.name;
 
@@ -46,6 +46,8 @@ export const ModelStoreFile = memo((props: Props) => {
           </Button>
         </>
       );
+
+    if (isMmproj || !isGguf) return null;
 
     if (downloadingData.isFinished) {
       return (

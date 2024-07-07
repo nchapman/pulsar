@@ -21,6 +21,7 @@ export const downloadSchema = tableSchema({
     { name: downloadsTable.cols.downloadingData, type: 'string' },
     { name: downloadsTable.cols.remoteUrl, type: 'string' },
     { name: downloadsTable.cols.name, type: 'string' },
+    { name: downloadsTable.cols.modelName, type: 'string' },
     { name: downloadsTable.cols.dto, type: 'string' },
     { name: downloadsTable.cols.type, type: 'string' },
     { name: downloadsTable.cols.modelFileId, type: 'string', isOptional: true },

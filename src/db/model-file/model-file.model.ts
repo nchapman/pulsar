@@ -2,20 +2,20 @@
 import { Model } from '@nozbe/watermelondb';
 import { date, json, readonly, text } from '@nozbe/watermelondb/decorators';
 
-import { modelsTable } from './model-file.schema.ts';
+import { modelFilesTable } from './model-file.schema.ts';
 
 export class ModelFileModel extends Model {
-  static table = modelsTable.name;
+  static table = modelFilesTable.name;
 
-  @text(modelsTable.cols.name) name;
+  @text(modelFilesTable.cols.name) name;
 
-  @text(modelsTable.cols.modelName) modelName;
+  @text(modelFilesTable.cols.modelName) modelName;
 
-  @text(modelsTable.cols.type) type;
+  @text(modelFilesTable.cols.type) type;
 
-  @json(modelsTable.cols.data, (json) => json) data;
+  @json(modelFilesTable.cols.data, (json) => json) data;
 
-  @readonly @date(modelsTable.cols.createdAt) createdAt;
+  @readonly @date(modelFilesTable.cols.createdAt) createdAt;
 
-  @readonly @date(modelsTable.cols.updatedAt) updatedAt;
+  @readonly @date(modelFilesTable.cols.updatedAt) updatedAt;
 }

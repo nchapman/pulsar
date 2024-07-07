@@ -35,7 +35,7 @@ jobs:
         run: yarn test:frontend
 
   rust_tests:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -48,29 +48,26 @@ jobs:
       - name: Pull LFS objects
         run: git lfs pull
 
-      # - name: install Rust stable
-      #   uses: dtolnay/rust-toolchain@stable
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
 
-      # - name: install dependencies (ubuntu only)
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf libgomp1 libatlas-base-dev liblapack-dev libsqlite3-dev
+      - name: install dependencies (ubuntu only)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf libgomp1 libatlas-base-dev liblapack-dev libsqlite3-dev
 
-      # - name: Set up cargo cache
-      #   uses: actions/cache@v3
-      #   continue-on-error: false
-      #   with:
-      #     path: |
-      #       ~/.cargo/bin/
-      #       ~/.cargo/registry/index/
-      #       ~/.cargo/registry/cache/
-      #       ~/.cargo/git/db/
-      #       src-tauri/target/
-      #     key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      #     restore-keys: ${{ runner.os }}-cargo-
-
-      # - name: Setup upterm session
-      #   uses: lhotari/action-upterm@v1
+      - name: Set up cargo cache
+        uses: actions/cache@v3
+        continue-on-error: false
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            src-tauri/target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
 
       - name: Test
         working-directory: src-tauri

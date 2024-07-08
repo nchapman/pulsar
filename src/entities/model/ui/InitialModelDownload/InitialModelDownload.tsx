@@ -82,7 +82,8 @@ export const InitialModelDownload = memo((props: Props) => {
             onPause={handlePause}
             isPaused={downloadingData.isPaused}
             onResume={resume}
-            percent={downloadingData?.percent}
+            current={downloadingData.progress}
+            total={downloadingData.total}
           />
         ) : (
           <Button onClick={handleModelDownload} variant="primary" loading={!!downloadId}>

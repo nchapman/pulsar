@@ -40,7 +40,30 @@ export const DownloadsPage = memo(() => {
   const downloads = useMemo(
     () =>
       groupDownloads(items, models).map(([author, data]) => (
-        <DownloadItemCard key={author} author={author} data={data} />
+        <div className={classNames(s.authorGroup)}>
+          <div className={s.authorHeader}>
+            <Text c="primary" w="semi" s={12}>
+              {author}
+            </Text>
+            <Text s={12}>on Hugging Face</Text>
+          </div>
+
+          {Object.entries(data).map(([modelName, items]) => (
+            <div className={s.modelCard}>
+              <div className={s.modelHeader}>
+                <Text className="medium" s={14}>
+                  {modelName.split('/')[1]}
+                </Text>
+              </div>
+
+              <div className={s.filesList}>
+                {items.map((item) => (
+                  <DownloadItemCard key={item.id} data={item.dto.file} />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       )),
     [items, models]
   );
@@ -53,8 +76,8 @@ export const DownloadsPage = memo(() => {
         </Text>
       </div>
 
-      <div className={s.fileListWrapper}>
-        <Scrollbars className={s.filesList}>{downloads}</Scrollbars>
+      <div className={s.listWrapper}>
+        <Scrollbars className={s.list}>{downloads}</Scrollbars>
       </div>
     </div>
   );

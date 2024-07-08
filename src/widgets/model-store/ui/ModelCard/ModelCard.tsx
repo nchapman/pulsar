@@ -49,7 +49,7 @@ export const ModelCard = memo((props: Props) => {
 
   return (
     <div className={classNames(s.modelCard, [className], { [s.info]: info })} onClick={handeClick}>
-      <div>
+      <div className={s.left}>
         <Text className={s.name} s={20} w="medium" c="primary">
           {name}
         </Text>

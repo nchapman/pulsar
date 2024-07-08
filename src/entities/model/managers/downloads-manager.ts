@@ -96,10 +96,18 @@ class DownloadsManager {
   }
 
   async remove(id: Id) {
+    if (this.current === id) {
+      this.pause(id);
+    }
+
     const download = this.downloadsData[id];
 
     if (!download) {
       throw new Error(`Download "${id}" not found`);
+    }
+
+    if (download.modelFileId) {
+      await this.modelManager.deleteModel(download.modelFileId);
     }
 
     // remove download from the db
@@ -244,7 +252,7 @@ class DownloadsManager {
 
     // pause all downloads
     await promiseAll(downloads, async (download) => {
-      if (download.downloadingData.isPaused) return;
+      if (download.downloadingData.status !== 'downloading') return;
       await this.updateDownloadData(download.id, {
         downloadingData: { ...download.downloadingData, isPaused: true },
       });

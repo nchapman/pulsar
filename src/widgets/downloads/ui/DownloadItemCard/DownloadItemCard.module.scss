@@ -1,25 +1,69 @@
 .download-item-card {
-  &:not(:last-child) {
-    margin-bottom: 24px;
+
+}
+
+.finished {
+  display: flex;
+  gap: 8px;
+
+  .delete-btn {
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    justify-content: center;
+  }
+
+  .start-chat {
+    width: 126px;
+    justify-content: center;
+    height: 32px;
   }
 }
 
-.author-header {
+.queued {
   display: flex;
-  gap: 4px;
+  gap: 8px;
   align-items: center;
-  margin-bottom: 8px;
+
+  .remove-btn {
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    justify-content: center;
+  }
 }
 
-.model-card {
-  padding: 12px 8px;
-  border-radius: 12px;
+.progress {
+  display: flex;
+  gap: 54px;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 
-  border: 1px solid var(--border-light);
-  background: var(--main-background-quaternary);
+  .progress-bar {
+    width: 400px;
+    margin-right: auto;
+  }
+
+  .progress-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .remove-btn, .play-btn {
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    justify-content: center;
+  }
+
+  .play-btn {
+    color: var(--success);
+
+    &.pause {
+      color: var(--warning);
+    }
+  }
 }
 
-.model-header {
-  padding-left: 12px;
-  margin-bottom: 16px;
-}
+

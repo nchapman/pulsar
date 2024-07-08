@@ -8,7 +8,7 @@ const HUGGING_FACE_BASE_URL = 'https://huggingface.co';
 
 export const searchHuggingFaceModels = async (query: string) => {
   const modelGenerator = listModels({
-    search: { query: `${query} gguf` },
+    search: { query: `${query}` },
     additionalFields: [
       'tags',
       'config',

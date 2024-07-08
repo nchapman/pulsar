@@ -37,11 +37,13 @@ export const ModelsList = memo((props: Props) => {
         {withViewSwitch && <div className={s.viewSwitch}></div>}
       </div>
 
-      <Scrollbars className={s.list}>
-        {models.map((i) => (
-          <ModelCard view={view} model={i} />
-        ))}
-      </Scrollbars>
+      <div className={s.listWrapper}>
+        <Scrollbars className={s.list}>
+          {models.map((i) => (
+            <ModelCard view={view} model={i} />
+          ))}
+        </Scrollbars>
+      </div>
     </div>
   );
 });

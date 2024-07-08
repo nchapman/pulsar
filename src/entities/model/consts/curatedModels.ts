@@ -13,7 +13,7 @@ export const curatedModels: Record<string, { file: ModelFileData; model: ModelDt
     file: {
       isGguf: true,
       name: 'llava-v1.6-mistral-7b.Q4_K_M.gguf',
-      size: 0,
+      size: 4368439552,
       isMmproj: false,
       fitsInMemory: true,
     },
@@ -30,7 +30,7 @@ export const curatedModels: Record<string, { file: ModelFileData; model: ModelDt
     file: {
       isGguf: true,
       name: 'mmproj-model-file-f16.gguf',
-      size: 0,
+      size: 624451168,
       isMmproj: true,
       fitsInMemory: true,
     },

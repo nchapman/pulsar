@@ -20,7 +20,7 @@ export async function startFileDownload(fileData: ModelFileData) {
 
   if (!modelData) return;
 
-  const { author, id, task } = modelData;
+  const { author, id, task = '' } = modelData;
   const { isGguf, isMmproj } = fileData;
   const files = await fetchHuggingFaceFiles(modelData.name);
 

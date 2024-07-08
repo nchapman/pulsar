@@ -47,7 +47,7 @@ export const ModelStoreFile = memo((props: Props) => {
         </>
       );
 
-    if (isMmproj || !isGguf) return null;
+    if (downloadingData.isFinished && (isMmproj || !isGguf)) return null;
 
     if (downloadingData.isFinished) {
       return (

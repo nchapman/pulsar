@@ -97,7 +97,7 @@ class DownloadsManager {
 
   async remove(id: Id) {
     if (this.current === id) {
-      this.pause(id);
+      await this.pause(id);
     }
 
     const download = this.downloadsData[id];
@@ -223,6 +223,10 @@ class DownloadsManager {
     this.#current = (this.userSettings.get('downloadsCurrent') as Id) || null;
 
     await this.readLocalDownloads();
+
+    if (this.#current) {
+      this.start(this.#current);
+    }
   }
 
   private async readLocalDownloads() {
@@ -232,10 +236,17 @@ class DownloadsManager {
     // get downloads from db
     let downloads = await this.downloadsRepository.getAll();
 
+    // update state
+    this.updateStateFromDB(downloads);
+
     // delete missing in local and unfinished
     await promiseAll(downloads, async (download) => {
-      if (!availableDownloads.includes(download.name) && !download.downloadingData.isFinished) {
-        await this.downloadsRepository.remove(download.id);
+      if (
+        !availableDownloads.includes(download.name) &&
+        !download.downloadingData.isFinished &&
+        download.downloadingData.status !== 'queued'
+      ) {
+        await this.remove(download.id);
       }
     });
 
@@ -265,6 +276,10 @@ class DownloadsManager {
       acc[download.id] = download;
       return acc;
     }, {});
+
+    this.queue = this.queue.filter((id) => this.downloadsIdsList.includes(id));
+    this.current =
+      this.current && this.downloadsIdsList.includes(this.current) ? this.current : null;
 
     if (this.current && !this.downloadsIdsList.includes(this.current)) {
       this.downloadNextFromQueue();
@@ -303,6 +318,7 @@ class DownloadsManager {
   }
 
   private addToQueue(id: Id) {
+    console.log(this.queue, this.current);
     if (!this.queue.length && !this.current) {
       this.current = id;
       this.start(id);

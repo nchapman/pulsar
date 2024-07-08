@@ -26,6 +26,8 @@ export const DownloadItemCard = memo((props: Props) => {
 
   const downloadItem = useUnit(downloadsManager.state.$downloadsNameData)[fileName];
 
+  console.log(downloadItem);
+
   const { id, downloadingData } = downloadItem || {};
   const handleDeleteModel = () => {
     confirm({
@@ -40,9 +42,7 @@ export const DownloadItemCard = memo((props: Props) => {
   };
 
   function getWidget() {
-    if (isMmproj || !isGguf) return null;
-
-    if (downloadingData.isFinished) {
+    if (downloadingData.isFinished && !isMmproj && isGguf) {
       return (
         <div className={s.finished}>
           <Button className={s.startChat} variant="primary">

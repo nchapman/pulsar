@@ -78,7 +78,7 @@ export const SwitchModelInsideChat = memo((props: Props) => {
 
   return (
     <Popover
-      isOpen
+      isOpen={isPopoverShown}
       positions={['bottom']}
       content={popover}
       align="start"

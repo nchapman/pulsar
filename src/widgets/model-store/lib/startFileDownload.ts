@@ -1,12 +1,9 @@
 import { ModelFileType } from '@/db/model-file';
 import { ModelFileData } from '@/entities/model';
 import { downloadsManager } from '@/entities/model/managers/downloads-manager.ts';
+import { getModelFileInfo } from '@/widgets/model-store/lib/getModelFileInfo.ts';
 
-import {
-  fetchHuggingFaceFiles,
-  getHuggingFaceDownloadLink,
-  searchHuggingFaceModels,
-} from '../api/search-hugging-face.ts';
+import { getHuggingFaceDownloadLink } from '../api/search-hugging-face.ts';
 
 function getModelFileNames(files: ModelFileData[], type: ModelFileType) {
   return files
@@ -19,12 +16,7 @@ function getModelFileNames(files: ModelFileData[], type: ModelFileType) {
 }
 
 export async function startFileDownload(modelName: string, fileName: string) {
-  const [modelData] = await searchHuggingFaceModels(modelName);
-  if (!modelData) throw new Error('Model not found');
-
-  const files = await fetchHuggingFaceFiles(modelData.name);
-  const fileData = files.find((i) => i.name === fileName);
-  if (!fileData) throw new Error('File not found');
+  const { modelData, fileData, files } = await getModelFileInfo(modelName, fileName);
 
   const { author, id, task = '' } = modelData;
   const { isGguf, isMmproj } = fileData;

@@ -5,7 +5,7 @@ import { useState } from 'preact/hooks';
 import { curatedModels } from '@/entities/model';
 import { downloadsManager } from '@/entities/model/managers/downloads-manager.ts';
 import DownloadIcon from '@/shared/assets/icons/download.svg';
-import { bytesToSize, classNames } from '@/shared/lib/func';
+import { classNames } from '@/shared/lib/func';
 import { changeTheme } from '@/shared/theme';
 import { Button, Icon, Progress, Text } from '@/shared/ui';
 import { startFileDownload } from '@/widgets/model-store/lib/startFileDownload.ts';
@@ -17,7 +17,7 @@ interface Props {
   className?: string;
 }
 
-const llava = curatedModels['llava-v1.6-mistral-7b'];
+const llava = curatedModels[0];
 
 export const InitialModelDownload = memo((props: Props) => {
   const { className } = props;
@@ -34,7 +34,7 @@ export const InitialModelDownload = memo((props: Props) => {
   }, []);
 
   const handleModelDownload = async () => {
-    const res = await startFileDownload(llava.model.name, llava.file.name);
+    const res = await startFileDownload(llava.modelName, llava.fileName);
 
     setDownloadId(res!.id);
   };
@@ -48,9 +48,9 @@ export const InitialModelDownload = memo((props: Props) => {
   };
 
   const modelData = {
-    name: llava.model.name,
-    desc: 'Model description',
-    size: bytesToSize(llava.file.size),
+    name: llava.modelName,
+    desc: llava.description,
+    size: '4.37 GB',
   };
 
   const loadingMmp = downloadingData?.status === 'queued';

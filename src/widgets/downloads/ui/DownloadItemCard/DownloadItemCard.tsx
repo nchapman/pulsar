@@ -26,8 +26,6 @@ export const DownloadItemCard = memo((props: Props) => {
 
   const downloadItem = useUnit(downloadsManager.state.$downloadsNameData)[fileName];
 
-  console.log(downloadItem);
-
   const { id, downloadingData } = downloadItem || {};
   const handleDeleteModel = () => {
     confirm({

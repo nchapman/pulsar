@@ -170,7 +170,9 @@ class ModelManager {
   // private methods
 
   private getFirstAvailableModel() {
-    return Object.keys(this.modelFiles)[0] || null;
+    const llmIds = Object.values(this.#llmNameIdMap);
+    console.log(llmIds);
+    return llmIds[0] || null;
   }
 
   private async initManager() {

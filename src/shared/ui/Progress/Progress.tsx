@@ -15,21 +15,28 @@ interface Props {
   onPause?: () => void;
   onResume?: () => void;
   small?: boolean;
+  loadingMmp?: boolean;
 }
+const mmpLoadText = 'Loading vision adapter...';
 
 export const Progress = memo((props: Props) => {
-  const { className, onPause, isPaused, onResume, current, total, small } = props;
+  const { className, onPause, isPaused, onResume, current, total, small, loadingMmp } = props;
 
   const percent = getPercent(current, total);
+  const progressText = `${bytesToSize(current)} / ${bytesToSize(total)} (${percent}%)`;
 
   return (
     <div
-      className={classNames(s.progress, [className], { [s.paused]: isPaused, [s.small]: small })}
+      className={classNames(s.progress, [className], {
+        [s.paused]: isPaused,
+        [s.small]: small,
+        [s.loadingMmp]: loadingMmp,
+      })}
     >
       <div className={s.bar}>
         <div className={s.inner} style={{ width: `${percent}%` }} />
         <Text c="primary" s={small ? 12 : 14} w="medium" className={s.percent}>
-          {bytesToSize(current)} / {bytesToSize(total)} ({percent}%)
+          {loadingMmp ? mmpLoadText : progressText}
         </Text>
       </div>
       {onPause && onResume && (
@@ -38,6 +45,7 @@ export const Progress = memo((props: Props) => {
           variant="secondary"
           onClick={isPaused ? onResume : onPause}
           icon={isPaused ? PlayIcon : StopIcon}
+          disabled={loadingMmp}
         />
       )}
     </div>

@@ -86,5 +86,3 @@ sample({
   clock: modelStoreEvents.closeModelDetails,
   target: createEffect(goToStore),
 });
-$modelStoreState.models.watch(console.log);
-$modelStoreState.currModelFiles.watch(console.log);

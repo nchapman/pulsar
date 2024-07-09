@@ -23,6 +23,10 @@
   background: var(--warning);
 }
 
+.loading-mmp .inner {
+  background: var(--info);
+}
+
 .percent {
   position: absolute;
   left: 50%;

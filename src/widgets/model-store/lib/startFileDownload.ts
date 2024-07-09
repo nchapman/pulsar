@@ -2,8 +2,11 @@ import { ModelFileType } from '@/db/model-file';
 import { ModelFileData } from '@/entities/model';
 import { downloadsManager } from '@/entities/model/managers/downloads-manager.ts';
 
-import { fetchHuggingFaceFiles, getHuggingFaceDownloadLink } from '../api/search-hugging-face.ts';
-import { $modelStoreState } from '../model/model-store.model.ts';
+import {
+  fetchHuggingFaceFiles,
+  getHuggingFaceDownloadLink,
+  searchHuggingFaceModels,
+} from '../api/search-hugging-face.ts';
 
 function getModelFileNames(files: ModelFileData[], type: ModelFileType) {
   return files
@@ -15,14 +18,16 @@ function getModelFileNames(files: ModelFileData[], type: ModelFileType) {
     .map((i) => i.name);
 }
 
-export async function startFileDownload(fileData: ModelFileData) {
-  const modelData = $modelStoreState.currModelData.getState();
+export async function startFileDownload(modelName: string, fileName: string) {
+  const [modelData] = await searchHuggingFaceModels(modelName);
+  if (!modelData) throw new Error('Model not found');
 
-  if (!modelData) return;
+  const files = await fetchHuggingFaceFiles(modelData.name);
+  const fileData = files.find((i) => i.name === fileName);
+  if (!fileData) throw new Error('File not found');
 
   const { author, id, task = '' } = modelData;
   const { isGguf, isMmproj } = fileData;
-  const files = await fetchHuggingFaceFiles(modelData.name);
 
   const type = isGguf && isMmproj ? 'mmp' : 'llm';
 
@@ -51,7 +56,7 @@ export async function startFileDownload(fileData: ModelFileData) {
     }
   }
 
-  await downloadsManager.addDownload(
+  return downloadsManager.addDownload(
     {
       remoteUrl: getHuggingFaceDownloadLink(modelData.name, fileData.name),
       dto: { file: fileData },

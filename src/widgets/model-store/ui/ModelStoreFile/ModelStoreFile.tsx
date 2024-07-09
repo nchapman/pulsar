@@ -7,6 +7,7 @@ import CloseIcon from '@/shared/assets/icons/close.svg';
 import DownloadIcon from '@/shared/assets/icons/download.svg';
 import { classNames } from '@/shared/lib/func';
 import { Button, Icon, ProgressRounded, Text } from '@/shared/ui';
+import { $modelStoreState } from '@/widgets/model-store/model/model-store.model.ts';
 
 import { startFileDownload } from '../../lib/startFileDownload.ts';
 import s from './ModelStoreFile.module.scss';
@@ -28,7 +29,7 @@ export const ModelStoreFile = memo((props: Props) => {
 
   const handleDownload = () => {
     if (downloadItem) return;
-    startFileDownload(data);
+    startFileDownload($modelStoreState.currModel.getState()!, data.name);
   };
 
   function getWidget() {

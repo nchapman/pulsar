@@ -1,32 +1,42 @@
 import { useUnit } from 'effector-react';
 import { useEffect } from 'preact/hooks';
 
-import { initAppFolders } from '@/app/lib/initAppFolders.ts';
-import {
-  $missingModel,
-  $modelLoadError,
-  getAvailableModelsEff,
-} from '@/entities/model/model/manage-models-model.ts';
-import { ChatPage } from '@/pages/chat';
-import { OnboardingPage } from '@/pages/onboarding';
+import { modelManager } from '@/entities/model';
 import { initTheme } from '@/shared/theme';
+import { PageError, PageLoader } from '@/shared/ui';
+import { OnboardingPage, restoreWindowSize } from '@/widgets/onboarding';
 
+import { Layout } from './Layout/Layout.tsx';
 import { checkUpdates } from './Updates';
 
 function App() {
-  const missingModel = useUnit($missingModel);
+  const hasNoModels = useUnit(modelManager.state.$hasNoModels);
+  const modelLoadError = useUnit(modelManager.state.$loadError);
+  const appStarted = useUnit(modelManager.state.$appStarted);
+  const ready = useUnit(modelManager.state.$ready);
 
   useEffect(() => {
     initTheme();
-    initAppFolders().then(() => getAvailableModelsEff());
     checkUpdates();
   }, []);
 
-  const modelLoadError = useUnit($modelLoadError);
+  useEffect(() => {
+    if (ready) {
+      restoreWindowSize();
+    }
+  }, [ready]);
 
-  if (modelLoadError) return <div>Failed to load model! Contact support</div>;
+  function getComponent() {
+    if (!appStarted) return <PageLoader />;
+    if (modelLoadError) return <PageError errorText={`Failed to load model: ${modelLoadError}.`} />;
+    if (hasNoModels) return <OnboardingPage />;
+    if (!ready && !hasNoModels) return <OnboardingPage ready />;
+    if (ready) return <Layout />;
 
-  return <div className="app">{missingModel ? <OnboardingPage /> : <ChatPage />}</div>;
+    return null;
+  }
+
+  return <div className="app">{getComponent()}</div>;
 }
 
 export default App;

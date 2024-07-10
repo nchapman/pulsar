@@ -1,0 +1,10 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="clock-check" clip-path="url(#clip0_4126_16020)">
+<path id="Icon" d="M9.66732 12.6663L11.0007 13.9997L14.0007 10.9997M14.6574 8.36626C14.664 8.2449 14.6673 8.12268 14.6673 7.99967C14.6673 4.31778 11.6826 1.33301 8.00065 1.33301C4.31875 1.33301 1.33398 4.31778 1.33398 7.99967C1.33398 11.6233 4.22499 14.5717 7.82631 14.6641M8.00065 3.99967V7.99967L10.4929 9.2458" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_4126_16020">
+<rect width="16" height="16" fill="white"/>
+</clipPath>
+</defs>
+</svg>

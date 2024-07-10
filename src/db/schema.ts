@@ -1,9 +1,10 @@
 import { appSchema } from '@nozbe/watermelondb';
 
 import { chatSchema } from './chat';
-import { postSchema } from './post';
+import { downloadSchema } from './download';
+import { modelSchema } from './model';
 
 export const schema = appSchema({
-  version: 3,
-  tables: [postSchema, chatSchema],
+  version: 16,
+  tables: [chatSchema, modelSchema, downloadSchema],
 });

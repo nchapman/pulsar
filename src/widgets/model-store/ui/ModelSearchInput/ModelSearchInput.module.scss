@@ -7,6 +7,10 @@
   gap: 8px;
   width: 480px;
   padding: 12px;
+
+  &:focus-within {
+    border-color: var(--text-primary);
+  }
 }
 
 .input {

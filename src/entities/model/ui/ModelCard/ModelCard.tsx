@@ -1,6 +1,5 @@
 import { memo } from 'preact/compat';
 
-import { LlmName, supportedLlms } from '@/entities/model/consts/supported-llms.const.ts';
 import { classNames } from '@/shared/lib/func';
 import { Badge, Card, Text } from '@/shared/ui';
 
@@ -8,12 +7,12 @@ import s from './ModelCard.module.scss';
 
 interface Props {
   className?: string;
-  model: LlmName;
+  modelData: { name: string; desc: string; size: string };
 }
 
 export const ModelCard = memo((props: Props) => {
-  const { className, model } = props;
-  const { name, desc, size } = supportedLlms[model];
+  const { className, modelData } = props;
+  const { name, desc, size } = modelData;
 
   return (
     <Card type="secondary" size="s" className={classNames(s.modelCard, [className])}>

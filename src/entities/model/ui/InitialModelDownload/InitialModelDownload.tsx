@@ -1,36 +1,67 @@
-import { useStoreMap } from 'effector-react';
+import { useStoreMap, useUnit } from 'effector-react';
 import { memo, useLayoutEffect } from 'preact/compat';
+import { useState } from 'preact/hooks';
 
-import { DEFAULT_LLM, ModelCard } from '@/entities/model';
+import { curatedModels } from '@/entities/model';
+import { downloadsManager } from '@/entities/model/managers/downloads-manager.ts';
 import DownloadIcon from '@/shared/assets/icons/download.svg';
 import { classNames } from '@/shared/lib/func';
-import { useToggle } from '@/shared/lib/hooks';
 import { changeTheme } from '@/shared/theme';
 import { Button, Icon, Progress, Text } from '@/shared/ui';
+import { getHuggingFaceDownloadLink } from '@/widgets/model-store/api/search-hugging-face.ts';
 
-import { $modelsDownload, downloadModelEff } from '../../model/manage-models-model.ts';
+import { ModelCard } from '../ModelCard/ModelCard';
 import s from './InitialModelDownload.module.scss';
 
 interface Props {
   className?: string;
 }
 
-const model = DEFAULT_LLM;
+const modelData = {
+  name: 'Model name',
+  desc: 'Model description',
+  size: '1.2 GB',
+};
 
 export const InitialModelDownload = memo((props: Props) => {
   const { className } = props;
-  const { on: pause, off: resume, isOn: isPaused } = useToggle();
-  const { on: startDownload, isOn: isDownloading } = useToggle();
+  const [downloadId, setDownloadId] = useState<Id | null>(null);
 
-  const downloadInfo = useStoreMap($modelsDownload, (s) => s[model]);
+  useStoreMap({
+    store: downloadsManager.state.$downloadsData,
+    keys: [downloadId],
+    fn: (d, [id]) => (id ? d[id] : null),
+  });
+
+  const data = useUnit(downloadsManager.state.$downloadsData);
+
+  const downloadInfo = downloadId ? data[downloadId] : null;
+
+  const { downloadingData } = downloadInfo || {};
 
   useLayoutEffect(() => {
     changeTheme('dark');
   }, []);
 
-  const handleModelDownload = () => {
-    startDownload();
-    downloadModelEff(model);
+  const handleModelDownload = async () => {
+    const llava = curatedModels['llava-v1.6-mistral-7b'];
+
+    const res = await downloadsManager.addDownload({
+      dto: llava,
+      name: llava.file.name,
+      type: 'llm',
+      remoteUrl: getHuggingFaceDownloadLink(llava.model.name, llava.file.name),
+    });
+
+    setDownloadId(res.id);
+  };
+
+  const handlePause = () => {
+    downloadsManager.pause(downloadId!);
+  };
+
+  const resume = () => {
+    downloadsManager.start(downloadId!);
   };
 
   return (
@@ -39,18 +70,18 @@ export const InitialModelDownload = memo((props: Props) => {
         Required model
       </Text>
 
-      <ModelCard model={model} className={s.modelCard} />
+      <ModelCard modelData={modelData} className={s.modelCard} />
 
       <div className={s.action}>
-        {downloadInfo?.percent ? (
+        {downloadingData?.percent ? (
           <Progress
-            onPause={pause}
-            isPaused={isPaused}
+            onPause={handlePause}
+            isPaused={downloadingData.isPaused}
             onResume={resume}
-            percent={downloadInfo?.percent}
+            percent={downloadingData?.percent}
           />
         ) : (
-          <Button onClick={handleModelDownload} variant="primary" loading={isDownloading}>
+          <Button onClick={handleModelDownload} variant="primary" loading={!!downloadId}>
             <Icon svg={DownloadIcon} />
             Download model
           </Button>

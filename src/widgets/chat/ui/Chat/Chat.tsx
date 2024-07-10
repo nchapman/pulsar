@@ -1,29 +1,22 @@
 import { useStoreMap } from 'effector-react';
 
 import { classNames } from '@/shared/lib/func';
-import { $chat } from '@/widgets/chat';
-import { UnarchiveChat } from '@/widgets/chat/ui/UnarchiveChat/UnarchiveChat.tsx';
 
+import { $chat } from '../../model/chat.ts';
 import { ChatInput } from '../ChatInput/ChatInput';
 import { ChatMsgList } from '../ChatMsgList/ChatMsgList';
+import { UnarchiveChat } from '../UnarchiveChat/UnarchiveChat.tsx';
 import s from './Chat.module.scss';
 
-interface Props {
-  className?: string;
-  isChatArchived?: boolean;
-}
-
-export const Chat = (props: Props) => {
-  const { className, isChatArchived } = props;
-
+export const Chat = () => {
   const isArchived = useStoreMap({
     keys: [],
     store: $chat.data,
-    fn: (data) => isChatArchived || data?.isArchived,
+    fn: (data) => data?.isArchived,
   });
 
   return (
-    <div className={classNames(s.chat, [className])}>
+    <div className={classNames(s.chat)}>
       <ChatMsgList className={s.msgList} />
       {isArchived ? <UnarchiveChat /> : <ChatInput className={s.chatInput} />}
     </div>

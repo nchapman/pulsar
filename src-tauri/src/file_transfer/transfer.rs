@@ -31,6 +31,10 @@ pub enum Error {
     // ContentLength(String),
     #[error("request failed with status code {0}: {1}")]
     HttpErrorCode(u16, String),
+    #[error("Hash mismatch")]
+    HashMismatch,
+    #[error("No hash to validate")]
+    NoHash,
 }
 
 impl Serialize for Error {
@@ -61,6 +65,7 @@ async fn download<R: Runtime>(
     url: &str,
     path: &str,
     headers: HashMap<String, String>,
+    verify_hash: bool,
     state: State<'_, TransferState>,
 ) -> Result<u32> {
     let client = reqwest::Client::builder()
@@ -100,6 +105,7 @@ async fn download<R: Runtime>(
     }
 
     let mut total_size = 0;
+    let mut sha: Option<String> = None;
     let head_response = head_request.send().await?;
 
     if head_response.status().is_success() {
@@ -111,6 +117,11 @@ async fn download<R: Runtime>(
             .and_then(|value| value.to_str().ok())
             .and_then(|value| value.parse().ok())
             .unwrap_or(0);
+        sha = head_response
+            .headers()
+            .get(reqwest::header::ETAG)
+            .and_then(|value| value.to_str().ok())
+            .map(|value| value.to_string());
     }
 
     let mut progress = 0.;
@@ -177,7 +188,7 @@ async fn download<R: Runtime>(
                 // Flush the file before returning the error JS
                 // so that the file is not corrupted and can be resumed afterwards
                 file.flush().await?;
-                // If it fail because of timeout to JS this will appear as error deconding response body
+                // If it fail because of timeout to JS this will appear as error decoding response body
                 return Err(err.into());
             }
         }
@@ -185,6 +196,17 @@ async fn download<R: Runtime>(
 
     // All bytes have been streamed, make sure file is flushed
     file.flush().await?;
+
+    if verify_hash {
+        if let Some(sha) = sha {
+            let file_hash = crate::fs::get_file_sha_256(path).await.unwrap();
+            if file_hash != sha {
+                return Err(Error::HashMismatch);
+            }
+        } else {
+            return Err(Error::NoHash);
+        }
+    }
 
     // Completes the promise
     Ok(id)

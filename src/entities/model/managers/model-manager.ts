@@ -89,20 +89,20 @@ class ModelManager {
     await this.loadCurrentModel();
   }
 
-  async addModel(d: { modelDto: Model['data']; filePath: string; type: ModelType }) {
-    const { modelDto, filePath, type } = d;
+  async addModel(d: { dto: Model['data']; filePath: string; type: ModelType }) {
+    const { dto, filePath, type } = d;
 
-    if (type === 'mmp' && !modelDto.llmName) {
+    if (type === 'mmp' && !dto.model.llmName) {
       throw new Error('LLM model name is required for MMP model');
     }
 
     // move file to models folder
-    await moveToModelsDir(filePath, modelDto.localName);
+    await moveToModelsDir(filePath, dto.file.name);
 
     // save model to the db
     const dbModel = await this.modelsRepository.create({
-      data: modelDto,
-      name: modelDto.name,
+      data: dto,
+      name: dto.file.name,
       type,
     });
 
@@ -139,7 +139,7 @@ class ModelManager {
     }
 
     // delete model from the disk
-    await deleteModel(model.data.localName);
+    await deleteModel(model.data.file.name);
   }
 
   async loadFirstAvailableModel() {
@@ -197,12 +197,15 @@ class ModelManager {
       throw new Error('Model type not supported');
     }
 
-    const { localName, mmpName } = this.models[this.currentModel].data;
+    const {
+      model: { mmpName },
+      file: { name },
+    } = this.models[this.currentModel].data;
 
     const isMmpPresent = mmpName && this.#mmpNameIdMap[mmpName];
 
     try {
-      await this.loadModel(localName, isMmpPresent ? mmpName : undefined);
+      await this.loadModel(name, isMmpPresent ? mmpName : undefined);
       this.isReady = true;
 
       logi(LOG_TAG, 'Model ready!');
@@ -220,7 +223,7 @@ class ModelManager {
 
     // delete missing in local
     await promiseAll(models, async (model) => {
-      if (availableModels.includes(model.data.localName)) return;
+      if (availableModels.includes(model.data.file.name)) return;
       await this.modelsRepository.remove(model.id);
     });
 
@@ -228,7 +231,7 @@ class ModelManager {
 
     // delete missing in db
     await promiseAll(availableModels, async (localName) => {
-      if (models.some((model) => model.data.localName === localName)) return;
+      if (models.some((model) => model.data.file.name === localName)) return;
       await deleteModel(localName);
     });
 
@@ -258,11 +261,11 @@ class ModelManager {
 
     Object.values(this.models).forEach((model) => {
       if (model.type === 'llm') {
-        llmNameIdMap[model.data.localName] = model.id;
+        llmNameIdMap[model.data.file.name] = model.id;
       }
 
       if (model.type === 'mmp') {
-        mmpNameIdMap[model.data.localName] = model.id;
+        mmpNameIdMap[model.data.file.name] = model.id;
       }
     });
 

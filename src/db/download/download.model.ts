@@ -11,7 +11,7 @@ export class DownloadModel extends Model {
 
   @json(downloadsTable.cols.downloadingData, (json) => json) downloadingData;
 
-  @text(downloadsTable.cols.localName) localName;
+  @text(downloadsTable.cols.name) name;
 
   @json(downloadsTable.cols.dto, (json) => json) dto;
 

@@ -5,6 +5,6 @@ import { downloadSchema } from './download';
 import { modelSchema } from './model';
 
 export const schema = appSchema({
-  version: 15,
+  version: 16,
   tables: [chatSchema, modelSchema, downloadSchema],
 });

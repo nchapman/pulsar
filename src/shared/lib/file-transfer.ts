@@ -103,6 +103,6 @@ export async function download({
     url,
     path,
     headers: headers ?? {},
-    verify_hash: verifyHash,
+    verifyHash,
   });
 }

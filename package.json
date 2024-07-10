@@ -20,7 +20,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "deploy-storybook": "yarn build-storybook && cd storybook-static && vercel --prod --yes",
-    "chromatic": "npx chromatic"
+    "chromatic": "npx chromatic",
+    "clippy": "cd src-tauri && cargo clippy --all-targets --all-features -- -D warnings"
   },
   "dependencies": {
     "@huggingface/hub": "^0.15.1",

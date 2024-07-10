@@ -13,11 +13,13 @@ export class DownloadModel extends Model {
 
   @text(downloadsTable.cols.name) name;
 
+  @text(downloadsTable.cols.modelName) modelName;
+
   @json(downloadsTable.cols.dto, (json) => json) dto;
 
   @text(downloadsTable.cols.type) type;
 
-  @text(downloadsTable.cols.modelId) modelId;
+  @text(downloadsTable.cols.modelFileId) modelId;
 
   @readonly @date(downloadsTable.cols.createdAt) createdAt;
 

@@ -5,12 +5,12 @@ export type Theme = 'light' | 'dark' | 'system';
 const THEME_LS_KEY = 'theme';
 const THEME_BODY_ATTR = 'data-theme';
 
-export const $theme = createStore<Theme>('system');
+export const $theme = createStore<Theme>('dark');
 
 export const changeTheme = createEvent<Theme>();
 
 export const initTheme = () => {
-  changeTheme((localStorage.getItem(THEME_LS_KEY) as Theme) || 'system');
+  changeTheme((localStorage.getItem(THEME_LS_KEY) as Theme) || 'dark');
 };
 
 sample({

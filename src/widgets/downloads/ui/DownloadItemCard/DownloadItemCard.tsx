@@ -1,46 +1,114 @@
+import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
 
-import { DownloadItem } from '@/db/download';
-import { ModelFile } from '@/entities/model';
+import { ModelFile, ModelFileData } from '@/entities/model';
 import { downloadsManager } from '@/entities/model/managers/downloads-manager.ts';
-import TrashIcon from '@/shared/assets/icons/trash.svg';
+import CloseIcon from '@/shared/assets/icons/close.svg';
+import PlayIcon from '@/shared/assets/icons/play-circle.svg';
+import StopIcon from '@/shared/assets/icons/stop-circle.svg';
+import RemoveIcon from '@/shared/assets/icons/trash.svg';
 import { classNames } from '@/shared/lib/func';
-import { Button, Progress, Text } from '@/shared/ui';
-import { formatDate } from '@/widgets/model-store/lib/formatDate.ts';
+import { Button, confirm, Icon, Progress, Text } from '@/shared/ui';
 
 import s from './DownloadItemCard.module.scss';
 
 interface Props {
   className?: string;
-  data: DownloadItem;
+  data: ModelFileData;
 }
 
 export const DownloadItemCard = memo((props: Props) => {
   const { className, data } = props;
 
-  const readyContent = (
-    <div className={s.readyContent}>
-      <Text className={s.date}>{formatDate(new Date(data.createdAt))}</Text>
-      <Button variant="secondary">Start chat</Button>
-      <Button variant="secondary" icon={TrashIcon} />
-    </div>
-  );
+  const { isGguf, isMmproj } = data;
 
-  const pendingContent = (
-    <div className={s.prendingContent}>
-      <Progress
-        percent={data.downloadingData.percent}
-        isPaused={data.downloadingData.isPaused}
-        onPause={() => downloadsManager.pause(data.id)}
-        onResume={() => downloadsManager.start(data.id)}
-      />
-      <Button variant="secondary" icon={TrashIcon} />
-    </div>
-  );
+  const fileName = data.name;
+
+  const downloadItem = useUnit(downloadsManager.state.$downloadsNameData)[fileName];
+
+  const { id, downloadingData } = downloadItem || {};
+  const handleDeleteModel = () => {
+    confirm({
+      type: 'danger',
+      title: 'Delete this model file?',
+      message:
+        `This will delete the ${fileName}. ` +
+        'This action will permanently remove all data. Proceed with caution.',
+      onConfirm: () => downloadsManager.remove(id),
+      confirmText: 'Confirm deletion',
+    });
+  };
+
+  function getWidget() {
+    if (downloadingData.isFinished && !isMmproj && isGguf) {
+      return (
+        <div className={s.finished}>
+          <Button className={s.startChat} variant="primary">
+            Start Chat
+          </Button>
+          <Button variant="secondary" className={s.deleteBtn} onClick={handleDeleteModel}>
+            <Icon size={12} svg={RemoveIcon} />
+          </Button>
+        </div>
+      );
+    }
+
+    if (downloadingData.status === 'queued') {
+      return (
+        <div className={s.queued}>
+          <Text className={s.queuedText} c="info" s={12}>
+            Queued
+          </Text>
+
+          <Button
+            variant="secondary"
+            className={s.removeBtn}
+            onClick={() => downloadsManager.remove(id)}
+          >
+            <Icon size={12} svg={CloseIcon} />
+          </Button>
+        </div>
+      );
+    }
+
+    if (!downloadingData.isFinished) {
+      return (
+        <div className={s.progress}>
+          <Progress
+            className={s.progressBar}
+            current={downloadingData.progress}
+            total={downloadingData.total}
+            isPaused={downloadingData.isPaused}
+            small
+          />
+
+          <div className={s.progressActions}>
+            <Button
+              className={classNames(s.playBtn, [], { [s.pause]: !downloadingData.isPaused })}
+              variant="secondary"
+              onClick={() => downloadsManager[downloadingData.isPaused ? 'start' : 'pause'](id)}
+            >
+              <Icon size={12} svg={downloadingData.isPaused ? PlayIcon : StopIcon} />
+            </Button>
+
+            <Button
+              variant="secondary"
+              className={s.removeBtn}
+              onClick={() => downloadsManager.remove(id)}
+            >
+              <Icon size={12} svg={CloseIcon} />
+            </Button>
+          </div>
+        </div>
+      );
+    }
+
+    return null;
+  }
 
   return (
-    <ModelFile data={data.dto.file} className={classNames(s.downloadItemCard, [className])}>
-      {data.downloadingData.isFinished ? readyContent : pendingContent}
+    <ModelFile className={classNames(s.downloadItemCard, [className])} data={data}>
+      {getWidget()}
     </ModelFile>
   );
 });

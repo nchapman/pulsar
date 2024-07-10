@@ -1,3 +1,69 @@
 .download-item-card {
-  // styles here
+
 }
+
+.finished {
+  display: flex;
+  gap: 8px;
+
+  .delete-btn {
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    justify-content: center;
+  }
+
+  .start-chat {
+    width: 126px;
+    justify-content: center;
+    height: 32px;
+  }
+}
+
+.queued {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+
+  .remove-btn {
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    justify-content: center;
+  }
+}
+
+.progress {
+  display: flex;
+  gap: 54px;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+
+  .progress-bar {
+    width: 400px;
+    margin-right: auto;
+  }
+
+  .progress-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .remove-btn, .play-btn {
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    justify-content: center;
+  }
+
+  .play-btn {
+    color: var(--success);
+
+    &.pause {
+      color: var(--warning);
+    }
+  }
+}
+
+

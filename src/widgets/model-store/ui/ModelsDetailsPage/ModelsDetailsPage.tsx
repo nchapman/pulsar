@@ -34,13 +34,15 @@ export const ModelsDetailsPage = memo(() => {
 
   const files = useUnit($modelStoreState.currModelFiles);
 
+  const withVision = files.some((f) => f.isMmproj);
+
   const modelsToShow = useMemo(() => processModelFiles(files, fileType), [fileType, files]);
 
   if (!modelData) return null;
 
   return (
     <div className={classNames(s.modelsDetailsPage)}>
-      <ModelCard info model={modelData} view="list" />
+      <ModelCard info model={modelData} view="list" withVision={withVision} />
 
       <div className={s.header}>
         <Text w="medium" c="primary">

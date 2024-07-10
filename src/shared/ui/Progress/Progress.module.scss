@@ -23,6 +23,10 @@
   background: var(--warning);
 }
 
+.loading-mmp .inner {
+  background: var(--info);
+}
+
 .percent {
   position: absolute;
   left: 50%;
@@ -36,4 +40,11 @@
   border-radius: 8px;
   border: 1px solid var(--border-light) !important;
   flex-shrink: 0;
+}
+
+.small {
+  .bar {
+    height: 24px;
+    border-radius: 6px;
+  }
 }

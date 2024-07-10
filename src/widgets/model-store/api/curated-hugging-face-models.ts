@@ -11,7 +11,7 @@ type CuratedModel = {
 const curatedModels: Record<string, CuratedModel[]> = {
   general: [
     {
-      description: 'cjpais/llava-1.6-mistral-7b-gguf this is our base model',
+      description: 'cjpais/llava-1.6-mistral-7b-gguf this is our base model-file',
       id: '65bc02cbb54ab5b37d4bd060',
       name: 'cjpais/llava-1.6-mistral-7b-gguf',
     },

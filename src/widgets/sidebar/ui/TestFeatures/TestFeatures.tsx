@@ -47,9 +47,9 @@ export const TestFeatures = memo((props: Props) => {
 
     const generalFeaturedModels = await getCuratedModels('general');
 
-    // const model = await fetchHuggingFaceModel(searchResults[0].modelId);
+    // const model-file = await fetchHuggingFaceModel(searchResults[0].modelId);
     logi('Hugging face search', JSON.stringify(searchResults, null, 2));
-    logi('Hugging face model', JSON.stringify(filesResults, null, 2));
+    logi('Hugging face model-file', JSON.stringify(filesResults, null, 2));
     logi('Curated models', JSON.stringify(generalFeaturedModels, null, 2));
   };
 
@@ -67,7 +67,7 @@ export const TestFeatures = memo((props: Props) => {
       );
       downloadModel(
         'https://huggingface.co/cjpais/llava-1.6-mistral-7b-gguf/resolve/main/mmproj-model-f16.gguf?download=true',
-        'mmproj-model-f16.gguf',
+        'mmproj-model-file-f16.gguf',
         (p) => logi('downloadModel', `Progress: ${p}`)
       );
     } catch (e) {

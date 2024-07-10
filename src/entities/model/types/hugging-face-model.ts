@@ -3,8 +3,6 @@ import { ModelEntry } from '@huggingface/hub';
 export interface HuggingFaceModel extends ModelEntry {
   downloadsAllTime: number;
   author: string;
-  sha: string;
-  tags: string[];
 }
 
 export interface CuratedModel extends HuggingFaceModel {

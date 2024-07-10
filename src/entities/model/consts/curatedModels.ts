@@ -1,38 +1,30 @@
-import { ModelDto } from '../types/model.types.ts';
+interface CuratedModel {
+  modelName: string;
+  fileName: string;
+  description: string;
+  logo: string;
+}
 
-export const curatedModels: Record<string, ModelDto> = {
-  'llava-v1.6-mistral-7b': {
-    model: {
-      name: 'cjpais/llava-1.6-mistral-7b-gguf',
-      sha: '6019df415777605a8364e2668aa08b7e354bf0ba',
-      mmpName: 'mmproj-model-f16.gguf',
-      task: 'image-text-to-text',
-      huggingFaceId: '65bc02cbb54ab5b37d4bd060',
-      author: 'cjpais',
-    },
-    file: {
-      isGguf: true,
-      name: 'llava-v1.6-mistral-7b.Q4_K_M.gguf',
-      size: 0,
-      isMmproj: false,
-      fitsInMemory: true,
-    },
+export const curatedModels: CuratedModel[] = [
+  {
+    modelName: 'cjpais/llava-1.6-mistral-7b-gguf',
+    fileName: 'llava-v1.6-mistral-7b.Q4_K_M.gguf',
+    description:
+      'The primary intended users of the model are researchers and hobbyists in computer vision, natural language processing, machine learning, and artificial intelligence.',
+    logo: '',
   },
-  'mmproj-model-f16': {
-    model: {
-      name: 'cjpais/llava-1.6-mistral-7b-gguf',
-      sha: '6019df415777605a8364e2668aa08b7e354bf0ba',
-      mmpName: 'mmproj-model-f16.gguf',
-      task: 'image-text-to-text',
-      huggingFaceId: '65bc02cbb54ab5b37d4bd060',
-      author: 'cjpais',
-    },
-    file: {
-      isGguf: true,
-      name: 'mmproj-model-f16.gguf',
-      size: 0,
-      isMmproj: true,
-      fitsInMemory: true,
-    },
+  {
+    modelName: 'Mozilla/llava-v1.5-7b-llamafile',
+    fileName: 'llava-v1.5-7b-Q4_K.gguf',
+    description:
+      'LLM Compiler is intended for commercial and research use in English, relevant programming languages, LLVM IR, x86_64 assembly and ARM assembly.',
+    logo: '',
   },
-};
+  {
+    modelName: 'TheBloke/OpenHermes-2.5-Mistral-7B-GGUF',
+    fileName: 'openhermes-2.5-mistral-7b.Q4_0.gguf',
+    description:
+      'The primary intended users of the model are researchers and hobbyists in computer vision, natural language processing, machine learning, and artificial intelligence.',
+    logo: '',
+  },
+];

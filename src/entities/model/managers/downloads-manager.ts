@@ -3,6 +3,8 @@ import { createEvent, createStore } from 'effector';
 import { APP_DIRS } from '@/app/consts/app.const.ts';
 import { downloadsRepository } from '@/db';
 import { DownloadItem, DownloadsRepository } from '@/db/download';
+import { ModelDto } from '@/entities/model';
+import { UserSettingsManager, userSettingsManager } from '@/entities/settings';
 import { download, getRandomInt, interruptFileTransfer } from '@/shared/lib/file-transfer.ts';
 import { getPercent, promiseAll } from '@/shared/lib/func';
 import { logi } from '@/shared/lib/Logger.ts';
@@ -13,25 +15,35 @@ import { getDownloadPath } from '../lib/getDownloadPath.ts';
 import { ModelManager, modelManager } from './model-manager.ts';
 
 export type DownloadsData = Record<Id, DownloadItem>;
+export type DownloadsNameData = Record<string, DownloadItem>;
 
 class DownloadsManager {
   #downloadsIdsList: Id[] = [];
 
   #downloadsData: DownloadsData = {};
 
+  #downloadsNameData: DownloadsNameData = {};
+
+  #queue: Id[] = [];
+
+  #current: Id | null = null;
+
   state = {
     $downloadsIdsList: createStore<Id[]>([]),
     $downloadsData: createStore<DownloadsData>({}),
+    $downloadsNameData: createStore<DownloadsNameData>({}),
   };
 
   events = {
     setDownloadsIdsList: createEvent<Id[]>(),
     setDownloadsData: createEvent<DownloadsData>(),
+    setDownloadsNameData: createEvent<DownloadsNameData>(),
   };
 
   constructor(
     private readonly downloadsRepository: DownloadsRepository,
-    private readonly modelManager: ModelManager
+    private readonly modelManager: ModelManager,
+    private readonly userSettings: UserSettingsManager
   ) {
     this.initState();
 
@@ -40,17 +52,25 @@ class DownloadsManager {
 
   // public API methods
 
-  async addDownload(d: Pick<DownloadItem, 'dto' | 'name' | 'type' | 'remoteUrl'>) {
+  async addDownload(
+    d: Pick<DownloadItem, 'dto' | 'name' | 'type' | 'remoteUrl' | 'modelName'>,
+    modelDto: ModelDto
+  ) {
+    await this.modelManager.updateOrCreateModel(modelDto);
+
     const existingDownload = Object.values(this.downloadsData).find(
       (download) => download.name === d.name
     );
+
+    if (this.modelManager.availableLlms.includes(d.name)) {
+      console.log('Llm already downloaded, skipping...');
+      return undefined;
+    }
 
     if (existingDownload) {
       this.start(existingDownload.id);
       return existingDownload;
     }
-
-    console.log('dto', d);
 
     // save download to the db
     const download = await this.downloadsRepository.create({
@@ -58,29 +78,36 @@ class DownloadsManager {
       downloadingData: {
         downloadId: getRandomInt(),
         progress: 0,
-        total: 0,
+        total: d.dto.file.size,
         percent: 0,
         isFinished: false,
         isPaused: false,
+        status: 'queued',
       },
     });
 
-    console.log('download', download);
-
     // save download to the state
     this.downloadsIdsList = [download.id, ...this.#downloadsIdsList];
-    this.downloadsData[download.id] = download;
+    this.downloadsData = { ...this.downloadsData, [download.id]: download };
 
-    this.start(download.id);
+    this.addToQueue(download.id);
 
     return download;
   }
 
   async remove(id: Id) {
+    if (this.current === id) {
+      await this.pause(id);
+    }
+
     const download = this.downloadsData[id];
 
     if (!download) {
       throw new Error(`Download "${id}" not found`);
+    }
+
+    if (download.modelFileId) {
+      await this.modelManager.deleteModel(download.modelFileId);
     }
 
     // remove download from the db
@@ -88,10 +115,22 @@ class DownloadsManager {
 
     // remove download from the state
     this.downloadsIdsList = this.downloadsIdsList.filter((downloadId) => downloadId !== id);
-    delete this.downloadsData[id];
+
+    const newData = { ...this.downloadsData };
+    delete newData[id];
+
+    this.downloadsData = newData;
 
     // delete file from the disk
     await deleteDownload(download.name);
+
+    if (this.current === id) {
+      this.downloadNextFromQueue();
+    }
+
+    if (this.queue.includes(id)) {
+      this.queue = this.queue.filter((queueId) => queueId !== id);
+    }
   }
 
   async start(id: Id) {
@@ -104,14 +143,16 @@ class DownloadsManager {
     }
 
     const path = await getDownloadPath(name);
-    await this.updateDownloadData(id, { downloadingData: { ...downloadingData, isPaused: false } });
+    await this.updateDownloadData(id, {
+      downloadingData: { ...downloadingData, isPaused: false, status: 'downloading' },
+    });
 
     await download({
       id: downloadId,
       url,
       path,
       progressHandler: (_id, progress, total) => {
-        console.log('progress', progress, total);
+        // console.log('progress', progress, total);
         this.updateDownloadProcess(id, progress, total);
       },
     }).catch((e) => logi('download', e));
@@ -122,7 +163,9 @@ class DownloadsManager {
 
     await interruptFileTransfer(downloadingData.downloadId);
 
-    await this.updateDownloadData(id, { downloadingData: { ...downloadingData, isPaused: true } });
+    await this.updateDownloadData(id, {
+      downloadingData: { ...downloadingData, isPaused: true, status: 'paused' },
+    });
   }
 
   // private methods
@@ -134,28 +177,30 @@ class DownloadsManager {
       throw new Error(`Download "${id}" not found`);
     }
 
+    const downloadingData = { ...download.downloadingData };
+
     const isNew = download.downloadingData.progress === 0;
 
-    const newData = { ...download };
-
     if (isNew) {
-      console.log(newData);
-      newData.downloadingData.total = total;
-      newData.dto.file.size = total;
+      downloadingData.total = total;
     }
 
-    newData.downloadingData.progress = newData.downloadingData.total - total + progress;
-    newData.downloadingData.percent = getPercent(
-      newData.downloadingData.progress,
-      newData.downloadingData.total
-    );
+    downloadingData.progress = downloadingData.total - total + progress;
+    downloadingData.percent = getPercent(downloadingData.progress, downloadingData.total);
 
-    await this.downloadsRepository.update(id, newData);
+    const dataToUpd: Partial<DownloadItem> = { downloadingData };
 
-    this.downloadsData = {
-      ...this.downloadsData,
-      [id]: newData,
-    };
+    // if (isNew) {
+    //   console.log(
+    //     'is HG size similar to download size',
+    //     download.dto.file.size === total,
+    //     download.dto.file.size,
+    //     total
+    //   );
+    //   // dataToUpd.dto = { ...download.dto, file: { ...download.dto.file, size: total } };
+    // }
+
+    await this.updateDownloadData(id, dataToUpd);
 
     if (progress === total) {
       this.onItemDownloaded(id);
@@ -174,7 +219,14 @@ class DownloadsManager {
   }
 
   private async initManager() {
+    this.#queue = (this.userSettings.get('downloadsQueue') as Id[]) || [];
+    this.#current = (this.userSettings.get('downloadsCurrent') as Id) || null;
+
     await this.readLocalDownloads();
+
+    if (this.#current) {
+      this.start(this.#current);
+    }
   }
 
   private async readLocalDownloads() {
@@ -184,10 +236,17 @@ class DownloadsManager {
     // get downloads from db
     let downloads = await this.downloadsRepository.getAll();
 
+    // update state
+    this.updateStateFromDB(downloads);
+
     // delete missing in local and unfinished
     await promiseAll(downloads, async (download) => {
-      if (!availableDownloads.includes(download.name) && !download.downloadingData.isFinished) {
-        await this.downloadsRepository.remove(download.id);
+      if (
+        !availableDownloads.includes(download.name) &&
+        !download.downloadingData.isFinished &&
+        download.downloadingData.status !== 'queued'
+      ) {
+        await this.remove(download.id);
       }
     });
 
@@ -204,7 +263,7 @@ class DownloadsManager {
 
     // pause all downloads
     await promiseAll(downloads, async (download) => {
-      if (download.downloadingData.isPaused) return;
+      if (download.downloadingData.status !== 'downloading') return;
       await this.updateDownloadData(download.id, {
         downloadingData: { ...download.downloadingData, isPaused: true },
       });
@@ -217,32 +276,92 @@ class DownloadsManager {
       acc[download.id] = download;
       return acc;
     }, {});
+
+    this.queue = this.queue.filter((id) => this.downloadsIdsList.includes(id));
+    this.current =
+      this.current && this.downloadsIdsList.includes(this.current) ? this.current : null;
+
+    if (this.current && !this.downloadsIdsList.includes(this.current)) {
+      this.downloadNextFromQueue();
+    }
   }
 
   private async onItemDownloaded(id: Id) {
-    const { name, type, dto } = this.downloadsData[id];
+    const { name, type, dto, modelName } = this.downloadsData[id];
 
     const filePath = await getDownloadPath(name);
 
-    const model = await this.modelManager.addModel({
+    const modelFile = await this.modelManager.addModel({
       type,
       filePath,
       dto,
+      modelName,
     });
 
     // save to the db
     await this.updateDownloadData(id, {
-      downloadingData: { ...this.downloadsData[id].downloadingData, isFinished: true },
-      modelId: model.id,
+      downloadingData: {
+        ...this.downloadsData[id].downloadingData,
+        isFinished: true,
+        status: 'finished',
+      },
+      modelFileId: modelFile.id,
     });
+
+    this.downloadNextFromQueue();
   }
 
   private initState() {
     this.state.$downloadsIdsList.on(this.events.setDownloadsIdsList, (_, val) => val);
     this.state.$downloadsData.on(this.events.setDownloadsData, (_, val) => val);
+    this.state.$downloadsNameData.on(this.events.setDownloadsNameData, (_, val) => val);
+  }
+
+  private addToQueue(id: Id) {
+    console.log(this.queue, this.current);
+    if (!this.queue.length && !this.current) {
+      this.current = id;
+      this.start(id);
+      return;
+    }
+
+    this.queue = [id, ...this.queue];
+  }
+
+  private downloadNextFromQueue() {
+    if (!this.queue.length) {
+      this.current = null;
+      return;
+    }
+
+    const newQueue = [...this.queue];
+    const nextId = newQueue.pop()!;
+
+    this.queue = newQueue;
+    this.current = nextId;
+
+    this.start(nextId);
   }
 
   // getters/setters
+
+  private get queue() {
+    return this.#queue;
+  }
+
+  private set queue(queue: Id[]) {
+    this.#queue = queue;
+    this.userSettings.set('downloadsQueue', queue);
+  }
+
+  private get current() {
+    return this.#current;
+  }
+
+  private set current(id: Id | null) {
+    this.#current = id;
+    this.userSettings.set('downloadsCurrent', id);
+  }
 
   private get downloadsIdsList() {
     return this.#downloadsIdsList;
@@ -257,10 +376,19 @@ class DownloadsManager {
     return this.#downloadsData;
   }
 
-  private set downloadsData(data: Record<Id, DownloadItem>) {
+  private set downloadsData(data: DownloadsData) {
     this.#downloadsData = data;
+    this.#downloadsNameData = Object.values(data).reduce<DownloadsNameData>((acc, download) => {
+      acc[download.name] = download;
+      return acc;
+    }, {});
     this.events.setDownloadsData(data);
+    this.events.setDownloadsNameData(this.#downloadsNameData);
   }
 }
 
-export const downloadsManager = new DownloadsManager(downloadsRepository, modelManager);
+export const downloadsManager = new DownloadsManager(
+  downloadsRepository,
+  modelManager,
+  userSettingsManager
+);

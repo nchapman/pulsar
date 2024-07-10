@@ -5,9 +5,9 @@
 //
 // import { LlmName, supportedLlms } from '../consts/supported-llms.const.ts';
 //
-// function verifyModelHash(model: LlmName) {
+// function verifyModelHash(model-file: LlmName) {
 //   const file = fs
-//     .readBinaryFile(`${APP_DIRS.MODELS}/${model}`, { dir: BaseDirectory.AppData })
+//     .readBinaryFile(`${APP_DIRS.MODELS}/${model-file}`, { dir: BaseDirectory.AppData })
 //     .then(console.log);
 //
 //

@@ -21,7 +21,7 @@ interface Props {
 export const SwitchModelInsideChat = memo((props: Props) => {
   const { className } = props;
   const currentModel = useUnit(modelManager.state.$currentModel);
-  const availableModels = useUnit(modelManager.state.$models);
+  const availableModels = useUnit(modelManager.state.$modelFiles);
   const defaultModel = useUnit($defaultModel);
   const { off: hidePopover, toggle: togglePopover, isOn: isPopoverShown } = useToggle();
 
@@ -59,7 +59,9 @@ export const SwitchModelInsideChat = memo((props: Props) => {
               variant="clear"
               onClick={() => modelManager.switchModel(m.id)}
             >
-              {m.name}
+              <Text w="semi" s={12} c="primary" className={s.modelName}>
+                {m.name}
+              </Text>
               <div className={s.modelInfo}>
                 {m.id === defaultModel && (
                   <div className={s.default}>
@@ -89,7 +91,7 @@ export const SwitchModelInsideChat = memo((props: Props) => {
           className={classNames(s.switchModelInsideChat, [className], { [s.open]: isPopoverShown })}
           variant="clear"
         >
-          {modelData?.model.name}
+          {modelData?.file.name}
           <Icon svg={ChevronDownIcon} className={s.icon} />
         </Button>
       </div>

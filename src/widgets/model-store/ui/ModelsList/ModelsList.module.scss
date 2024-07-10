@@ -7,9 +7,8 @@
 }
 
 .list {
-  width: 100%;
   height: 100%;
-
+  width: 100%;
 
   & > div:first-child {
     padding-right: 12px;
@@ -17,6 +16,12 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+    padding-bottom: 1px;
   }
+}
+
+.list-wrapper {
+  width: 100%;
+  height: calc(100% - 24px);
 }
 

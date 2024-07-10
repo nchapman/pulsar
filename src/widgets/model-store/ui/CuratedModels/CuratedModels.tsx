@@ -1,8 +1,9 @@
+import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
 
 import { classNames } from '@/shared/lib/func';
 import { Logo, Text } from '@/shared/ui';
-import { curatedModels } from '@/widgets/model-store/consts/curated-model.ts';
+import { $modelStoreState } from '@/widgets/model-store/model/model-store.model.ts';
 import { CuratedModelCard } from '@/widgets/model-store/ui/CuratedModelCard/CuratedModelCard.tsx';
 
 import s from './CuratedModels.module.scss';
@@ -14,6 +15,8 @@ interface Props {
 export const CuratedModels = memo((props: Props) => {
   const { className } = props;
 
+  const curatedModels = useUnit($modelStoreState.curatedModels);
+
   return (
     <div className={classNames(s.curatedModels, [className])}>
       <div className={s.header}>
@@ -24,7 +27,7 @@ export const CuratedModels = memo((props: Props) => {
       </div>
 
       <div className={s.list}>
-        {[...curatedModels, ...curatedModels, ...curatedModels, ...curatedModels].map((i) => (
+        {curatedModels.map((i) => (
           <CuratedModelCard className={s.item} data={i} key={i.name} />
         ))}
       </div>

@@ -19,3 +19,21 @@
     color: var(--error);
   }
 }
+
+.queued {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.delete-btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  justify-content: center;
+}
+
+.start-chat {
+  width: 118px;
+  justify-content: center;
+}

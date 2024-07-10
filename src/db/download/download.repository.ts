@@ -1,7 +1,7 @@
 import { Collection, Database } from '@nozbe/watermelondb';
 
-import { ModelType } from '@/db/model';
-import { ModelDto } from '@/entities/model';
+import { ModelFileType } from '@/db/model-file';
+import { ModelFileDto } from '@/entities/model';
 import { assignValues, serialize } from '@/shared/lib/func';
 
 import { DownloadModel } from './download.model.ts';
@@ -11,6 +11,7 @@ export interface DownloadItem {
   id: Id;
   remoteUrl: string;
   downloadingData: {
+    status: 'queued' | 'downloading' | 'paused' | 'finished';
     downloadId: number;
 
     progress: number;
@@ -20,12 +21,11 @@ export interface DownloadItem {
     isFinished: boolean;
     isPaused: boolean;
   };
-  type: ModelType;
+  type: ModelFileType;
   name: string;
-  dto: ModelDto;
-
-  modelId?: Id;
-
+  modelName: string;
+  dto: ModelFileDto;
+  modelFileId?: Id;
   createdAt: number;
   updatedAt: number;
 }
@@ -86,9 +86,10 @@ export class DownloadsRepository {
       'downloadingData',
       'remoteUrl',
       'name',
+      'modelName',
       'type',
       'dto',
-      'modelId',
+      'modelFileId',
       'createdAt',
       'updatedAt',
     ] as (keyof DownloadItem)[]);

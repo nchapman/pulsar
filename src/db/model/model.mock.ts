@@ -1,3 +1,3 @@
 import { Model } from './model.repository.ts';
 
-export const modelMock: Model[] = [];
+export const modelsMock: Model[] = [];

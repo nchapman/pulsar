@@ -1,4 +1,4 @@
-import { useStoreMap, useUnit } from 'effector-react';
+import { useUnit } from 'effector-react';
 import { memo, useLayoutEffect } from 'preact/compat';
 import { useState } from 'preact/hooks';
 
@@ -8,7 +8,7 @@ import DownloadIcon from '@/shared/assets/icons/download.svg';
 import { classNames } from '@/shared/lib/func';
 import { changeTheme } from '@/shared/theme';
 import { Button, Icon, Progress, Text } from '@/shared/ui';
-import { getHuggingFaceDownloadLink } from '@/widgets/model-store/api/search-hugging-face.ts';
+import { startFileDownload } from '@/widgets/model-store/lib/startFileDownload.ts';
 
 import { ModelCard } from '../ModelCard/ModelCard';
 import s from './InitialModelDownload.module.scss';
@@ -17,21 +17,11 @@ interface Props {
   className?: string;
 }
 
-const modelData = {
-  name: 'Model name',
-  desc: 'Model description',
-  size: '1.2 GB',
-};
+const llava = curatedModels[0];
 
 export const InitialModelDownload = memo((props: Props) => {
   const { className } = props;
   const [downloadId, setDownloadId] = useState<Id | null>(null);
-
-  useStoreMap({
-    store: downloadsManager.state.$downloadsData,
-    keys: [downloadId],
-    fn: (d, [id]) => (id ? d[id] : null),
-  });
 
   const data = useUnit(downloadsManager.state.$downloadsData);
 
@@ -44,16 +34,9 @@ export const InitialModelDownload = memo((props: Props) => {
   }, []);
 
   const handleModelDownload = async () => {
-    const llava = curatedModels['llava-v1.6-mistral-7b'];
+    const res = await startFileDownload(llava.modelName, llava.fileName);
 
-    const res = await downloadsManager.addDownload({
-      dto: llava,
-      name: llava.file.name,
-      type: 'llm',
-      remoteUrl: getHuggingFaceDownloadLink(llava.model.name, llava.file.name),
-    });
-
-    setDownloadId(res.id);
+    setDownloadId(res!.id);
   };
 
   const handlePause = () => {
@@ -64,6 +47,14 @@ export const InitialModelDownload = memo((props: Props) => {
     downloadsManager.start(downloadId!);
   };
 
+  const modelData = {
+    name: llava.modelName,
+    desc: llava.description,
+    size: '4.37 GB',
+  };
+
+  const loadingMmp = downloadingData?.status === 'queued';
+
   return (
     <div className={classNames(s.initialModelDownload, [className])}>
       <Text className={s.requiredTitle} c="primary" w="bold" s={18}>
@@ -73,12 +64,14 @@ export const InitialModelDownload = memo((props: Props) => {
       <ModelCard modelData={modelData} className={s.modelCard} />
 
       <div className={s.action}>
-        {downloadingData?.percent ? (
+        {downloadingData ? (
           <Progress
             onPause={handlePause}
             isPaused={downloadingData.isPaused}
             onResume={resume}
-            percent={downloadingData?.percent}
+            current={downloadingData.progress}
+            total={downloadingData.total}
+            loadingMmp={loadingMmp}
           />
         ) : (
           <Button onClick={handleModelDownload} variant="primary" loading={!!downloadId}>

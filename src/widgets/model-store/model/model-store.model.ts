@@ -1,8 +1,9 @@
 import { combine, createEffect, createEvent, createStore, sample } from 'effector';
 
 import { goToStore, goToStoreModel } from '@/app/routes';
-import { ModelFileData } from '@/entities/model';
-import { HuggingFaceModel } from '@/entities/model/types/hugging-face-model.ts';
+import { curatedModels as curated, ModelFileData } from '@/entities/model';
+import { CuratedModel, HuggingFaceModel } from '@/entities/model/types/hugging-face-model.ts';
+import { getModelFileInfo } from '@/widgets/model-store/lib/getModelFileInfo.ts';
 
 import { fetchHuggingFaceFiles, searchHuggingFaceModels } from '../api/search-hugging-face.ts';
 
@@ -18,12 +19,16 @@ const modelsNameMap = models.map((models) =>
   )
 );
 
+const curatedModels = createStore<CuratedModel[]>([]);
+
 const currModelData = combine(
   {
     currModel,
     modelsNameMap,
+    curatedModels,
   },
-  ({ currModel, modelsNameMap }) => (currModel ? modelsNameMap[currModel] : null)
+  ({ currModel, modelsNameMap, curatedModels }) =>
+    currModel ? modelsNameMap[currModel] || curatedModels.find((i) => i.name === currModel) : null
 );
 
 export const $modelStoreState = {
@@ -33,6 +38,7 @@ export const $modelStoreState = {
   currModel,
   currModelFiles,
   currModelData,
+  curatedModels,
 };
 
 export const modelStoreEvents = {
@@ -41,6 +47,18 @@ export const modelStoreEvents = {
   openModelDetails: createEvent<string>(),
   closeModelDetails: createEvent(),
 };
+
+const fetchCuratedModels = createEffect(() =>
+  Promise.all(
+    curated.map(async (i) => {
+      const { modelData } = await getModelFileInfo(i.modelName, i.fileName);
+      return { ...modelData, description: i.description, logo: i.logo };
+    })
+  )
+);
+
+$modelStoreState.curatedModels.on(fetchCuratedModels.doneData, (_, data) => data);
+fetchCuratedModels();
 
 export const fetchHFModels = createEffect<string, HuggingFaceModel[]>(searchHuggingFaceModels);
 const fetchHFFiles = createEffect<string, ModelFileData[]>(fetchHuggingFaceFiles);
@@ -70,6 +88,7 @@ $modelStoreState.showCurated.on(fetchHFModels, () => false);
 $modelStoreState.currModelFiles.on(fetchHFFiles.doneData, (_, data) => data);
 
 $modelStoreState.currModel.on(modelStoreEvents.openModelDetails, (_, modelId) => modelId);
+$modelStoreState.currModelFiles.reset(modelStoreEvents.openModelDetails);
 $modelStoreState.currModel.on(modelStoreEvents.closeModelDetails, () => null);
 $modelStoreState.currModelFiles.reset(modelStoreEvents.closeModelDetails);
 
@@ -84,5 +103,3 @@ sample({
   clock: modelStoreEvents.closeModelDetails,
   target: createEffect(goToStore),
 });
-$modelStoreState.models.watch(console.log);
-$modelStoreState.currModelFiles.watch(console.log);

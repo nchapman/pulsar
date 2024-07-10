@@ -1,12 +1,17 @@
-import { removeFile } from '@tauri-apps/api/fs';
+import { exists, removeFile } from '@tauri-apps/api/fs';
 
 import { APP_DIRS } from '@/app/consts/app.const.ts';
 import { getModelPath } from '@/entities/model/lib/getModelPath.ts';
 
 export async function deleteDownload(localName: string) {
   try {
-    await removeFile(await getModelPath(localName, APP_DIRS.DOWNLOADS));
-  } catch {
+    const path = await getModelPath(localName, APP_DIRS.DOWNLOADS);
+    const fileExists = await exists(path);
+
+    if (fileExists) {
+      await removeFile(path);
+    }
+  } catch (e) {
     console.error('Failed to delete download file');
   }
 }

@@ -8,7 +8,7 @@ const HUGGING_FACE_BASE_URL = 'https://huggingface.co';
 
 export const searchHuggingFaceModels = async (query: string) => {
   const modelGenerator = listModels({
-    search: { query: `${query} gguf` },
+    search: { query: `${query}` },
     additionalFields: [
       'tags',
       'config',
@@ -35,7 +35,7 @@ export const searchHuggingFaceModels = async (query: string) => {
   return models as HuggingFaceModel[];
 };
 
-export const fetchHuggingFaceFiles = async (modelId: string): Promise<any> => {
+export const fetchHuggingFaceFiles = async (modelId: string): Promise<ModelFileData[]> => {
   const systemInfo = await getSystemInfo();
   const filesGenerator = listFiles({
     repo: modelId,

@@ -14,6 +14,17 @@
   }
 }
 
+.name {
+  max-width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.left {
+  width: calc(100% - 357px);
+}
+
 
 .meta {
   display: flex;
@@ -31,6 +42,7 @@
   gap: 6px;
   align-items: center;
 }
+
 
 .right {
   width: 327px;

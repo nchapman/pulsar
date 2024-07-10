@@ -32,13 +32,17 @@
 .model {
   padding: 8px;
   width: 100%;
-  font-weight: 600;
-  font-size: 12px;
   height: 44px;
 
   &:not(:last-child) {
     margin-bottom: 2px;
   }
+}
+
+.model-name {
+  text-align: left;
+  display: block;
+  width: 164px;
 }
 
 .popover-head {

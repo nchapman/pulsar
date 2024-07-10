@@ -11,8 +11,11 @@
   align-items: center;
 }
 
-.file-name {
+.header {
   margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .tags {

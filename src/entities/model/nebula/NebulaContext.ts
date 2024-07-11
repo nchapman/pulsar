@@ -10,6 +10,21 @@ type NebulaPredictPayload = {
   finished: boolean;
 };
 
+type ContextOptions = {
+  seed?: number;
+  n_ctx?: number;
+  n_threads?: number;
+  user_format?: string;
+  assistant_format?: string;
+  prompt_format?: string;
+  prompt_format_with_image?: string;
+  stop_tokens?: string[];
+  ctx?: {
+    message: string;
+    is_user: boolean;
+  }[];
+};
+
 const DEFAULT_TEMP = 0.5;
 
 export class NebulaContext {
@@ -29,15 +44,19 @@ export class NebulaContext {
   public static async initContext({
     model,
     cctx = [],
-    stopTokens = [],
+    stopTokens,
   }: {
     model: NebulaModel;
     cctx: { message: string; is_user: boolean }[];
     stopTokens?: string[];
   }): Promise<NebulaContext> {
+    let contextOptions: ContextOptions = { ctx: cctx, n_ctx: 20000 };
+    if (stopTokens) {
+      contextOptions = { ...contextOptions, stop_tokens: stopTokens };
+    }
     const ctx = await invoke<string>('plugin:nebula|model_init_context', {
       modelPath: model.model,
-      contextOptions: { ctx: cctx, n_ctx: 20000, stop_tokens: stopTokens },
+      contextOptions,
     });
 
     return new NebulaContext(model, ctx);

@@ -8,7 +8,7 @@ import { ModelSorting } from '@/widgets/model-store/types/model-sorting.ts';
 
 import { fetchHuggingFaceFiles, searchHuggingFaceModels } from '../api/search-hugging-face.ts';
 
-const modelSorting = createStore<ModelSorting>(ModelSorting.MOST_RECENT);
+const modelSorting = createStore<ModelSorting>(ModelSorting.MOST_DOWNLOADS);
 const models = createStore<HuggingFaceModel[]>([]);
 const currModel = createStore<string | null>(null);
 const currModelFiles = createStore<ModelFileData[]>([]);

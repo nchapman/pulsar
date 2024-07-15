@@ -24,10 +24,10 @@ interface Props {
 }
 
 const optionsArr = [
-  ModelSorting.MOST_RECENT,
-  ModelSorting.LEAST_RECENT,
   ModelSorting.MOST_DOWNLOADS,
   ModelSorting.MOST_LIKES,
+  ModelSorting.LEAST_RECENT,
+  ModelSorting.MOST_RECENT,
 ].map((i) => ({
   label: ModelSortingData[i].label,
   value: ModelSortingData[i].value,

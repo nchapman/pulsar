@@ -17,10 +17,19 @@ interface SelectProps {
   firstDisabled?: boolean;
   popoverClassName?: string;
   optionClassName?: string;
+  type?: 'secondary' | 'clear';
 }
 
 export const Select = memo((props: SelectProps) => {
-  const { className, options, onChange, value, optionClassName, popoverClassName } = props;
+  const {
+    className,
+    options,
+    onChange,
+    value,
+    optionClassName,
+    popoverClassName,
+    type = 'clear',
+  } = props;
   const { toggle, isOn, off } = useToggle();
 
   const content = (
@@ -53,7 +62,11 @@ export const Select = memo((props: SelectProps) => {
       onClickOutside={off}
     >
       <div>
-        <Button className={classNames(s.select, [className])} onClick={toggle} variant="clear">
+        <Button
+          className={classNames(s.select, [className, s[type]])}
+          onClick={toggle}
+          variant="clear"
+        >
           {options.find((o) => o.value === value)?.label || options[0].label}
           <Icon svg={ChevronDownIcon} />
         </Button>

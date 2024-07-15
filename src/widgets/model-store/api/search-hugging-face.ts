@@ -1,12 +1,17 @@
-import { listFiles, listModels } from '@huggingface/hub';
+import { listFiles } from '@huggingface/hub';
 
 import { ModelFileData } from '@/entities/model';
 import { HuggingFaceModel } from '@/entities/model/types/hugging-face-model.ts';
 import { getSystemInfo } from '@/features/system/system.ts';
+import { listModels } from '@/widgets/model-store/api/listModels.ts';
+import { ModelSorting, ModelSortingData } from '@/widgets/model-store/types/model-sorting.ts';
 
 const HUGGING_FACE_BASE_URL = 'https://huggingface.co';
 
-export const searchHuggingFaceModels = async (query: string) => {
+export const searchHuggingFaceModels = async (query: string, sorting?: ModelSorting) => {
+  // @ts-ignore
+  const { sort, direction } = sorting ? ModelSortingData[sorting] : {};
+
   const modelGenerator = listModels({
     search: { query: `${query}` },
     additionalFields: [
@@ -24,6 +29,8 @@ export const searchHuggingFaceModels = async (query: string) => {
       'model-index',
     ],
     limit: 100,
+    sort,
+    direction,
   });
 
   const models = [];

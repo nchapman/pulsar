@@ -4,9 +4,11 @@ import { goToStore, goToStoreModel } from '@/app/routes';
 import { curatedModels as curated, ModelFileData } from '@/entities/model';
 import { CuratedModel, HuggingFaceModel } from '@/entities/model/types/hugging-face-model.ts';
 import { getModelFileInfo } from '@/widgets/model-store/lib/getModelFileInfo.ts';
+import { ModelSorting } from '@/widgets/model-store/types/model-sorting.ts';
 
 import { fetchHuggingFaceFiles, searchHuggingFaceModels } from '../api/search-hugging-face.ts';
 
+const modelSorting = createStore<ModelSorting>(ModelSorting.MOST_RECENT);
 const models = createStore<HuggingFaceModel[]>([]);
 const currModel = createStore<string | null>(null);
 const currModelFiles = createStore<ModelFileData[]>([]);
@@ -31,6 +33,9 @@ const currModelData = combine(
     currModel ? modelsNameMap[currModel] || curatedModels.find((i) => i.name === currModel) : null
 );
 
+const setModelSorting = createEvent<ModelSorting>();
+modelSorting.on(setModelSorting, (_, v) => v);
+
 export const $modelStoreState = {
   searchValue,
   showCurated,
@@ -39,6 +44,8 @@ export const $modelStoreState = {
   currModelFiles,
   currModelData,
   curatedModels,
+  modelSorting,
+  setModelSorting,
 };
 
 export const modelStoreEvents = {
@@ -60,13 +67,23 @@ const fetchCuratedModels = createEffect(() =>
 $modelStoreState.curatedModels.on(fetchCuratedModels.doneData, (_, data) => data);
 fetchCuratedModels();
 
-export const fetchHFModels = createEffect<string, HuggingFaceModel[]>(searchHuggingFaceModels);
+export const fetchHFModels = createEffect<string, HuggingFaceModel[]>((query: string) =>
+  searchHuggingFaceModels(query, modelSorting.getState())
+);
+fetchHFModels('');
 const fetchHFFiles = createEffect<string, ModelFileData[]>(fetchHuggingFaceFiles);
 
 // fetchHFModels is triggered by searchHF
 sample({
   source: $modelStoreState.searchValue,
   clock: modelStoreEvents.searchHF,
+  target: fetchHFModels,
+});
+
+// fetchHFModels is triggered by searchHF
+sample({
+  source: $modelStoreState.searchValue,
+  clock: $modelStoreState.modelSorting,
   target: fetchHFModels,
 });
 

@@ -224,8 +224,13 @@ class DownloadsManager {
 
     await this.readLocalDownloads();
 
-    if (this.#current) {
-      this.start(this.#current);
+    if (!this.current) return;
+
+    // Start download if it was downloading
+    const data = this.downloadsData[this.current];
+
+    if (data.downloadingData.status === 'downloading') {
+      this.start(this.current);
     }
   }
 

@@ -21,7 +21,8 @@
     "build-storybook": "storybook build",
     "deploy-storybook": "yarn build-storybook && cd storybook-static && vercel --prod --yes",
     "chromatic": "npx chromatic",
-    "clippy": "cd src-tauri && cargo clippy --all-targets --all-features -- -D warnings"
+    "clippy": "cd src-tauri && cargo clippy --all-targets --all-features -- -D warnings",
+    "nebula:update": "cd src-tauri && cargo update"
   },
   "dependencies": {
     "@huggingface/hub": "^0.15.1",
@@ -102,3 +103,4 @@
   },
   "packageManager": "yarn@4.1.0"
 }
+

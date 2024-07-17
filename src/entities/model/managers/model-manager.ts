@@ -306,7 +306,9 @@ class ModelManager {
       const modelPath = await getModelPath(llmLocalName);
       const multiModalPath = mmpLocalName ? await getModelPath(mmpLocalName) : undefined;
 
-      this.#model = await NebulaModel.initModel(modelPath, multiModalPath);
+      this.#model = await NebulaModel.initModel(modelPath, multiModalPath, (progress) => {
+        logi('Model manager', `Model loading progress: ${progress}`);
+      });
     } catch (e) {
       loge('Model manager', `Failed to load model, rust error: ${e}`);
       throw e;

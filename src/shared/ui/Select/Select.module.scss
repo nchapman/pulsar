@@ -1,11 +1,19 @@
 .wrapper {
+}
 
+.secondary {
+  background: var(--main-background-secondary);
 
+  &:hover {
+    background: var(--main-background-tertiary);
+  }
 }
 
 .select {
   color: var(--text-primary);
   gap: 8px;
+  font-weight: 600;
+  font-size: 12px;
 }
 
 .popover {
@@ -25,4 +33,6 @@
   display: flex;
   gap: 8px;
   align-items: center;
+  font-weight: 600;
+  font-size: 12px;
 }

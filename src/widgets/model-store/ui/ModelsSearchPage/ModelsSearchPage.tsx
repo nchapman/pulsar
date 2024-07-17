@@ -1,6 +1,7 @@
 import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
 
+import ListIcon from '@/shared/assets/icons/list.svg';
 import { classNames } from '@/shared/lib/func';
 import { Text } from '@/shared/ui';
 
@@ -23,16 +24,15 @@ export const ModelsSearchPage = memo(() => {
 
       <ModelSearchInput className={s.input} />
 
-      {showCurated ? (
-        <CuratedModels />
-      ) : (
-        <ModelsList
-          loading={isLoading}
-          view="list"
-          models={searchedModels}
-          title={`${searchedModels.length} results from Hugging Face`}
-        />
-      )}
+      {showCurated && <CuratedModels className={s.curated} />}
+
+      <ModelsList
+        loading={isLoading}
+        view="list"
+        models={searchedModels}
+        icon={showCurated ? ListIcon : undefined}
+        title={showCurated ? 'All models' : `${searchedModels.length} results from Hugging Face`}
+      />
     </div>
   );
 });

@@ -277,9 +277,9 @@ dependencies = [
 
 [[package]]
 name = "async-signal"
-version = "0.2.8"
+version = "0.2.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "794f185324c2f00e771cd9f1ae8b5ac68be2ca7abb129a87afd6e86d228bc54d"
+checksum = "dfb3634b73397aa844481f814fad23bbf07fdb0eabec10f2eb95e58944b1ec32"
 dependencies = [
  "async-io",
  "async-lock",
@@ -2708,7 +2708,7 @@ checksum = "78b3ae25bc7c8c38cec158d1f2757ee79e9b3740fbc7ccf0e59e4b08d793fa89"
 [[package]]
 name = "llama-cpp"
 version = "0.0.1"
-source = "git+https://github.com/nchapman/nebula.git#1bbb4172fb9b4fba1167ed1efd1b3cfecaa213d7"
+source = "git+https://github.com/nchapman/nebula.git#a1b7e7671c732eecca62443aafd7af4a762c7c21"
 dependencies = [
  "gag",
  "llama-cpp-sys",
@@ -2721,7 +2721,7 @@ dependencies = [
 [[package]]
 name = "llama-cpp-sys"
 version = "0.0.1"
-source = "git+https://github.com/nchapman/nebula.git#1bbb4172fb9b4fba1167ed1efd1b3cfecaa213d7"
+source = "git+https://github.com/nchapman/nebula.git#a1b7e7671c732eecca62443aafd7af4a762c7c21"
 dependencies = [
  "bindgen",
  "cmake",
@@ -2958,7 +2958,7 @@ dependencies = [
 [[package]]
 name = "nebula"
 version = "0.1.0"
-source = "git+https://github.com/nchapman/nebula.git#1bbb4172fb9b4fba1167ed1efd1b3cfecaa213d7"
+source = "git+https://github.com/nchapman/nebula.git#a1b7e7671c732eecca62443aafd7af4a762c7c21"
 dependencies = [
  "clap",
  "hf-hub",

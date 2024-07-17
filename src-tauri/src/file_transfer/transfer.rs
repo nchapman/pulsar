@@ -1,5 +1,4 @@
 use futures_util::TryStreamExt;
-use log::info;
 use read_progress_stream::ReadProgressStream;
 use serde::{ser::Serializer, Serialize};
 use std::collections::HashMap;
@@ -177,7 +176,6 @@ async fn download<R: Runtime>(
                                 total,
                             },
                         );
-                        info!("Download progress: {}%", last_percent);
                     }
                 }
                 // None signifies end of stream

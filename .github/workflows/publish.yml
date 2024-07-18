@@ -30,7 +30,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: install macos universal arch
-        if: matrix.platform == 'macos-latest'
+        if: matrix.platform == 'macos-14'
         run: rustup target add x86_64-apple-darwin
 
       # - name: install libomp for VSS
@@ -46,7 +46,7 @@ jobs:
       #   run: ln -s $(brew --prefix llvm@15)/bin/clang++ /usr/local/bin/clang++
 
       - name: Print clang version
-        if: matrix.platform == 'macos-latest'
+        if: matrix.platform == 'macos-14'
         run: |
           clang --version
           clang++ --version
@@ -62,7 +62,7 @@ jobs:
 
       - name: Build app for non macos
         id: restbuild
-        if: matrix.platform != 'macos-latest'
+        if: matrix.platform != 'macos-14'
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -75,7 +75,7 @@ jobs:
 
       - name: Build for macos
         id: macosbuild
-        if: matrix.platform == 'macos-latest'
+        if: matrix.platform == 'macos-14'
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

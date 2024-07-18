@@ -8,7 +8,7 @@ interface CuratedModel {
 export const curatedModels: CuratedModel[] = [
   {
     modelName: 'cjpais/llava-1.6-mistral-7b-gguf',
-    fileName: 'llava-v1.6-mistral-7b.Q4_K_M.gguf',
+    fileName: 'llava-v1.6-mistral-7b.Q3_K_XS.gguf',
     description:
       'The primary intended users of the model are researchers and hobbyists in computer vision, natural language processing, machine learning, and artificial intelligence.',
     logo: '',

@@ -1,0 +1,3 @@
+[submodule "src-tauri/nebula"]
+	path = src-tauri/nebula
+	url = https://github.com/nchapman/nebula.git

@@ -94,7 +94,7 @@ jobs:
       - name: Fetch Submodules
         run: git submodule update --init --recursive
 
-        - name: install Rust stable
+      - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
 
       - name: install dependencies (ubuntu only)

@@ -2959,6 +2959,7 @@ version = "0.1.0"
 dependencies = [
  "clap",
  "hf-hub",
+ "lazy_static",
  "llama-cpp",
  "log",
  "num_cpus",

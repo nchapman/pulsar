@@ -1,0 +1,11 @@
+{
+  "tauri": {
+    "allowlist": {
+      "fs": {
+        "scope": {
+          "requireLiteralLeadingDot": false
+        }
+      }
+    }
+  }
+}

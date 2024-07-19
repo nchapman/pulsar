@@ -1,8 +1,14 @@
 import { invoke } from '@tauri-apps/api';
+import { appWindow } from '@tauri-apps/api/window';
 
 import { loge } from '@/shared/lib/Logger';
 
 import { NebulaContext } from './NebulaContext.ts';
+
+type ModelLoadProgress = {
+  model: string;
+  progress: number;
+};
 
 export class NebulaModel {
   public model: string;
@@ -11,7 +17,16 @@ export class NebulaModel {
     this.model = model;
   }
 
-  public static async initModel(model: string, mmproj?: string): Promise<NebulaModel> {
+  public static async initModel(
+    model: string,
+    mmproj?: string,
+    loadProgressCallback?: (progress: number) => void
+  ): Promise<NebulaModel> {
+    appWindow.listen<ModelLoadProgress>('nebula://load-progress', ({ payload }) => {
+      if (payload.model === model && loadProgressCallback) {
+        loadProgressCallback(payload.progress);
+      }
+    });
     try {
       if (typeof mmproj !== 'undefined') {
         await invoke<string>('plugin:nebula|init_model_with_mmproj', {

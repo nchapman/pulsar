@@ -115,7 +115,9 @@ class ModelManager {
 
     // save model-file to the list
     this.modelFiles = { ...this.modelFiles, [dbModel.id]: dbModel };
+    this.updateModelIdMaps();
 
+    console.log('Model added:', this.hasNoModels, type);
     // if first model-file, set as default
     if (this.hasNoModels && type === 'llm') {
       logi(LOG_TAG, 'adding first model-file');
@@ -154,6 +156,7 @@ class ModelManager {
 
     // set default/current model-file to first available
     const newModel = this.getFirstAvailableModel();
+    console.log('First available model:', newModel);
 
     this.currentModel = newModel;
     this.userSettings.set('defaultModel', newModel);
@@ -306,7 +309,9 @@ class ModelManager {
       const modelPath = await getModelPath(llmLocalName);
       const multiModalPath = mmpLocalName ? await getModelPath(mmpLocalName) : undefined;
 
-      this.#model = await NebulaModel.initModel(modelPath, multiModalPath);
+      this.#model = await NebulaModel.initModel(modelPath, multiModalPath, (progress) => {
+        logi('Model manager', `Model loading progress: ${progress}`);
+      });
     } catch (e) {
       loge('Model manager', `Failed to load model, rust error: ${e}`);
       throw e;

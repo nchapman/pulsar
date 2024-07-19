@@ -2,6 +2,7 @@ use crate::nebula::error::NebulaError;
 use crate::nebula::error::NebulaResult;
 use base64::prelude::*;
 use nebula::options::{ContextOptions, ModelOptions};
+use serde::Serialize;
 use std::{
     collections::HashMap,
     sync::{atomic::AtomicBool, Arc},
@@ -9,7 +10,7 @@ use std::{
 use tauri::{
     async_runtime::Mutex,
     plugin::{Builder, TauriPlugin},
-    AppHandle, Manager, Runtime, State,
+    AppHandle, Manager, Runtime, State, Window,
 };
 
 struct NebulaModelState {
@@ -20,6 +21,12 @@ struct NebulaModelState {
 #[derive(Default)]
 struct NebulaState {
     models: Arc<Mutex<HashMap<String, NebulaModelState>>>,
+}
+
+#[derive(Clone, Serialize)]
+struct LoadProgressPayload {
+    model: String,
+    progress: f32,
 }
 
 #[tauri::command]
@@ -37,6 +44,7 @@ async fn get_loaded_models(state: State<'_, NebulaState>) -> Result<Vec<String>,
 ///
 #[tauri::command]
 async fn init_model<R: Runtime>(
+    window: Window<R>,
     model_path: String,
     model_options: ModelOptions,
     _app: AppHandle<R>,
@@ -48,12 +56,24 @@ async fn init_model<R: Runtime>(
         return Ok(model_path.clone());
     }
 
+    let cloned_path = model_path.clone();
+
     models.insert(
         model_path.clone(),
         NebulaModelState {
-            model: Arc::new(Mutex::new(nebula::Model::new(
+            model: Arc::new(Mutex::new(nebula::Model::new_with_progress_callback(
                 model_path.clone(),
                 model_options,
+                move |a| {
+                    let _ = window.emit(
+                        "nebula://load-progress",
+                        LoadProgressPayload {
+                            model: cloned_path.clone(),
+                            progress: a,
+                        },
+                    );
+                    true
+                },
             )?)),
             contexts: HashMap::new(),
         },
@@ -70,6 +90,7 @@ async fn init_model<R: Runtime>(
 ///
 #[tauri::command]
 async fn init_model_with_mmproj<R: Runtime>(
+    window: Window<R>,
     model_path: String,
     mmproj_path: String,
     model_options: ModelOptions,
@@ -81,9 +102,23 @@ async fn init_model_with_mmproj<R: Runtime>(
     if models.contains_key(&model_path) {
         return Ok(model_path.clone());
     }
+    let cloned_path = model_path.clone();
 
-    let model =
-        nebula::Model::new_with_mmproj(model_path.clone(), mmproj_path.clone(), model_options)?;
+    let model = nebula::Model::new_with_mmproj_with_callback(
+        model_path.clone(),
+        mmproj_path.clone(),
+        model_options,
+        move |a| {
+            let _ = window.emit(
+                "nebula://load-progress",
+                LoadProgressPayload {
+                    model: cloned_path.clone(),
+                    progress: a,
+                },
+            );
+            true
+        },
+    )?;
     let model_state = NebulaModelState {
         model: Arc::new(Mutex::new(model)),
         contexts: HashMap::new(),

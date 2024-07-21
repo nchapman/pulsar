@@ -1,6 +1,7 @@
 import { useUnit } from 'effector-react';
-import { memo } from 'preact/compat';
+import { memo, useLayoutEffect } from 'preact/compat';
 
+import { goToStoreModel } from '@/app/routes';
 import ListIcon from '@/shared/assets/icons/list.svg';
 import { classNames } from '@/shared/lib/func';
 import { Text } from '@/shared/ui';
@@ -15,6 +16,12 @@ export const ModelsSearchPage = memo(() => {
   const searchedModels = useUnit($modelStoreState.models);
   const showCurated = useUnit($modelStoreState.showCurated);
   const isLoading = useUnit(fetchHFModels.pending);
+
+  useLayoutEffect(() => {
+    if ($modelStoreState.currModel.getState()) {
+      goToStoreModel();
+    }
+  }, []);
 
   return (
     <div className={classNames(s.modelsSearchPage)}>

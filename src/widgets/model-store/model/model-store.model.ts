@@ -11,7 +11,10 @@ import { fetchHuggingFaceFiles, searchHuggingFaceModels } from '../api/search-hu
 const modelSorting = createStore<ModelSorting>(ModelSorting.MOST_DOWNLOADS);
 const models = createStore<HuggingFaceModel[]>([]);
 const currModel = createStore<string | null>(null);
-const currModelFiles = createStore<ModelFileData[]>([]);
+const modelFiles = createStore<Record<string, ModelFileData[]>>({});
+const currModelFiles = combine(modelFiles, currModel, (files, currModel) =>
+  currModel ? files[currModel] : []
+);
 const showCurated = createStore(true);
 const searchValue = createStore('');
 const modelsNameMap = models.map((models) =>
@@ -41,11 +44,12 @@ export const $modelStoreState = {
   showCurated,
   models,
   currModel,
-  currModelFiles,
+  modelFiles,
   currModelData,
   curatedModels,
   modelSorting,
   setModelSorting,
+  currModelFiles,
 };
 
 export const modelStoreEvents = {
@@ -70,8 +74,13 @@ fetchCuratedModels();
 export const fetchHFModels = createEffect<string, HuggingFaceModel[]>((query: string) =>
   searchHuggingFaceModels(query, modelSorting.getState())
 );
-fetchHFModels('');
-const fetchHFFiles = createEffect<string, ModelFileData[]>(fetchHuggingFaceFiles);
+
+const fetchHFFiles = createEffect<string, { files: ModelFileData[]; modelId: string }>(
+  async (modelId: string) => {
+    const files = await fetchHuggingFaceFiles(modelId);
+    return { files, modelId };
+  }
+);
 
 // fetchHFModels is triggered by searchHF
 sample({
@@ -99,15 +108,18 @@ $modelStoreState.searchValue.on(modelStoreEvents.setSearchValue, (_, v) => v);
 // modelsList is updated by fetchHFModels
 $modelStoreState.models.on(fetchHFModels.doneData, (_, data) => data);
 
+fetchHFModels('');
+
 $modelStoreState.showCurated.on(fetchHFModels, () => false);
 
 // currModel is updated by openModelDetails
-$modelStoreState.currModelFiles.on(fetchHFFiles.doneData, (_, data) => data);
+$modelStoreState.modelFiles.on(fetchHFFiles.doneData, (prev, { files, modelId }) => ({
+  ...prev,
+  [modelId]: files,
+}));
 
 $modelStoreState.currModel.on(modelStoreEvents.openModelDetails, (_, modelId) => modelId);
-$modelStoreState.currModelFiles.reset(modelStoreEvents.openModelDetails);
 $modelStoreState.currModel.on(modelStoreEvents.closeModelDetails, () => null);
-$modelStoreState.currModelFiles.reset(modelStoreEvents.closeModelDetails);
 
 // goToStore is triggered by openModelDetails
 sample({

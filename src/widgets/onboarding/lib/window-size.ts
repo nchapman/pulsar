@@ -8,7 +8,7 @@ export const windowSize = {
     height: 784,
   },
   main: {
-    width: 1060,
+    width: 1200,
     height: 740,
   },
 };
@@ -35,7 +35,7 @@ export async function minimizeWindowSize() {
 
 export async function restoreWindowSize() {
   updateIsResizable();
-  if (window.innerWidth > windowSize.onboarding.width) return;
+  if (window.innerWidth >= windowSize.main.width) return;
   await appWindow.setMinSize(new LogicalSize(windowSize.main.width, windowSize.main.height));
   appWindow.setSize(new LogicalSize(windowSize.main.width, windowSize.main.height));
   appWindow.setResizable(true);

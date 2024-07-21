@@ -269,6 +269,6 @@ export const $streamedText = combine($streamedMsgId, $messages.data, (msgId, dat
   return msg?.text || '';
 });
 
-export const isArchivedChat = $chat.data.map((i) => i?.isArchived);
+export const isArchivedChat = $chat.data.map((i) => i?.isArchived, { skipVoid: false });
 
 export const { askQuestion, startNew: startNewChat, switch: switchChat } = chatEvt;

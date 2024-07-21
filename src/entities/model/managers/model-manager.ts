@@ -117,7 +117,6 @@ class ModelManager {
     this.modelFiles = { ...this.modelFiles, [dbModel.id]: dbModel };
     this.updateModelIdMaps();
 
-    console.log('Model added:', this.hasNoModels, type);
     // if first model-file, set as default
     if (this.hasNoModels && type === 'llm') {
       logi(LOG_TAG, 'adding first model-file');
@@ -137,7 +136,9 @@ class ModelManager {
     }
 
     // remove model-file from the list
-    delete this.modelFiles[modelId];
+    const newModelFiles = { ...this.modelFiles };
+    delete newModelFiles[modelId];
+    this.modelFiles = newModelFiles;
 
     // remove model-file from the db
     await this.modelFilesRepository.remove(modelId);
@@ -149,6 +150,8 @@ class ModelManager {
 
     // delete model-file from the disk
     await deleteModel(model.data.file.name);
+
+    this.updateModelIdMaps();
   }
 
   async loadFirstAvailableModel() {
@@ -173,8 +176,7 @@ class ModelManager {
   // private methods
 
   private getFirstAvailableModel() {
-    const llmIds = Object.values(this.#llmNameIdMap);
-    console.log(llmIds);
+    const llmIds = Object.values(this.llmNameIdMap);
     return llmIds[0] || null;
   }
 
@@ -336,7 +338,7 @@ class ModelManager {
   // getters/setters
 
   get llmNameIdMap() {
-    return this.#mmpNameIdMap;
+    return this.#llmNameIdMap;
   }
 
   private get hasNoModels() {

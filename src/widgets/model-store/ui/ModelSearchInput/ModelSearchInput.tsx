@@ -34,6 +34,7 @@ export const ModelSearchInput = memo((props: Props) => {
 
   const handleSubmit = useCallback((e: any) => {
     e.preventDefault();
+    e.stopPropagation();
     modelStoreEvents.searchHF();
   }, []);
 
@@ -62,6 +63,7 @@ export const ModelSearchInput = memo((props: Props) => {
           loading={isLoading}
           variant="clear"
           type="submit"
+          onClick={handleSubmit}
           className={s.go}
           icon={GoIcon}
         />

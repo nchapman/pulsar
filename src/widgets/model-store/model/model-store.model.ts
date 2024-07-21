@@ -12,8 +12,11 @@ const modelSorting = createStore<ModelSorting>(ModelSorting.MOST_DOWNLOADS);
 const models = createStore<HuggingFaceModel[]>([]);
 const currModel = createStore<string | null>(null);
 const modelFiles = createStore<Record<string, ModelFileData[]>>({});
-const currModelFiles = combine(modelFiles, currModel, (files, currModel) =>
-  currModel ? files[currModel] : []
+const currModelFiles = combine(
+  modelFiles,
+  currModel,
+  (files, currModel) => (currModel && files[currModel] ? files[currModel] : []),
+  { skipVoid: false }
 );
 const showCurated = createStore(true);
 const searchValue = createStore('');

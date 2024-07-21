@@ -19,7 +19,7 @@ export class DownloadModel extends Model {
 
   @text(downloadsTable.cols.type) type;
 
-  @text(downloadsTable.cols.modelFileId) modelId;
+  @text(downloadsTable.cols.modelFileId) modelFileId;
 
   @readonly @date(downloadsTable.cols.createdAt) createdAt;
 

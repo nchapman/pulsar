@@ -1,10 +1,10 @@
 import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
-import Scrollbars from 'react-custom-scrollbars';
 
 import { HuggingFaceModel } from '@/entities/model/types/hugging-face-model.ts';
 import { classNames } from '@/shared/lib/func';
 import { Icon, Select, Text } from '@/shared/ui';
+import { ScrollArea } from '@/shared/ui/ScrollArea/ScrollArea.tsx';
 import { $modelStoreState } from '@/widgets/model-store/model/model-store.model.ts';
 
 import { ModelSorting, ModelSortingData } from '../../types/model-sorting.ts';
@@ -59,13 +59,11 @@ export const ModelsList = memo((props: Props) => {
         />
       </div>
 
-      <div className={s.listWrapper}>
-        <Scrollbars className={s.list}>
-          {models.map((i) => (
-            <ModelCard view={view} model={i} />
-          ))}
-        </Scrollbars>
-      </div>
+      <ScrollArea height="400px" className={s.list}>
+        {models.map((i) => (
+          <ModelCard view={view} model={i} />
+        ))}
+      </ScrollArea>
     </div>
   );
 });

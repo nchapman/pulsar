@@ -1,0 +1,14 @@
+.scroll-wrapper {
+  width: 100%;
+  overflow: hidden;
+}
+
+.scroll-area {
+  height: 100%;
+  width: 100%;
+
+  & > div:first-child {
+    transform: translateY(1px);
+    padding-bottom: 1px;
+  }
+}

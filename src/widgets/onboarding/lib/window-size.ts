@@ -18,7 +18,7 @@ export const $isResizable = createStore(getIsResizable());
 const updateIsResizable = createEvent();
 $isResizable.on(updateIsResizable, () => getIsResizable());
 
-async function isWindows() {
+export async function isWindows() {
   return (await os.type()) === 'Windows_NT';
 }
 
@@ -28,10 +28,9 @@ export async function minimizeWindowSize() {
     new LogicalSize(windowSize.onboarding.width, windowSize.onboarding.height)
   );
 
-  if (!(await isWindows())) {
-    appWindow.setFullscreen(false);
-    appWindow.setResizable(false);
-  }
+  appWindow.setFullscreen(false);
+  appWindow.setResizable(false);
+
   updateIsResizable();
 }
 

@@ -10,6 +10,7 @@ import ArchiveIcon from '@/shared/assets/icons/credit-card.svg';
 import TrashIcon from '@/shared/assets/icons/trash.svg';
 import { classNames } from '@/shared/lib/func';
 import { Button, showToast, Text, Tooltip } from '@/shared/ui';
+import { ScrollArea } from '@/shared/ui/ScrollArea/ScrollArea.tsx';
 import { deleteChatWithConfirm, switchChat } from '@/widgets/chat';
 import { closeSettingsModal } from '@/widgets/settings';
 
@@ -45,12 +46,12 @@ const ArchivedChats = memo((props: Props) => {
   const [chats, setChats] = useState<Chat[]>([]);
 
   useEffect(() => {
-    chatsRepository.getAll({ limit: 28 }, true).then(setChats);
+    chatsRepository.getAll({}, true).then(setChats);
   }, [chatsCount]);
 
   const chatsList = useMemo(
     () => (
-      <div className={s.chats}>
+      <ScrollArea height="400px" className={s.chats}>
         {chats.map((chat) => (
           <div className={s.chat}>
             <Button
@@ -88,7 +89,7 @@ const ArchivedChats = memo((props: Props) => {
             </div>
           </div>
         ))}
-      </div>
+      </ScrollArea>
     ),
     [chats]
   );

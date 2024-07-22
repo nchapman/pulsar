@@ -6,6 +6,7 @@ export interface ModelFileData {
   isGguf: boolean;
   fitsInMemory?: boolean;
   isMmproj: boolean;
+  downloadId?: string;
 }
 
 export interface ModelDto {

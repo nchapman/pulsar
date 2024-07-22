@@ -1,5 +1,5 @@
 import { useUnit } from 'effector-react';
-import { FC, memo } from 'preact/compat';
+import { FC, memo, useLayoutEffect } from 'preact/compat';
 
 import { $currRoute, Route } from '@/app/routes';
 import { Page } from '@/shared/ui';
@@ -7,6 +7,7 @@ import { Chat, ChatNavbar } from '@/widgets/chat';
 import { DownloadsNavbar, DownloadsPage } from '@/widgets/downloads';
 import { ModelsDetailsPage, ModelsSearchPage, ModelStoreNavbar } from '@/widgets/model-store';
 import { Navbar } from '@/widgets/navbar';
+import { restoreWindowSize } from '@/widgets/onboarding';
 import { $sidebarOpened, Sidebar, toggleSidebar } from '@/widgets/sidebar';
 import { Toolbar } from '@/widgets/toolbar';
 
@@ -31,6 +32,10 @@ export const Layout = memo(() => {
   const route = useUnit($currRoute);
   const Widget = Widgets[route];
   const WidgetNav = Nav[route];
+
+  useLayoutEffect(() => {
+    restoreWindowSize();
+  }, []);
 
   return (
     <Page className={s.layout}>

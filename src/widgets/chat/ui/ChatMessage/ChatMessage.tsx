@@ -6,10 +6,10 @@ import { Markdown } from '@/entities/markdown';
 import UserIcon from '@/shared/assets/icons/user-circle.svg';
 import { classNames } from '@/shared/lib/func';
 import { Icon, Logo } from '@/shared/ui';
-import { CopyMsgText } from '@/widgets/chat/ui/actions/CopyMsgText/CopyMsgText.tsx';
-import { Regenerate } from '@/widgets/chat/ui/actions/Regenerate/Regenerate.tsx';
 
-import { $messages, $streamedMsgId } from '../../model/chat.ts';
+import { $messages, $streamedMsgId, isArchivedChat } from '../../model/chat.ts';
+import { CopyMsgText } from '../actions/CopyMsgText/CopyMsgText.tsx';
+import { Regenerate } from '../actions/Regenerate/Regenerate.tsx';
 import s from './ChatMessage.module.scss';
 
 interface Props {
@@ -21,6 +21,7 @@ export const ChatMessage = (props: Props) => {
   const { className, id } = props;
   const streamedMsgId = useUnit($streamedMsgId);
   const isStreamed = streamedMsgId === id;
+  const isArchived = useUnit(isArchivedChat);
 
   const msg = useStoreMap({
     store: $messages.data,
@@ -37,12 +38,16 @@ export const ChatMessage = (props: Props) => {
 
     if (!isUser) {
       if (!isStreamed) {
-        actions.push(<Regenerate msgId={msg.id} />, <CopyMsgText text={text} />);
+        if (!isArchived) {
+          actions.push(<Regenerate msgId={msg.id} />);
+        }
+
+        actions.push(<CopyMsgText text={text} />);
       }
     }
 
     return actions;
-  }, [isStreamed, isUser, msg.id, text]);
+  }, [isArchived, isStreamed, isUser, msg.id, text]);
 
   return (
     <div className={classNames(s.chatMessageWrapper, [className])}>

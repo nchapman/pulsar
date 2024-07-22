@@ -12,17 +12,10 @@
 }
 
 .list {
-  height: 100%;
-  width: 100%;
-
-  & > div:first-child {
-    padding-right: 12px;
-    transform: translateY(1px);
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding-bottom: 1px;
-  }
+  padding-right: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .title {
@@ -31,8 +24,4 @@
   gap: 8px;
 }
 
-.list-wrapper {
-  width: 100%;
-  height: calc(100% - 24px);
-}
 

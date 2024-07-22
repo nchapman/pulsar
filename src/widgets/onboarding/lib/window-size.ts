@@ -12,7 +12,7 @@ export const windowSize = {
     height: 740,
   },
 };
-const getIsResizable = () => windowSize.onboarding.width < window.innerWidth;
+const getIsResizable = () => window.innerWidth >= windowSize.main.width;
 
 export const $isResizable = createStore(getIsResizable());
 const updateIsResizable = createEvent();

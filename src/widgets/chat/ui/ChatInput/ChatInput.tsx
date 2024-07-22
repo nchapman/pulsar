@@ -52,6 +52,7 @@ export const ChatInput = (props: Props) => {
   }, [input]);
 
   useEffect(() => {
+    setInput('');
     inputRef.current?.focus();
   }, [chatId]);
 

@@ -9,18 +9,24 @@ interface Props {
   wrapperClassName?: string;
   className?: string;
   children: ReactNode;
-  height: string | number;
+  height: string;
+  width?: string;
 }
 
 export const ScrollArea = memo((props: Props) => {
-  const { className, children, height, wrapperClassName } = props;
+  const { className, children, height, wrapperClassName, width } = props;
 
   return (
     <div
       className={classNames(s.scrollWrapper, [wrapperClassName])}
-      style={{ height: `calc(${height})` }}
+      style={{ height: `calc(${height})`, width }}
     >
-      <Scrollbars className={classNames(s.scrollArea, [])}>
+      <Scrollbars
+        renderThumbVertical={(props) => (
+          <div {...props} className={classNames(s.scrollThumb, ['thumb-vertical'])} />
+        )}
+        className={classNames(s.scrollArea, [])}
+      >
         <div className={className}>{children}</div>
       </Scrollbars>
     </div>

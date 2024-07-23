@@ -14,9 +14,6 @@ try {
     fs.readFileSync(path.resolve(__dirname, '../src-tauri/tauri.conf.json'), 'utf8')
   );
 
-  console.log('🟦 Current version', tauriJson.package.version);
-
-  // Example usage:
   const currentVersion = tauriJson.package.version;
   const newVersion = bumpPatchVersion(currentVersion);
   // Update the version in tauriJson
@@ -36,16 +33,14 @@ try {
     return;
   }
 
-  console.log(`🟢 Updated to ${tauriJson.package.version}`);
+  console.log(`🟢 Bumped ${currentVersion} → ${newVersion}`);
 
-  // execSync(`git checkout -b ${newVersion}`);
+  execSync('git add .', { stdio: 'inherit' });
+  execSync(`git commit -m "Release ${newVersion}"`, { stdio: 'inherit' });
+  execSync(`git push`, { stdio: 'inherit' });
 
-  execSync('git add .');
-  execSync(`git commit -m "Release ${newVersion}"`);
-  execSync(`git push`);
-
-  execSync(`git tag -a v${newVersion} -m "Release ${newVersion}"`);
-  execSync(`git push --tags`);
+  execSync(`git tag -a v${newVersion} -m "Release ${newVersion}"`, { stdio: 'inherit' });
+  execSync(`git push --tags`, { stdio: 'inherit' });
 } catch (error) {
   console.error('Error:', error);
 }

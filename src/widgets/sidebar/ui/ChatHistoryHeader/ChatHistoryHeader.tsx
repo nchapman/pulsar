@@ -1,3 +1,4 @@
+import { os } from '@tauri-apps/api';
 import { memo } from 'preact/compat';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
@@ -17,10 +18,21 @@ interface Props {
   onSearchChange: (search: string) => void;
 }
 
+const combinationKey: Record<os.OsType, string> = {
+  Darwin: '⌘',
+  Linux: 'alt',
+  Windows_NT: 'alt',
+};
+
 export const ChatHistoryHeader = memo((props: Props) => {
   const { className, onSearchChange, search } = props;
   const [isSearchActive, setIsSearchActive] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [osType, setOsType] = useState<os.OsType>('Darwin');
+
+  useEffect(() => {
+    os.type().then(setOsType);
+  }, []);
 
   const onSearch = useCallback(() => {
     setIsSearchActive(true);
@@ -35,7 +47,9 @@ export const ChatHistoryHeader = memo((props: Props) => {
     if (isSearchActive) inputRef.current?.focus();
   }, [isSearchActive]);
 
-  useKeyboardListener(onSearch, 'Slash', ['metaKey']);
+  const combKey = osType === 'Darwin' ? 'metaKey' : 'altKey';
+
+  useKeyboardListener(onSearch, 'Slash', [combKey]);
 
   if (isSearchActive)
     return (
@@ -70,7 +84,7 @@ export const ChatHistoryHeader = memo((props: Props) => {
         </div>
 
         <div className={s.left}>
-          <Tooltip position="bottom" text="Search Chats ⌘/">
+          <Tooltip position="bottom" text={`Search Chats ${combinationKey[osType]}/`}>
             <Button icon={SearchIcon} onClick={onSearch} variant="clear" iconSize={16} />
           </Tooltip>
 

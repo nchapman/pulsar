@@ -22,7 +22,7 @@ interface ButtonProps {
   disabled?: boolean;
   activeSuffix?: ReactNode;
   suffixClassName?: string;
-  onClick?: () => void;
+  onClick?: (e?: any) => void;
   notActive?: boolean;
   withInactive?: boolean;
 }

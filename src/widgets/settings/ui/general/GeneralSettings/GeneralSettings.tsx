@@ -37,6 +37,7 @@ export const GeneralSettings = memo((props: Props) => {
             value={theme}
             options={options}
             optionClassName={s.themeOption}
+            className={s.theme}
           />
         }
       />

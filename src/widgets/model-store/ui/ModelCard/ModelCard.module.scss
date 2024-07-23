@@ -7,6 +7,7 @@
   border-radius: 8px;
   gap: 20px;
   border: 1px solid transparent;
+  max-width: 100%;
 
   &:hover:not(.info) {
     border-color: var(--link-hover);
@@ -15,7 +16,7 @@
 }
 
 .name {
-  max-width: 100%;
+  max-width: 38vw;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;

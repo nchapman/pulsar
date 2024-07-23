@@ -1,9 +1,11 @@
 import { useUnit } from 'effector-react';
-import { memo } from 'preact/compat';
+import { memo, useLayoutEffect } from 'preact/compat';
 
+import { goToStoreModel } from '@/app/routes';
 import ListIcon from '@/shared/assets/icons/list.svg';
 import { classNames } from '@/shared/lib/func';
 import { Text } from '@/shared/ui';
+import { ScrollArea } from '@/shared/ui/ScrollArea/ScrollArea.tsx';
 
 import { $modelStoreState, fetchHFModels } from '../../model/model-store.model.ts';
 import { CuratedModels } from '../CuratedModels/CuratedModels.tsx';
@@ -16,8 +18,14 @@ export const ModelsSearchPage = memo(() => {
   const showCurated = useUnit($modelStoreState.showCurated);
   const isLoading = useUnit(fetchHFModels.pending);
 
+  useLayoutEffect(() => {
+    if ($modelStoreState.currModel.getState()) {
+      goToStoreModel();
+    }
+  }, []);
+
   return (
-    <div className={classNames(s.modelsSearchPage)}>
+    <ScrollArea height="100vh" className={classNames(s.modelsSearchPage)}>
       <Text w="semi" s={36} c="primary">
         Model Store
       </Text>
@@ -33,6 +41,6 @@ export const ModelsSearchPage = memo(() => {
         icon={showCurated ? ListIcon : undefined}
         title={showCurated ? 'All models' : `${searchedModels.length} results from Hugging Face`}
       />
-    </div>
+    </ScrollArea>
   );
 });

@@ -106,6 +106,8 @@ class DownloadsManager {
       throw new Error(`Download "${id}" not found`);
     }
 
+    console.log('Deleting model file:', download.modelFileId);
+
     if (download.modelFileId) {
       await this.modelManager.deleteModel(download.modelFileId);
     }
@@ -295,6 +297,8 @@ class DownloadsManager {
     const { name, type, dto, modelName } = this.downloadsData[id];
 
     const filePath = await getDownloadPath(name);
+
+    dto.file.downloadId = id;
 
     const modelFile = await this.modelManager.addModel({
       type,

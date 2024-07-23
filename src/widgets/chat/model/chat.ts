@@ -1,5 +1,6 @@
 import { combine, createEffect, createEvent, createStore, sample } from 'effector';
 
+import { goToChat } from '@/app/routes';
 import { chatsRepository } from '@/db';
 import type { Chat, ChatMsg } from '@/db/chat';
 import { FileData } from '@/features/upload-file';
@@ -269,4 +270,9 @@ export const $streamedText = combine($streamedMsgId, $messages.data, (msgId, dat
   return msg?.text || '';
 });
 
+export const isArchivedChat = $chat.data.map((i) => i?.isArchived, { skipVoid: false });
+
 export const { askQuestion, startNew: startNewChat, switch: switchChat } = chatEvt;
+
+switchChat.watch(goToChat);
+startNewChat.watch(goToChat);

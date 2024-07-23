@@ -46,7 +46,7 @@ export const ModelsDetailsPage = memo(() => {
 
       <div className={s.header}>
         <Text w="medium" c="primary">
-          {files.length} Available files
+          {modelsToShow.length ? `${modelsToShow.length} Available files` : 'No files available'}
         </Text>
 
         <MultiSwitch options={fileTypeOptions} value={fileType} onChange={setFileType} />

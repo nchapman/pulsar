@@ -18,7 +18,7 @@ tauri-plugin-log = { git = "https://github.com/tauri-apps/plugins-workspace", br
   "colored",
 ] }
 nebula = { path = "nebula", default-features = false, features = [
-  "llama", "llama-build"
+  "llama"
 ] }
 uuid = "1.8.0"
 base64 = "0.22.0"

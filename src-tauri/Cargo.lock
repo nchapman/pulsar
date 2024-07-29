@@ -2733,6 +2733,7 @@ dependencies = [
  "objc2-metal",
  "powershell_script",
  "procfs",
+ "resource-path",
  "rust-embed",
  "tempfile",
  "thiserror",
@@ -2963,6 +2964,7 @@ dependencies = [
  "llama-cpp",
  "log",
  "num_cpus",
+ "resource-path",
  "serde",
  "simple_logger",
  "strfmt",
@@ -4265,6 +4267,13 @@ dependencies = [
  "wasm-streams",
  "web-sys",
  "winreg 0.52.0",
+]
+
+[[package]]
+name = "resource-path"
+version = "0.1.0"
+dependencies = [
+ "lazy_static",
 ]
 
 [[package]]

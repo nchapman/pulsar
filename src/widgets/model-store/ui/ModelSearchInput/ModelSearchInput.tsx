@@ -6,7 +6,7 @@ import GoIcon from '@/shared/assets/icons/arrow-right.svg';
 import CrossIcon from '@/shared/assets/icons/close.svg';
 import LensIcon from '@/shared/assets/icons/search.svg';
 import { classNames } from '@/shared/lib/func';
-import { useToggle } from '@/shared/lib/hooks';
+import { useKeyboardListener, useToggle } from '@/shared/lib/hooks';
 import { Button, Icon, Input } from '@/shared/ui';
 
 import {
@@ -32,9 +32,9 @@ export const ModelSearchInput = memo((props: Props) => {
 
   const { isOn: isFocused, on: onFocusIn, off: onFocusOut } = useToggle();
 
-  const handleSubmit = useCallback((e: any) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleSubmit = useCallback((e?: any) => {
+    e?.preventDefault();
+    e?.stopPropagation();
     modelStoreEvents.searchHF();
   }, []);
 
@@ -43,13 +43,15 @@ export const ModelSearchInput = memo((props: Props) => {
     inputRef.current.focus();
   }, []);
 
+  useKeyboardListener(handleSubmit, 'Enter');
+
   return (
     <form onSubmit={handleSubmit} className={classNames(s.modelSearchInput, [className])}>
       <Icon svg={LensIcon} className={s.icon} />
       <Input
         ref={inputRef}
         onFocusIn={onFocusIn}
-        onFocusOut={onFocusOut}
+        onFocusOut={() => setTimeout(onFocusOut, 100)}
         autofocus
         placeholder={placeholder}
         className={s.input}

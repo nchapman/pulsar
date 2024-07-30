@@ -75,7 +75,7 @@ $modelStoreState.curatedModels.on(fetchCuratedModels.doneData, (_, data) => data
 fetchCuratedModels();
 
 export const fetchHFModels = createEffect<string, HuggingFaceModel[]>((query: string) =>
-  searchHuggingFaceModels(query, modelSorting.getState())
+  searchHuggingFaceModels({ query, sorting: modelSorting.getState(), modelsOnly: !query })
 );
 
 const fetchHFFiles = createEffect<string, { files: ModelFileData[]; modelId: string }>(

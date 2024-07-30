@@ -4,7 +4,7 @@ import {
 } from '@/widgets/model-store/api/search-hugging-face.ts';
 
 export async function getModelFileInfo(modelName: string, fileName: string) {
-  const [modelData] = await searchHuggingFaceModels(modelName);
+  const [modelData] = await searchHuggingFaceModels({ query: modelName });
   if (!modelData) throw new Error('Model not found');
 
   const files = await fetchHuggingFaceFiles(modelData.name);

@@ -18,7 +18,10 @@ export const deleteChatWithConfirm = async (id: Id) => {
     title: 'Delete chat?',
     message: (
       <>
-        This will delete <Text c="primary">{title}</Text>
+        This will delete{' '}
+        <Text c="primary">
+          &quot;{title.length < 170 ? title : `${title.slice(0, 170)}...`}&quot;
+        </Text>
       </>
     ),
     type: 'danger',

@@ -63,7 +63,7 @@ export const ConfirmModal = memo(() => {
       className={classNames(s.confirmModal, [className])}
       noClose
     >
-      <Text c="primary" s={20} w="semi">
+      <Text c="primary" className={s.title} s={20} w="semi">
         {title}
       </Text>
       <div className={s.divider} />

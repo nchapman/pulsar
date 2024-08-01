@@ -36,6 +36,8 @@ class ModelManager {
 
   #currentModel: string | null = null;
 
+  #currentMmp: string | null = null;
+
   #hasNoModels = false;
 
   #loadError: string | null = null;
@@ -51,6 +53,7 @@ class ModelManager {
     $hasNoModels: createStore(false),
     $loadError: createStore<string | null>(null),
     $appStarted: createStore(false),
+    $currentMmp: createStore<string | null>(null),
   };
 
   events = {
@@ -62,6 +65,7 @@ class ModelManager {
     setHasNoModels: createEvent<boolean>(),
     setLoadError: createEvent<string | null>(),
     setAppStarted: createEvent<boolean>(),
+    setCurrentMmp: createEvent<string | null>(),
   };
 
   constructor(
@@ -222,6 +226,7 @@ class ModelManager {
 
     try {
       await this.loadModel(fileName, mmp || undefined);
+      this.currentMmp = mmp || null;
       this.isReady = true;
 
       logi(LOG_TAG, 'Model ready!');
@@ -309,6 +314,7 @@ class ModelManager {
     this.state.$appStarted.on(this.events.setAppStarted, (_, val) => val);
     this.state.$models.on(this.events.setModels, (_, models) => models);
     this.state.$availableLlms.on(this.events.setAvailableLlms, (_, models) => models);
+    this.state.$currentMmp.on(this.events.setCurrentMmp, (_, val) => val);
   }
 
   private async loadModel(llmLocalName: string, mmpLocalName?: string) {
@@ -342,6 +348,15 @@ class ModelManager {
   }
 
   // getters/setters
+
+  get currentMmp() {
+    return this.#currentMmp;
+  }
+
+  private set currentMmp(val: string | null) {
+    this.#currentMmp = val;
+    this.events.setCurrentMmp(val);
+  }
 
   get llmNameIdMap() {
     return this.#llmNameIdMap;

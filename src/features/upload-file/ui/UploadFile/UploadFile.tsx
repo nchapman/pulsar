@@ -1,7 +1,9 @@
+import { useUnit } from 'effector-react';
 import { memo, ReactNode } from 'preact/compat';
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import { Popover } from 'react-tiny-popover';
 
+import { modelManager } from '@/entities/model';
 import { FileData } from '@/features/upload-file';
 // import CamIcon from '@/shared/assets/icons/cam.svg';
 // import FileIcon from '@/shared/assets/icons/file.svg';
@@ -28,6 +30,7 @@ interface InputOption {
 
 export const UploadFile = memo((props: Props) => {
   const { className, onUpload, fileData, onRemove } = props;
+  const currentMmp = useUnit(modelManager.state.$currentMmp);
 
   const [open, setOpen] = useState(false);
 
@@ -45,6 +48,8 @@ export const UploadFile = memo((props: Props) => {
       setOpen(false);
     }
   }, [fileData]);
+
+  if (!currentMmp) return <div />;
 
   const popover = (
     <div className={s.popover}>

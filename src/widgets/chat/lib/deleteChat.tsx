@@ -1,11 +1,23 @@
+import { removeFile } from '@tauri-apps/api/fs';
+
 import { chatsRepository } from '@/db';
 import { confirm, Text } from '@/shared/ui';
 import { updateChatHistory } from '@/widgets/sidebar';
 
 import { $chat, startNewChat } from '../model/chat.ts';
 
-export function deleteChat(id: Id, isCurrent: boolean) {
-  chatsRepository.remove(id);
+async function clearChatFiles(id: Id) {
+  const chat = await chatsRepository.getById(id);
+  chat.messages.forEach((m) => {
+    if (m.file) {
+      removeFile(m.file.src);
+    }
+  });
+}
+
+export async function deleteChat(id: Id, isCurrent: boolean) {
+  await clearChatFiles(id);
+  await chatsRepository.remove(id);
   if (isCurrent) startNewChat();
 }
 

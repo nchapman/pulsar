@@ -2,5 +2,6 @@
 export function autoResize(element: HTMLTextAreaElement | null) {
   if (!element) return;
   element.style.height = 'auto';
-  element.style.height = `${element!.scrollHeight}px`;
+  const height = element.scrollHeight > 200 ? 200 : element.scrollHeight;
+  element.style.height = `${height}px`;
 }

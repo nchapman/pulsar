@@ -1,7 +1,7 @@
 import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
 
-import { goToChat } from '@/app/routes';
+import { $currRoute, goToChat, goToStore, Route } from '@/app/routes';
 import BackIcon from '@/shared/assets/icons/arrow-right.svg';
 import { classNames } from '@/shared/lib/func';
 import { Button, Text } from '@/shared/ui';
@@ -11,9 +11,13 @@ import s from './ModelStoreNavbar.module.scss';
 
 export const ModelStoreNavbar = memo(() => {
   const model = useUnit($modelStoreState.currModel);
+  const route = useUnit($currRoute);
+
   const handleBack = () => {
     if (model) {
       modelStoreEvents.closeModelDetails();
+    } else if (route === Route.StoreSearch) {
+      goToStore();
     } else {
       goToChat();
     }

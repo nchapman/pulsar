@@ -1,6 +1,6 @@
 import { combine, createEffect, createEvent, createStore, sample } from 'effector';
 
-import { goToStore, goToStoreModel } from '@/app/routes';
+import { goToStoreModel, goToStoreSearch } from '@/app/routes';
 import { curatedModels as curated, ModelFileData } from '@/entities/model';
 import { CuratedModel, HuggingFaceModel } from '@/entities/model/types/hugging-face-model.ts';
 import { getModelFileInfo } from '@/widgets/model-store/lib/getModelFileInfo.ts';
@@ -18,7 +18,6 @@ const currModelFiles = combine(
   (files, currModel) => (currModel && files[currModel] ? files[currModel] : []),
   { skipVoid: false }
 );
-const showCurated = createStore(true);
 const searchValue = createStore('');
 const modelsNameMap = models.map((models) =>
   models.reduce<Record<string, HuggingFaceModel>>(
@@ -44,7 +43,6 @@ modelSorting.on(setModelSorting, (_, v) => v);
 
 export const $modelStoreState = {
   searchValue,
-  showCurated,
   models,
   currModel,
   modelFiles,
@@ -75,7 +73,7 @@ $modelStoreState.curatedModels.on(fetchCuratedModels.doneData, (_, data) => data
 fetchCuratedModels();
 
 export const fetchHFModels = createEffect<string, HuggingFaceModel[]>((query: string) =>
-  searchHuggingFaceModels(query, modelSorting.getState())
+  searchHuggingFaceModels({ query, sorting: modelSorting.getState(), modelsOnly: !query })
 );
 
 const fetchHFFiles = createEffect<string, { files: ModelFileData[]; modelId: string }>(
@@ -111,10 +109,6 @@ $modelStoreState.searchValue.on(modelStoreEvents.setSearchValue, (_, v) => v);
 // modelsList is updated by fetchHFModels
 $modelStoreState.models.on(fetchHFModels.doneData, (_, data) => data);
 
-fetchHFModels('');
-
-$modelStoreState.showCurated.on(fetchHFModels, () => false);
-
 // currModel is updated by openModelDetails
 $modelStoreState.modelFiles.on(fetchHFFiles.doneData, (prev, { files, modelId }) => ({
   ...prev,
@@ -133,5 +127,5 @@ sample({
 // goToStore is triggered by closeModelDetails
 sample({
   clock: modelStoreEvents.closeModelDetails,
-  target: createEffect(goToStore),
+  target: createEffect(goToStoreSearch),
 });

@@ -13,6 +13,11 @@
   }
 }
 
+.go {
+  position: relative;
+  z-index: 100;
+}
+
 .input {
   color: var(--text-primary);
   font-size: 14px;

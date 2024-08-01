@@ -8,12 +8,20 @@ import { ModelSorting, ModelSortingData } from '@/widgets/model-store/types/mode
 
 const HUGGING_FACE_BASE_URL = 'https://huggingface.co';
 
-export const searchHuggingFaceModels = async (query: string, sorting?: ModelSorting) => {
+export const searchHuggingFaceModels = async ({
+  modelsOnly,
+  sorting,
+  query,
+}: {
+  query: string;
+  modelsOnly?: boolean;
+  sorting?: ModelSorting;
+}) => {
   // @ts-ignore
   const { sort, direction } = sorting ? ModelSortingData[sorting] : {};
 
   const modelGenerator = listModels({
-    search: { query: `${query}` },
+    search: { query: `${query}${modelsOnly ? ' gguf' : ''}` },
     additionalFields: [
       'tags',
       'config',

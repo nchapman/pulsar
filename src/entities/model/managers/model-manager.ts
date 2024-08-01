@@ -36,6 +36,8 @@ class ModelManager {
 
   #currentModel: string | null = null;
 
+  #currentMmp: string | null = null;
+
   #hasNoModels = false;
 
   #loadError: string | null = null;
@@ -46,20 +48,24 @@ class ModelManager {
     $ready: createStore(false),
     $models: createStore<Models>({}),
     $modelFiles: createStore<ModelFileIdMap>({}),
+    $availableLlms: createStore<ModelFileIdMap>({}),
     $currentModel: createStore<string | null>(null),
     $hasNoModels: createStore(false),
     $loadError: createStore<string | null>(null),
     $appStarted: createStore(false),
+    $currentMmp: createStore<string | null>(null),
   };
 
   events = {
     setReady: createEvent<boolean>(),
     setModelFiles: createEvent<ModelFileIdMap>(),
+    setAvailableLlms: createEvent<ModelFileIdMap>(),
     setModels: createEvent<Models>(),
     setCurrentModels: createEvent<string | null>(),
     setHasNoModels: createEvent<boolean>(),
     setLoadError: createEvent<string | null>(),
     setAppStarted: createEvent<boolean>(),
+    setCurrentMmp: createEvent<string | null>(),
   };
 
   constructor(
@@ -220,6 +226,7 @@ class ModelManager {
 
     try {
       await this.loadModel(fileName, mmp || undefined);
+      this.currentMmp = mmp || null;
       this.isReady = true;
 
       logi(LOG_TAG, 'Model ready!');
@@ -280,10 +287,12 @@ class ModelManager {
   private updateModelIdMaps() {
     const llmNameIdMap: ModelFileNameIdMap = {};
     const mmpNameIdMap: ModelFileNameIdMap = {};
+    const availableLllms: ModelFileIdMap = {};
 
     Object.values(this.modelFiles).forEach((model) => {
       if (model.type === 'llm') {
         llmNameIdMap[model.data.file.name] = model.id;
+        availableLllms[model.id] = model;
       }
 
       if (model.type === 'mmp') {
@@ -291,6 +300,7 @@ class ModelManager {
       }
     });
 
+    this.events.setAvailableLlms(availableLllms);
     this.#llmNameIdMap = llmNameIdMap;
     this.#mmpNameIdMap = mmpNameIdMap;
   }
@@ -303,6 +313,8 @@ class ModelManager {
     this.state.$loadError.on(this.events.setLoadError, (_, val) => val);
     this.state.$appStarted.on(this.events.setAppStarted, (_, val) => val);
     this.state.$models.on(this.events.setModels, (_, models) => models);
+    this.state.$availableLlms.on(this.events.setAvailableLlms, (_, models) => models);
+    this.state.$currentMmp.on(this.events.setCurrentMmp, (_, val) => val);
   }
 
   private async loadModel(llmLocalName: string, mmpLocalName?: string) {
@@ -336,6 +348,15 @@ class ModelManager {
   }
 
   // getters/setters
+
+  get currentMmp() {
+    return this.#currentMmp;
+  }
+
+  private set currentMmp(val: string | null) {
+    this.#currentMmp = val;
+    this.events.setCurrentMmp(val);
+  }
 
   get llmNameIdMap() {
     return this.#llmNameIdMap;

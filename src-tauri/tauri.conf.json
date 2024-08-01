@@ -7,7 +7,7 @@
   },
   "package": {
     "productName": "Pulsar",
-    "version": "0.0.38"
+    "version": "0.0.43"
   },
   "tauri": {
     "allowlist": {
@@ -16,7 +16,8 @@
         "all": true,
         "scope": {
           "allow": [
-            "**"
+            "**",
+            "$RESOURCE/*"
           ]
         }
       },
@@ -43,6 +44,9 @@
         "icons/128x128@2x.png",
         "icons/icon.icns",
         "icons/icon.ico"
+      ],
+      "resources": [
+        "nebula/backends/llama_cpp/llama-cpp-sys/dist/*"
       ],
       "macOS": {
         "signingIdentity": "-"

@@ -387,6 +387,12 @@ pub fn init_plugin<R: Runtime>() -> TauriPlugin<R> {
             get_loaded_models
         ])
         .setup(|app_handle| {
+            #[cfg(test)]
+            let resource_path = std::path::PathBuf::from("nebula/backends/llama_cpp/llama-cpp-sys/dist");
+            #[cfg(not(test))]
+            let resource_path = app_handle.path_resolver().resolve_resource("nebula/backends/llama_cpp/llama-cpp-sys/dist").unwrap();
+            eprintln!("{:?}", resource_path);
+            nebula::init(resource_path).unwrap();
             app_handle.manage(NebulaState::default());
             Ok(())
         })

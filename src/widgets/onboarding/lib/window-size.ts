@@ -22,6 +22,10 @@ export async function isWindows() {
   return (await os.type()) === 'Windows_NT';
 }
 
+export async function isMacOS() {
+  return (await os.type()) === 'Darwin';
+}
+
 export async function minimizeWindowSize() {
   appWindow.setMinSize(new LogicalSize(windowSize.onboarding.width, windowSize.onboarding.height));
   await appWindow.setSize(

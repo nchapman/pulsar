@@ -60,7 +60,7 @@ export const ModelsList = memo((props: Props) => {
         />
       </div>
 
-      <ScrollArea height={all ? '400px' : 'calc(100vh - 340px)'} className={s.list}>
+      <ScrollArea height={all ? '400px' : 'calc(100vh - 364px)'} className={s.list}>
         {models.map((i) => (
           <ModelCard view={view} model={i} />
         ))}

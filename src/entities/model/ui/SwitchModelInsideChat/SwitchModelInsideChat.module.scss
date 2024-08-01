@@ -2,7 +2,7 @@
 
 .switch-model-inside-chat {
   position: relative;
-  z-index: 1000000;
+  z-index: var(--z-index-model-switch);
   height: 100%;
   font-size: 12px;
   font-weight: 600;

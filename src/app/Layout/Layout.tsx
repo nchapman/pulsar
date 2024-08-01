@@ -16,6 +16,7 @@ import s from './Layout.module.scss';
 const Widgets: Record<Route, FC> = {
   [Route.Chat]: Chat,
   [Route.Store]: ModelsSearchPage,
+  [Route.StoreSearch]: ModelsSearchPage,
   [Route.StoreModel]: ModelsDetailsPage,
   [Route.Downloads]: DownloadsPage,
 };
@@ -23,6 +24,7 @@ const Widgets: Record<Route, FC> = {
 const Nav: Record<Route, FC> = {
   [Route.Chat]: ChatNavbar,
   [Route.Store]: ModelStoreNavbar,
+  [Route.StoreSearch]: ModelStoreNavbar,
   [Route.StoreModel]: ModelStoreNavbar,
   [Route.Downloads]: DownloadsNavbar,
 };

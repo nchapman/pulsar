@@ -21,6 +21,7 @@ interface Props {
   loading?: boolean;
   sorting?: ModelSorting;
   onSortingChange?: (sorting: ModelSorting) => void;
+  all?: boolean;
 }
 
 const optionsArr = [
@@ -34,7 +35,7 @@ const optionsArr = [
 }));
 
 export const ModelsList = memo((props: Props) => {
-  const { className, view, models, title, icon, loading } = props;
+  const { className, all, view, models, title, icon, loading } = props;
 
   const sorting = useUnit($modelStoreState.modelSorting);
 
@@ -59,7 +60,7 @@ export const ModelsList = memo((props: Props) => {
         />
       </div>
 
-      <ScrollArea height="400px" className={s.list}>
+      <ScrollArea height={all ? '400px' : 'calc(100vh - 340px)'} className={s.list}>
         {models.map((i) => (
           <ModelCard view={view} model={i} />
         ))}

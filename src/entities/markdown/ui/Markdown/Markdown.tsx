@@ -20,7 +20,6 @@ const components: Partial<Components> = {
 
 export const Markdown = memo((props: Props) => {
   const { className, text, isGenerating } = props;
-  console.log(text);
 
   return (
     <ReactMarkdown

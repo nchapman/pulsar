@@ -41,7 +41,7 @@ export const TestFeatures = memo((props: Props) => {
   };
 
   const testHuggingFace = async () => {
-    const searchResults = await searchHuggingFaceModels('cjpais');
+    const searchResults = await searchHuggingFaceModels({ query: 'cjpais' });
 
     const filesResults = await fetchHuggingFaceFiles(searchResults[0].name);
 

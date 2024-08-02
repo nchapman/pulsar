@@ -1,7 +1,7 @@
 import { useUnit } from 'effector-react';
 import { memo, useLayoutEffect } from 'preact/compat';
 
-import { goToStoreModel } from '@/app/routes';
+import { $currRoute, goToStoreModel, Route } from '@/app/routes';
 import ListIcon from '@/shared/assets/icons/list.svg';
 import { classNames } from '@/shared/lib/func';
 import { Text } from '@/shared/ui';
@@ -13,10 +13,14 @@ import { ModelSearchInput } from '../ModelSearchInput/ModelSearchInput.tsx';
 import { ModelsList } from '../ModelsList/ModelsList.tsx';
 import s from './ModelsSearchPage.module.scss';
 
+$currRoute.watch((r) => {
+  if (r === Route.Store) fetchHFModels('');
+});
+
 export const ModelsSearchPage = memo(() => {
   const searchedModels = useUnit($modelStoreState.models);
-  const showCurated = useUnit($modelStoreState.showCurated);
   const isLoading = useUnit(fetchHFModels.pending);
+  const route = useUnit($currRoute);
 
   useLayoutEffect(() => {
     if ($modelStoreState.currModel.getState()) {
@@ -32,15 +36,26 @@ export const ModelsSearchPage = memo(() => {
 
       <ModelSearchInput className={s.input} />
 
-      {showCurated && <CuratedModels className={s.curated} />}
-
-      <ModelsList
-        loading={isLoading}
-        view="list"
-        models={searchedModels}
-        icon={showCurated ? ListIcon : undefined}
-        title={showCurated ? 'All models' : `${searchedModels.length} results from Hugging Face`}
-      />
+      {route === Route.StoreSearch ? (
+        <ModelsList
+          loading={isLoading}
+          view="list"
+          models={searchedModels}
+          title={`${searchedModels.length} results from Hugging Face`}
+        />
+      ) : (
+        <>
+          <CuratedModels className={s.curated} />
+          <ModelsList
+            all
+            loading={isLoading}
+            view="list"
+            models={searchedModels}
+            icon={ListIcon}
+            title="All models"
+          />
+        </>
+      )}
     </ScrollArea>
   );
 });

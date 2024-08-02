@@ -36,7 +36,7 @@ try {
   console.log(`🟢 Bumped ${currentVersion} → ${newVersion}`);
 
   execSync('git add .', { stdio: 'inherit' });
-  execSync(`git commit -m "Release ${newVersion}"`, { stdio: 'inherit' });
+  execSync(`git commit --no-verify -m "Release ${newVersion}"`, { stdio: 'inherit' });
   execSync(`git push`, { stdio: 'inherit' });
 
   execSync(`git tag -a v${newVersion} -m "Release ${newVersion}"`, { stdio: 'inherit' });

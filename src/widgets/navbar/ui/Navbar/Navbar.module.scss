@@ -6,6 +6,20 @@
   border-bottom: 1px solid var(--main-background-secondary);
 }
 
+.inner {
+  position: absolute;
+  left: var(--sidebar-width);
+  transition: left 0.3s;
+}
+
+.collapsed .inner {
+  left: 36px;
+}
+
+.collapsed.mac .inner {
+  left: 88px;
+}
+
 .history {
   margin-left: auto;
   display: flex;

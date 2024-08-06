@@ -44,6 +44,8 @@ class ModelManager {
 
   #appStarted = false;
 
+  #loadingProgress = 0;
+
   state = {
     $ready: createStore(false),
     $models: createStore<Models>({}),
@@ -54,6 +56,7 @@ class ModelManager {
     $loadError: createStore<string | null>(null),
     $appStarted: createStore(false),
     $currentMmp: createStore<string | null>(null),
+    $loadingProgress: createStore<number>(0),
   };
 
   events = {
@@ -66,6 +69,7 @@ class ModelManager {
     setLoadError: createEvent<string | null>(),
     setAppStarted: createEvent<boolean>(),
     setCurrentMmp: createEvent<string | null>(),
+    setLoadingProgress: createEvent<number>(),
   };
 
   constructor(
@@ -315,6 +319,7 @@ class ModelManager {
     this.state.$models.on(this.events.setModels, (_, models) => models);
     this.state.$availableLlms.on(this.events.setAvailableLlms, (_, models) => models);
     this.state.$currentMmp.on(this.events.setCurrentMmp, (_, val) => val);
+    this.state.$loadingProgress.on(this.events.setLoadingProgress, (_, val) => val);
   }
 
   private async loadModel(llmLocalName: string, mmpLocalName?: string) {
@@ -325,6 +330,8 @@ class ModelManager {
 
       this.#model = await NebulaModel.initModel(modelPath, multiModalPath, (progress) => {
         logi('Model manager', `Model loading progress: ${progress}`);
+        this.loadingProgress = progress;
+        console.log('Loading progress:', progress);
       });
     } catch (e) {
       loge('Model manager', `Failed to load model, rust error: ${e}`);
@@ -336,6 +343,7 @@ class ModelManager {
     try {
       this.#model?.drop();
       this.#model = null;
+      // this.isReady = false;
     } catch (e: any) {
       loge('Model manager', `Failed to unload model ${e}`);
       throw e;
@@ -348,6 +356,15 @@ class ModelManager {
   }
 
   // getters/setters
+
+  get loadingProgress() {
+    return this.#loadingProgress;
+  }
+
+  private set loadingProgress(val: number) {
+    this.#loadingProgress = val;
+    this.events.setLoadingProgress(val);
+  }
 
   get currentMmp() {
     return this.#currentMmp;

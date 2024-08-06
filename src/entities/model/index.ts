@@ -5,4 +5,5 @@ export type { ModelDto, ModelFileData, ModelFileDto } from './types/model.types.
 export { InitialModelDownload } from './ui/InitialModelDownload/InitialModelDownload.tsx';
 export { ModelCard } from './ui/ModelCard/ModelCard.tsx';
 export { ModelFile } from './ui/ModelFile/ModelFile.tsx';
+export { ModelLoadingIndicator } from './ui/ModelLoadingIndicator/ModelLoadingIndicator.tsx';
 export { SwitchModelInsideChat } from './ui/SwitchModelInsideChat/SwitchModelInsideChat.tsx';

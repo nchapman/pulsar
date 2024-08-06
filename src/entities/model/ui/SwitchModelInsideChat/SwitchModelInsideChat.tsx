@@ -88,7 +88,9 @@ export const SwitchModelInsideChat = memo((props: Props) => {
       <div>
         <Button
           onClick={togglePopover}
-          className={classNames(s.switchModelInsideChat, [className], { [s.open]: isPopoverShown })}
+          className={classNames(s.switchModelInsideChat, [className], {
+            [s.open]: isPopoverShown,
+          })}
           variant="clear"
         >
           {modelData?.file.name}

@@ -1,3 +1,4 @@
+export { defaultModelSettings } from './consts/defaultModelSettings.ts';
 export { archiveAllChats, archiveAllChatsWithConfirm } from './lib/archiveChat.ts';
 export {
   deleteAllChats,

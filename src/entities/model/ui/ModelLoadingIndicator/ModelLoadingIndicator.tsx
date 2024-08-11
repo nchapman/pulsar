@@ -1,4 +1,3 @@
-import { combine } from 'effector';
 import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
 
@@ -6,18 +5,12 @@ import { modelManager } from '@/entities/model';
 import { classNames } from '@/shared/lib/func';
 import { Text } from '@/shared/ui';
 
+import { $currModelData } from '../../model/model.model.ts';
 import s from './ModelLoadingIndicator.module.scss';
 
 interface Props {
   className?: string;
 }
-
-const $currModelData = combine(
-  modelManager.state.$currentModel,
-  modelManager.state.$modelFiles,
-  (id, models) => (id && models ? models[id] : null),
-  { skipVoid: false }
-);
 
 export const ModelLoadingIndicator = memo((props: Props) => {
   const { className } = props;

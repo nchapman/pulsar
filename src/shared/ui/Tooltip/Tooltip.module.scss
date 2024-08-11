@@ -24,6 +24,12 @@
     left: 50%;
     transform: translateX(-50%) rotate(180deg) translateY(1px);
   }
+
+  &.top-left .arrow {
+    left: 12px;
+    top: 100%;
+    transform: rotate(180deg) translateY(1px);
+  }
 }
 
 .tooltip-text {
@@ -31,6 +37,18 @@
   background: var(--sidebar-background-primary);
   border-radius: 8px;
   border: 1px solid var(--border-light);
+}
+
+.secondary {
+  .tooltip-text {
+    background: var(--sidebar-background-secondary);
+    color: var(--text-color-secondary);
+  }
+
+  .arrow {
+    border-bottom: 8px solid var(--sidebar-background-secondary);
+
+  }
 }
 
 .success {

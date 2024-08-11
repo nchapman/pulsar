@@ -19,3 +19,14 @@
 .sidebar {
   flex-shrink: 0;
 }
+
+.model-settings-switch {
+  position: absolute;
+  right: 12px;
+  top: calc(var(--navbar-height) + 12px);
+  z-index: 1;
+}
+
+.model-settings {
+  z-index: 2;
+}

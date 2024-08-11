@@ -355,6 +355,14 @@ class ModelManager {
     this.models = { ...this.models, [dbModel.name]: dbModel };
   }
 
+  getModelFileNameById(id: Id): string | undefined {
+    return this.modelFiles[id]?.name;
+  }
+
+  getModelFileIdByName(name: string): string | undefined {
+    return this.#llmNameIdMap[name];
+  }
+
   // getters/setters
 
   get loadingProgress() {
@@ -432,7 +440,7 @@ class ModelManager {
     this.events.setAppStarted(val);
   }
 
-  private get currentModel() {
+  get currentModel() {
     return this.#currentModel;
   }
 

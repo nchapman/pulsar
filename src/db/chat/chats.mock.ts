@@ -1,4 +1,11 @@
-import { Chat } from './chat.repository.ts';
+import { Chat, ModelSettings } from './chat.repository.ts';
+
+const defaultModelSettings: ModelSettings = {
+  topP: 0.9,
+  temp: 0.8,
+  maxLength: 10000,
+  stopTokens: [],
+};
 
 function minusDaysTS(days: number): number {
   const today = new Date();
@@ -47,6 +54,7 @@ export const chatsMock: Chat[] = [
       },
     ],
     model: 'chat',
+    modelSettings: defaultModelSettings,
     createdAt: 1631182800000,
     updatedAt: minusDaysTS(0),
     isArchived: false,
@@ -57,6 +65,7 @@ export const chatsMock: Chat[] = [
     title: 'Chat 2',
     messages: [],
     model: 'chat',
+    modelSettings: defaultModelSettings,
     createdAt: 1631182800000,
     updatedAt: minusDaysTS(0),
     isArchived: false,
@@ -67,6 +76,7 @@ export const chatsMock: Chat[] = [
     title: 'Chat 3',
     messages: [],
     model: 'chat',
+    modelSettings: defaultModelSettings,
     createdAt: 1631182800000,
     updatedAt: minusDaysTS(1),
     isArchived: false,
@@ -77,6 +87,7 @@ export const chatsMock: Chat[] = [
     title: 'Chat 4',
     messages: [],
     model: 'chat',
+    modelSettings: defaultModelSettings,
     createdAt: 1631182800000,
     updatedAt: minusDaysTS(40),
     isArchived: false,
@@ -87,6 +98,7 @@ export const chatsMock: Chat[] = [
     title: 'Chat 5',
     messages: [],
     model: 'chat',
+    modelSettings: defaultModelSettings,
     createdAt: 1631182800000,
     updatedAt: minusDaysTS(600),
     isArchived: false,

@@ -1,7 +1,7 @@
 import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
 
-import { ModelFile, ModelFileData } from '@/entities/model';
+import { ModelFile, ModelFileData, modelManager } from '@/entities/model';
 import { downloadsManager } from '@/entities/model/managers/downloads-manager.ts';
 import CloseIcon from '@/shared/assets/icons/close.svg';
 import PlayIcon from '@/shared/assets/icons/play-circle.svg';
@@ -27,6 +27,7 @@ export const DownloadItemCard = memo((props: Props) => {
   const downloadItem = useUnit(downloadsManager.state.$downloadsNameData)[fileName];
 
   const { id, downloadingData } = downloadItem || {};
+
   const handleDeleteModel = () => {
     confirm({
       type: 'danger',
@@ -39,11 +40,16 @@ export const DownloadItemCard = memo((props: Props) => {
     });
   };
 
+  const handleStartChat = () => {
+    if (!downloadItem.modelFileId) return;
+    modelManager.switchModel(downloadItem.modelFileId);
+  };
+
   function getWidget() {
     if (downloadingData.isFinished && !isMmproj && isGguf) {
       return (
         <div className={s.finished}>
-          <Button className={s.startChat} variant="primary">
+          <Button className={s.startChat} variant="primary" onClick={handleStartChat}>
             Start Chat
           </Button>
           <Button variant="secondary" className={s.deleteBtn} onClick={handleDeleteModel}>

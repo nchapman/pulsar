@@ -311,7 +311,6 @@ startNewChat.watch(goToChat);
 export const $modelSettings = $chat.data.map((chat) => chat?.modelSettings || defaultModelSettings);
 
 export const setModelSettings = createEvent<Partial<ModelSettings>>();
-// const resetModelSettings = createEvent();
 export const resetModelSettings = setModelSettings.prepend(() => defaultModelSettings);
 
 export async function saveModelSettingsForChat() {
@@ -321,15 +320,6 @@ export async function saveModelSettingsForChat() {
 
   await chatsRepository.update(chatData.id, { modelSettings: chatData.modelSettings });
 }
-
-// $chat.data.on(resetModelSettings, (chat) => {
-//   if (!chat) return chat;
-//
-//   return {
-//     ...chat,
-//     modelSettings: defaultModelSettings,
-//   } as Chat;
-// });
 
 $chat.data.on(setModelSettings, (chat, settings) => {
   if (!chat) return chat;

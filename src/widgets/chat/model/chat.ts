@@ -3,6 +3,7 @@ import { combine, createEffect, createEvent, createStore, sample } from 'effecto
 import { goToChat } from '@/app/routes';
 import { chatsRepository } from '@/db';
 import type { Chat, ChatMsg } from '@/db/chat';
+import { ModelSettings } from '@/db/chat/chat.repository.ts';
 import { modelManager } from '@/entities/model';
 import { FileData } from '@/features/upload-file';
 import { suid } from '@/shared/lib/func';
@@ -305,3 +306,41 @@ sample({
 
 switchChat.watch(goToChat);
 startNewChat.watch(goToChat);
+
+// model settings
+export const $modelSettings = $chat.data.map((chat) => chat?.modelSettings || defaultModelSettings);
+
+export const setModelSettings = createEvent<Partial<ModelSettings>>();
+// const resetModelSettings = createEvent();
+export const resetModelSettings = setModelSettings.prepend(() => defaultModelSettings);
+
+export async function saveModelSettingsForChat() {
+  const chatData = $chat.data.getState();
+
+  if (!chatData) return;
+
+  await chatsRepository.update(chatData.id, { modelSettings: chatData.modelSettings });
+}
+
+// $chat.data.on(resetModelSettings, (chat) => {
+//   if (!chat) return chat;
+//
+//   return {
+//     ...chat,
+//     modelSettings: defaultModelSettings,
+//   } as Chat;
+// });
+
+$chat.data.on(setModelSettings, (chat, settings) => {
+  if (!chat) return chat;
+
+  const newSettings = {
+    ...(chat.modelSettings || defaultModelSettings),
+    ...settings,
+  };
+
+  return {
+    ...chat,
+    modelSettings: newSettings,
+  } as Chat;
+});

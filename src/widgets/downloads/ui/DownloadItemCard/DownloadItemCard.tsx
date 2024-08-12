@@ -9,6 +9,7 @@ import StopIcon from '@/shared/assets/icons/stop-circle.svg';
 import RemoveIcon from '@/shared/assets/icons/trash.svg';
 import { classNames } from '@/shared/lib/func';
 import { Button, confirm, Icon, Progress, Text } from '@/shared/ui';
+import { startNewChat } from '@/widgets/chat';
 
 import s from './DownloadItemCard.module.scss';
 
@@ -42,6 +43,11 @@ export const DownloadItemCard = memo((props: Props) => {
 
   const handleStartChat = () => {
     if (!downloadItem.modelFileId) return;
+    if (modelManager.currentModel === downloadItem.modelFileId) {
+      startNewChat();
+      return;
+    }
+
     modelManager.switchModel(downloadItem.modelFileId);
   };
 

@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState } from 'preact/hooks';
 import { chatsRepository } from '@/db';
 import { Chat } from '@/db/chat';
 import { chatsTable } from '@/db/chat/chat.schema.ts';
+import { modelManager } from '@/entities/model';
 import { classNames, debounce } from '@/shared/lib/func';
 import { fallbackFn } from '@/shared/storybook';
 import { Collapsible, Text } from '@/shared/ui';
@@ -62,7 +63,12 @@ const ChatHistory = memo((props: Props) => {
         >
           <div className={s.chats}>
             {chats.map((chat) => (
-              <ChatHistoryItem key={chat.id} id={chat.id} isCurrent={currChatId === chat.id} />
+              <ChatHistoryItem
+                key={chat.id}
+                id={chat.id}
+                isCurrent={currChatId === chat.id}
+                unavailable={!modelManager.getModelFileNameById(chat.model)}
+              />
             ))}
           </div>
         </Collapsible>

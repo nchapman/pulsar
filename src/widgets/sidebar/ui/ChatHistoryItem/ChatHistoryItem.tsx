@@ -21,6 +21,7 @@ interface Props {
   chat?: ChatModel;
   isCurrent: boolean;
   id: string;
+  unavailable?: boolean;
 }
 
 const $shownPopoverId = createStore<string | null>(null);
@@ -28,7 +29,7 @@ const changeShownPopoverId = createEvent<string | null>();
 $shownPopoverId.on(changeShownPopoverId, (_, id) => id);
 
 const ChatHistoryItem = (props: Props) => {
-  const { className, chat, id, isCurrent } = props;
+  const { className, chat, id, isCurrent, unavailable } = props;
   const { isOn: isPopoverShown, off: hidePopover, on: openPopover } = useToggle();
   const [newTitle, setNewTitle] = useState(chat?.title);
   const { isOn: isRenaming, toggle: toggleRename, off: stopRenaming } = useToggle();
@@ -69,9 +70,10 @@ const ChatHistoryItem = (props: Props) => {
       active={(isCurrent || isPopoverShown) && !isRenaming}
       notActive={isRenaming}
       onClick={handleChatClick}
-      className={classNames(s.chatHistoryItem, [className])}
+      className={classNames(s.chatHistoryItem, [className], { [s.unavailable]: unavailable })}
       suffixClassName={s.suffixWrapper}
       endFade
+      disabled={unavailable}
       activeSuffix={
         <ChatHistoryActions
           isOpen={isPopoverShown}
@@ -95,7 +97,7 @@ const ChatHistoryItem = (props: Props) => {
           autofocus
         />
       ) : (
-        chat?.title
+        `${chat?.title}${unavailable ? ' [no model present]' : ''}`
       )}
     </Button>
   );

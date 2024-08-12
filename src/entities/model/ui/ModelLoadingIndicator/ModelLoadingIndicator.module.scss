@@ -1,0 +1,35 @@
+@import './src/shared/styles/mixins';
+
+.model-loading-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
+  padding: 0 24px;
+}
+
+.model-name {
+  opacity: 30%;
+}
+
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.progress {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: #12b76a1f;
+  bottom: 0;
+}
+
+.inner {
+  height: 100%;
+  background: var(--success);
+  position: relative;
+  z-index: 10;
+}

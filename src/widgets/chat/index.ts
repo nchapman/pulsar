@@ -1,3 +1,4 @@
+export { defaultModelSettings } from './consts/defaultModelSettings.ts';
 export { archiveAllChats, archiveAllChatsWithConfirm } from './lib/archiveChat.ts';
 export {
   deleteAllChats,
@@ -5,6 +6,15 @@ export {
   deleteChat,
   deleteChatWithConfirm,
 } from './lib/deleteChat.tsx';
-export { $chat, askQuestion, startNewChat, switchChat } from './model/chat';
+export {
+  $chat,
+  $modelSettings,
+  askQuestion,
+  resetModelSettings,
+  saveModelSettingsForChat,
+  setModelSettings,
+  startNewChat,
+  switchChat,
+} from './model/chat';
 export { Chat } from './ui/Chat/Chat';
 export { ChatNavbar } from './ui/ChatNavbar/ChatNavbar';

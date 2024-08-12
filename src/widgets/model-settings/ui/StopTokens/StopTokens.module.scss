@@ -1,0 +1,15 @@
+.textarea {
+  color: var(--text-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--border-medium);
+  background: rgba(255, 255, 255, 0.01);
+  font-size: 12px;
+  margin-top: 8px;
+  resize: vertical;
+  font-weight: 400;
+
+  &:focus {
+    background-color: var(--main-background-quaternary);
+    border: 1px solid var(--border-medium);
+  }
+}

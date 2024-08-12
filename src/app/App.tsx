@@ -1,6 +1,7 @@
 import { useUnit } from 'effector-react';
 import { useEffect } from 'preact/hooks';
 
+import { cleanUpDB } from '@/app/lib/cleanUpDB.ts';
 import { modelManager } from '@/entities/model';
 import { initTheme } from '@/shared/theme';
 import { PageError, PageLoader } from '@/shared/ui';
@@ -18,6 +19,7 @@ function App() {
   useEffect(() => {
     initTheme();
     checkUpdates();
+    cleanUpDB();
   }, []);
 
   function getComponent() {

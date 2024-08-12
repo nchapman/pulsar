@@ -1,0 +1,27 @@
+.slider {
+  width: 100%;
+  height: 16px;
+}
+
+.thumb {
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--main-background-primary);
+  border-radius: 50%;
+  background: var(--brand);
+  cursor: pointer;
+  outline: transparent;
+}
+
+.track {
+  height: 16px;
+  cursor: pointer;
+}
+
+.thumb-inner {
+  margin-top: 6px;
+  height: 4px;
+  width: 100%;
+  border-radius: 8px;
+  background: var(--main-background-secondary);
+}

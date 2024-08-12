@@ -1,0 +1,48 @@
+.info {
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.value {
+  color: var(--text-primary);
+  font-size: 14px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid var(--border-medium);
+  width: 60px;
+  padding: 4px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1;
+  outline: transparent;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  -moz-appearance: textfield;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.reset {
+  opacity: 0;
+  pointer-events: none;
+  border-radius: 8px;
+}
+
+.slider-with-info:hover .reset {
+  opacity: 1;
+  pointer-events: auto;
+}

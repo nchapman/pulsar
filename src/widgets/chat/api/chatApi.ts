@@ -12,7 +12,7 @@ export async function stream(
     onStreamEnd: () => void;
     onTitleUpdate: (title: string) => void;
   },
-  maxPredictLen: number = 10000
+  ctx: { maxPredictLen: number; temp: number; topP: number; stopTokens: string[] }
 ) {
   if (!modelManager.model) {
     loge('chatApi', 'Model not loaded, cannot stream');
@@ -24,7 +24,8 @@ export async function stream(
 
   try {
     const context = await modelManager.model.createContext(
-      messages.slice(0, -1).map((msg) => ({ message: msg.text, is_user: !!msg.isUser }))
+      messages.slice(0, -1).map((msg) => ({ message: msg.text, is_user: !!msg.isUser })),
+      ctx.stopTokens
     );
 
     context.onToken = (p) => {
@@ -44,7 +45,11 @@ export async function stream(
 
     onStreamStart();
 
-    await context.predict({ maxLength: maxPredictLen });
+    await context.predict({
+      maxLength: ctx.maxPredictLen || 10000,
+      topP: ctx.topP,
+      temp: ctx.temp,
+    });
   } catch (e) {
     loge('chatApi', `Failed to stream: ${e}`);
   } finally {

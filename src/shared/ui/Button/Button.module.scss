@@ -164,6 +164,27 @@
       color: var(--gray-100);
     }
   }
+
+  &.outlined {
+    border-radius: 8px;
+    border: 1px solid var(--border-disabled);
+    color: var(--icon-default);
+
+    path {
+      stroke-opacity: 0.6;
+    }
+
+    &.active,
+    &:hover {
+      color: var(--icon-active);
+      background: var(--main-background-quaternary);
+      border-color: var(--main-background-quaternary);
+
+      path {
+        stroke-opacity: 1;
+      }
+    }
+  }
 }
 
 

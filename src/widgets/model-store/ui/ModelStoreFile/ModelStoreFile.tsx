@@ -1,12 +1,13 @@
 import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
 
-import { ModelFile, ModelFileData } from '@/entities/model';
+import { ModelFile, ModelFileData, modelManager } from '@/entities/model';
 import { downloadsManager } from '@/entities/model/managers/downloads-manager.ts';
 import CloseIcon from '@/shared/assets/icons/close.svg';
 import DownloadIcon from '@/shared/assets/icons/download.svg';
 import { classNames } from '@/shared/lib/func';
 import { Button, Icon, ProgressRounded, Text } from '@/shared/ui';
+import { startNewChat } from '@/widgets/chat';
 import { $modelStoreState } from '@/widgets/model-store/model/model-store.model.ts';
 
 import { startFileDownload } from '../../lib/startFileDownload.ts';
@@ -32,6 +33,15 @@ export const ModelStoreFile = memo((props: Props) => {
     startFileDownload($modelStoreState.currModel.getState()!, data.name);
   };
 
+  const handleStartChat = () => {
+    if (!downloadItem.modelFileId) return;
+    if (modelManager.currentModel === downloadItem.modelFileId) {
+      startNewChat();
+      return;
+    }
+    modelManager.switchModel(downloadItem.modelFileId);
+  };
+
   function getWidget() {
     if (!downloadItem)
       return (
@@ -52,7 +62,7 @@ export const ModelStoreFile = memo((props: Props) => {
 
     if (downloadingData.isFinished) {
       return (
-        <Button className={s.startChat} variant="primary">
+        <Button className={s.startChat} variant="primary" onClick={handleStartChat}>
           Start Chat
         </Button>
       );

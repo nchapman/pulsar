@@ -1,0 +1,43 @@
+.model-settings {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  border-bottom: 1px solid var(--main-background-secondary);
+  height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  width: 100%;
+}
+
+.main {
+  height: calc(100% - 48px - 88px);
+  padding: 16px 24px;
+}
+
+.footer {
+  height: 88px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-top: 1px solid var(--main-background-secondary);
+}
+
+.close-btn {
+  margin-left: auto;
+}
+
+.local-model-label {
+  padding: 2px 6px;
+  background: var(--main-background-quaternary);
+  border-radius: 4px;
+}
+
+.model-settings-menu {
+  margin-top: 32px;
+}

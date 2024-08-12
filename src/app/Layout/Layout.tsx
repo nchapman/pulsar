@@ -5,6 +5,7 @@ import { $currRoute, Route } from '@/app/routes';
 import { Page } from '@/shared/ui';
 import { Chat, ChatNavbar } from '@/widgets/chat';
 import { DownloadsNavbar, DownloadsPage } from '@/widgets/downloads';
+import { ModelSettings, ModelSettingsSwitch } from '@/widgets/model-settings';
 import { ModelsDetailsPage, ModelsSearchPage, ModelStoreNavbar } from '@/widgets/model-store';
 import { Navbar } from '@/widgets/navbar';
 import { restoreWindowSize } from '@/widgets/onboarding';
@@ -52,6 +53,9 @@ export const Layout = memo(() => {
 
         <Widget />
       </main>
+
+      <ModelSettings className={s.modelSettings} />
+      <ModelSettingsSwitch className={s.modelSettingsSwitch} />
     </Page>
   );
 });

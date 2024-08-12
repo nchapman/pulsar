@@ -20,6 +20,13 @@ export interface ChatMsg {
   currentOption?: number;
 }
 
+export interface ModelSettings {
+  temp: number;
+  topP: number;
+  maxLength: number;
+  stopTokens: string[];
+}
+
 export interface Chat {
   id: Id;
   title: string;
@@ -27,6 +34,7 @@ export interface Chat {
   isPinned: boolean;
   isArchived: boolean;
   model: string;
+  modelSettings?: ModelSettings;
   createdAt: number;
   updatedAt: number;
 }
@@ -113,6 +121,7 @@ export class ChatsRepository {
       'title',
       'messages',
       'model',
+      'modelSettings',
       'createdAt',
       'updatedAt',
       'isArchived',

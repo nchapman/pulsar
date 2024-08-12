@@ -3,10 +3,13 @@ import { combine, createEffect, createEvent, createStore, sample } from 'effecto
 import { goToChat } from '@/app/routes';
 import { chatsRepository } from '@/db';
 import type { Chat, ChatMsg } from '@/db/chat';
+import { ModelSettings } from '@/db/chat/chat.repository.ts';
+import { modelManager } from '@/entities/model';
 import { FileData } from '@/features/upload-file';
 import { suid } from '@/shared/lib/func';
 
 import { stream } from '../api/chatApi.ts';
+import { defaultModelSettings } from '../consts/defaultModelSettings';
 
 const chatEvt = {
   setChatId: createEvent<Id>(),
@@ -53,12 +56,15 @@ $messages.idsList.reset(chatEvt.startNew);
 const NEW_CHAT_TITLE = 'New chat';
 
 async function createDBChat() {
+  if (!modelManager.currentModel) return;
+
   const newChat = await chatsRepository.create({
     title: NEW_CHAT_TITLE,
     messages: [],
-    model: 'pulsar',
+    model: modelManager.currentModel,
     isArchived: false,
     isPinned: false,
+    modelSettings: defaultModelSettings,
   });
 
   chatEvt.setChatId(newChat.id);
@@ -97,13 +103,23 @@ const createAssistantMsg = createEffect<ChatMsg, ChatMsg>((userMessage) => ({
 
 const streamMsg = createEffect<{ chatId: Id; msgId: Id; messages: ChatMsg[] }, void>(
   async ({ msgId, chatId, messages }) => {
-    stream({
-      messages: messages.slice(0, -1).map((msg) => msg),
-      onTextChunkReceived: (chunk) => streamEvt.addTextChunk({ chunk, msgId }),
-      onStreamStart: () => streamEvt.start({ msgId }),
-      onTitleUpdate: (title) => streamEvt.updateTitle({ title, chatId }),
-      onStreamEnd: streamEvt.finish,
-    });
+    const chatSettings = $chat.data.getState()?.modelSettings || defaultModelSettings;
+
+    stream(
+      {
+        messages: messages.slice(0, -1).map((msg) => msg),
+        onTextChunkReceived: (chunk) => streamEvt.addTextChunk({ chunk, msgId }),
+        onStreamStart: () => streamEvt.start({ msgId }),
+        onTitleUpdate: (title) => streamEvt.updateTitle({ title, chatId }),
+        onStreamEnd: streamEvt.finish,
+      },
+      {
+        topP: chatSettings.topP || defaultModelSettings.topP,
+        temp: chatSettings.temp || defaultModelSettings.temp,
+        maxPredictLen: chatSettings.maxLength || defaultModelSettings.maxLength,
+        stopTokens: chatSettings.stopTokens || defaultModelSettings.stopTokens,
+      }
+    );
   }
 );
 
@@ -274,5 +290,47 @@ export const isArchivedChat = $chat.data.map((i) => i?.isArchived, { skipVoid: f
 
 export const { askQuestion, startNew: startNewChat, switch: switchChat } = chatEvt;
 
+// start new chat on model change
+sample({
+  clock: modelManager.state.$currentModel,
+  target: startNewChat,
+});
+
+// switch model on chat switch
+sample({
+  clock: $chat.id,
+  source: $chat.data,
+  fn: (chat) => modelManager.switchModel(chat!.model),
+  filter: (chat) => chat !== null,
+});
+
 switchChat.watch(goToChat);
 startNewChat.watch(goToChat);
+
+// model settings
+export const $modelSettings = $chat.data.map((chat) => chat?.modelSettings || defaultModelSettings);
+
+export const setModelSettings = createEvent<Partial<ModelSettings>>();
+export const resetModelSettings = setModelSettings.prepend(() => defaultModelSettings);
+
+export async function saveModelSettingsForChat() {
+  const chatData = $chat.data.getState();
+
+  if (!chatData) return;
+
+  await chatsRepository.update(chatData.id, { modelSettings: chatData.modelSettings });
+}
+
+$chat.data.on(setModelSettings, (chat, settings) => {
+  if (!chat) return chat;
+
+  const newSettings = {
+    ...(chat.modelSettings || defaultModelSettings),
+    ...settings,
+  };
+
+  return {
+    ...chat,
+    modelSettings: newSettings,
+  } as Chat;
+});

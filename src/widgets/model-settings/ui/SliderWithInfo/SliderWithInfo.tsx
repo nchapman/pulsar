@@ -19,16 +19,25 @@ interface Props {
   description: string;
 }
 
+function roundToOne10(value: number) {
+  return Number(value.toFixed(1));
+}
+
 export const SliderWithInfo = memo((props: Props) => {
   const { className, min, max, step, onChange, defaultVal, value, title, description } = props;
 
   const handleChange = (e: any) => {
     const { value } = e.target;
     if (Number.isNaN(Number(value)) || value === '') {
-      console.log('here');
-      setTimeout(() => onChange(props.value), 1000);
+      setTimeout(() => onChange(props.value), 100);
       return;
     }
+    if ((value * 10) % 1 !== 0) {
+      console.log(Number(value), roundToOne10(Number(value)));
+      setTimeout(() => onChange(roundToOne10(Number(value))), 100);
+      return;
+    }
+
     onChange(Number(value));
   };
 
@@ -48,7 +57,7 @@ export const SliderWithInfo = memo((props: Props) => {
             iconSize={16}
           />
 
-          <input value={value} className={s.value} type="number" onChange={handleChange} />
+          <input disabled value={value} className={s.value} type="number" onChange={handleChange} />
         </div>
       </div>
 

@@ -3,7 +3,7 @@ import { memo } from 'preact/compat';
 
 import CloseIcon from '@/shared/assets/icons/close.svg';
 import { classNames } from '@/shared/lib/func';
-import { Button, RightPanel, Text } from '@/shared/ui';
+import { Button, RightPanel, showToast, Text } from '@/shared/ui';
 import { resetModelSettings, saveModelSettingsForChat } from '@/widgets/chat';
 import { ModelSettingsMenu } from '@/widgets/model-settings/ui/ModelSettingsMenu/ModelSettingsMenu.tsx';
 
@@ -19,6 +19,15 @@ export const ModelSettings = memo((props: Props) => {
   const { className } = props;
 
   const isOpened = useUnit($modelSettingsOpened);
+
+  const handleSave = async () => {
+    await saveModelSettingsForChat();
+    showToast({
+      title: 'Settings saved',
+      type: 'success',
+      message: 'Model settings for the current chat have been successfully saved',
+    });
+  };
 
   return (
     <RightPanel open={isOpened} className={classNames(s.modelSettings, [className])}>
@@ -50,7 +59,7 @@ export const ModelSettings = memo((props: Props) => {
         <Button onClick={() => resetModelSettings()} className={s.reset} variant="secondary">
           Reset to default settings
         </Button>
-        <Button onClick={() => saveModelSettingsForChat()} className={s.saveBtn} variant="primary">
+        <Button onClick={handleSave} className={s.saveBtn} variant="primary">
           Save for this chat
         </Button>
       </div>

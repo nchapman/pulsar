@@ -5,10 +5,6 @@
   justify-content: space-between;
 }
 
-.icon {
-  display: flex;
-}
-
 .value {
   color: var(--text-primary);
   font-size: 14px;
@@ -34,8 +30,19 @@
   -moz-appearance: textfield;
 }
 
-.info-left {
+.right {
   display: flex;
   align-items: center;
   gap: 4px;
+}
+
+.reset {
+  opacity: 0;
+  pointer-events: none;
+  border-radius: 8px;
+}
+
+.slider-with-info:hover .reset {
+  opacity: 1;
+  pointer-events: auto;
 }

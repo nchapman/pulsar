@@ -1,9 +1,10 @@
 import { memo } from 'preact/compat';
 
-import InfoIcon from '@/shared/assets/icons/info-circle.svg';
+import RefreshIcon from '@/shared/assets/icons/refresh.svg';
 import { classNames } from '@/shared/lib/func';
-import { Icon, Slider, Text, Tooltip } from '@/shared/ui';
+import { Button, Slider } from '@/shared/ui';
 
+import { SettingTitle } from '../SettingTitle/SettingTitle.tsx';
 import s from './SliderWithInfo.module.scss';
 
 interface Props {
@@ -13,12 +14,13 @@ interface Props {
   step: number;
   value: number;
   onChange: (value: number) => void;
-  name: string;
+  defaultVal: number;
+  title: string;
   description: string;
 }
 
 export const SliderWithInfo = memo((props: Props) => {
-  const { className, min, max, step, onChange, value, name, description } = props;
+  const { className, min, max, step, onChange, defaultVal, value, title, description } = props;
 
   const handleChange = (e: any) => {
     const { value } = e.target;
@@ -30,20 +32,24 @@ export const SliderWithInfo = memo((props: Props) => {
     onChange(Number(value));
   };
 
+  const handleReset = () => onChange(defaultVal);
+
   return (
     <div className={classNames(s.sliderWithInfo, [className])}>
       <div className={s.info}>
-        <div className={s.infoLeft}>
-          <Text c="primary" s={14} w="medium">
-            {name}
-          </Text>
+        <SettingTitle title={title} description={description} />
 
-          <Tooltip variant="secondary" text={description} position="topLeft">
-            <Icon className={s.icon} size={16} svg={InfoIcon} />
-          </Tooltip>
+        <div className={s.right}>
+          <Button
+            className={s.reset}
+            variant="secondary"
+            onClick={handleReset}
+            icon={RefreshIcon}
+            iconSize={16}
+          />
+
+          <input value={value} className={s.value} type="number" onChange={handleChange} />
         </div>
-
-        <input value={value} className={s.value} type="number" onChange={handleChange} />
       </div>
 
       <Slider max={max} min={min} step={step} value={value} onChange={onChange} />

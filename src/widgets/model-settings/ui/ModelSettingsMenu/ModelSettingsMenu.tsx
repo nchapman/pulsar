@@ -2,9 +2,11 @@ import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
 
 import { classNames } from '@/shared/lib/func';
-import { SliderWithInfo } from '@/shared/ui';
-import { $modelSettings, setModelSettings } from '@/widgets/chat';
+import { $modelSettings, defaultModelSettings, setModelSettings } from '@/widgets/chat';
+import { modelSettingsContent } from '@/widgets/model-settings/consts/model-settings-content.ts';
 
+import { SliderWithInfo } from '../SliderWithInfo/SliderWithInfo';
+import { StopTokens } from '../StopTokens/StopTokens.tsx';
 import s from './ModelSettingsMenu.module.scss';
 
 interface Props {
@@ -17,24 +19,27 @@ const sliders = [
     min: 0,
     max: 24567,
     step: 1,
-    label: 'Max Tokens',
-    description: '',
+    label: modelSettingsContent.maxLength.label,
+    description: modelSettingsContent.maxLength.description,
+    defaultVal: defaultModelSettings.maxLength,
   },
   {
     name: 'temp',
     min: 0,
     max: 2,
     step: 0.1,
-    label: 'Temperature',
-    description: '',
+    label: modelSettingsContent.temp.label,
+    description: modelSettingsContent.temp.description,
+    defaultVal: defaultModelSettings.temp,
   },
   {
     name: 'topP',
     min: 0,
     max: 1,
     step: 0.1,
-    label: 'Top P',
-    description: '',
+    label: modelSettingsContent.topP.label,
+    description: modelSettingsContent.topP.description,
+    defaultVal: defaultModelSettings.topP,
   },
 ] as const;
 
@@ -53,9 +58,15 @@ export const ModelSettingsMenu = memo((props: Props) => {
           onChange={(v) => setModelSettings({ [i.name]: v })}
           value={modelSettings[i.name]}
           description={i.description}
-          name={i.label}
+          title={i.label}
+          defaultVal={i.defaultVal}
         />
       ))}
+
+      <StopTokens
+        onChange={(v) => setModelSettings({ stopTokens: v })}
+        value={modelSettings.stopTokens}
+      />
     </div>
   );
 });

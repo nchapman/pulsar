@@ -24,7 +24,6 @@ export * from './RightPanel/RightPanel';
 export * from './Select/Select';
 export * from './Skeleton/Skeleton';
 export * from './Slider/Slider';
-export * from './SliderWithInfo/SliderWithInfo';
 export * from './Spinner/Spinner';
 export * from './Tabs/Tabs';
 export * from './Text/Text';

@@ -29,6 +29,7 @@ const streamEvt = {
 export const $chat = {
   id: createStore<Id | null>(null),
   data: createStore<Chat | null>(null),
+  tempModelSettings: createStore<ModelSettings>(defaultModelSettings),
 };
 
 // Change chatId on switchChat
@@ -64,7 +65,7 @@ async function createDBChat() {
     model: modelManager.currentModel,
     isArchived: false,
     isPinned: false,
-    modelSettings: defaultModelSettings,
+    modelSettings: $chat.tempModelSettings.getState(),
   });
 
   chatEvt.setChatId(newChat.id);
@@ -114,10 +115,10 @@ const streamMsg = createEffect<{ chatId: Id; msgId: Id; messages: ChatMsg[] }, v
         onStreamEnd: streamEvt.finish,
       },
       {
-        topP: chatSettings.topP || defaultModelSettings.topP,
-        temp: chatSettings.temp || defaultModelSettings.temp,
-        maxPredictLen: chatSettings.maxLength || defaultModelSettings.maxLength,
-        stopTokens: chatSettings.stopTokens || defaultModelSettings.stopTokens,
+        topP: chatSettings.topP,
+        temp: chatSettings.temp,
+        maxPredictLen: chatSettings.maxLength,
+        stopTokens: chatSettings.stopTokens,
       }
     );
   }
@@ -308,7 +309,11 @@ switchChat.watch(goToChat);
 startNewChat.watch(goToChat);
 
 // model settings
-export const $modelSettings = $chat.data.map((chat) => chat?.modelSettings || defaultModelSettings);
+export const $modelSettings = combine(
+  $chat.data,
+  $chat.tempModelSettings,
+  (chat, tempSettings) => chat?.modelSettings || tempSettings
+);
 
 export const setModelSettings = createEvent<Partial<ModelSettings>>();
 export const resetModelSettings = setModelSettings.prepend(() => defaultModelSettings);
@@ -334,3 +339,14 @@ $chat.data.on(setModelSettings, (chat, settings) => {
     modelSettings: newSettings,
   } as Chat;
 });
+
+// set temp settings if new chat
+sample({
+  source: { chat: $chat.data, tempSettings: $chat.tempModelSettings },
+  clock: setModelSettings,
+  target: $chat.tempModelSettings,
+  fn: ({ tempSettings }, settings) => ({ ...tempSettings, ...settings }),
+  filter: ({ chat }) => !chat,
+});
+
+$chat.tempModelSettings.reset(startNewChat);

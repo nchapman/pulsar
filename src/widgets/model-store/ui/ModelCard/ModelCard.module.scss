@@ -36,7 +36,7 @@
 }
 
 .icon {
-  color: var(--text-tertiary);
+  color: var(--text-secondary);
 }
 
 .stat {
@@ -58,16 +58,14 @@
 .publisher {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   height: 40px;
   width: 100%;
   border-radius: 4px;
-
-  border: 1px solid var(--border-light);
-  background: var(--sidebar-background-secondary);
 }
 
 .tags {
   display: flex;
   gap: 8px;
+  justify-content: flex-end;
 }

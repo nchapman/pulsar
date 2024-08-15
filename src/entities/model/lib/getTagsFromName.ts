@@ -2,6 +2,7 @@ import { Tag } from '@/entities/model/types/tag.type.ts';
 
 export function getTagsFromName(name: string): Tag[] {
   const tags: Tag[] = [];
+  console.log(name);
 
   const [type] = name.match(/gguf/i) || [];
   if (type) tags.push({ value: `GGUF`, type: 'type' });

@@ -8,9 +8,10 @@
   gap: 20px;
   border: 1px solid transparent;
   max-width: 100%;
+  transition: background-color 0.2s;
 
   &:hover:not(.info) {
-    border-color: var(--link-hover);
+    background-color: var(--main-background-tertiary);
     cursor: pointer;
   }
 }

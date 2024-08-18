@@ -55,6 +55,10 @@ export const InitialModelDownload = memo((props: Props) => {
 
   const loadingMmp = downloadingData?.status === 'queued';
 
+  const handleLoadTestModel = () => {
+    downloadsManager.addTestModel();
+  };
+
   return (
     <div className={classNames(s.initialModelDownload, [className])}>
       <Text className={s.requiredTitle} c="primary" w="bold" s={18}>
@@ -80,6 +84,12 @@ export const InitialModelDownload = memo((props: Props) => {
           </Button>
         )}
       </div>
+
+      {import.meta.env.DEV && (
+        <Button variant="secondary" className={s.test} onClick={handleLoadTestModel}>
+          Load test model
+        </Button>
+      )}
     </div>
   );
 });

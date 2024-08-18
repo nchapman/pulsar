@@ -40,4 +40,3 @@ scripts/manifest
 *storybook.log
 
 src-tauri/.vscode
-src-tauri/sample_models/*.gguf

@@ -1,21 +1,17 @@
-import { resourceDir } from '@tauri-apps/api/path';
 import { useUnit } from 'effector-react';
 import { memo, useLayoutEffect } from 'preact/compat';
 import { useState } from 'preact/hooks';
 
-import { curatedModels, modelManager } from '@/entities/model';
+import { curatedModels } from '@/entities/model';
 import { downloadsManager } from '@/entities/model/managers/downloads-manager.ts';
 import DownloadIcon from '@/shared/assets/icons/download.svg';
 import { classNames } from '@/shared/lib/func';
-import { logi } from '@/shared/lib/Logger';
 import { changeTheme } from '@/shared/theme';
 import { Button, Icon, Progress, Text } from '@/shared/ui';
 import { startFileDownload } from '@/widgets/model-store/lib/startFileDownload.ts';
 
 import { ModelCard } from '../ModelCard/ModelCard';
 import s from './InitialModelDownload.module.scss';
-
-const LOG_TAG = 'InitialModelDownload';
 
 interface Props {
   className?: string;
@@ -36,31 +32,6 @@ export const InitialModelDownload = memo((props: Props) => {
   useLayoutEffect(() => {
     changeTheme('dark');
   }, []);
-
-  const loadEvolvedSeeker = async () => {
-    try {
-      logi(LOG_TAG, 'Loading EvolvedSeeker model');
-      const resourceDirPath = await resourceDir();
-      logi(LOG_TAG, resourceDirPath);
-      await modelManager.addModel({
-        dto: {
-          file: {
-            name: 'EvolvedSeeker',
-            size: 0,
-            isGguf: true,
-            fitsInMemory: true,
-            isMmproj: false,
-          },
-        },
-        filePath: `sample_models/evolvedseeker_1_3.Q2_K.gguf`,
-        type: 'llm',
-        modelName: 'EvolvedSeeker',
-      });
-      logi(LOG_TAG, 'EvolvedSeeker model copied');
-    } catch (e) {
-      logi(LOG_TAG, `Failed to load EvolvedSeeker model ${e}`);
-    }
-  };
 
   const handleModelDownload = async () => {
     const res = await startFileDownload(llava.modelName, llava.fileName);
@@ -110,12 +81,6 @@ export const InitialModelDownload = memo((props: Props) => {
           <Button onClick={handleModelDownload} variant="primary" loading={!!downloadId}>
             <Icon svg={DownloadIcon} />
             Download model
-          </Button>
-        )}
-
-        {import.meta.env.DEV && (
-          <Button onClick={loadEvolvedSeeker} variant="primary">
-            Load EvolvedSeeker Test Model
           </Button>
         )}
       </div>

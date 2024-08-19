@@ -41,6 +41,10 @@
 
   border: 1px solid var(--border-light);
   background: var(--main-background-quaternary);
+
+  &:not(:last-child) {
+    margin-bottom: 12px;
+  }
 }
 
 .model-header {

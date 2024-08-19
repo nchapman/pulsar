@@ -1,3 +1,4 @@
+import { resolve } from '@tauri-apps/api/path';
 import { createEvent, createStore } from 'effector';
 
 import { APP_DIRS } from '@/app/consts/app.const.ts';
@@ -327,7 +328,6 @@ class DownloadsManager {
   }
 
   private addToQueue(id: Id) {
-    console.log(this.queue, this.current);
     if (!this.queue.length && !this.current) {
       this.current = id;
       this.start(id);
@@ -350,6 +350,83 @@ class DownloadsManager {
     this.current = nextId;
 
     this.start(nextId);
+  }
+
+  async addTestModel() {
+    const modelDto: ModelDto = {
+      name: 'test-model',
+      author: 'test',
+      llms: ['evolvedseeker_1_3.Q2_K.gguf'],
+      mmps: [],
+      task: 'test',
+      huggingFaceId: 'none',
+    };
+
+    await this.modelManager.updateOrCreateModel(modelDto);
+
+    const modelFileData: Pick<DownloadItem, 'dto' | 'name' | 'type' | 'remoteUrl' | 'modelName'> = {
+      name: modelDto.llms[0],
+      type: 'llm',
+      modelName: modelDto.name,
+      remoteUrl: 'none',
+      dto: {
+        file: {
+          name: modelDto.llms[0],
+          size: 134,
+          isGguf: true,
+          isMmproj: false,
+          fitsInMemory: true,
+        },
+      },
+    };
+
+    if (this.modelManager.availableLlms.includes(modelFileData.name)) {
+      console.log('Llm already downloaded, skipping...');
+      return;
+    }
+
+    // save download to the db
+    const download = await this.downloadsRepository.create({
+      ...modelFileData,
+      downloadingData: {
+        downloadId: getRandomInt(),
+        progress: modelFileData.dto.file.size,
+        total: modelFileData.dto.file.size,
+        percent: 100,
+        isFinished: true,
+        isPaused: true,
+        status: 'finished',
+      },
+    });
+
+    // save download to the state
+    this.downloadsIdsList = [download.id, ...this.#downloadsIdsList];
+    this.downloadsData = { ...this.downloadsData, [download.id]: download };
+
+    const { type, dto, modelName, id } = this.downloadsData[download.id];
+
+    const filePath = await resolve('tests', modelFileData.name);
+
+    dto.file.downloadId = id;
+
+    const modelFile = await this.modelManager.addModel({
+      type,
+      filePath,
+      dto,
+      modelName,
+    });
+
+    // save to the db
+    await this.updateDownloadData(id, {
+      downloadingData: {
+        ...this.downloadsData[id].downloadingData,
+        isFinished: true,
+        status: 'finished',
+      },
+      modelFileId: modelFile.id,
+    });
+
+    await this.modelManager.switchModel(modelFile.id);
   }
 
   // getters/setters

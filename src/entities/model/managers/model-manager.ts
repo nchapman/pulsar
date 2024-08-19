@@ -1,7 +1,7 @@
 import { createEvent, createStore } from 'effector';
 
 import { initAppFolders } from '@/app/lib/initAppFolders.ts';
-import { modelFilesRepository, modelsRepository } from '@/db';
+import { downloadsRepository, modelFilesRepository, modelsRepository } from '@/db';
 import { Model, ModelsRepository } from '@/db/model';
 import { ModelFile, ModelFilesRepository, ModelFileType } from '@/db/model-file';
 import { ModelDto } from '@/entities/model';
@@ -135,6 +135,8 @@ class ModelManager {
 
       this.userSettings.set('defaultModel', dbModel.id);
       this.hasNoModels = false;
+
+      // TODO: delete downloads if missing model
     }
 
     return dbModel;
@@ -162,6 +164,8 @@ class ModelManager {
 
     // delete model-file from the disk
     await deleteModel(model.data.file.name);
+
+    await downloadsRepository.remove(model.data.file.downloadId!);
 
     this.updateModelIdMaps();
   }
@@ -222,6 +226,7 @@ class ModelManager {
     }
 
     if (modelFile.type !== 'llm') {
+      console.log('Model type:', modelFile.type);
       throw new Error('Model type not supported');
     }
 
@@ -260,6 +265,7 @@ class ModelManager {
     await promiseAll(models, async (model) => {
       if (availableModels.includes(model.data.file.name)) return;
       await this.modelFilesRepository.remove(model.id);
+      await downloadsRepository.remove(model.data.file.downloadId!);
     });
 
     models = await this.modelFilesRepository.getAll();

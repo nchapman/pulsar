@@ -39,10 +39,6 @@ export const ModelsList = memo((props: Props) => {
 
   const sorting = useUnit($modelStoreState.modelSorting);
 
-  if (loading) {
-    return <Text>Searching...</Text>;
-  }
-
   return (
     <div className={classNames(s.modelsList, [className, s[view]])}>
       <div className={s.header}>
@@ -61,9 +57,11 @@ export const ModelsList = memo((props: Props) => {
       </div>
 
       <ScrollArea height={all ? '400px' : 'calc(100vh - 364px)'} className={s.list}>
-        {models.map((i) => (
-          <ModelCard view={view} model={i} />
-        ))}
+        {loading ? (
+          <Text className={s.searching}>Searching...</Text>
+        ) : (
+          models.map((i) => <ModelCard view={view} model={i} />)
+        )}
       </ScrollArea>
     </div>
   );

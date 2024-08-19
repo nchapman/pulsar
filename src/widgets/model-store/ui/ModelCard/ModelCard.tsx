@@ -58,7 +58,7 @@ export const ModelCard = memo((props: Props) => {
           {stats.map((i) => (
             <div className={s.stat}>
               <Icon className={s.icon} svg={i.icon} />
-              <Text s={14} c="tertiary">
+              <Text s={14} c="secondary">
                 {i.label}
               </Text>
             </div>

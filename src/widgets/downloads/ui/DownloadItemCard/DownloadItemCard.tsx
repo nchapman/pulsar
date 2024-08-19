@@ -52,12 +52,14 @@ export const DownloadItemCard = memo((props: Props) => {
   };
 
   function getWidget() {
-    if (downloadingData.isFinished && !isMmproj && isGguf) {
+    if (downloadingData.isFinished) {
       return (
         <div className={s.finished}>
-          <Button className={s.startChat} variant="primary" onClick={handleStartChat}>
-            Start Chat
-          </Button>
+          {!isMmproj && isGguf && (
+            <Button className={s.startChat} variant="primary" onClick={handleStartChat}>
+              Start Chat
+            </Button>
+          )}
           <Button variant="secondary" className={s.deleteBtn} onClick={handleDeleteModel}>
             <Icon size={12} svg={RemoveIcon} />
           </Button>

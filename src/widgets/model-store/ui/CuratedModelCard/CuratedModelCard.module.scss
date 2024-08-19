@@ -3,9 +3,10 @@
   background: var(--main-background-secondary);
   border-radius: 16px;
   border: 1px solid transparent;
+  transition: background-color 0.2s;
 
   &:hover:not(.info) {
-    border-color: var(--link-hover);
+    background-color: var(--main-background-tertiary);
     cursor: pointer;
   }
 }

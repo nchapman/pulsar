@@ -85,11 +85,9 @@ export const InitialModelDownload = memo((props: Props) => {
         )}
       </div>
 
-      {import.meta.env.DEV && (
         <Button variant="secondary" className={s.test} onClick={handleLoadTestModel}>
           Load test model
         </Button>
-      )}
     </div>
   );
 });

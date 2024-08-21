@@ -1,4 +1,5 @@
-import { memo, ReactNode } from 'preact/compat';
+import { memo, ReactNode, useLayoutEffect } from 'preact/compat';
+import { useRef } from 'preact/hooks';
 import Scrollbars from 'react-custom-scrollbars';
 
 import { classNames } from '@/shared/lib/func';
@@ -11,10 +12,20 @@ interface Props {
   children: ReactNode;
   height: string;
   width?: string;
+  onScroll?: (e: any) => void;
+  initialScroll?: number;
 }
 
 export const ScrollArea = memo((props: Props) => {
-  const { className, children, height, wrapperClassName, width } = props;
+  const { className, children, onScroll, initialScroll, height, wrapperClassName, width } = props;
+  const ref = useRef<Scrollbars>(null);
+
+  useLayoutEffect(() => {
+    if (initialScroll && ref.current) {
+      ref.current.scrollTop(initialScroll);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div
@@ -22,6 +33,8 @@ export const ScrollArea = memo((props: Props) => {
       style={{ height: `calc(${height})`, width }}
     >
       <Scrollbars
+        ref={ref}
+        onScroll={onScroll}
         renderThumbVertical={(props) => (
           <div {...props} className={classNames(s.scrollThumb, ['thumb-vertical'])} />
         )}

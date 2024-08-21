@@ -5,7 +5,10 @@ import { HuggingFaceModel } from '@/entities/model/types/hugging-face-model.ts';
 import { classNames } from '@/shared/lib/func';
 import { Icon, Select, Text } from '@/shared/ui';
 import { ScrollArea } from '@/shared/ui/ScrollArea/ScrollArea.tsx';
-import { $modelStoreState } from '@/widgets/model-store/model/model-store.model.ts';
+import {
+  $modelStoreState,
+  modelStoreEvents,
+} from '@/widgets/model-store/model/model-store.model.ts';
 
 import { ModelSorting, ModelSortingData } from '../../types/model-sorting.ts';
 import { ModelCard } from '../ModelCard/ModelCard.tsx';
@@ -39,6 +42,11 @@ export const ModelsList = memo((props: Props) => {
 
   const sorting = useUnit($modelStoreState.modelSorting);
 
+  const handleScroll = (e: any) => {
+    if (all) return;
+    modelStoreEvents.setListScroll(e.target.scrollTop);
+  };
+
   return (
     <div className={classNames(s.modelsList, [className, s[view]])}>
       <div className={s.header}>
@@ -56,7 +64,12 @@ export const ModelsList = memo((props: Props) => {
         />
       </div>
 
-      <ScrollArea height={all ? '400px' : 'calc(100vh - 364px)'} className={s.list}>
+      <ScrollArea
+        onScroll={handleScroll}
+        height={all ? '400px' : 'calc(100vh - 364px)'}
+        className={s.list}
+        initialScroll={$modelStoreState.listScroll.getState()}
+      >
         {loading ? (
           <Text className={s.searching}>Searching...</Text>
         ) : (

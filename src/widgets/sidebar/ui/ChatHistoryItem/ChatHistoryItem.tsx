@@ -4,6 +4,7 @@ import { useUnit } from 'effector-react';
 import { FC, memo } from 'preact/compat';
 import { useCallback, useEffect, useState } from 'preact/hooks';
 
+import { $currRoute } from '@/app/routes';
 import { chatsRepository } from '@/db';
 import { ChatModel } from '@/db/chat';
 import { chatsMock } from '@/db/chat/chats.mock.ts';
@@ -28,11 +29,14 @@ const $shownPopoverId = createStore<string | null>(null);
 const changeShownPopoverId = createEvent<string | null>();
 $shownPopoverId.on(changeShownPopoverId, (_, id) => id);
 
+const $isChat = $currRoute.map((route) => route === 'chat');
+
 const ChatHistoryItem = (props: Props) => {
   const { className, chat, id, isCurrent, unavailable } = props;
   const { isOn: isPopoverShown, off: hidePopover, on: openPopover } = useToggle();
   const [newTitle, setNewTitle] = useState(chat?.title);
   const { isOn: isRenaming, toggle: toggleRename, off: stopRenaming } = useToggle();
+  const isChat = useUnit($isChat);
 
   const shownPopoverId = useUnit($shownPopoverId);
 
@@ -67,7 +71,7 @@ const ChatHistoryItem = (props: Props) => {
   return (
     <Button
       variant="clear"
-      active={(isCurrent || isPopoverShown) && !isRenaming}
+      active={(isCurrent || isPopoverShown) && !isRenaming && isChat}
       notActive={isRenaming}
       onClick={handleChatClick}
       className={classNames(s.chatHistoryItem, [className], { [s.unavailable]: unavailable })}

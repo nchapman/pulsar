@@ -4,6 +4,7 @@
   @include scrollbar;
   scroll-behavior: smooth;
   position: relative;
+  padding-top: 16px;
 
   * {
     overflow-anchor: none;

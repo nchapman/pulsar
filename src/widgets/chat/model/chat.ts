@@ -318,10 +318,28 @@ export const $modelSettings = combine(
 export const setModelSettings = createEvent<Partial<ModelSettings>>();
 export const resetModelSettings = setModelSettings.prepend(() => defaultModelSettings);
 
+function validateModelSettings(settings: ModelSettings) {
+  const { temp, topP, maxLength } = settings;
+
+  if (Number.isNaN(topP) || topP < 0 || topP > 1) {
+    throw new Error('Top P value should be between 0 and 1');
+  }
+
+  if (Number.isNaN(temp) || temp < 0 || temp > 2) {
+    throw new Error('Temperature value should be between 0 and 1');
+  }
+
+  if (Number.isNaN(maxLength) || maxLength < 0) {
+    throw new Error('Max length value should be greater than 0');
+  }
+}
+
 export async function saveModelSettingsForChat() {
   const chatData = $chat.data.getState();
 
-  if (!chatData) return;
+  if (!chatData || !chatData.modelSettings) return;
+  console.log(chatData.modelSettings);
+  validateModelSettings(chatData.modelSettings);
 
   await chatsRepository.update(chatData.id, { modelSettings: chatData.modelSettings });
 }

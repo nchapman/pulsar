@@ -22,12 +22,21 @@ export const ModelSettings = memo((props: Props) => {
   const chatId = useUnit($chat.id);
 
   const handleSave = async () => {
-    await saveModelSettingsForChat();
-    showToast({
-      title: 'Settings saved',
-      type: 'success',
-      message: 'Model settings for the current chat have been successfully saved',
-    });
+    try {
+      await saveModelSettingsForChat();
+
+      showToast({
+        title: 'Settings saved',
+        type: 'success',
+        message: 'Model settings for the current chat have been successfully saved',
+      });
+    } catch (e: any) {
+      showToast({
+        title: 'Settings not saved',
+        type: 'error',
+        message: e.message,
+      });
+    }
   };
 
   return (

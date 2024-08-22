@@ -26,6 +26,11 @@ export const SliderWithInfo = memo((props: Props) => {
     const { value } = e.target;
     if (value[value.length - 1] === '.') return;
 
+    if (!value) {
+      setTimeout(() => onChange(props.defaultVal));
+      return;
+    }
+
     const numericValue = parseFloat(value);
 
     if (numericValue < min || numericValue > max) {

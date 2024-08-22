@@ -193,16 +193,6 @@ class DownloadsManager {
 
     const dataToUpd: Partial<DownloadItem> = { downloadingData };
 
-    // if (isNew) {
-    //   console.log(
-    //     'is HG size similar to download size',
-    //     download.dto.file.size === total,
-    //     download.dto.file.size,
-    //     total
-    //   );
-    //   // dataToUpd.dto = { ...download.dto, file: { ...download.dto.file, size: total } };
-    // }
-
     await this.updateDownloadData(id, dataToUpd);
 
     if (progress === total) {

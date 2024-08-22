@@ -15,13 +15,19 @@ function getModelFileNames(files: ModelFileData[], type: ModelFileType) {
     .map((i) => i.name);
 }
 
+function getType(isGguf: boolean, isMmproj: boolean) {
+  if (!isGguf) return 'other';
+
+  return isMmproj ? 'mmp' : 'llm';
+}
+
 export async function startFileDownload(modelName: string, fileName: string) {
   const { modelData, fileData, files } = await getModelFileInfo(modelName, fileName);
 
   const { author, id, task = '' } = modelData;
   const { isGguf, isMmproj } = fileData;
 
-  const type = isGguf && isMmproj ? 'mmp' : 'llm';
+  const type = getType(isGguf, isMmproj);
 
   const modelDto = {
     author,

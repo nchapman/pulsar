@@ -123,8 +123,6 @@ class ModelManager {
       type,
     });
 
-    console.log(dto, type);
-
     // save model-file to the list
     this.modelFiles = { ...this.modelFiles, [dbModel.id]: dbModel };
     this.updateModelIdMaps();

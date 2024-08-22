@@ -1,5 +1,7 @@
+import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
 
+import { $isChat } from '@/app/routes';
 import { classNames } from '@/shared/lib/func';
 import { Button } from '@/shared/ui';
 
@@ -13,6 +15,9 @@ interface Props {
 
 export const ModelSettingsSwitch = memo((props: Props) => {
   const { className } = props;
+  const isChat = useUnit($isChat);
+
+  if (!isChat) return null;
 
   return (
     <Button

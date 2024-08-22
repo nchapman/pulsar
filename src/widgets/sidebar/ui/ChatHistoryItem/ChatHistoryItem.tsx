@@ -4,7 +4,7 @@ import { useUnit } from 'effector-react';
 import { FC, memo } from 'preact/compat';
 import { useCallback, useEffect, useState } from 'preact/hooks';
 
-import { $currRoute } from '@/app/routes';
+import { $isChat } from '@/app/routes';
 import { chatsRepository } from '@/db';
 import { ChatModel } from '@/db/chat';
 import { chatsMock } from '@/db/chat/chats.mock.ts';
@@ -28,8 +28,6 @@ interface Props {
 const $shownPopoverId = createStore<string | null>(null);
 const changeShownPopoverId = createEvent<string | null>();
 $shownPopoverId.on(changeShownPopoverId, (_, id) => id);
-
-const $isChat = $currRoute.map((route) => route === 'chat');
 
 const ChatHistoryItem = (props: Props) => {
   const { className, chat, id, isCurrent, unavailable } = props;

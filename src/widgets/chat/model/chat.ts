@@ -317,6 +317,11 @@ export const $modelSettings = combine(
 
 export const setModelSettings = createEvent<Partial<ModelSettings>>();
 export const resetModelSettings = setModelSettings.prepend(() => defaultModelSettings);
+export const $modelSettingsDisabled = createStore(true);
+
+const setModelSettingsDisabled = createEvent<boolean>();
+$modelSettingsDisabled.on(setModelSettings, () => false);
+$modelSettingsDisabled.on(setModelSettingsDisabled, (_, val) => val);
 
 function validateModelSettings(settings: ModelSettings) {
   const { temp, topP, maxLength } = settings;
@@ -336,9 +341,9 @@ function validateModelSettings(settings: ModelSettings) {
 
 export async function saveModelSettingsForChat() {
   const chatData = $chat.data.getState();
+  setModelSettingsDisabled(true);
 
   if (!chatData || !chatData.modelSettings) return;
-  console.log(chatData.modelSettings);
   validateModelSettings(chatData.modelSettings);
 
   await chatsRepository.update(chatData.id, { modelSettings: chatData.modelSettings });

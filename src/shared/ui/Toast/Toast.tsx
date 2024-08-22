@@ -2,6 +2,7 @@ import { memo, ReactNode } from 'preact/compat';
 import { toast } from 'react-toastify';
 
 import SuccessIcon from '@/shared/assets/icons/check-circle.svg';
+import ErrorIcon from '@/shared/assets/icons/close.svg';
 import { classNames } from '@/shared/lib/func';
 import { Icon, Text } from '@/shared/ui';
 
@@ -14,12 +15,18 @@ interface Props {
   message: ReactNode;
 }
 
+const iconByType = {
+  success: SuccessIcon,
+  error: ErrorIcon,
+  info: SuccessIcon,
+};
+
 const Toast = memo((props: Props) => {
-  const { className } = props;
+  const { className, type } = props;
 
   return (
-    <div className={classNames(s.toast, [className])}>
-      <Icon svg={SuccessIcon} className={s.icon} />
+    <div className={classNames(s.toast, [className, s[type]])}>
+      <Icon svg={iconByType[type]} className={s.icon} />
 
       <div className={s.content}>
         <Text s={14} w="medium" c="primary">

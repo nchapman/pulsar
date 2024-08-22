@@ -4,7 +4,12 @@ import { memo } from 'preact/compat';
 import CloseIcon from '@/shared/assets/icons/close.svg';
 import { classNames } from '@/shared/lib/func';
 import { Button, RightPanel, showToast, Text } from '@/shared/ui';
-import { $chat, resetModelSettings, saveModelSettingsForChat } from '@/widgets/chat';
+import {
+  $chat,
+  $modelSettingsDisabled,
+  resetModelSettings,
+  saveModelSettingsForChat,
+} from '@/widgets/chat';
 import { ModelSettingsMenu } from '@/widgets/model-settings/ui/ModelSettingsMenu/ModelSettingsMenu.tsx';
 
 import { $modelSettingsOpened, closeModelSettings } from '../../model/model-settings.model.ts';
@@ -20,14 +25,24 @@ export const ModelSettings = memo((props: Props) => {
 
   const isOpened = useUnit($modelSettingsOpened);
   const chatId = useUnit($chat.id);
+  const modelSettingsDisabled = useUnit($modelSettingsDisabled);
 
   const handleSave = async () => {
-    await saveModelSettingsForChat();
-    showToast({
-      title: 'Settings saved',
-      type: 'success',
-      message: 'Model settings for the current chat have been successfully saved',
-    });
+    try {
+      await saveModelSettingsForChat();
+
+      showToast({
+        title: 'Settings saved',
+        type: 'success',
+        message: 'Model settings for the current chat have been successfully saved',
+      });
+    } catch (e: any) {
+      showToast({
+        title: 'Settings not saved',
+        type: 'error',
+        message: e.message,
+      });
+    }
   };
 
   return (
@@ -60,7 +75,12 @@ export const ModelSettings = memo((props: Props) => {
         <Button onClick={() => resetModelSettings()} className={s.reset} variant="secondary">
           Reset to default settings
         </Button>
-        <Button disabled={!chatId} onClick={handleSave} className={s.saveBtn} variant="primary">
+        <Button
+          disabled={!chatId || modelSettingsDisabled}
+          onClick={handleSave}
+          className={s.saveBtn}
+          variant="primary"
+        >
           Save for this chat
         </Button>
       </div>

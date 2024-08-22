@@ -6,7 +6,7 @@ import { assignValues, serialize } from '@/shared/lib/func';
 import { ModelFileModel } from './model-file.model.ts';
 import { modelFilesTable } from './model-file.schema.ts';
 
-export type ModelFileType = 'llm' | 'mmp';
+export type ModelFileType = 'llm' | 'mmp' | 'other';
 
 export interface ModelFile {
   id: Id;

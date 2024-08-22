@@ -9,6 +9,7 @@ export {
 export {
   $chat,
   $modelSettings,
+  $modelSettingsDisabled,
   askQuestion,
   resetModelSettings,
   saveModelSettingsForChat,

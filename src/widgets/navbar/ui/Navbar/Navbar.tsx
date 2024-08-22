@@ -5,6 +5,7 @@ import { useEffect, useState } from 'preact/hooks';
 
 import { classNames } from '@/shared/lib/func';
 import { $sidebarOpened } from '@/widgets/sidebar';
+import { $isFullscreen } from '@/widgets/toolbar';
 
 import s from './Navbar.module.scss';
 
@@ -16,6 +17,7 @@ interface Props {
 export const Navbar = memo((props: Props) => {
   const { className, children } = props;
   const sidebarOpened = useUnit($sidebarOpened);
+  const fullscreen = useUnit($isFullscreen);
 
   const [osType, setOsType] = useState<os.OsType>();
 
@@ -28,6 +30,7 @@ export const Navbar = memo((props: Props) => {
       className={classNames(s.navbar, [className], {
         [s.collapsed]: !sidebarOpened,
         [s.mac]: osType === 'Darwin',
+        [s.fullscreen]: fullscreen,
       })}
     >
       <div className={s.inner}>{children}</div>

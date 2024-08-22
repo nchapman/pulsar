@@ -19,6 +19,11 @@ const currModelFiles = combine(
   { skipVoid: false }
 );
 const searchValue = createStore('');
+
+const listScroll = createStore(0);
+const setListScroll = createEvent<number>();
+listScroll.on(setListScroll, (_, v) => v);
+
 const modelsNameMap = models.map((models) =>
   models.reduce<Record<string, HuggingFaceModel>>(
     (acc, model) => ({ ...acc, [model.name]: model }),
@@ -51,6 +56,7 @@ export const $modelStoreState = {
   modelSorting,
   setModelSorting,
   currModelFiles,
+  listScroll,
 };
 
 export const modelStoreEvents = {
@@ -58,6 +64,7 @@ export const modelStoreEvents = {
   searchHF: createEvent(),
   openModelDetails: createEvent<string>(),
   closeModelDetails: createEvent(),
+  setListScroll,
 };
 
 const fetchCuratedModels = createEffect(() =>

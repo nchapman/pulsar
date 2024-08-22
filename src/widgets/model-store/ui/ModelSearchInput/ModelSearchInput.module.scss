@@ -2,14 +2,14 @@
   display: flex;
   align-items: center;
   border-radius: 8px;
-  border: 1px solid var(--border-x-heavy);
+  border: 1px solid var(--border-disabled);
   background: var(--main-background-secondary);
   gap: 8px;
   width: 480px;
   padding: 12px;
 
   &:focus-within {
-    border-color: var(--text-primary);
+    border-color: var(--border-x-heavy);
   }
 }
 

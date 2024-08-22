@@ -18,3 +18,5 @@ export const goToStore = () => setRoute(Route.Store);
 export const goToStoreSearch = () => setRoute(Route.StoreSearch);
 export const goToStoreModel = () => setRoute(Route.StoreModel);
 export const goToDownloads = () => setRoute(Route.Downloads);
+
+export const $isChat = $currRoute.map((route) => route === 'chat');

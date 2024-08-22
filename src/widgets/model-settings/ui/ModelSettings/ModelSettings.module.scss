@@ -14,12 +14,12 @@
 }
 
 .main {
-  height: calc(100% - 48px - 88px);
+  height: calc(100% - 48px - 100px);
   padding: 16px 24px;
 }
 
 .footer {
-  height: 88px;
+  height: 100px;
   flex-shrink: 0;
   display: flex;
   align-items: center;

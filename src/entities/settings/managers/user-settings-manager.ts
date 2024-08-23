@@ -35,6 +35,7 @@ class UserSettingsManager {
 
   set<T extends keyof UserSettings>(key: T, value: UserSettings[T]) {
     this.settings[key] = value;
+    this.events.set(this.settings);
     this.saveToLS();
   }
 

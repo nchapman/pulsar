@@ -28,6 +28,10 @@
   background: #3F422B;
 }
 
+.model {
+  background: #184456;
+}
+
 .quantization {
   background: #412E6C;
 
@@ -49,4 +53,10 @@
   display: flex;
   width: 16px;
   height: 16px;
+}
+
+.downloads {
+  &.quantization, &.model, &.vision, &.size {
+    background: transparent;
+  }
 }

@@ -51,3 +51,10 @@
   padding-left: 12px;
   margin-bottom: 16px;
 }
+
+.divider {
+  height: 1px;
+  width: calc(100% - 24px);
+  background: var(--border-disabled);
+  margin: 6px auto;
+}

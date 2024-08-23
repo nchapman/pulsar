@@ -9,6 +9,7 @@ export type ModelTagType =
   | 'recommended'
   | 'size'
   | 'model'
+  | 'other'
   | 'quantization';
 
 export interface Tag {

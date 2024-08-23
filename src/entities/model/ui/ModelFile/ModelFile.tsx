@@ -39,6 +39,8 @@ export const ModelFile = memo((props: Props) => {
         </div>
 
         <div className={s.tags}>
+          {!isGguf && <ModelTag isDownloads={isDownloads} data={{ type: 'other' }} />}
+
           {isGguf && !isMmproj && <ModelTag isDownloads={isDownloads} data={{ type: 'model' }} />}
 
           {isMmproj && <ModelTag isDownloads={isDownloads} data={{ type: 'vision' }} />}

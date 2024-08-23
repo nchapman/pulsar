@@ -35,6 +35,7 @@ const meta: OptionalRecord<
   vision: { formatter: () => 'Vision Adapter' },
   hasVision: { formatter: () => 'Has Vision Adapter' },
   model: { formatter: () => 'Model File' },
+  other: { formatter: () => 'Other' },
 };
 
 export const ModelTag = memo((props: Props) => {

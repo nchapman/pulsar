@@ -15,6 +15,7 @@ interface Props {
   className?: string;
   children: ReactNode;
   data: ModelFileData;
+  isDownloads?: boolean;
 }
 
 function getIcon(isMmproj: boolean, isGguf: boolean) {
@@ -23,12 +24,12 @@ function getIcon(isMmproj: boolean, isGguf: boolean) {
 }
 
 export const ModelFile = memo((props: Props) => {
-  const { className, children, data } = props;
+  const { className, children, data, isDownloads } = props;
   const { name, size, isMmproj, isGguf } = data;
   const quantization = getQuantization(name);
 
   return (
-    <div className={classNames(s.modelFile, [className])}>
+    <div className={classNames(s.modelFile, [className], { [s.downloads]: isDownloads })}>
       <div>
         <div className={s.header}>
           <Icon svg={getIcon(isMmproj, isGguf)} className={s.icon} />

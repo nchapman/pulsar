@@ -121,7 +121,7 @@ export const DownloadItemCard = memo((props: Props) => {
   }
 
   return (
-    <ModelFile className={classNames(s.downloadItemCard, [className])} data={data}>
+    <ModelFile isDownloads className={classNames(s.downloadItemCard, [className])} data={data}>
       {getWidget()}
     </ModelFile>
   );

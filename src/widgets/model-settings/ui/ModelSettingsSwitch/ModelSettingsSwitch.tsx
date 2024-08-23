@@ -4,6 +4,7 @@ import { memo } from 'preact/compat';
 import { $isChat } from '@/app/routes';
 import { classNames } from '@/shared/lib/func';
 import { Button } from '@/shared/ui';
+import { isArchivedChat } from '@/widgets/chat/model/chat.ts';
 
 import SettingsIcon from '../../assets/settings.svg';
 import { openModelSettings } from '../../model/model-settings.model.ts';
@@ -16,8 +17,9 @@ interface Props {
 export const ModelSettingsSwitch = memo((props: Props) => {
   const { className } = props;
   const isChat = useUnit($isChat);
+  const isArchived = useUnit(isArchivedChat);
 
-  if (!isChat) return null;
+  if (!isChat || isArchived) return null;
 
   return (
     <Button

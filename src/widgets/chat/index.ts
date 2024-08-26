@@ -18,4 +18,5 @@ export {
   switchChat,
 } from './model/chat';
 export { Chat } from './ui/Chat/Chat';
+export { $withFileUpload } from './ui/ChatInput/ChatInput';
 export { ChatNavbar } from './ui/ChatNavbar/ChatNavbar';

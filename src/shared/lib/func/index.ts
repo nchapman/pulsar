@@ -10,6 +10,7 @@ export { formatDateWithOffset } from './formatDateWithOffset/formatDateWithOffse
 export { getDomainFromUrl } from './getDomainFromUrl/getDomainFromUrl';
 export { getFaviconFromUrl } from './getFaviconFromUrl/getFaviconFromUrl';
 export { getPercent } from './getPercent.ts';
+export { getState } from './getState.ts';
 export { getTimeFromDate } from './getTimeFromDate/getTimeFromDate.ts';
 export { groupDataByDays } from './groupDataByDays/groupDataByDays.ts';
 export { isDev } from './isDev.ts';

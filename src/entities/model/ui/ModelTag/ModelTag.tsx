@@ -11,6 +11,7 @@ import s from './ModelTag.module.scss';
 interface Props {
   className?: string;
   data: Tag;
+  isDownloads?: boolean;
 }
 
 const meta: OptionalRecord<
@@ -33,18 +34,25 @@ const meta: OptionalRecord<
   },
   vision: { formatter: () => 'Vision Adapter' },
   hasVision: { formatter: () => 'Has Vision Adapter' },
+  model: { formatter: () => 'Model File' },
+  other: { formatter: () => 'Other' },
 };
 
 export const ModelTag = memo((props: Props) => {
   const {
     className,
     data: { type, value },
+    isDownloads,
   } = props;
 
   const { formatter, prefix, suffix, tagClass } = meta[type] || {};
 
   return (
-    <div className={classNames(s.modelTag, [className, s[type], s[tagClass?.(value) || '']])}>
+    <div
+      className={classNames(s.modelTag, [className, s[type], s[tagClass?.(value) || '']], {
+        [s.downloads]: isDownloads,
+      })}
+    >
       {prefix && <Text s={12}>{prefix}</Text>}
 
       <Text s={12} w="medium" c="primary">

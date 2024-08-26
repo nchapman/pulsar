@@ -8,6 +8,8 @@ export type ModelTagType =
   | 'too-large'
   | 'recommended'
   | 'size'
+  | 'model'
+  | 'other'
   | 'quantization';
 
 export interface Tag {

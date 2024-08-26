@@ -1,4 +1,5 @@
 import { useUnit } from 'effector-react';
+import { useLayoutEffect } from 'preact/compat';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { modelManager } from '@/entities/model';
@@ -6,7 +7,7 @@ import { UploadFile, useUploadFile } from '@/features/upload-file';
 import { VoiceInput } from '@/features/voice-input';
 import SendIcon from '@/shared/assets/icons/send.svg';
 import StopIcon from '@/shared/assets/icons/stop.svg';
-import { classNames } from '@/shared/lib/func';
+import { classNames, getState } from '@/shared/lib/func';
 import { useKeyboardListener } from '@/shared/lib/hooks';
 import { Button } from '@/shared/ui';
 
@@ -17,6 +18,8 @@ import s from './ChatInput.module.scss';
 interface Props {
   className?: string;
 }
+
+export const [$withFileUpload, setWithFileUpload] = getState(false);
 
 export const ChatInput = (props: Props) => {
   const { className } = props;
@@ -35,6 +38,10 @@ export const ChatInput = (props: Props) => {
   const handleInputChange = (e: Event) => {
     setInput((e.target as HTMLInputElement).value);
   };
+
+  useLayoutEffect(() => {
+    setWithFileUpload(!!fileData);
+  }, [fileData]);
 
   function handleSubmit(e?: Event) {
     e?.preventDefault();

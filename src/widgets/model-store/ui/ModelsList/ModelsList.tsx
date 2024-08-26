@@ -40,7 +40,8 @@ const optionsArr = [
 export const ModelsList = memo((props: Props) => {
   const { className, all, view, models, title, icon, loading } = props;
 
-  const sorting = useUnit($modelStoreState.modelSorting);
+  const sortingAll = useUnit($modelStoreState.modelSortingAll);
+  const sortingSearch = useUnit($modelStoreState.modelSortingSearch);
 
   const handleScroll = (e: any) => {
     if (all) return;
@@ -59,8 +60,12 @@ export const ModelsList = memo((props: Props) => {
         <Select
           type="secondary"
           options={optionsArr}
-          value={sorting}
-          onChange={(v) => $modelStoreState.setModelSorting(v as ModelSorting)}
+          value={all ? sortingAll : sortingSearch}
+          onChange={(v) =>
+            $modelStoreState[all ? 'setModelSortingAll' : 'setModelSortingSearch'](
+              v as ModelSorting
+            )
+          }
         />
       </div>
 

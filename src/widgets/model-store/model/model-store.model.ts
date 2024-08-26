@@ -1,6 +1,6 @@
 import { combine, createEffect, createEvent, createStore, sample } from 'effector';
 
-import { goToStoreModel, goToStoreSearch } from '@/app/routes';
+import { $currRoute, goToStoreModel, goToStoreSearch, Route } from '@/app/routes';
 import { curatedModels as curated, ModelFileData } from '@/entities/model';
 import { CuratedModel, HuggingFaceModel } from '@/entities/model/types/hugging-face-model.ts';
 import { getModelFileInfo } from '@/widgets/model-store/lib/getModelFileInfo.ts';
@@ -8,7 +8,9 @@ import { ModelSorting } from '@/widgets/model-store/types/model-sorting.ts';
 
 import { fetchHuggingFaceFiles, searchHuggingFaceModels } from '../api/search-hugging-face.ts';
 
-const modelSorting = createStore<ModelSorting>(ModelSorting.MOST_DOWNLOADS);
+const modelSortingAll = createStore<ModelSorting>(ModelSorting.MOST_DOWNLOADS);
+const modelSortingSearch = createStore<ModelSorting>(ModelSorting.MOST_DOWNLOADS);
+
 const models = createStore<HuggingFaceModel[]>([]);
 const currModel = createStore<string | null>(null);
 const modelFiles = createStore<Record<string, ModelFileData[]>>({});
@@ -43,8 +45,11 @@ const currModelData = combine(
     currModel ? modelsNameMap[currModel] || curatedModels.find((i) => i.name === currModel) : null
 );
 
-const setModelSorting = createEvent<ModelSorting>();
-modelSorting.on(setModelSorting, (_, v) => v);
+const setModelSortingAll = createEvent<ModelSorting>();
+const setModelSortingSearch = createEvent<ModelSorting>();
+
+modelSortingAll.on(setModelSortingAll, (_, v) => v);
+modelSortingSearch.on(setModelSortingSearch, (_, v) => v);
 
 export const $modelStoreState = {
   searchValue,
@@ -53,8 +58,10 @@ export const $modelStoreState = {
   modelFiles,
   currModelData,
   curatedModels,
-  modelSorting,
-  setModelSorting,
+  modelSortingAll,
+  setModelSortingAll,
+  modelSortingSearch,
+  setModelSortingSearch,
   currModelFiles,
   listScroll,
 };
@@ -80,7 +87,14 @@ $modelStoreState.curatedModels.on(fetchCuratedModels.doneData, (_, data) => data
 fetchCuratedModels();
 
 export const fetchHFModels = createEffect<string, HuggingFaceModel[]>((query: string) =>
-  searchHuggingFaceModels({ query, sorting: modelSorting.getState(), modelsOnly: !query })
+  searchHuggingFaceModels({
+    query,
+    sorting:
+      $currRoute.getState() === Route.Store
+        ? modelSortingAll.getState()
+        : modelSortingSearch.getState(),
+    modelsOnly: !query,
+  })
 );
 
 const fetchHFFiles = createEffect<string, { files: ModelFileData[]; modelId: string }>(
@@ -100,7 +114,13 @@ sample({
 // fetchHFModels is triggered by searchHF
 sample({
   source: $modelStoreState.searchValue,
-  clock: $modelStoreState.modelSorting,
+  clock: $modelStoreState.modelSortingAll,
+  target: fetchHFModels,
+});
+
+sample({
+  source: $modelStoreState.searchValue,
+  clock: $modelStoreState.modelSortingSearch,
   target: fetchHFModels,
 });
 

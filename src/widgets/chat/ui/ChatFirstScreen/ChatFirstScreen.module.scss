@@ -16,6 +16,11 @@
   font-size: 24px;
   font-weight: 500;
   justify-self: center;
+  transform: translateY(-24px);
+}
+
+.translate .question {
+  transform: translateY(-48px);
 }
 
 .example-prompts {

@@ -57,8 +57,11 @@ export const DownloadsPage = memo(() => {
               </div>
 
               <div className={s.filesList}>
-                {items.map((item) => (
-                  <DownloadItemCard key={item.id} data={item.dto.file} />
+                {items.map((item, idx) => (
+                  <>
+                    <DownloadItemCard key={item.id} data={item.dto.file} />
+                    {idx < items.length - 1 && <div className={s.divider} />}
+                  </>
                 ))}
               </div>
             </div>

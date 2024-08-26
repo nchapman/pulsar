@@ -16,6 +16,10 @@
 .track {
   height: 16px;
   cursor: pointer;
+
+  &:first-child .thumb-inner {
+    background: var(--white);
+  }
 }
 
 .thumb-inner {

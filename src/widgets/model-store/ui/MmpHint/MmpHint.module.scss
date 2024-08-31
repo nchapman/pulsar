@@ -1,0 +1,32 @@
+.mmp-hint {
+  padding: 12px 0 12px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-light);
+  margin-top: 12px;
+  transition: background-color 0.2s, border-color 0.2s;
+
+  &:hover {
+    background: var(--border-light);
+  }
+
+  &.hint-expanded {
+    background: var(--main-background-secondary);
+    border-color: transparent;
+  }
+}
+
+.hint-highlight {
+  display: inline;
+  color: var(--info);
+}
+
+.body {
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tag {
+  display: inline-flex;
+}

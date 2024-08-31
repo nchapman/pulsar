@@ -8,6 +8,7 @@ import { classNames } from '@/shared/lib/func';
 import { MultiSwitch, Text } from '@/shared/ui';
 
 import { $modelStoreState } from '../../model/model-store.model.ts';
+import { MmpHint } from '../MmpHint/MmpHint.tsx';
 import { ModelCard } from '../ModelCard/ModelCard';
 import { ModelStoreFile } from '../ModelStoreFile/ModelStoreFile.tsx';
 import s from './ModelsDetailsPage.module.scss';
@@ -43,6 +44,8 @@ export const ModelsDetailsPage = memo(() => {
   return (
     <div className={classNames(s.modelsDetailsPage)}>
       <ModelCard info model={modelData} view="list" withVision={withVision} />
+
+      {withVision && <MmpHint className={s.hint} />}
 
       <div className={s.header}>
         <Text w="medium" c="primary">

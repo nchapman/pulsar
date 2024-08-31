@@ -3,7 +3,8 @@ import { memo } from 'preact/compat';
 
 import { ModelTag } from '@/entities/model/ui/ModelTag/ModelTag.tsx';
 import { classNames } from '@/shared/lib/func';
-import { Collapsible, Text } from '@/shared/ui';
+import { Collapsible, Icon, Text } from '@/shared/ui';
+import WarnIcon from '@/widgets/downloads/assets/warn.svg';
 
 import s from './MmpHint.module.scss';
 
@@ -43,6 +44,14 @@ export const MmpHint = memo((props: Props) => {
           Once both files are downloaded, Pulsar will automatically link them together, and you will
           notice a corresponding badge in the model loader indicating their association.
         </Text>
+
+        <div className={s.warn}>
+          <Icon svg={WarnIcon} />
+          <Text s={12} className={s.text}>
+            Keep in mind that local vision models are at an early stage of development and their
+            performance may be limited.
+          </Text>
+        </div>
       </div>
     </Collapsible>
   );

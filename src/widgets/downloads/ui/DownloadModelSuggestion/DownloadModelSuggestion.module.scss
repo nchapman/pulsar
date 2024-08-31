@@ -1,0 +1,28 @@
+.download-model-suggestion {
+  width: calc(100% + 24px);
+  height: 34px;
+  background: var(--main-background-quaternary);
+  position: relative;
+  bottom: -12px;
+  left: -12px;
+  margin-top: 8px;
+
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 8px;
+}
+
+.text, .link {
+  color: var(--warning);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.link {
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}

@@ -38,6 +38,7 @@
 .model-card {
   padding: 12px 8px;
   border-radius: 12px;
+  overflow: hidden;
 
   border: 1px solid var(--border-light);
   background: var(--main-background-quaternary);

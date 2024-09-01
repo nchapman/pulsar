@@ -411,7 +411,7 @@ class ModelManager {
     this.events.setModelFiles(modelFiles);
   }
 
-  private get models() {
+  get models() {
     return this.#models;
   }
 

@@ -3,6 +3,7 @@
   z-index: var(--z-index-tooltip);
   transform: translateX(-50%);
 
+
   .arrow {
     position: absolute;
     width: 0;
@@ -32,6 +33,10 @@
   }
 }
 
+.inside-modal {
+  z-index: 100000 !important;
+}
+
 .tooltip-text {
   padding: 6px 10px;
   background: var(--sidebar-background-primary);
@@ -47,7 +52,6 @@
 
   .arrow {
     border-bottom: 8px solid var(--sidebar-background-secondary);
-
   }
 }
 

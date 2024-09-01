@@ -1,0 +1,96 @@
+.additional-file-download-modal {
+  padding: 24px;
+  background-color: var(--main-background-secondary);
+  width: 615px;
+}
+
+.divider {
+  margin: 12px 0;
+  height: 1px;
+  background-color: var(--border-light);
+}
+
+.files {
+  padding: 16px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border-light);
+  background: var(--main-background-primary);
+}
+
+.file .divider {
+  background: var(--main-background-secondary);
+}
+
+.highlight {
+  display: inline;
+  font-weight: 600;
+}
+
+.file {
+  display: flex;
+  gap: 8px;
+}
+
+.checkbox {
+  margin-top: 16px;
+}
+
+.text-first {
+  margin-bottom: 8px;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.hiw {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+  cursor: pointer;
+
+  &:hover, &:hover span {
+    color: var(--text-primary);
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer-right {
+  display: flex;
+  gap: 12px;
+}
+
+.mmp-info {
+  display: flex;
+  color: var(--info);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--white);
+  }
+}
+
+.tag {
+  display: inline-flex !important;
+}
+
+.mmp-info-content {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--sidebar-background-primary);
+  border-radius: 8px;
+  border: 1px solid var(--border-light);
+  width: 600px;
+}

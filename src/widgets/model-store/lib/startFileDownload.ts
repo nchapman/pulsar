@@ -21,7 +21,7 @@ function getType(isGguf: boolean, isMmproj: boolean) {
   return isMmproj ? 'mmp' : 'llm';
 }
 
-export async function startFileDownload(modelName: string, fileName: string) {
+export async function startFileDownload(modelName: string, fileName: string, autoMmp = true) {
   const { modelData, fileData, files } = await getModelFileInfo(modelName, fileName);
 
   const { author, id, task = '' } = modelData;
@@ -38,7 +38,7 @@ export async function startFileDownload(modelName: string, fileName: string) {
     llms: getModelFileNames(files, 'llm'),
   };
 
-  if (type === 'llm') {
+  if (type === 'llm' && autoMmp) {
     const mmp = files.find((i) => i.name.includes('mmproj'));
     if (mmp) {
       await downloadsManager.addDownload(

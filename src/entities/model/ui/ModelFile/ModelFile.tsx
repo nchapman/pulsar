@@ -13,7 +13,7 @@ import s from './ModelFile.module.scss';
 
 interface Props {
   className?: string;
-  children: ReactNode;
+  children?: ReactNode;
   data: ModelFileData;
   isDownloads?: boolean;
 }

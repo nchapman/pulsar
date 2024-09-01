@@ -59,7 +59,7 @@ export const ModelsDetailsPage = memo(() => {
         <Scrollbars className={s.filesList}>
           {modelsToShow.map((file, idx) => (
             <>
-              <ModelStoreFile key={file.name} data={file} />
+              <ModelStoreFile key={file.name} data={file} modelName={modelData.name} />
               {idx !== modelsToShow.length - 1 && <div className={s.divider} />}
             </>
           ))}

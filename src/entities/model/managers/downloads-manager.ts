@@ -461,6 +461,10 @@ class DownloadsManager {
     this.events.setDownloadsData(data);
     this.events.setDownloadsNameData(this.#downloadsNameData);
   }
+
+  get downloadsNameData() {
+    return this.#downloadsNameData;
+  }
 }
 
 export const downloadsManager = new DownloadsManager(

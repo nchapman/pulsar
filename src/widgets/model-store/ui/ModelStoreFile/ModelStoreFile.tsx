@@ -6,21 +6,29 @@ import { downloadsManager } from '@/entities/model/managers/downloads-manager.ts
 import CloseIcon from '@/shared/assets/icons/close.svg';
 import DownloadIcon from '@/shared/assets/icons/download.svg';
 import { classNames } from '@/shared/lib/func';
+import { useToggle } from '@/shared/lib/hooks';
 import { Button, Icon, ProgressRounded, Text } from '@/shared/ui';
 import { startNewChat } from '@/widgets/chat';
 import { $modelStoreState } from '@/widgets/model-store/model/model-store.model.ts';
 
 import { startFileDownload } from '../../lib/startFileDownload.ts';
+import { AdditionalFileDownloadModal } from '../AdditionalFileDownloadModal/AdditionalFileDownloadModal.tsx';
 import s from './ModelStoreFile.module.scss';
 
 interface Props {
   className?: string;
   data: ModelFileData;
+  modelName: string;
 }
 
 export const ModelStoreFile = memo((props: Props) => {
-  const { className, data } = props;
+  const { className, data, modelName } = props;
   const { fitsInMemory, isGguf, isMmproj } = data;
+  const {
+    isOn: batchDownloadModalOpened,
+    off: closeBatchDownloadModal,
+    on: openBatchDownloadModal,
+  } = useToggle();
 
   const fileName = data.name;
 
@@ -30,6 +38,33 @@ export const ModelStoreFile = memo((props: Props) => {
 
   const handleDownload = () => {
     if (downloadItem) return;
+
+    const downloadedMmp =
+      Object.values(downloadsManager.downloadsNameData).findIndex(
+        (i) => i.type === 'mmp' && i.modelName === modelName
+      ) !== -1;
+
+    const downloadedLlm =
+      Object.values(downloadsManager.downloadsNameData).findIndex(
+        (i) => i.type === 'llm' && i.modelName === modelName
+      ) !== -1;
+
+    const hasMmp = !!modelManager.models[modelName].data.mmps.length;
+
+    if (isGguf) {
+      if (!isMmproj && !downloadedMmp && hasMmp) {
+        // no mmp
+        openBatchDownloadModal();
+        return;
+      }
+
+      if (isMmproj && !downloadedLlm) {
+        // no llm
+        openBatchDownloadModal();
+        return;
+      }
+    }
+
     startFileDownload($modelStoreState.currModel.getState()!, data.name);
   };
 
@@ -100,6 +135,12 @@ export const ModelStoreFile = memo((props: Props) => {
   return (
     <ModelFile data={data} className={classNames(s.modelStoreFile, [className])}>
       {getWidget()}
+      <AdditionalFileDownloadModal
+        onClose={closeBatchDownloadModal}
+        open={batchDownloadModalOpened}
+        type={isMmproj ? 'addLlm' : 'addMmp'}
+        file={data}
+      />
     </ModelFile>
   );
 });

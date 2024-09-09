@@ -25,7 +25,9 @@ export const ModelStoreNavbar = memo(() => {
 
   return (
     <div className={classNames(s.modelStoreNavbar, [], { [s.detailsMode]: !!model })}>
-      <Button variant="clear" icon={BackIcon} className={s.backButton} onClick={handleBack} />
+      {route === Route.StoreModel && (
+        <Button variant="clear" icon={BackIcon} className={s.backButton} onClick={handleBack} />
+      )}
 
       <Text s={14} w="medium" className={s.store} c="primary">
         Store {model ? ' / ' : ''}

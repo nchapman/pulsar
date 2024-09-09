@@ -57,7 +57,10 @@ export const SwitchModelInsideChat = memo((props: Props) => {
               key={m.name}
               className={s.model}
               variant="clear"
-              onClick={() => modelManager.switchModel(m.id)}
+              onClick={() => {
+                modelManager.switchModel(m.id);
+                hidePopover();
+              }}
             >
               <Text w="semi" s={12} c="primary" className={s.modelName}>
                 {m.name}

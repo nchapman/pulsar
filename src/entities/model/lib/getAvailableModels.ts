@@ -3,20 +3,29 @@ import { BaseDirectory, readDir } from '@tauri-apps/api/fs';
 import { APP_DIRS } from '@/app/consts/app.const.ts';
 
 export async function getAvailableModels(folder = APP_DIRS.MODELS) {
-  const entries = await readDir(folder, { dir: BaseDirectory.AppData });
+  const entries = await readDir(folder, { dir: BaseDirectory.AppData, recursive: true });
 
-  // TODO: VERIFY HASHES
-
-  const map: Record<string, boolean> = {};
+  const map: Record<string, Record<string, Record<string, boolean>>> = {};
 
   entries.forEach((i) => {
-    if (!i.name?.includes('.gguf')) return;
+    if (!i.children?.length || !i.name) return; // skip files
 
-    const { name } = i;
-    map[name] = true;
+    const author = i.name;
+    map[author] = {};
+
+    i.children.forEach((j) => {
+      if (!j.children?.length || !j.name) return; // skip files
+
+      const modelName = j.name;
+      map[author][modelName] = {};
+
+      j.children?.forEach((k) => {
+        const fileName = k.name;
+        if (!fileName) return;
+        map[author][modelName][fileName] = true;
+      });
+    });
   });
 
-  const list: string[] = Object.keys(map);
-
-  return [list, map] as const;
+  return map;
 }

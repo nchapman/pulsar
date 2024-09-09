@@ -19,6 +19,8 @@ interface CollapsibleProps {
   collapsed?: boolean;
   setCollapsed?: (expanded: boolean) => void;
   updateHeightFlag?: any;
+  className?: string;
+  expandedClassName?: string;
 }
 
 export const Collapsible: FC<CollapsibleProps> = ({
@@ -32,6 +34,8 @@ export const Collapsible: FC<CollapsibleProps> = ({
   collapsed,
   setCollapsed,
   updateHeightFlag,
+  className,
+  expandedClassName,
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(!defaultExpanded);
   const [contentHeight, setContentHeight] = useState(0);
@@ -53,9 +57,10 @@ export const Collapsible: FC<CollapsibleProps> = ({
   return (
     <div
       onClick={wholeClickable ? toggleCollapse : undefined}
-      className={classNames(s.collapsible, [], {
+      className={classNames(s.collapsible, [className], {
         [s.expanded]: !finalCollapsed,
         [s.wholeClickable]: wholeClickable,
+        [expandedClassName!]: !finalCollapsed && expandedClassName,
       })}
     >
       <div

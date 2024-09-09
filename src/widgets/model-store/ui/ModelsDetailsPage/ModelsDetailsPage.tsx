@@ -8,6 +8,7 @@ import { classNames } from '@/shared/lib/func';
 import { MultiSwitch, Text } from '@/shared/ui';
 
 import { $modelStoreState } from '../../model/model-store.model.ts';
+import { MmpHint } from '../MmpHint/MmpHint.tsx';
 import { ModelCard } from '../ModelCard/ModelCard';
 import { ModelStoreFile } from '../ModelStoreFile/ModelStoreFile.tsx';
 import s from './ModelsDetailsPage.module.scss';
@@ -44,6 +45,8 @@ export const ModelsDetailsPage = memo(() => {
     <div className={classNames(s.modelsDetailsPage)}>
       <ModelCard info model={modelData} view="list" withVision={withVision} />
 
+      {withVision && <MmpHint className={s.hint} />}
+
       <div className={s.header}>
         <Text w="medium" c="primary">
           {modelsToShow.length ? `${modelsToShow.length} Available files` : 'No files available'}
@@ -56,7 +59,7 @@ export const ModelsDetailsPage = memo(() => {
         <Scrollbars className={s.filesList}>
           {modelsToShow.map((file, idx) => (
             <>
-              <ModelStoreFile key={file.name} data={file} />
+              <ModelStoreFile key={file.name} data={file} modelName={modelData.name} />
               {idx !== modelsToShow.length - 1 && <div className={s.divider} />}
             </>
           ))}

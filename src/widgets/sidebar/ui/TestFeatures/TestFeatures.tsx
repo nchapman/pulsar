@@ -60,16 +60,18 @@ export const TestFeatures = memo((props: Props) => {
 
   const testResumeDownload = async () => {
     try {
-      downloadModel(
-        'https://huggingface.co/cjpais/llava-1.6-mistral-7b-gguf/resolve/main/llava-v1.6-mistral-7b.Q4_K_M.gguf?download=true',
-        'llava-v1.6-mistral-7b.Q4_K_M.gguf',
-        (p) => logi('downloadModel', `Progress: ${p}`)
-      );
-      downloadModel(
-        'https://huggingface.co/cjpais/llava-1.6-mistral-7b-gguf/resolve/main/mmproj-model-f16.gguf?download=true',
-        'mmproj-model-file-f16.gguf',
-        (p) => logi('downloadModel', `Progress: ${p}`)
-      );
+      downloadModel({
+        url: 'https://huggingface.co/cjpais/llava-1.6-mistral-7b-gguf/resolve/main/llava-v1.6-mistral-7b.Q4_K_M.gguf?download=true',
+        fileName: 'llava-v1.6-mistral-7b.Q4_K_M.gguf',
+        onProgress: (p) => logi('downloadModel', `Progress: ${p}`),
+        model: 'cjpais/llava-1.6-mistral-7b-gguf',
+      });
+      downloadModel({
+        url: 'https://huggingface.co/cjpais/llava-1.6-mistral-7b-gguf/resolve/main/mmproj-model-f16.gguf?download=true',
+        model: 'cjpais/llava-1.6-mistral-7b-gguf',
+        fileName: 'mmproj-model-file-f16.gguf',
+        onProgress: (p) => logi('downloadModel', `Progress: ${p}`),
+      });
     } catch (e) {
       loge('downloadModel', `Failed to download ${e}`);
     }

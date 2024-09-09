@@ -2,7 +2,10 @@ import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
 
 import { ModelFile, ModelFileData, modelManager } from '@/entities/model';
-import { downloadsManager } from '@/entities/model/managers/downloads-manager.ts';
+import {
+  downloadsManager,
+  DownloadsNameData,
+} from '@/entities/model/managers/downloads-manager.ts';
 import CloseIcon from '@/shared/assets/icons/close.svg';
 import DownloadIcon from '@/shared/assets/icons/download.svg';
 import { classNames } from '@/shared/lib/func';
@@ -21,6 +24,16 @@ interface Props {
   modelName: string;
 }
 
+function getDownloadItem(
+  downloadsData: DownloadsNameData,
+  fileData: ModelFileData,
+  modelName: string
+) {
+  const sameNameFile = downloadsData[fileData.name];
+
+  return sameNameFile?.remoteUrl?.includes(modelName) ? sameNameFile : null;
+}
+
 export const ModelStoreFile = memo((props: Props) => {
   const { className, data, modelName } = props;
   const { fitsInMemory, isGguf, isMmproj } = data;
@@ -30,9 +43,9 @@ export const ModelStoreFile = memo((props: Props) => {
     on: openBatchDownloadModal,
   } = useToggle();
 
-  const fileName = data.name;
+  const downloads = useUnit(downloadsManager.state.$downloadsNameData);
 
-  const downloadItem = useUnit(downloadsManager.state.$downloadsNameData)[fileName];
+  const downloadItem = getDownloadItem(downloads, data, modelName);
 
   const { id, downloadingData } = downloadItem || {};
 
@@ -49,7 +62,7 @@ export const ModelStoreFile = memo((props: Props) => {
         (i) => i.type === 'llm' && i.modelName === modelName
       ) !== -1;
 
-    const hasMmp = !!modelManager.models[modelName].data.mmps.length;
+    const hasMmp = $modelStoreState.currModelFiles.getState().findIndex((i) => i.isMmproj) !== -1;
 
     if (isGguf) {
       if (!isMmproj && !downloadedMmp && hasMmp) {
@@ -69,7 +82,7 @@ export const ModelStoreFile = memo((props: Props) => {
   };
 
   const handleStartChat = () => {
-    if (!downloadItem.modelFileId) return;
+    if (!downloadItem?.modelFileId) return;
     if (modelManager.currentModel === downloadItem.modelFileId) {
       startNewChat();
       return;
@@ -93,9 +106,9 @@ export const ModelStoreFile = memo((props: Props) => {
         </>
       );
 
-    if (downloadingData.isFinished && (isMmproj || !isGguf)) return null;
+    if (downloadingData?.isFinished && (isMmproj || !isGguf)) return null;
 
-    if (downloadingData.isFinished) {
+    if (downloadingData?.isFinished) {
       return (
         <Button className={s.startChat} variant="primary" onClick={handleStartChat}>
           Start Chat
@@ -103,7 +116,7 @@ export const ModelStoreFile = memo((props: Props) => {
       );
     }
 
-    if (downloadingData.status === 'queued') {
+    if (downloadingData?.status === 'queued') {
       return (
         <div className={s.queued}>
           <Text className={s.queuedText} c="info" s={12}>
@@ -112,7 +125,7 @@ export const ModelStoreFile = memo((props: Props) => {
           <Button
             variant="secondary"
             className={s.deleteBtn}
-            onClick={() => downloadsManager.remove(id)}
+            onClick={() => downloadsManager.remove(id!)}
           >
             <Icon size={12} svg={CloseIcon} className={s.closeIcon} />
           </Button>
@@ -123,11 +136,11 @@ export const ModelStoreFile = memo((props: Props) => {
     return (
       <ProgressRounded
         className={s.progress}
-        current={downloadingData.progress}
-        total={downloadingData.total}
-        isPaused={downloadingData.isPaused}
-        onPause={() => downloadsManager.pause(id)}
-        onResume={() => downloadsManager.start(id)}
+        current={downloadingData!.progress}
+        total={downloadingData!.total}
+        isPaused={downloadingData!.isPaused}
+        onPause={() => downloadsManager.pause(id!)}
+        onResume={() => downloadsManager.start(id!)}
       />
     );
   }

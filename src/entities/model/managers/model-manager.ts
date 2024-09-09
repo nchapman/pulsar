@@ -5,6 +5,7 @@ import { downloadsRepository, modelFilesRepository, modelsRepository } from '@/d
 import { Model, ModelsRepository } from '@/db/model';
 import { ModelFile, ModelFilesRepository, ModelFileType } from '@/db/model-file';
 import { ModelDto } from '@/entities/model';
+import { createModelFolder } from '@/entities/model/lib/createModelFolder.ts';
 import { UserSettingsManager, userSettingsManager } from '@/entities/settings';
 import { promiseAll } from '@/shared/lib/func';
 import { loge, logi } from '@/shared/lib/Logger.ts';
@@ -112,8 +113,10 @@ class ModelManager {
   }) {
     const { dto, filePath, type, modelName } = d;
 
+    console.log(modelName);
+
     // move file to models folder
-    await moveToModelsDir(filePath, dto.file.name);
+    await moveToModelsDir({ curFilePath: filePath, model: modelName, fileName: dto.file.name });
 
     // save model-file to the db
     const dbModel = await this.modelFilesRepository.create({
@@ -157,22 +160,20 @@ class ModelManager {
 
     // if the model-file is the current model-file, drop it
     if (this.currentModel === modelId) {
-      await this.loadFirstAvailableModel();
+      await this.loadFirstAvailableModel(modelId);
     }
 
     // delete model-file from the disk
-    await deleteModel(model.data.file.name);
-
-    await downloadsRepository.remove(model.data.file.downloadId!);
+    await deleteModel({ model: model.modelName, fileName: model.name });
 
     this.updateModelIdMaps();
   }
 
-  async loadFirstAvailableModel() {
+  async loadFirstAvailableModel(excludeId?: Id) {
     logi(LOG_TAG, 'Loading first available model-file');
 
     // set default/current model-file to first available
-    const newModel = this.getFirstAvailableModel();
+    const newModel = this.getFirstAvailableModel(excludeId);
     console.log('First available model:', newModel);
 
     this.currentModel = newModel;
@@ -189,8 +190,8 @@ class ModelManager {
 
   // private methods
 
-  private getFirstAvailableModel() {
-    const llmIds = Object.values(this.llmNameIdMap);
+  private getFirstAvailableModel(excludeId?: Id) {
+    const llmIds = Object.values(this.llmNameIdMap).filter((id) => id !== excludeId);
     return llmIds[0] || null;
   }
 
@@ -228,13 +229,15 @@ class ModelManager {
       throw new Error('Model type not supported');
     }
 
-    const fileName = this.modelFiles[this.currentModel].data.file.name;
+    const { modelName, name } = this.modelFiles[this.currentModel];
 
     const { mmps } = this.models[modelFile.modelName].data;
     const mmp = mmps.find((mmp) => this.#mmpNameIdMap[mmp]);
 
+    console.log('MMP:', mmp);
+
     try {
-      await this.loadModel(fileName, mmp || undefined);
+      await this.loadModel(modelName, name, mmp || undefined);
       this.currentMmp = mmp || null;
       this.isReady = true;
 
@@ -254,25 +257,47 @@ class ModelManager {
 
   private async readLocalModels() {
     // load models from the disk
-    const [availableModels] = await getAvailableModels();
+    const filesMap = await getAvailableModels();
 
     // get all from db
     let models = await this.modelFilesRepository.getAll();
 
     // delete missing in local
     await promiseAll(models, async (model) => {
-      if (availableModels.includes(model.data.file.name)) return;
+      const fileName = model.name;
+      const [author, modelName] = model.modelName.split('/');
+
+      if (filesMap[author]?.[modelName]?.[fileName]) return;
       await this.modelFilesRepository.remove(model.id);
       await downloadsRepository.remove(model.data.file.downloadId!);
     });
 
     models = await this.modelFilesRepository.getAll();
 
-    // delete missing in db
-    await promiseAll(availableModels, async (localName) => {
-      if (models.some((model) => model.data.file.name === localName)) return;
-      await deleteModel(localName);
+    const modelsToDelete: Promise<void>[] = [];
+
+    console.log('Files map:', filesMap);
+
+    Object.entries(filesMap).forEach(([author, modelNames]) => {
+      Object.entries(modelNames).forEach(([modelName, files]) => {
+        Object.entries(files)
+          .filter(([_, filePresent]) => filePresent)
+          .forEach(([fileName]) => {
+            if (
+              models.some(
+                (model) =>
+                  model.data.file.name === fileName && model.modelName === `${author}/${modelName}`
+              )
+            )
+              return;
+            console.log('Deleting model:', `${author}/${modelName}`, fileName);
+            modelsToDelete.push(deleteModel({ model: `${author}/${modelName}`, fileName }));
+          });
+      });
     });
+
+    // delete missing in db
+    await Promise.all(modelsToDelete);
 
     // if has no local models
     if (!models.length) {
@@ -328,13 +353,15 @@ class ModelManager {
     this.state.$loadingProgress.on(this.events.setLoadingProgress, (_, val) => val);
   }
 
-  private async loadModel(llmLocalName: string, mmpLocalName?: string) {
+  private async loadModel(modelName: string, llmFileName: string, mmpFileName?: string) {
     try {
       await this.dropModel();
-      const modelPath = await getModelPath(llmLocalName);
-      const multiModalPath = mmpLocalName ? await getModelPath(mmpLocalName) : undefined;
+      const llmPath = await getModelPath({ model: modelName, fileName: llmFileName });
+      const mmpPath = mmpFileName
+        ? await getModelPath({ model: modelName, fileName: mmpFileName })
+        : undefined;
 
-      this.#model = await NebulaModel.initModel(modelPath, multiModalPath, (progress) => {
+      this.#model = await NebulaModel.initModel(llmPath, mmpPath, (progress) => {
         logi('Model manager', `Model loading progress: ${progress}`);
         this.loadingProgress = progress;
         console.log('Loading progress:', progress);
@@ -358,6 +385,8 @@ class ModelManager {
 
   async updateOrCreateModel(data: ModelDto) {
     const dbModel = await this.modelsRepository.createOrUpdate(data);
+    // create folders for the model
+    await Promise.all([createModelFolder(data.name), createModelFolder(data.name, true)]);
     this.models = { ...this.models, [dbModel.name]: dbModel };
   }
 

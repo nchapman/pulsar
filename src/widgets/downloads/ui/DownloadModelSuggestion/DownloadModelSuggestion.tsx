@@ -35,6 +35,8 @@ function getType(model: Model, items: DownloadItem[]): 'llm' | 'mmp' | null {
   const downloadingMmp = items.findIndex((i) => i.type === 'mmp') !== -1;
   const downloadingLlm = items.findIndex((i) => i.type === 'llm') !== -1;
 
+  if (!downloadingLlm && !downloadingMmp) return 'mmp';
+
   if (!downloadingLlm && downloadingMmp) return 'llm';
 
   const supportsMmp = !!model.data.mmps.length;

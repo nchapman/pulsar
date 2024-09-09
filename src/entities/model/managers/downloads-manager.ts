@@ -5,14 +5,14 @@ import { APP_DIRS } from '@/app/consts/app.const.ts';
 import { downloadsRepository } from '@/db';
 import { DownloadItem, DownloadsRepository } from '@/db/download';
 import { ModelDto } from '@/entities/model';
+import { deleteModel } from '@/entities/model/lib/deleteModel.ts';
+import { getModelPath } from '@/entities/model/lib/getModelPath.ts';
 import { UserSettingsManager, userSettingsManager } from '@/entities/settings';
 import { download, getRandomInt, interruptFileTransfer } from '@/shared/lib/file-transfer.ts';
 import { getPercent, promiseAll } from '@/shared/lib/func';
 import { logi } from '@/shared/lib/Logger.ts';
 
-import { deleteDownload } from '../lib/deleteDownload.ts';
 import { getAvailableModels } from '../lib/getAvailableModels.ts';
-import { getDownloadPath } from '../lib/getDownloadPath.ts';
 import { ModelManager, modelManager } from './model-manager.ts';
 
 export type DownloadsData = Record<Id, DownloadItem>;
@@ -60,7 +60,7 @@ class DownloadsManager {
     await this.modelManager.updateOrCreateModel(modelDto);
 
     const existingDownload = Object.values(this.downloadsData).find(
-      (download) => download.name === d.name
+      (download) => download.name === d.name && download.modelName === d.modelName
     );
 
     if (this.modelManager.availableLlms.includes(d.name)) {
@@ -107,10 +107,10 @@ class DownloadsManager {
       throw new Error(`Download "${id}" not found`);
     }
 
-    console.log('Deleting model file:', download.modelFileId);
+    // console.log('Deleting model file:', download.modelFileId);
 
     if (download.modelFileId) {
-      await this.modelManager.deleteModel(download.modelFileId);
+      await this.modelManager.deleteModel(download.modelFileId).catch(console.log);
     }
 
     // remove download from the db
@@ -125,7 +125,7 @@ class DownloadsManager {
     this.downloadsData = newData;
 
     // delete file from the disk
-    await deleteDownload(download.name);
+    await deleteModel({ model: download.modelName, fileName: download.name }, true);
 
     if (this.current === id) {
       this.downloadNextFromQueue();
@@ -137,7 +137,7 @@ class DownloadsManager {
   }
 
   async start(id: Id) {
-    const { remoteUrl: url, name, downloadingData } = this.downloadsData[id];
+    const { remoteUrl: url, downloadingData, modelName, name } = this.downloadsData[id];
 
     const { downloadId, progress, isPaused } = downloadingData;
 
@@ -145,7 +145,8 @@ class DownloadsManager {
       return;
     }
 
-    const path = await getDownloadPath(name);
+    const path = await getModelPath({ model: modelName, fileName: name }, true);
+
     await this.updateDownloadData(id, {
       downloadingData: { ...downloadingData, isPaused: false, status: 'downloading' },
     });
@@ -155,7 +156,6 @@ class DownloadsManager {
       url,
       path,
       progressHandler: (_id, progress, total) => {
-        // console.log('progress', progress, total);
         this.updateDownloadProcess(id, progress, total);
       },
     }).catch((e) => logi('download', e));
@@ -229,7 +229,7 @@ class DownloadsManager {
 
   private async readLocalDownloads() {
     // load downloads from disk
-    const [availableDownloads] = await getAvailableModels(APP_DIRS.DOWNLOADS);
+    const filesMap = await getAvailableModels(APP_DIRS.DOWNLOADS);
 
     // get downloads from db
     let downloads = await this.downloadsRepository.getAll();
@@ -239,9 +239,13 @@ class DownloadsManager {
 
     // delete missing in local and unfinished
     await promiseAll(downloads, async (download) => {
+      const fileName = download.name;
+      const [author, model] = download.modelName.split('/');
+
+      if (download.downloadingData.isFinished && download.modelFileId) return;
+
       if (
-        !availableDownloads.includes(download.name) &&
-        !download.downloadingData.isFinished &&
+        !filesMap?.[author]?.[model]?.[fileName] &&
         download.downloadingData.status !== 'queued'
       ) {
         await this.remove(download.id);
@@ -251,10 +255,24 @@ class DownloadsManager {
     downloads = await this.downloadsRepository.getAll();
 
     // delete missing in db
-    // await promiseAll(availableDownloads, async (localName) => {
-    //   if (downloads.some((download) => download.localName === localName)) return;
-    //   await deleteDownload(localName);
-    // });
+    const modelsToDelete: Promise<void>[] = [];
+
+    Object.entries(filesMap).forEach(([author, modelNames]) => {
+      Object.entries(modelNames).forEach(([modelName, files]) => {
+        Object.entries(files)
+          .filter(([_, filePresent]) => filePresent)
+          .forEach(([fileName]) => {
+            if (
+              downloads.some((i) => i.name === fileName && i.modelName === `${author}/${modelName}`)
+            ) {
+              modelsToDelete.push(deleteModel({ model: `${author}/${modelName}`, fileName }, true));
+            }
+          });
+      });
+    });
+
+    // delete missing in db
+    await Promise.all(modelsToDelete);
 
     // update state
     this.updateStateFromDB(downloads);
@@ -285,9 +303,9 @@ class DownloadsManager {
   }
 
   private async onItemDownloaded(id: Id) {
-    const { name, type, dto, modelName } = this.downloadsData[id];
+    const { type, dto, modelName, name } = this.downloadsData[id];
 
-    const filePath = await getDownloadPath(name);
+    const filePath = await getModelPath({ model: modelName, fileName: name }, true);
 
     dto.file.downloadId = id;
 
@@ -344,7 +362,7 @@ class DownloadsManager {
 
   async addTestModel() {
     const modelDto: ModelDto = {
-      name: 'test-model',
+      name: 'test/test-model',
       author: 'test',
       llms: ['evolvedseeker_1_3.Q2_K.gguf'],
       mmps: [],
@@ -458,6 +476,7 @@ class DownloadsManager {
       acc[download.name] = download;
       return acc;
     }, {});
+
     this.events.setDownloadsData(data);
     this.events.setDownloadsNameData(this.#downloadsNameData);
   }

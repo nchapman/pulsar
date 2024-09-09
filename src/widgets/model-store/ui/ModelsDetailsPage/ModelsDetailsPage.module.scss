@@ -4,6 +4,10 @@
   padding: 40px;
 }
 
+.hint {
+  margin-top: 12px;
+}
+
 .header {
   margin: 32px 0 40px;
   display: flex;
@@ -20,7 +24,7 @@
 }
 
 .file-list-wrapper {
-  height: calc(100vh - 360px);
+  height: calc(100vh - 404px);
 }
 
 .files-list {

@@ -8,6 +8,7 @@ import { modelManager, Models } from '@/entities/model';
 import { DownloadsData, downloadsManager } from '@/entities/model/managers/downloads-manager.ts';
 import { classNames } from '@/shared/lib/func';
 import { Text } from '@/shared/ui';
+import { DownloadModelSuggestion } from '@/widgets/downloads/ui/DownloadModelSuggestion/DownloadModelSuggestion.tsx';
 
 import { DownloadItemCard } from '../DownloadItemCard/DownloadItemCard.tsx';
 import s from './DownloadsPage.module.scss';
@@ -64,6 +65,8 @@ export const DownloadsPage = memo(() => {
                   </>
                 ))}
               </div>
+
+              <DownloadModelSuggestion modelName={modelName} items={items} />
             </div>
           ))}
         </div>

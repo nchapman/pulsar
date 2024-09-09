@@ -29,7 +29,7 @@ export const ModelCard = memo((props: Props) => {
 
   const stats = [
     {
-      label: `${formatNumber(model.downloadsAllTime)}`,
+      label: `${formatNumber(model.downloadsAllTime)} Downloads`,
       icon: DownloadIcon,
     },
     {

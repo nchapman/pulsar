@@ -2,12 +2,20 @@ import { copyFile, renameFile } from '@tauri-apps/api/fs';
 
 import { getModelPath } from '@/entities/model/lib/getModelPath.ts';
 
-export async function moveToModelsDir(curFilePath: string, localName: string) {
+export async function moveToModelsDir({
+  model,
+  fileName,
+  curFilePath,
+}: {
+  curFilePath: string;
+  fileName: string;
+  model: string;
+}) {
   try {
-    if (localName === 'evolvedseeker_1_3.Q2_K.gguf') {
-      await copyFile(curFilePath, await getModelPath(localName));
+    if (fileName === 'evolvedseeker_1_3.Q2_K.gguf') {
+      await copyFile(curFilePath, await getModelPath({ model, fileName }));
     } else {
-      await renameFile(curFilePath, await getModelPath(localName));
+      await renameFile(curFilePath, await getModelPath({ model, fileName }));
     }
   } catch (e) {
     console.error(`Failed to move model file: ${e}`);

@@ -3,12 +3,18 @@ import { loge, logi } from '@/shared/lib/Logger.ts';
 
 import { getModelPath } from '../lib/getModelPath.ts';
 
-export const downloadModel = async (
-  url: string,
-  localName: string,
-  onProgress: (p: number) => void
-) => {
-  const pathToSave = await getModelPath(localName);
+export const downloadModel = async ({
+  fileName,
+  model,
+  url,
+  onProgress,
+}: {
+  model: string;
+  url: string;
+  fileName: string;
+  onProgress: (p: number) => void;
+}) => {
+  const pathToSave = await getModelPath({ fileName, model });
   logi('downloadModel', `Downloading model to ${pathToSave}`);
   try {
     await download({

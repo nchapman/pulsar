@@ -1,6 +1,6 @@
 import { combine, createEffect, createEvent, createStore, sample } from 'effector';
 
-import { $currRoute, goToStoreModel, goToStoreSearch, Route } from '@/app/routes';
+import { $currRoute, goToStore, goToStoreModel, goToStoreSearch, Route } from '@/app/routes';
 import { curatedModels as curated, ModelFileData } from '@/entities/model';
 import { CuratedModel, HuggingFaceModel } from '@/entities/model/types/hugging-face-model.ts';
 import { getModelFileInfo } from '@/widgets/model-store/lib/getModelFileInfo.ts';
@@ -153,6 +153,14 @@ sample({
 
 // goToStore is triggered by closeModelDetails
 sample({
+  source: $modelStoreState.searchValue,
   clock: modelStoreEvents.closeModelDetails,
-  target: createEffect(goToStoreSearch),
+  fn: (value) => value,
+  target: createEffect((value: string) => {
+    if (value) {
+      goToStoreSearch();
+    } else {
+      goToStore();
+    }
+  }),
 });

@@ -16,6 +16,7 @@ interface TooltipProps {
   success?: boolean;
   show?: boolean;
   variant?: 'primary' | 'secondary';
+  insideModal?: boolean;
 }
 
 function getPosition(position: TooltipProps['position'], dimensions: DOMRect) {
@@ -49,6 +50,7 @@ export const Tooltip = memo((props: TooltipProps) => {
     success,
     text,
     variant = 'primary',
+    insideModal,
   } = props;
 
   const ref = useRef<HTMLDivElement>(null);
@@ -87,7 +89,12 @@ export const Tooltip = memo((props: TooltipProps) => {
       {children}
       {visible && pos && (
         <Portal>
-          <div style={pos} className={classNames(s.tooltip, [s[position], s[variant]])}>
+          <div
+            style={pos}
+            className={classNames(s.tooltip, [s[position], s[variant]], {
+              [s.insideModal]: insideModal,
+            })}
+          >
             <div className={s.arrow} />
             {text ? (
               <Text

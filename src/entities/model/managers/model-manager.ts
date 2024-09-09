@@ -234,8 +234,6 @@ class ModelManager {
     const { mmps } = this.models[modelFile.modelName].data;
     const mmp = mmps.find((mmp) => this.#mmpNameIdMap[mmp]);
 
-    console.log('MMP:', mmp);
-
     try {
       await this.loadModel(modelName, name, mmp || undefined);
       this.currentMmp = mmp || null;

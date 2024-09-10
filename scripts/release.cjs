@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-const { sleep } = require('bun');
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');

@@ -1,7 +1,14 @@
 /* eslint-disable no-console */
+const { sleep } = require('bun');
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+
+async function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
 
 function bumpPatchVersion(version) {
   const parts = version.split('.');
@@ -38,6 +45,8 @@ try {
   execSync('git add .', { stdio: 'inherit' });
   execSync(`git commit --no-verify -m "Release ${newVersion}"`, { stdio: 'inherit' });
   execSync(`git push`, { stdio: 'inherit' });
+
+  await sleep(2000);
 
   execSync(`git tag -a v${newVersion} -m "Release ${newVersion}"`, { stdio: 'inherit' });
   execSync(`git push --tags`, { stdio: 'inherit' });

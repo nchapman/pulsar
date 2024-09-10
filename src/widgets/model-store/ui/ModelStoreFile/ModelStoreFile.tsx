@@ -99,7 +99,12 @@ export const ModelStoreFile = memo((props: Props) => {
               <Text s={14}>{fitsInMemory ? 'Recommended' : 'Too large for this machine'}</Text>
             </div>
           )}
-          <Button variant="secondary" className={s.downloadBtn} onClick={handleDownload}>
+          <Button
+            loading={batchDownloadModalOpened}
+            variant="secondary"
+            className={s.downloadBtn}
+            onClick={handleDownload}
+          >
             <Icon svg={DownloadIcon} className={s.downloadIcon} />
             Download
           </Button>

@@ -42,7 +42,7 @@ export const ModelsDetailsPage = memo(() => {
   if (!modelData) return null;
 
   return (
-    <div className={classNames(s.modelsDetailsPage)}>
+    <div className={classNames(s.modelsDetailsPage, [], { [s.withVision]: withVision })}>
       <ModelCard info model={modelData} view="list" withVision={withVision} />
 
       {withVision && <MmpHint className={s.hint} />}

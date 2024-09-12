@@ -24,6 +24,10 @@
 }
 
 .file-list-wrapper {
+  height: calc(100vh - 360px);
+}
+
+.with-vision .file-list-wrapper {
   height: calc(100vh - 404px);
 }
 

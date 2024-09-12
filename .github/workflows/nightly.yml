@@ -1,0 +1,89 @@
+name: Nightly Release
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  publish:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [macos-14, ubuntu-20.04, windows-latest]
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch Submodules
+        run: git submodule update --init --recursive
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: enable corepack
+        run: corepack enable
+
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: install macos universal arch
+        if: matrix.platform == 'macos-14'
+        run: rustup target add x86_64-apple-darwin
+
+      # - name: install libomp for VSS
+      #   if: matrix.platform == 'macos-14'
+      #   run: brew install libomp
+
+      # - name: set latest version of clang for compilation
+      #   if: matrix.platform == 'macos-14'
+      #   run: ln -s $(brew --prefix llvm@15)/bin/clang /usr/local/bin/clang
+
+      # - name: Also add clang++ to path
+      #   if: matrix.platform == 'macos-14'
+      #   run: ln -s $(brew --prefix llvm@15)/bin/clang++ /usr/local/bin/clang++
+
+      - name: Print clang version
+        if: matrix.platform == 'macos-14'
+        run: |
+          clang --version
+          clang++ --version
+
+      - name: install dependencies (ubuntu only)
+        if: matrix.platform == 'ubuntu-20.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - name: install frontend dependencies
+        run: yarn install # change this to npm or pnpm depending on which one you use
+
+      - name: Build app for non macos
+        id: restbuild
+        if: matrix.platform != 'macos-14'
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
+          TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
+        with:
+          tagName: nightly-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
+          releaseName: 'Nightly v__VERSION__'
+          tauriScript: yarn tauri
+
+      - name: Build for macos
+        id: macosbuild
+        if: matrix.platform == 'macos-14'
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
+          TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
+        with:
+          tagName: nightly-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
+          args: --target universal-apple-darwin
+          releaseName: 'Nightly v__VERSION__'
+          tauriScript: yarn tauri

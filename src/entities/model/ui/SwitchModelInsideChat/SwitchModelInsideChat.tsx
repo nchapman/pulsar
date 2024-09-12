@@ -4,8 +4,7 @@ import { Popover } from 'react-tiny-popover';
 
 import { goToStore } from '@/app/routes';
 import { modelManager } from '@/entities/model';
-import { $defaultModel } from '@/entities/settings/managers/user-settings-manager.ts';
-import CheckIcon from '@/shared/assets/icons/check-circle-broken.svg';
+import CheckIcon from '@/shared/assets/icons/check-circle-filled.svg';
 import ChevronDownIcon from '@/shared/assets/icons/chevron-down.svg';
 import CubeIcon from '@/shared/assets/icons/cube.svg';
 import { classNames } from '@/shared/lib/func';
@@ -22,8 +21,12 @@ export const SwitchModelInsideChat = memo((props: Props) => {
   const { className } = props;
   const currentModel = useUnit(modelManager.state.$currentModel);
   const availableModels = useUnit(modelManager.state.$availableLlms);
-  const defaultModel = useUnit($defaultModel);
   const { off: hidePopover, toggle: togglePopover, isOn: isPopoverShown } = useToggle();
+
+  const handleModelClick = (modelId: string) => () => {
+    modelManager.switchModel(modelId);
+    hidePopover();
+  };
 
   if (!currentModel) return null;
   const modelData = modelManager.getModelData(currentModel);
@@ -55,22 +58,18 @@ export const SwitchModelInsideChat = memo((props: Props) => {
             <Button
               active={m.id === currentModel}
               key={m.name}
-              className={s.model}
+              className={classNames(s.model, [], { [s.active]: m.id === currentModel })}
               variant="clear"
-              onClick={() => {
-                modelManager.switchModel(m.id);
-                hidePopover();
-              }}
+              onClick={handleModelClick(m.id)}
             >
               <Text w="semi" s={12} c="primary" className={s.modelName}>
                 {m.name}
               </Text>
               <div className={s.modelInfo}>
-                {m.id === defaultModel && (
-                  <div className={s.default}>
-                    <Text s={12}>Set as default</Text>
-                  </div>
-                )}
+                <div className={s.newChat}>
+                  <Text s={12}>New Chat</Text>
+                </div>
+
                 {m.id === currentModel && <Icon svg={CheckIcon} className={s.selectedIcon} />}
               </div>
             </Button>

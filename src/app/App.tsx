@@ -8,7 +8,8 @@ import { PageError, PageLoader } from '@/shared/ui';
 import { OnboardingPage } from '@/widgets/onboarding';
 
 import { Layout } from './Layout/Layout.tsx';
-import { checkUpdates } from './Updates';
+import { shouldUpdateApp, updateApp } from './Updates';
+import { dialog } from '@tauri-apps/api';
 
 function App() {
   const hasNoModels = useUnit(modelManager.state.$hasNoModels);
@@ -18,7 +19,21 @@ function App() {
 
   useEffect(() => {
     initTheme();
-    checkUpdates();
+    shouldUpdateApp().then((shouldUpdate) => {
+      if (shouldUpdate) {
+        dialog
+          .confirm('A new version of the app is available. Do you want to update?', {
+            title: 'Update available',
+            okLabel: 'Update',
+            cancelLabel: 'Later',
+          })
+          .then((ok) => {
+            if (ok) {
+              updateApp();
+            }
+          });
+      }
+    });
     cleanUpDB();
   }, []);
 

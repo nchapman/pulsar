@@ -29,7 +29,7 @@ export const SidebarFooter = memo((props: Props) => {
         withInactive
       >
         <Icon svg={StoreIcon} className={s.icon} />
-        Store
+        Models
       </Button>
       <Button className={s.btn} onClick={openSettingsModal} variant="clear" withInactive>
         <Icon svg={SettingsIcon} className={s.icon} />

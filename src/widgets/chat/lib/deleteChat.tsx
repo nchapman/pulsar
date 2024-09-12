@@ -5,14 +5,19 @@ import { confirm, Text } from '@/shared/ui';
 import { updateChatHistory } from '@/widgets/sidebar';
 
 import { $chat, startNewChat } from '../model/chat.ts';
+import { loge } from '@/shared/lib/Logger.ts';
 
 async function clearChatFiles(id: Id) {
   const chat = await chatsRepository.getById(id);
-  chat.messages.forEach((m) => {
+  for (let m of chat.messages) {
     if (m.file) {
-      removeFile(m.file.src);
+      try {
+        await removeFile(m.file.src);
+      } catch (e) {
+        loge('deleteChat.tsx', `Failed to remove file ${e}`);
+      }
     }
-  });
+  }
 }
 
 export async function deleteChat(id: Id, isCurrent: boolean) {

@@ -8,11 +8,11 @@ import { $chat, startNewChat } from '../model/chat.ts';
 
 async function clearChatFiles(id: Id) {
   const chat = await chatsRepository.getById(id);
-  chat.messages.forEach((m) => {
+  for (let m of chat.messages) {
     if (m.file) {
-      removeFile(m.file.src);
+      await removeFile(m.file.src);
     }
-  });
+  }
 }
 
 export async function deleteChat(id: Id, isCurrent: boolean) {

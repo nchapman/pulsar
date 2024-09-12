@@ -1,6 +1,6 @@
-import { Tag } from '@/entities/model/types/tag.type.ts';
+import { ModelTagType, Tag } from '../types/tag.type.ts';
 
-export function getTagsFromName(name: string): Tag[] {
+export function getTagsFromName(name: string, exclude?: ModelTagType[]): Tag[] {
   const tags: Tag[] = [];
 
   const [type] = name.match(/gguf/i) || [];
@@ -12,5 +12,5 @@ export function getTagsFromName(name: string): Tag[] {
   const [architecture] = name.match(/(llama|llava|mistral)/i) || [];
   if (architecture) tags.push({ value: architecture.toLowerCase(), type: 'arch' });
 
-  return tags;
+  return tags.filter((tag) => !exclude?.includes(tag.type));
 }

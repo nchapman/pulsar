@@ -78,7 +78,7 @@ export const ModelsList = memo((props: Props) => {
         {loading ? (
           <Text className={s.searching}>Searching...</Text>
         ) : (
-          models.map((i) => <ModelCard view={view} model={i} />)
+          models.map((i) => <ModelCard isList view={view} model={i} />)
         )}
       </ScrollArea>
     </div>

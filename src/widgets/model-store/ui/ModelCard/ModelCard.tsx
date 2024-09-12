@@ -20,10 +20,11 @@ interface Props {
   model: HuggingFaceModel;
   info?: boolean;
   withVision?: boolean;
+  isList?: boolean;
 }
 
 export const ModelCard = memo((props: Props) => {
-  const { className, model, info } = props;
+  const { className, model, info, isList } = props;
 
   const { name } = model;
 
@@ -68,7 +69,7 @@ export const ModelCard = memo((props: Props) => {
 
       <div className={s.right}>
         <div className={s.tags}>
-          {getTagsFromName(name).map((tag) => (
+          {getTagsFromName(name, isList ? ['type'] : undefined).map((tag) => (
             <ModelTag key={tag.value} data={tag} />
           ))}
           {props.withVision && <ModelTag data={{ type: 'hasVision' }} />}

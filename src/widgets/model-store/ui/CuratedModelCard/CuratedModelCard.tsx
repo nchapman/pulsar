@@ -24,7 +24,7 @@ export const CuratedModelCard = memo((props: Props) => {
   return (
     <div className={classNames(s.curatedModelCard, [className])} onClick={handeClick}>
       <div className={s.tags}>
-        {getTagsFromName(data.name).map((tag) => (
+        {getTagsFromName(data.name, ['type']).map((tag) => (
           <ModelTag key={tag.value} data={tag} />
         ))}
       </div>

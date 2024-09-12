@@ -1,6 +1,9 @@
 .models-details-page {
   height: 100%;
   width: 100%;
+}
+
+.scroll-area > div {
   padding: 40px;
 }
 
@@ -24,11 +27,11 @@
 }
 
 .file-list-wrapper {
-  height: calc(100vh - 352px);
+  height: calc(100vh - 360px);
 }
 
 .with-vision .file-list-wrapper {
-  height: calc(100vh - 396px);
+  height: calc(100vh - 404px);
 }
 
 .files-list {

@@ -80,14 +80,14 @@ export const AdditionalFileDownloadModal = memo((props: Props) => {
       <div className={s.files}>
         <div className={s.file}>
           <Checkbox onChange={() => undefined} checked disabled className={s.checkbox} />
-          <ModelFile data={file} className={s.file} />
+          <ModelFile noTooltip data={file} className={s.file} />
         </div>
 
         <div className={s.divider} />
 
         <div className={s.file}>
           <Checkbox onChange={setChecked} checked={checked} className={s.checkbox} />
-          <ModelFile data={secondFile} className={s.file} />
+          <ModelFile noTooltip data={secondFile} className={s.file} />
         </div>
       </div>
 

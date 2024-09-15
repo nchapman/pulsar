@@ -31,6 +31,17 @@
   }
 }
 
+.downloaded {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+
+
+  &, & span {
+    color: var(--success);
+  }
+}
+
 .too-large {
   background: rgba(240, 68, 56, 0.12);
 

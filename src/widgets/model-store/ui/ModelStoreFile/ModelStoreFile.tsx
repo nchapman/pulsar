@@ -6,6 +6,7 @@ import {
   downloadsManager,
   DownloadsNameData,
 } from '@/entities/model/managers/downloads-manager.ts';
+import CheckIcon from '@/shared/assets/icons/check-circle-broken.svg';
 import CloseIcon from '@/shared/assets/icons/close.svg';
 import DownloadIcon from '@/shared/assets/icons/download.svg';
 import { classNames } from '@/shared/lib/func';
@@ -111,7 +112,16 @@ export const ModelStoreFile = memo((props: Props) => {
         </>
       );
 
-    if (downloadingData?.isFinished && (isMmproj || !isGguf)) return null;
+    if (downloadingData?.isFinished && (isMmproj || !isGguf)) {
+      return (
+        <div className={s.downloaded}>
+          <Icon svg={CheckIcon} />
+          <Text w="medium" s={14}>
+            Downloaded
+          </Text>
+        </div>
+      );
+    }
 
     if (downloadingData?.isFinished) {
       return (

@@ -1,3 +1,4 @@
+import { dialog } from '@tauri-apps/api';
 import { useUnit } from 'effector-react';
 import { useEffect } from 'preact/hooks';
 
@@ -9,7 +10,6 @@ import { OnboardingPage } from '@/widgets/onboarding';
 
 import { Layout } from './Layout/Layout.tsx';
 import { shouldUpdateApp, updateApp } from './Updates';
-import { dialog } from '@tauri-apps/api';
 
 function App() {
   const hasNoModels = useUnit(modelManager.state.$hasNoModels);

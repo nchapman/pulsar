@@ -39,8 +39,9 @@ export async function minimizeWindowSize() {
 }
 
 export async function restoreWindowSize() {
-  if (window.innerWidth >= windowSize.main.width) return;
   appWindow.setMinSize(new LogicalSize(windowSize.main.width, windowSize.main.height));
+
+  if (window.innerWidth >= windowSize.main.width) return;
   await appWindow.setSize(new LogicalSize(windowSize.main.width, windowSize.main.height));
   appWindow.setResizable(true);
   updateIsResizable();

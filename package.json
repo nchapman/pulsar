@@ -16,7 +16,7 @@
     "test:frontend": "vitest run",
     "test:backend": "cd src-tauri && cargo test -- --test-threads=1 --color=auto",
     "test:backend:nocap": "cd src-tauri && cargo test -- --test-threads=1 --color=auto --nocapture",
-    "release": "node ./scripts/release.cjs",
+    "release": "node ./scripts/release.mjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "deploy-storybook": "yarn build-storybook && cd storybook-static && vercel --prod --yes",
@@ -107,3 +107,4 @@
   },
   "packageManager": "yarn@4.1.0"
 }
+

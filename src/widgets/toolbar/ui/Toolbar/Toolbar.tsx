@@ -1,7 +1,9 @@
 import { os } from '@tauri-apps/api';
+import { useUnit } from 'effector-react';
 import { FC, memo } from 'preact/compat';
-import { useEffect, useState } from 'preact/hooks';
 import { createPortal } from 'react';
+
+import { $osType } from '@/app/model/os.model.ts';
 
 import { ToolbarLinux } from '../ToolbarLinux/ToolbarLinux.tsx';
 import { ToolbarMacOS } from '../ToolbarMacOS/ToolbarMacOS.tsx';
@@ -19,11 +21,7 @@ const toolbar: Record<os.OsType, FC<Props>> = {
 };
 
 export const Toolbar = memo((props: Props) => {
-  const [osType, setOsType] = useState<os.OsType>();
-
-  useEffect(() => {
-    os.type().then(setOsType);
-  }, []);
+  const osType = useUnit($osType);
 
   if (!osType) return null;
 

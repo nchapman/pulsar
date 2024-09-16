@@ -30,7 +30,7 @@ export const ModelStoreNavbar = memo(() => {
       )}
 
       <Text s={14} w="medium" className={s.store} c="primary">
-        Store {model ? ' / ' : ''}
+        Model Store {model ? ' / ' : ''}
       </Text>
 
       {model && (

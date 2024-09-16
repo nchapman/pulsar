@@ -1,10 +1,11 @@
-.download-item-card {
 
-}
 
 .finished {
   display: flex;
   gap: 8px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
 
   .delete-btn {
     padding: 0;
@@ -18,6 +19,11 @@
     justify-content: center;
     height: 32px;
   }
+}
+
+.download-item-card:hover .finished {
+  opacity: 1;
+  pointer-events: all;
 }
 
 .queued {
@@ -65,5 +71,7 @@
     }
   }
 }
+
+
 
 

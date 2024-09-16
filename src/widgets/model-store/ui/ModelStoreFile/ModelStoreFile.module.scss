@@ -1,3 +1,22 @@
+.model-store-file {
+  border-radius: 8px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background: var(--main-background-secondary);
+
+    .downloadBtn {
+      color: var(--button-text-primary);
+      background: var(--button-primary-default);
+
+      &.active,
+      &:hover {
+        background: var(--button-primary-hover);
+      }
+    }
+  }
+}
+
 .memory-fit {
   padding: 4px 12px;
   border-radius: 100px;
@@ -8,6 +27,17 @@
   background: rgba(18, 183, 106, 0.12);
 
   & span {
+    color: var(--success);
+  }
+}
+
+.downloaded {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+
+
+  &, & span {
     color: var(--success);
   }
 }

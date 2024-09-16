@@ -1,6 +1,7 @@
 import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
 
+import { ModelFileType } from '@/db/model-file';
 import { ModelFile, ModelFileData, modelManager } from '@/entities/model';
 import { downloadsManager } from '@/entities/model/managers/downloads-manager.ts';
 import CloseIcon from '@/shared/assets/icons/close.svg';
@@ -18,6 +19,12 @@ interface Props {
   data: ModelFileData;
 }
 
+const FILE_NAME: Record<ModelFileType, string> = {
+  llm: 'model file',
+  mmp: 'vision adapter file',
+  other: 'file',
+};
+
 export const DownloadItemCard = memo((props: Props) => {
   const { className, data } = props;
 
@@ -27,12 +34,12 @@ export const DownloadItemCard = memo((props: Props) => {
 
   const downloadItem = useUnit(downloadsManager.state.$downloadsNameData)[fileName];
 
-  const { id, downloadingData } = downloadItem || {};
+  const { id, downloadingData, type } = downloadItem || {};
 
   const handleDeleteModel = () => {
     confirm({
       type: 'danger',
-      title: 'Delete this model file?',
+      title: `Delete this ${FILE_NAME[type]}?`,
       message:
         `This will delete the ${fileName}. ` +
         'This action will permanently remove all data. Proceed with caution.',

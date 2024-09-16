@@ -16,6 +16,7 @@ interface Props {
   children?: ReactNode;
   data: ModelFileData;
   isDownloads?: boolean;
+  noTooltip?: boolean;
 }
 
 function getIcon(isMmproj: boolean, isGguf: boolean) {
@@ -24,7 +25,7 @@ function getIcon(isMmproj: boolean, isGguf: boolean) {
 }
 
 export const ModelFile = memo((props: Props) => {
-  const { className, children, data, isDownloads } = props;
+  const { className, children, data, isDownloads, noTooltip } = props;
   const { name, size, isMmproj, isGguf } = data;
   const quantization = getQuantization(name);
 
@@ -36,7 +37,7 @@ export const ModelFile = memo((props: Props) => {
           <Text c="primary" w="medium" s={16} className={s.fileName}>
             {name}
           </Text>
-          {isMmproj && !isDownloads && (
+          {isMmproj && !isDownloads && !noTooltip && (
             <Tooltip
               variant="primary"
               content={

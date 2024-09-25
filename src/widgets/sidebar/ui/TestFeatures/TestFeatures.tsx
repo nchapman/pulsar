@@ -138,7 +138,7 @@ export const TestFeatures = memo((props: Props) => {
   return (
     <div className={classNames(s.testFeatures, [className])}>
       {import.meta.env.DEV &&
-        import.meta.env.VITE_PULSAR_SHOW_DEV_MENU === 'true' &&
+        import.meta.env.VITE_HIRO_SHOW_DEV_MENU === 'true' &&
         !__IS_STORYBOOK__ && (
           <>
             <Button className={s.btn} onClick={openAppData} variant="secondary">

@@ -8,7 +8,7 @@ const meta: Meta<typeof Button> = {
   title: 'shared/Button',
   component: Button,
   args: {
-    children: 'Pulsar',
+    children: 'Hiro',
   },
 } satisfies Meta<typeof Button>;
 

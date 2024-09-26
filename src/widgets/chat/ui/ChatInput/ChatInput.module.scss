@@ -5,7 +5,7 @@
   overflow: hidden;
   border: 1px solid var(--border-light);
   position: relative;
-  padding: 4px 16px 12px;
+  padding: 0 16px 12px;
 
   &:focus-within {
     border-color: var(--border-heavy);
@@ -22,11 +22,23 @@
   align-items: flex-end;
   justify-content: space-between;
 
-  & > div:last-child {
+  .actions-right {
     display: flex;
     align-items: center;
     gap: 8px;
   }
+
+  .actions-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+.divider {
+  height: 12px;
+  width: 1px;
+  background-color: var(--border-light);
 }
 
 .chat-input {

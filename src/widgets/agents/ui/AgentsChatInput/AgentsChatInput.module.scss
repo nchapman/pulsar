@@ -1,0 +1,46 @@
+.agents-chat-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  width: calc(100% + 32px);
+  padding: 8px 12px;
+  margin-left: -16px;
+
+  background: var(--main-background-secondary);
+}
+
+.clear-btn {
+  margin-left: auto;
+  padding: 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+
+  &:hover {
+    color: var(--text-primary);
+    background: transparent;
+  }
+}
+
+.popover {
+  width: var(--chat-container-width);
+  height: 100px;
+  margin-bottom: 5px;
+  padding: 2px 16px 12px;
+
+  border-radius: 16px;
+  border: 1px solid var(--border-light);
+  background: var(--main-background-secondary);
+}
+
+.header {
+  padding: 12px 8px;
+}
+
+.footer {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px;
+}

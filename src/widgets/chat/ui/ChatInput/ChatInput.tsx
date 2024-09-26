@@ -10,6 +10,7 @@ import StopIcon from '@/shared/assets/icons/stop.svg';
 import { classNames, getState } from '@/shared/lib/func';
 import { useKeyboardListener } from '@/shared/lib/hooks';
 import { Button } from '@/shared/ui';
+import { AgentsChatInput, AgentsChatInputBtn } from '@/widgets/agents';
 
 import { autoResize } from '../../lib/utils/autoResize.ts';
 import { $chat, $isInputDisabled, $streamedMsgId, askQuestion } from '../../model/chat.ts';
@@ -68,6 +69,8 @@ export const ChatInput = (props: Props) => {
 
   return (
     <form onSubmit={handleSubmit} className={classNames(s.chatForm, [className])}>
+      <AgentsChatInput />
+
       <div className={s.inputRow}>
         <textarea
           ref={inputRef}
@@ -80,14 +83,20 @@ export const ChatInput = (props: Props) => {
       </div>
 
       <div className={s.actionsRow}>
-        <UploadFile
-          className={s.uploadFile}
-          onUpload={uploadFile}
-          fileData={fileData}
-          onRemove={resetFileData}
-        />
+        <div className={s.actionsLeft}>
+          <UploadFile
+            className={s.uploadFile}
+            onUpload={uploadFile}
+            fileData={fileData}
+            onRemove={resetFileData}
+          />
 
-        <div>
+          <div className={s.divider} />
+
+          <AgentsChatInputBtn />
+        </div>
+
+        <div className={s.actionsRight}>
           <VoiceInput className={s.audioInput} />
 
           {!disabledSend &&

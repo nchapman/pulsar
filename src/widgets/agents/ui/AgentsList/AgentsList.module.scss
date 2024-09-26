@@ -1,53 +1,6 @@
-@import './src/shared/styles/mixins';
-
 .agents-list {
   margin-bottom: -6px;
   max-height: 340px;
   height: max-content;
 }
 
-.agent {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px;
-
-  &:not(:last-child) {
-    margin-bottom: 8px;
-  }
-}
-
-.icon {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-}
-
-.description {
-  @include line-clamp(1);
-}
-
-.info {
-  margin-right: 24px;
-}
-
-.widget {
-  margin-left: auto;
-  width: 48px;
-  flex-shrink: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.add-btn {
-  width: 48px;
-  height: 32px;
-  font-size: 12px;
-  justify-content: center;
-  border-radius: 4px;
-}
-
-.added {
-  color: var(--success);
-}

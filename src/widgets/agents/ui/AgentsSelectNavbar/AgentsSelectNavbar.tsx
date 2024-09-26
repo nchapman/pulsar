@@ -7,13 +7,12 @@ import { classNames } from '@/shared/lib/func';
 import { useToggle } from '@/shared/lib/hooks';
 import { Button, Icon } from '@/shared/ui';
 import { agentsMock } from '@/widgets/agents/mocks/agents.mock.ts';
+import { agentsNavbarModel } from '@/widgets/agents/model/agents-navbar.model.ts';
+import { AgentDetailsNavbar } from '@/widgets/agents/ui/AgentDetailsNavbar/AgentDetailsNavbar.tsx';
 import { AgentsList } from '@/widgets/agents/ui/AgentsList/AgentsList.tsx';
 import { AgentsSearch } from '@/widgets/agents/ui/AgentsSearch/AgentsSearch.tsx';
-import {
-  $agentsNavbarView,
-  AgentsViewSwitch,
-} from '@/widgets/agents/ui/AgentsViewSwitch/AgentsViewSwitch.tsx';
 
+import { $agentsNavbarView, AgentsViewSwitch } from '../AgentsViewSwitch/AgentsViewSwitch.tsx';
 import s from './AgentsSelectNavbar.module.scss';
 
 interface Props {
@@ -23,13 +22,20 @@ interface Props {
 export const AgentsSelectNavbar = memo((props: Props) => {
   const { className } = props;
   const { off: hidePopover, toggle: togglePopover, isOn: isPopoverShown } = useToggle();
+  const detailsAgent = useUnit(agentsNavbarModel.$detailsAgent);
   const view = useUnit($agentsNavbarView);
 
   const popover = (
     <div className={s.popover}>
-      <AgentsSearch onPopoverClose={hidePopover} />
-      <AgentsViewSwitch className={s.switch} />
-      <AgentsList view={view} agents={agentsMock} />
+      {detailsAgent ? (
+        <AgentDetailsNavbar />
+      ) : (
+        <>
+          <AgentsSearch onPopoverClose={hidePopover} />
+          <AgentsViewSwitch className={s.switch} />
+          <AgentsList view={view} agents={agentsMock} />
+        </>
+      )}
     </div>
   );
 

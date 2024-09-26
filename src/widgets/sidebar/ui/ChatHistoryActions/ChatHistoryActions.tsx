@@ -137,7 +137,6 @@ export const ChatHistoryActions = memo((props: Props) => {
         align="start"
         padding={4}
         onClickOutside={onClose}
-        containerClassName={s.popoverContainer}
       >
         <div>
           <Button

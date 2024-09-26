@@ -1,0 +1,82 @@
+@import './src/shared/styles/mixins';
+
+.agents-list-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  position: relative;
+
+  &:not(:last-child) {
+    margin-bottom: 8px;
+  }
+}
+
+.icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.description {
+  @include line-clamp(1);
+}
+
+.info {
+  margin-right: 24px;
+}
+
+.widget {
+  margin-left: auto;
+  min-width: 48px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.add-btn {
+  width: 48px;
+  height: 32px;
+  font-size: 12px;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.added {
+  color: var(--success);
+}
+
+.my-agent-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.popover {
+  width: 95px;
+  height: 64px;
+
+  outline: none;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 10;
+}
+
+.popover-btn {
+  width: 86px;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  font-weight: 500;
+
+  &.error {
+    color: var(--error);
+  }
+
+  &:hover {
+    background: var(--main-background-quaternary);
+  }
+}

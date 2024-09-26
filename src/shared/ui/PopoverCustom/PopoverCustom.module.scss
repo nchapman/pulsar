@@ -1,0 +1,22 @@
+.popover-custom {
+  position: relative;
+}
+
+.content {
+  position: absolute;
+  z-index: 1000;
+
+  &.left {
+    transform: translateX(-100%);
+    left: 100%;
+  }
+
+  &.top {
+    top: 0;
+  }
+
+  background: var(--main-background-primary);
+  border: 1px solid var(--border-light);
+  padding: 8px;
+  border-radius: 8px;
+}

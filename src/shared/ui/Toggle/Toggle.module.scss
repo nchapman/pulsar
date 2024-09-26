@@ -1,0 +1,43 @@
+$transition: .2s;
+$width: 36px;
+$height: 20px;
+
+.control {
+  transition: background-color $transition;
+  width: $width;
+  height: $height;
+  display: block;
+  background-color: var(--main-background-tertiary);
+  border-radius: 100px;
+  position: relative;
+  cursor: pointer;
+
+  &:after{
+    position: absolute;
+    top: 2px;
+    left: 2px;
+
+    display: block;
+    content: "";
+
+    width: 16px;
+    height: 16px;
+
+    background-color: #fff;
+    border-radius: 50%;
+
+    transition: left $transition;
+  }
+}
+
+.input{
+  display: none;
+
+  &:checked + .control{
+    background-color: var(--success);
+
+    &:after{
+      left: 18px;
+    }
+  }
+}

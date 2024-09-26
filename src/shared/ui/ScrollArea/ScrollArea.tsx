@@ -10,7 +10,7 @@ interface Props {
   wrapperClassName?: string;
   className?: string;
   children: ReactNode;
-  height: string;
+  height?: string;
   width?: string;
   onScroll?: (e: any) => void;
   initialScroll?: number;
@@ -30,7 +30,7 @@ export const ScrollArea = memo((props: Props) => {
   return (
     <div
       className={classNames(s.scrollWrapper, [wrapperClassName])}
-      style={{ height: `calc(${height})`, width }}
+      style={{ height: height ? `calc(${height})` : undefined, width }}
     >
       <Scrollbars
         ref={ref}

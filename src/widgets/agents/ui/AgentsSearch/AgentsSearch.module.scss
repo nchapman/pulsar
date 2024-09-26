@@ -1,0 +1,47 @@
+.agents-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  width: 100%;
+  padding: 8px 16px 8px 8px;
+
+  border-radius: 8px;
+  border: 1px solid var(--border-disabled);
+  background: var(--main-background-quaternary);
+
+  &:focus-within {
+    border-color: var(--border-x-heavy);
+  }
+}
+
+.go {
+  position: relative;
+  z-index: 100;
+}
+
+.input {
+  color: var(--text-primary);
+  font-size: 14px;
+  padding: 0;
+  font-weight: 400;
+  line-height: 24px;
+
+  &::placeholder {
+    color: var(--text-secondary);
+  }
+}
+
+.explore {
+  padding: 0;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 0;
+  width: max-content;
+  flex-shrink: 0;
+
+  &:hover {
+    background: none;
+    text-decoration: underline;
+  }
+}

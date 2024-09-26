@@ -80,10 +80,6 @@
   .end-fade {
     transition: background 0.2s;
     background: linear-gradient(90deg, rgb(255, 255, 255, 0) 0%, var(--sidebar-background-primary) 50%, var(--sidebar-background-primary) 100%);
-
-    //@media (prefers-color-scheme: dark) {
-    //  background: linear-gradient(90deg, #17171700, var(--sidebar-background-primary) 50%, var(--sidebar-background-primary) 100%);
-    //}
   }
 
   &:hover,
@@ -112,6 +108,21 @@
         width: 60px;
       }
     }
+  }
+}
+
+.tertiary {
+  color: var(--text-secondary);
+  transition: color 0.2s, background 0.2s;
+  padding: 6px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 4px;
+
+  &.active,
+  &:hover {
+    color: var(--text-primary);
+    background: var(--main-background-quaternary);
   }
 }
 

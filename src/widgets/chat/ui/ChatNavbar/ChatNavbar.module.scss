@@ -2,4 +2,11 @@
   height: 100%;
   display: flex;
   align-items: center;
+  gap: 8px;
+}
+
+.divider {
+  width: 1px;
+  height: 16px;
+  background: var(--border-light);
 }

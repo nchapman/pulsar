@@ -1,0 +1,19 @@
+.agents-select-navbar {
+  position: relative;
+  z-index: var(--z-index-model-switch);
+}
+
+.popover {
+  width: 480px;
+  padding: 12px;
+  margin-left: 20px;
+  background: var(--main-background-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.switch {
+  margin: 8px 0;
+}

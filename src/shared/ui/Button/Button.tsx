@@ -13,7 +13,7 @@ interface ButtonProps {
   icon?: FC<SVGProps<SVGSVGElement>> | any;
   className?: string;
   children?: ComponentChild | any;
-  variant: 'primary' | 'secondary' | 'link' | 'clear' | 'danger' | 'outlined';
+  variant: 'primary' | 'secondary' | 'link' | 'clear' | 'danger' | 'outlined' | 'tertiary';
   type?: 'button' | 'submit' | 'reset';
   loading?: boolean;
   iconSize?: number;

@@ -1,0 +1,14 @@
+.agents-view-switch {
+  display: flex;
+  gap: 8px;
+}
+
+.my-agents-num {
+  padding: 2px 4px;
+  border-radius: 4px;
+  background: var(--main-background-quaternary);
+}
+
+.switchBtn.active .my-agents-num {
+  background: var(--main-background-secondary);
+}

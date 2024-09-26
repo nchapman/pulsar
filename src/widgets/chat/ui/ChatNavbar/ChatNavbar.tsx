@@ -3,6 +3,7 @@ import { memo } from 'preact/compat';
 
 import { ModelLoadingIndicator, modelManager, SwitchModelInsideChat } from '@/entities/model';
 import { classNames } from '@/shared/lib/func';
+import { AgentsSelectNavbar } from '@/widgets/agents';
 
 import s from './ChatNavbar.module.scss';
 
@@ -16,6 +17,8 @@ export const ChatNavbar = memo(() => {
   return (
     <div className={classNames(s.chatNavbar)}>
       {showLoadingIndicator ? <ModelLoadingIndicator /> : <SwitchModelInsideChat />}
+      <div className={s.divider} />
+      <AgentsSelectNavbar />
     </div>
   );
 });

@@ -6,6 +6,7 @@ import CheckIcon from '@/shared/assets/icons/check-circle-filled.svg';
 import PlusIcon from '@/shared/assets/icons/plus.svg';
 import { classNames } from '@/shared/lib/func';
 import { Button, Icon, Text } from '@/shared/ui';
+import { ScrollArea } from '@/shared/ui/ScrollArea/ScrollArea.tsx';
 import { agentsMock } from '@/widgets/agents/mocks/agents.mock.ts';
 
 import { agentsChatInputModel } from '../../model/agents-chat-input.model.ts';
@@ -16,6 +17,15 @@ interface Props {
 }
 
 const active = (idx: number) => idx % 2 === 0;
+
+function getHeight(num: number) {
+  const maxHeight = 188;
+  const itemHeight = 36;
+  const gap = 2;
+
+  const overallHeight = num * itemHeight + gap * (num - 1);
+  return overallHeight < maxHeight ? overallHeight : maxHeight;
+}
 
 export const AgentsChatInput = memo((props: Props) => {
   const { className } = props;
@@ -31,7 +41,7 @@ export const AgentsChatInput = memo((props: Props) => {
         </Text>
       </div>
 
-      <div className={s.list}>
+      <ScrollArea className={s.list} height={`${getHeight(agents.length)}px`}>
         {agents.map((i, idx) => (
           <div className={classNames(s.agent, [], { [s.selected]: active(idx) })}>
             <img src={i.icon} className={s.agentIcon} />
@@ -45,7 +55,7 @@ export const AgentsChatInput = memo((props: Props) => {
             {active(idx) && <Icon className={s.selectedAgentIcon} svg={CheckIcon} />}
           </div>
         ))}
-      </div>
+      </ScrollArea>
 
       <div className={s.footer}>
         <Button

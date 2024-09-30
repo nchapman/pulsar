@@ -14,15 +14,15 @@ interface Props {
 export const AgentsChatInputBtn = memo((props: Props) => {
   const { className } = props;
 
-  const handleOpen = (e: any) => {
+  const handleToggle = (e: any) => {
     e.stopPropagation();
     e.preventDefault();
-    agentsChatInputModel.setOpen(true);
+    agentsChatInputModel.toggle();
   };
 
   return (
     <Button
-      onClick={handleOpen}
+      onClick={handleToggle}
       className={classNames(s.agentsChatInputBtn, [className])}
       variant="clear"
       icon={AtIcon}

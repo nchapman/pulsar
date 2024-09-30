@@ -3,6 +3,7 @@ import { FC, memo, useLayoutEffect } from 'preact/compat';
 
 import { $currRoute, Route } from '@/app/routes';
 import { Page } from '@/shared/ui';
+import { AgentAddModal } from '@/widgets/agents/ui/AgentAddModal/AgentAddModal.tsx';
 import { AgentsPage } from '@/widgets/agents/ui/AgentsPage/AgentsPage.tsx';
 import { Chat, ChatNavbar } from '@/widgets/chat';
 import { DownloadsNavbar, DownloadsPage } from '@/widgets/downloads';
@@ -59,6 +60,7 @@ export const Layout = memo(() => {
 
       <ModelSettings className={s.modelSettings} />
       <ModelSettingsSwitch className={s.modelSettingsSwitch} />
+      <AgentAddModal />
     </Page>
   );
 });

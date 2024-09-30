@@ -31,7 +31,7 @@ export const AgentsSelectNavbar = memo((props: Props) => {
         <AgentDetailsNavbar />
       ) : (
         <>
-          <AgentsSearch onPopoverClose={hidePopover} />
+          <AgentsSearch />
           <AgentsViewSwitch className={s.switch} />
           <AgentsList view={view} agents={agentsMock} />
         </>

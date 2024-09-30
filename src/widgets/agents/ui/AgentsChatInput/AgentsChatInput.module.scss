@@ -1,3 +1,5 @@
+@import './src/shared/styles/mixins';
+
 .agents-chat-input {
   display: flex;
   align-items: center;
@@ -24,7 +26,6 @@
 
 .popover {
   width: var(--chat-container-width);
-  height: 100px;
   margin-bottom: 5px;
   padding: 2px 16px 12px;
 
@@ -35,6 +36,9 @@
 
 .header {
   padding: 12px 8px;
+  margin-bottom: 6px;
+
+  border-bottom: 1px solid var(--border-light);
 }
 
 .footer {
@@ -43,4 +47,68 @@
   align-items: center;
   gap: 8px;
   padding: 0 8px;
+}
+
+.add-agent-btn {
+  padding: 0;
+  gap: 8px;
+
+  & > div {
+    background: var(--main-background-quaternary);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &:hover {
+    background: transparent;
+
+    & > div {
+      background: var(--main-background-tertiary);
+    }
+  }
+}
+
+.agent {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+
+  border-radius: 8px;
+  transition: background 0.2s;
+
+  cursor: pointer;
+
+  &.selected,
+  &:hover {
+    background: var(--main-background-quaternary);
+  }
+
+  &:not(:last-child) {
+    margin-bottom: 2px;
+  }
+}
+
+.agent-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.agent-name {
+  flex-shrink: 0;
+}
+
+.agent-desc {
+  @include line-clamp(1);
+  margin-left: 4px;
+  flex-shrink: 1;
+}
+
+.selected-agent-icon {
+  margin-left: auto;
 }

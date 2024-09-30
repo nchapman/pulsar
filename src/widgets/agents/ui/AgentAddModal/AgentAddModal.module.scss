@@ -1,0 +1,17 @@
+.agent-add-modal {
+  width: 560px;
+  padding: 24px;
+
+  & > div {
+    height: 100%;
+  }
+}
+
+.search {
+  margin-top: 20px;
+  margin-bottom: 16px;
+}
+
+.title {
+  color: var(--button-text-secondary)
+}

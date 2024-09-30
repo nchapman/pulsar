@@ -12,7 +12,6 @@ import s from './AgentsSearch.module.scss';
 
 interface Props {
   className?: string;
-  onPopoverClose: () => void;
 }
 
 const placeholder = 'Search agents...';
@@ -20,7 +19,7 @@ const placeholder = 'Search agents...';
 const [$searchAgentsNavbarValue, setSearchAgentsNavbarValue] = getState('');
 
 export const AgentsSearch = memo((props: Props) => {
-  const { className, onPopoverClose } = props;
+  const { className } = props;
   const value = useUnit($searchAgentsNavbarValue);
 
   const handleSubmit = useCallback((e?: any) => {
@@ -33,21 +32,13 @@ export const AgentsSearch = memo((props: Props) => {
     <form onSubmit={handleSubmit} className={classNames(s.agentsSearch, [className])}>
       <Icon svg={LensIcon} className={s.icon} />
       <Input
-        autofocus
         placeholder={placeholder}
         className={s.input}
         value={value}
         // disabled={isLoading}
         onChange={setSearchAgentsNavbarValue}
       />
-      <Button
-        className={s.explore}
-        variant="clear"
-        onClick={() => {
-          goToAgents();
-          onPopoverClose();
-        }}
-      >
+      <Button className={s.explore} variant="clear" onClick={goToAgents}>
         <Icon svg={CubeIcon} className={s.icon} />
         Explore in Library
       </Button>

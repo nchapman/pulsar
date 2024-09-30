@@ -1,5 +1,7 @@
-// export { agentsChatInputModel } from './model/agents-chat-input.model.ts';
-// export { agentsNavbarModel } from './model/agents-navbar.model.ts';
+export { AgentAddModal } from './ui/AgentAddModal/AgentAddModal';
+export { AgentDetailsPage } from './ui/AgentDetailsPage/AgentDetailsPage';
 export { AgentsChatInput } from './ui/AgentsChatInput/AgentsChatInput';
 export { AgentsChatInputBtn } from './ui/AgentsChatInputBtn/AgentsChatInputBtn';
+export { AgentsNavbar } from './ui/AgentsNavbar/AgentsNavbar';
+export { AgentsPage } from './ui/AgentsPage/AgentsPage';
 export { AgentsSelectNavbar } from './ui/AgentsSelectNavbar/AgentsSelectNavbar';

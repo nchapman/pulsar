@@ -7,6 +7,7 @@ export enum Route {
   StoreModel = 'storeModel',
   Downloads = 'downloads',
   Agents = 'agents',
+  AgentsDetails = 'agentsDetails',
 }
 
 export const [$currRoute, setRoute] = getState(Route.Chat);
@@ -17,5 +18,6 @@ export const goToStoreSearch = () => setRoute(Route.StoreSearch);
 export const goToStoreModel = () => setRoute(Route.StoreModel);
 export const goToDownloads = () => setRoute(Route.Downloads);
 export const goToAgents = () => setRoute(Route.Agents);
+export const goToAgentsDetails = () => setRoute(Route.AgentsDetails);
 
 export const $isChat = $currRoute.map((route) => route === 'chat');

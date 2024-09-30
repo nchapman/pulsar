@@ -1,3 +1,20 @@
-.AgentsPage {
-  // styles-here
+.agents-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 40px 40px;
+  background-image: url("../../assets/agents-bg.png");
+  background-size: contain;
+  background-position: 0 0;
+  background-repeat: no-repeat;
+}
+
+.input {
+  margin: 24px 0;
+}
+
+.categories {
+  margin-top: 24px;
+  margin-bottom: 48px;
 }

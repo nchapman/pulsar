@@ -1,0 +1,21 @@
+.agents-navbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+  z-index: 1000;
+  padding: 8px 16px;
+  width: max-content;
+}
+
+.details-mode .store {
+  opacity: 0.5;
+}
+
+.back-button {
+  svg {
+    transform: rotate(180deg);
+    width: 16px;
+    height: 16px;
+  }
+}

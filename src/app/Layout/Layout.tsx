@@ -3,8 +3,7 @@ import { FC, memo, useLayoutEffect } from 'preact/compat';
 
 import { $currRoute, Route } from '@/app/routes';
 import { Page } from '@/shared/ui';
-import { AgentAddModal } from '@/widgets/agents/ui/AgentAddModal/AgentAddModal.tsx';
-import { AgentsPage } from '@/widgets/agents/ui/AgentsPage/AgentsPage.tsx';
+import { AgentAddModal, AgentDetailsPage, AgentsNavbar, AgentsPage } from '@/widgets/agents';
 import { Chat, ChatNavbar } from '@/widgets/chat';
 import { DownloadsNavbar, DownloadsPage } from '@/widgets/downloads';
 import { ModelSettings, ModelSettingsSwitch } from '@/widgets/model-settings';
@@ -23,6 +22,7 @@ const Widgets: Record<Route, FC> = {
   [Route.StoreModel]: ModelsDetailsPage,
   [Route.Downloads]: DownloadsPage,
   [Route.Agents]: AgentsPage,
+  [Route.AgentsDetails]: AgentDetailsPage,
 };
 
 const Nav: Record<Route, FC> = {
@@ -31,7 +31,8 @@ const Nav: Record<Route, FC> = {
   [Route.StoreSearch]: ModelStoreNavbar,
   [Route.StoreModel]: ModelStoreNavbar,
   [Route.Downloads]: DownloadsNavbar,
-  [Route.Agents]: () => null,
+  [Route.Agents]: AgentsNavbar,
+  [Route.AgentsDetails]: AgentsNavbar,
 };
 
 export const Layout = memo(() => {

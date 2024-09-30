@@ -1,7 +1,8 @@
 import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
 
-import { $currRoute, goToDownloads, goToStore, Route } from '@/app/routes';
+import { $currRoute, goToAgents, goToDownloads, goToStore, Route } from '@/app/routes';
+import AgentsIcon from '@/shared/assets/icons/at-sign.svg';
 import { classNames } from '@/shared/lib/func';
 import { Button, Icon } from '@/shared/ui';
 import { openSettingsModal, SettingsModal } from '@/widgets/settings';
@@ -30,6 +31,16 @@ export const SidebarFooter = memo((props: Props) => {
       >
         <Icon svg={StoreIcon} className={s.icon} />
         Models
+      </Button>
+      <Button
+        className={s.btn}
+        onClick={goToAgents}
+        variant="clear"
+        active={currRoute === Route.Agents}
+        withInactive
+      >
+        <Icon svg={AgentsIcon} className={s.icon} />
+        Agents
       </Button>
       <Button className={s.btn} onClick={openSettingsModal} variant="clear" withInactive>
         <Icon svg={SettingsIcon} className={s.icon} />

@@ -1,5 +1,6 @@
 import { createEvent, sample } from 'effector';
 
+import { $currRoute, Route } from '@/app/routes';
 import { getState } from '@/shared/lib/func';
 
 const [$open, setOpen] = getState(false);
@@ -12,6 +13,7 @@ const [$modalOpen, setModalOpen] = getState(false);
 const openModal = () => setModalOpen(true);
 const closeModal = () => setModalOpen(false);
 
+// Close popover when opening modal
 sample({
   clock: $modalOpen,
   target: $open,
@@ -28,3 +30,11 @@ export const agentsChatInputModel = {
   openModal,
   closeModal,
 };
+
+// Close modal when going to Agents page
+sample({
+  clock: $currRoute,
+  target: $modalOpen,
+  fn: () => false,
+  filter: (v) => v === Route.Agents,
+});

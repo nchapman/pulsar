@@ -1,4 +1,4 @@
-import { createEvent, createStore } from 'effector';
+import { getState } from '@/shared/lib/func';
 
 export enum Route {
   Chat = 'chat',
@@ -9,10 +9,7 @@ export enum Route {
   Agents = 'agents',
 }
 
-export const $currRoute = createStore<Route>(Route.Chat);
-export const setRoute = createEvent<Route>();
-
-$currRoute.on(setRoute, (_, route) => route);
+export const [$currRoute, setRoute] = getState(Route.Chat);
 
 export const goToChat = () => setRoute(Route.Chat);
 export const goToStore = () => setRoute(Route.Store);

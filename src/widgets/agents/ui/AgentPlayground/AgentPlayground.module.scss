@@ -1,3 +1,46 @@
-.AgentPlayground {
+.agent-playground {
+  padding: 12px 24px 0;
   background: var(--sidebar-background-primary);
+}
+
+.header {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-light);
+
+  &-upper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+}
+
+.limited {
+  font-size: 12px;
+  color: var(--warning);
+  border-radius: 4px;
+  background: rgba(253, 176, 34, 0.10);
+  padding: 2px 6px;
+}
+
+.chat {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+
+  width: 100%;
+  max-height: calc(100vh - 146px);
+  height: 100%;
+}
+
+.msg-list {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.chat-input {
+  flex: 0 1 auto;
+  flex-shrink: 0;
+  width: 100%;
 }

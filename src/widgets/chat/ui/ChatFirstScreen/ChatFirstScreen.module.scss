@@ -27,3 +27,13 @@
   position: absolute;
   bottom: 16px;
 }
+
+.demo {
+  text-align: center;
+  transform: translateY(-12%);
+
+  .example-prompts {
+    position: static;
+    margin-top: 24px;
+  }
+}

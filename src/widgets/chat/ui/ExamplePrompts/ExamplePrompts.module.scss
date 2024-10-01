@@ -13,6 +13,7 @@
   border: 1px solid var(--border-medium);
   padding: 16px;
   cursor: pointer;
+  transition: background-color 0.2s;
 
   &:hover {
     background-color: var(--main-background-secondary);
@@ -21,4 +22,21 @@
 
 .desc {
   @include line-clamp(1)
+}
+
+.demo {
+  background: transparent;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 0 12px;
+
+  .prompt {
+    padding: 12px;
+
+    &:not(:hover) {
+      background: var(--main-background-quaternary);
+    }
+  }
 }

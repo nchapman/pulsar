@@ -18,12 +18,13 @@ import s from './ChatInput.module.scss';
 
 interface Props {
   className?: string;
+  demo?: boolean;
 }
 
 export const [$withFileUpload, setWithFileUpload] = getState(false);
 
 export const ChatInput = (props: Props) => {
-  const { className } = props;
+  const { className, demo } = props;
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [input, setInput] = useState('');
@@ -91,9 +92,9 @@ export const ChatInput = (props: Props) => {
             onRemove={resetFileData}
           />
 
-          <div className={s.divider} />
+          {!demo && <div className={s.divider} />}
 
-          <AgentsChatInputBtn />
+          {!demo && <AgentsChatInputBtn />}
         </div>
 
         <div className={s.actionsRight}>

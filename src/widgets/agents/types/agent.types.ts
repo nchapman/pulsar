@@ -7,6 +7,7 @@ export interface Agent {
   categories: Id[];
   users: number;
   likes: number;
+  features: string[];
 }
 
 export enum AgentsView {

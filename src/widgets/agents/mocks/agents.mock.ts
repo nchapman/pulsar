@@ -10,6 +10,7 @@ export const agentsMock: Agent[] = [
     categories: ['1', '2', '3', '4', '5', '6'],
     likes: 849,
     users: 21625,
+    features: ['Code Generation', 'Text Generation', 'Visual Generation'],
   },
   {
     id: '2',
@@ -20,6 +21,7 @@ export const agentsMock: Agent[] = [
     categories: ['1', '2', '3', '4', '5', '6'],
     likes: 849,
     users: 21625,
+    features: ['Code Generation', 'Text Generation', 'Visual Generation'],
   },
   {
     id: '3',
@@ -30,6 +32,7 @@ export const agentsMock: Agent[] = [
     categories: ['1', '2', '3', '4', '5', '6'],
     likes: 849,
     users: 21625,
+    features: ['Code Generation', 'Text Generation', 'Visual Generation'],
   },
   {
     id: '4',
@@ -40,6 +43,7 @@ export const agentsMock: Agent[] = [
     categories: ['1', '2', '3', '4', '5', '6'],
     likes: 849,
     users: 21625,
+    features: ['Code Generation', 'Text Generation', 'Visual Generation'],
   },
   {
     id: '5',
@@ -50,6 +54,7 @@ export const agentsMock: Agent[] = [
     categories: ['1', '2', '3', '4', '5', '6'],
     likes: 849,
     users: 21625,
+    features: ['Code Generation', 'Text Generation', 'Visual Generation'],
   },
   {
     id: '6',
@@ -60,5 +65,6 @@ export const agentsMock: Agent[] = [
     categories: ['1', '2', '3', '4', '5', '6'],
     likes: 849,
     users: 21625,
+    features: ['Code Generation', 'Text Generation', 'Visual Generation'],
   },
 ];

@@ -6,6 +6,7 @@ import { classNames } from '@/shared/lib/func';
 import { Icon, Text } from '@/shared/ui';
 
 import { AGENT_CATEGORIES_MAP } from '../../consts/categories.const.ts';
+import { agentsLibModel } from '../../model/agents-lib.model.ts';
 import { Agent } from '../../types/agent.types.ts';
 import s from './AgentCard.module.scss';
 
@@ -30,8 +31,12 @@ export const AgentCard = memo((props: Props) => {
     { icon: LikeIcon, value: agent.likes },
   ];
 
+  const handeClick = () => {
+    agentsLibModel.setCurrAgent(agent.id);
+  };
+
   return (
-    <div className={classNames(s.agentCard, [className])}>
+    <div className={classNames(s.agentCard, [className])} onClick={handeClick}>
       <div className={s.header}>
         <img className={s.icon} src={agent.icon} />
         <div>

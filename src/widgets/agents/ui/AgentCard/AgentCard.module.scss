@@ -1,0 +1,64 @@
+.agent-card {
+  width: 100%;
+  padding: 12px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  border-radius: 8px;
+  border: 1px solid var(--border-disabled);
+  background: var(--main-background-secondary);
+  cursor: pointer;
+
+  transition: border-color 0.2s;
+
+  &:hover {
+    border-color: var(--border-heavy);
+  }
+}
+
+.header {
+  display: flex;
+  gap: 12px;
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+
+.categories {
+  display: flex;
+  gap: 4px;
+}
+
+.category {
+  color: var(--text-primary);
+  border: 1px solid var(--border-medium);
+  background: var(--main-background-quaternary);
+  font-size: 12px;
+  padding: 2px 6px;
+  width: max-content;
+  border-radius: 4px;
+}
+
+.stats {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.stat {
+  color: var(--text-secondary);
+  display: flex;
+  gap: 4px;
+}
+
+.stats-divider {
+  width: 3px;
+  height: 3px;
+  background: var(--text-secondary);
+  border-radius: 50%;
+}

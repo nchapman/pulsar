@@ -3,12 +3,12 @@ import { memo } from 'preact/compat';
 import { getTagsFromName } from '@/entities/model/lib/getTagsFromName.ts';
 import { HuggingFaceModel } from '@/entities/model/types/hugging-face-model.ts';
 import { ModelTag } from '@/entities/model/ui/ModelTag/ModelTag.tsx';
+import LikeIcon from '@/shared/assets/icons/heart.svg';
 import { classNames } from '@/shared/lib/func';
 import { Icon, Text } from '@/shared/ui';
 
 import UpdateIcon from '../../assets/clock-check.svg';
 import DownloadIcon from '../../assets/download.svg';
-import LikeIcon from '../../assets/heart.svg';
 import { formatDate } from '../../lib/formatDate';
 import { formatNumber } from '../../lib/formatNumber.ts';
 import { modelStoreEvents } from '../../model/model-store.model.ts';

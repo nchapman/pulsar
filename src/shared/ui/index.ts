@@ -21,6 +21,7 @@ export * from './Portal/Portal';
 export * from './Progress/Progress';
 export * from './ProgressRounded/ProgressRounded';
 export * from './RightPanel/RightPanel';
+export * from './ScrollArea/ScrollArea';
 export * from './Select/Select';
 export * from './Skeleton/Skeleton';
 export * from './Slider/Slider';

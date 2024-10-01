@@ -11,14 +11,16 @@ interface BadgeProps {
   content: ReactNode;
   bg?: string;
   prefix?: string;
+  round?: boolean;
+  c?: 'quaternary' | 'primary' | 'secondary' | 'tertiary';
 }
 
 export const Badge = memo((props: BadgeProps) => {
-  const { className, content, bg, prefix, isDark = false } = props;
+  const { className, content, round, bg, prefix, isDark = false, c = 'quaternary' } = props;
 
   return (
     <div
-      className={classNames(s.badge, [className], { [s.dark]: isDark })}
+      className={classNames(s.badge, [className, s[c]], { [s.dark]: isDark, [s.round]: round })}
       style={{ backgroundColor: bg }}
     >
       {prefix && (

@@ -3,6 +3,7 @@ import { combine, createEffect, createEvent, createStore, sample } from 'effecto
 import { $currRoute, goToStore, goToStoreModel, goToStoreSearch, Route } from '@/app/routes';
 import { curatedModels as curated, ModelFileData } from '@/entities/model';
 import { CuratedModel, HuggingFaceModel } from '@/entities/model/types/hugging-face-model.ts';
+import { getState } from '@/shared/lib/func';
 import { getModelFileInfo } from '@/widgets/model-store/lib/getModelFileInfo.ts';
 import { ModelSorting } from '@/widgets/model-store/types/model-sorting.ts';
 
@@ -22,9 +23,7 @@ const currModelFiles = combine(
 );
 const searchValue = createStore('');
 
-const listScroll = createStore(0);
-const setListScroll = createEvent<number>();
-listScroll.on(setListScroll, (_, v) => v);
+const [listScroll, setListScroll] = getState(0);
 
 const modelsNameMap = models.map((models) =>
   models.reduce<Record<string, HuggingFaceModel>>(

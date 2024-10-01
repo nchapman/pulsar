@@ -8,3 +8,17 @@
 
   border-radius: 4px;
 }
+
+.quaternary {
+  background: var(--main-background-quaternary);
+
+  span {
+    color: var(--text-secondary);
+  }
+}
+
+.round {
+  border-radius: 1000px;
+  padding: 2px 8px;
+  font-weight: 700;
+}

@@ -20,6 +20,8 @@ const $agentsMap = $agents.map((agents) =>
 
 const $currAgentData = $currAgent.map((id) => (id ? $agentsMap.getState()[id] : null));
 
+const closeAgentDetails = () => setCurrAgent(null);
+
 export const agentsLibModel = {
   $sorting,
   setSorting,
@@ -32,6 +34,8 @@ export const agentsLibModel = {
 
   $agents,
   $currAgentData,
+
+  closeAgentDetails,
 };
 
 sample({

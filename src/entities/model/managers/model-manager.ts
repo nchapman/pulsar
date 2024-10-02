@@ -113,8 +113,6 @@ class ModelManager {
   }) {
     const { dto, filePath, type, modelName } = d;
 
-    console.log(modelName);
-
     // move file to models folder
     await moveToModelsDir({ curFilePath: filePath, model: modelName, fileName: dto.file.name });
 
@@ -174,7 +172,6 @@ class ModelManager {
 
     // set default/current model-file to first available
     const newModel = this.getFirstAvailableModel(excludeId);
-    console.log('First available model:', newModel);
 
     this.currentModel = newModel;
     this.userSettings.set('defaultModel', newModel);
@@ -225,7 +222,6 @@ class ModelManager {
     }
 
     if (modelFile.type !== 'llm') {
-      console.log('Model type:', modelFile.type);
       throw new Error('Model type not supported');
     }
 
@@ -273,8 +269,6 @@ class ModelManager {
     models = await this.modelFilesRepository.getAll();
 
     const modelsToDelete: Promise<void>[] = [];
-
-    console.log('Files map:', filesMap);
 
     Object.entries(filesMap).forEach(([author, modelNames]) => {
       Object.entries(modelNames).forEach(([modelName, files]) => {
@@ -353,8 +347,9 @@ class ModelManager {
 
   private async loadModel(modelName: string, llmFileName: string, mmpFileName?: string) {
     try {
-      await this.dropModel();
       const llmPath = await getModelPath({ model: modelName, fileName: llmFileName });
+
+      await this.dropModel(llmPath);
       const mmpPath = mmpFileName
         ? await getModelPath({ model: modelName, fileName: mmpFileName })
         : undefined;
@@ -362,7 +357,6 @@ class ModelManager {
       this.#model = await NebulaModel.initModel(llmPath, mmpPath, (progress) => {
         logi('Model manager', `Model loading progress: ${progress}`);
         this.loadingProgress = progress;
-        console.log('Loading progress:', progress);
       });
     } catch (e) {
       loge('Model manager', `Failed to load model, rust error: ${e}`);
@@ -370,9 +364,9 @@ class ModelManager {
     }
   }
 
-  private async dropModel() {
+  private async dropModel(llmPath: string) {
     try {
-      this.#model?.drop();
+      this.#model?.drop(llmPath);
       this.#model = null;
       // this.isReady = false;
     } catch (e: any) {

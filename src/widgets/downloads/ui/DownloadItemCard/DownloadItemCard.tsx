@@ -11,6 +11,7 @@ import RemoveIcon from '@/shared/assets/icons/trash.svg';
 import { classNames } from '@/shared/lib/func';
 import { Button, confirm, Icon, Progress, Text } from '@/shared/ui';
 import { startNewChat } from '@/widgets/chat';
+import { switchModelWithNewChat } from '@/widgets/chat/model/chat.ts';
 
 import s from './DownloadItemCard.module.scss';
 
@@ -55,7 +56,7 @@ export const DownloadItemCard = memo((props: Props) => {
       return;
     }
 
-    modelManager.switchModel(downloadItem.modelFileId);
+    switchModelWithNewChat(downloadItem.modelFileId);
   };
 
   function getWidget() {

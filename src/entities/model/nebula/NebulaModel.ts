@@ -48,9 +48,10 @@ export class NebulaModel {
     return new NebulaModel(model);
   }
 
-  public async drop() {
+  public async drop(modelPath: string): Promise<void> {
     await invoke('plugin:nebula|drop_model', {
       model: this.model,
+      modelPath,
     });
   }
 

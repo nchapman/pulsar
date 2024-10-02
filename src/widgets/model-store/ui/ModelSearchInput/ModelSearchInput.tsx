@@ -36,8 +36,8 @@ export const ModelSearchInput = memo((props: Props) => {
   const handleSubmit = useCallback((e?: any) => {
     e?.preventDefault();
     e?.stopPropagation();
-    modelStoreEvents.searchHF();
     goToStoreSearch();
+    modelStoreEvents.searchHF();
   }, []);
 
   const handleResetInput = useCallback(() => {

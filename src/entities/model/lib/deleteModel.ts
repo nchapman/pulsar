@@ -11,6 +11,6 @@ export async function deleteModel(d: { fileName: string; model: string }, isDown
       await removeFile(path);
     }
   } catch (e) {
-    console.error('Failed to delete model-file file');
+    console.error('Failed to delete model-file file', e);
   }
 }

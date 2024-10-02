@@ -124,8 +124,11 @@
     padding-left: 18px;
   }
 
-  p + ul, p + ol {
-    padding-left: 46px;
+  p, span, h1, h2, h3, h4, h5, h6 {
+    & + ul,
+    & + ol {
+      padding-left: 46px;
+    }
   }
 
   span {

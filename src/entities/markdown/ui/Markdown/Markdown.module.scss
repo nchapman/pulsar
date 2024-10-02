@@ -86,7 +86,6 @@
   ol {
     list-style: none;
     counter-reset: item;
-    padding-left: 10px;
 
     & > li {
       counter-increment: item;
@@ -123,6 +122,10 @@
 
   ul ol, ol ul, ul ul, ol ol {
     padding-left: 18px;
+  }
+
+  p + ul, p + ol {
+    padding-left: 46px;
   }
 
   span {

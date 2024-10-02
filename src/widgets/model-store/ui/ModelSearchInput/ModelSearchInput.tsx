@@ -2,7 +2,7 @@ import { useUnit } from 'effector-react';
 import { memo } from 'preact/compat';
 import { useCallback, useRef } from 'preact/hooks';
 
-import { goToStoreSearch } from '@/app/routes';
+import { goToStore, goToStoreSearch } from '@/app/routes';
 import GoIcon from '@/shared/assets/icons/arrow-right.svg';
 import CrossIcon from '@/shared/assets/icons/close.svg';
 import LensIcon from '@/shared/assets/icons/search.svg';
@@ -36,13 +36,14 @@ export const ModelSearchInput = memo((props: Props) => {
   const handleSubmit = useCallback((e?: any) => {
     e?.preventDefault();
     e?.stopPropagation();
-    modelStoreEvents.searchHF();
     goToStoreSearch();
+    modelStoreEvents.searchHF();
   }, []);
 
   const handleResetInput = useCallback(() => {
     modelStoreEvents.setSearchValue('');
     inputRef.current.focus();
+    goToStore();
   }, []);
 
   useKeyboardListener(handleSubmit, 'Enter');

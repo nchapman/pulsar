@@ -61,7 +61,8 @@ export const ChatInput = (props: Props) => {
   useEffect(() => {
     setInput('');
     inputRef.current?.focus();
-  }, [chatId]);
+    resetFileData();
+  }, [chatId, resetFileData]);
 
   useKeyboardListener(() => handleSubmit(), 'Enter', undefined, ['shiftKey']);
   useKeyboardListener(() => startNewLine(), 'Enter', ['shiftKey']);

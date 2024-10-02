@@ -18,6 +18,7 @@ import s from './DownloadItemCard.module.scss';
 interface Props {
   className?: string;
   data: ModelFileData;
+  id: Id;
 }
 
 const FILE_NAME: Record<ModelFileType, string> = {
@@ -27,15 +28,15 @@ const FILE_NAME: Record<ModelFileType, string> = {
 };
 
 export const DownloadItemCard = memo((props: Props) => {
-  const { className, data } = props;
+  const { className, data, id } = props;
 
   const { isGguf, isMmproj } = data;
 
   const fileName = data.name;
 
-  const downloadItem = useUnit(downloadsManager.state.$downloadsNameData)[fileName];
+  const downloadItem = useUnit(downloadsManager.state.$downloadsData)[id];
 
-  const { id, downloadingData, type } = downloadItem || {};
+  const { downloadingData, type } = downloadItem || {};
 
   const handleDeleteModel = () => {
     confirm({

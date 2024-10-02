@@ -143,7 +143,6 @@ class ModelManager {
 
   async deleteModel(modelId: string) {
     const model = this.modelFiles[modelId];
-
     if (!model) {
       throw new Error(`Model "${modelId}" not found`);
     }

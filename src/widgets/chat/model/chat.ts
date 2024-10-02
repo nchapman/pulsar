@@ -55,10 +55,6 @@ $chat.data.reset(chatEvt.startNew);
 $messages.data.reset(chatEvt.startNew);
 $messages.idsList.reset(chatEvt.startNew);
 
-chatEvt.startNew.watch(() => {
-  console.log('Starting new chat');
-});
-
 const NEW_CHAT_TITLE = 'New chat';
 
 async function createDBChat() {
@@ -309,10 +305,6 @@ export const switchModelWithNewChat = createEffect(async (modelId: Id) => {
 
 const $currChatModel = $chat.data.map((chat) => chat?.model || null);
 
-$chat.id.watch((chat) => {
-  console.log('Chat id changed', chat);
-});
-
 // switch model on chat switch
 sample({
   clock: $currChatModel,
@@ -326,7 +318,6 @@ sample({
       // eslint-disable-next-line no-param-reassign
       if (!modelId) modelId = $defaultModel.getState()!;
       if (modelId === currModel) return;
-      console.log('Switching to model', modelId);
 
       await modelManager.switchModel(modelId);
     }

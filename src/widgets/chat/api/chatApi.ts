@@ -24,7 +24,8 @@ export async function stream(
 
   try {
     const context = await modelManager.model.createContext(
-      messages.slice(0, -1).map((msg) => ({ message: msg.text, is_user: !!msg.isUser })),
+      [],
+      //      messages.slice(0, -1).map((msg) => ({ message: msg.text, is_user: !!msg.isUser })),
       ctx.stopTokens
     );
 
@@ -34,14 +35,7 @@ export async function stream(
 
     context.onComplete = onStreamEnd;
 
-    const msg = messages[messages.length - 1];
-
-    if (msg.file?.type === 'image') {
-      const file = await urlToBase64(msg.file.src);
-      await context.evaluateImage(file, messages[messages.length - 1].text);
-    } else {
-      await context.evaluateString(messages[messages.length - 1].text, true);
-    }
+    await context.evaluate(messages);
 
     onStreamStart();
 

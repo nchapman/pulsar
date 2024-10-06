@@ -1,7 +1,9 @@
 import { invoke } from '@tauri-apps/api';
 import { listen } from '@tauri-apps/api/event';
 
+import { ChatMsg } from '@/db/chat';
 import { NebulaModel } from './NebulaModel.ts';
+import { urlToBase64 } from '@/widgets/chat/lib/utils/urlToBase64.ts';
 
 type NebulaPredictPayload = {
   model: string;
@@ -44,22 +46,29 @@ export class NebulaContext {
   public static async initContext({
     model,
     cctx = [],
-    stopTokens,
   }: {
     model: NebulaModel;
     cctx: { message: string; is_user: boolean }[];
-    stopTokens?: string[];
   }): Promise<NebulaContext> {
-    let contextOptions: ContextOptions = { ctx: cctx, n_ctx: 20000 };
-    if (stopTokens) {
-      contextOptions = { ...contextOptions, stop_tokens: stopTokens };
-    }
+    const contextOptions: ContextOptions = { n_ctx: 20000 };
     const ctx = await invoke<string>('plugin:nebula|model_init_context', {
       modelPath: model.model,
       contextOptions,
     });
 
-    return new NebulaContext(model, ctx);
+    const ccc = new NebulaContext(model, ctx);
+    if (cctx.length > 0) {
+      const dialog = cctx.map((val) => ({
+        content: val.message,
+        role: val.isUser ? 'user' : 'assistant',
+      }));
+      await invoke('plugin:nebula|model_context_eval', {
+        modelPath: ccc.model.model,
+        contextId: ccc.contextId,
+        dialog,
+      });
+    }
+    return ccc;
   }
 
   public async drop() {
@@ -69,21 +78,28 @@ export class NebulaContext {
     });
   }
 
-  public async evaluateString(data: string, useBos: boolean = false) {
-    await invoke('plugin:nebula|model_context_eval_string', {
+  public async evaluate(data: ChatMsg[]) {
+    const dialog = await Promise.all(
+      data.map(async (val) => {
+        if (val.file?.type === 'image') {
+          const b64im = await urlToBase64(val.file.src);
+          return {
+            content: val.text,
+            role: val.isUser ? 'user' : 'assistant',
+            images: [b64im],
+          };
+        } else {
+          return {
+            content: val.text,
+            role: val.isUser ? 'user' : 'assistant',
+          };
+        }
+      })
+    );
+    await invoke('plugin:nebula|model_context_eval', {
       modelPath: this.model.model,
       contextId: this.contextId,
-      data,
-      useBos,
-    });
-  }
-
-  public async evaluateImage(base64EncodedImage: string, prompt: string) {
-    await invoke('plugin:nebula|model_context_eval_image', {
-      modelPath: this.model.model,
-      contextId: this.contextId,
-      base64EncodedImage,
-      prompt,
+      dialog,
     });
   }
 
@@ -106,12 +122,18 @@ export class NebulaContext {
       }
     });
 
+    const PredictOptions = {
+      max_len: maxLength,
+      temp,
+    };
+    if (topP) {
+      PredictOptions.top_p = topP;
+    }
+
     await invoke('plugin:nebula|model_context_predict', {
       modelPath: this.model.model,
       contextId: this.contextId,
-      maxLen: maxLength,
-      temp,
-      topP,
+      predictOptions: PredictOptions,
     });
 
     unsubscribe();

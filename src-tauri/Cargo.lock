@@ -491,6 +491,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "bon"
+version = "2.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "97493a391b4b18ee918675fb8663e53646fd09321c58b46afa04e8ce2499c869"
+dependencies = [
+ "bon-macros",
+ "rustversion",
+]
+
+[[package]]
+name = "bon-macros"
+version = "2.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2a2af3eac944c12cdf4423eab70d310da0a8e5851a18ffb192c0a5e3f7ae1663"
+dependencies = [
+ "darling",
+ "ident_case",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.71",
+]
+
+[[package]]
 name = "borsh"
 version = "1.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2709,9 +2732,11 @@ checksum = "78b3ae25bc7c8c38cec158d1f2757ee79e9b3740fbc7ccf0e59e4b08d793fa89"
 name = "llama-cpp"
 version = "0.0.1"
 dependencies = [
+ "bon",
  "gag",
  "llama-cpp-sys",
  "log",
+ "ringbuffer",
  "stdio-override",
  "thiserror",
  "tracing",
@@ -2958,6 +2983,8 @@ dependencies = [
 name = "nebula"
 version = "0.1.0"
 dependencies = [
+ "base64 0.22.1",
+ "bon",
  "clap",
  "hf-hub",
  "lazy_static",
@@ -2966,6 +2993,7 @@ dependencies = [
  "num_cpus",
  "resource-path",
  "serde",
+ "serde_json",
  "simple_logger",
  "strfmt",
  "thiserror",
@@ -4314,6 +4342,12 @@ dependencies = [
  "untrusted",
  "windows-sys 0.52.0",
 ]
+
+[[package]]
+name = "ringbuffer"
+version = "0.15.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3df6368f71f205ff9c33c076d170dd56ebf68e8161c733c0caa07a7a5509ed53"
 
 [[package]]
 name = "rkyv"

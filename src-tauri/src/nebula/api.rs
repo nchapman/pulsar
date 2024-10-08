@@ -229,7 +229,7 @@ async fn model_context_eval<R: Runtime>(
     dialog: Vec<Message>,
     _app: AppHandle<R>,
     state: State<'_, NebulaState>,
-) -> NebulaResult<()>{
+) -> NebulaResult<()> {
     let mut models = state.models.lock().await;
 
     let model = models
@@ -301,7 +301,7 @@ async fn model_context_predict<R: Runtime>(
             token: None,
         },
     )
-        .expect("Could not emit llm predict payload event");
+    .expect("Could not emit llm predict payload event");
     Ok(())
 }
 
@@ -332,9 +332,13 @@ pub fn init_plugin<R: Runtime>() -> TauriPlugin<R> {
         ])
         .setup(|app_handle| {
             #[cfg(test)]
-            let resource_path = std::path::PathBuf::from("nebula/backends/llama_cpp/llama-cpp-sys/dist");
+            let resource_path =
+                std::path::PathBuf::from("nebula/backends/llama_cpp/llama-cpp-sys/dist");
             #[cfg(not(test))]
-            let resource_path = app_handle.path_resolver().resolve_resource("nebula/backends/llama_cpp/llama-cpp-sys/dist").unwrap();
+            let resource_path = app_handle
+                .path_resolver()
+                .resolve_resource("nebula/backends/llama_cpp/llama-cpp-sys/dist")
+                .unwrap();
             eprintln!("{:?}", resource_path);
             nebula::init(resource_path).unwrap();
             app_handle.manage(NebulaState::default());
@@ -660,9 +664,9 @@ mod tests {
                 callback: tauri::api::ipc::CallbackFn(0),
                 error: tauri::api::ipc::CallbackFn(1),
                 inner: serde_json::json!({
-                    "modelPath": model_path,
+                    "modelPath": model_path.clone(),
                     "contextOptions": {
-                        "ctx": [{"message": "Hello, world!", "is_user": true}, {"message": "How are you doing?", "is_user": false}]
+                        "n_ctx": 20000
                     }
                 }),
             },
@@ -671,6 +675,26 @@ mod tests {
         assert!(context_init_res.is_ok());
 
         let context_id = context_init_res.unwrap();
+
+        let inner = serde_json::json!({
+            "modelPath": model_path.clone(),
+            "contextId": context_id.clone(),
+            "dialog": [{"content": "Hello, world!", "role": "user"}, {"content": "How are you doing?", "role": "assistant"}]
+        });
+
+        let context_eval_res = tauri::test::get_ipc_response::<()>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|model_context_eval".into(),
+                tauri_module: None,
+                invoke_key: Some(tauri::test::INVOKE_KEY.into()),
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner: inner,
+            },
+        );
+
+        assert!(context_eval_res.is_ok());
 
         // let _id = app.listen_global("nebula-predict", |event| {
         //     // println!("Received event: {:?}", event.payload().unwrap());
@@ -689,7 +713,10 @@ mod tests {
                 inner: serde_json::json!({
                     "modelPath": model_path,
                     "contextId": context_id,
-                    "maxLen": 10
+                    "predictOptions": {
+                        "max_len": 10,
+                        "temp": 0.5
+                    },
                 }),
             },
         );

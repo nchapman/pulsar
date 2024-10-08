@@ -7,6 +7,7 @@ import { agentsMock } from '@/widgets/agents/mocks/agents.mock.ts';
 import { AgentCardsList } from '@/widgets/agents/ui/AgentCardsList/AgentCardsList.tsx';
 import { AgentCategories } from '@/widgets/agents/ui/AgentCategories/AgentCategories.tsx';
 import { AgentsSearchInput } from '@/widgets/agents/ui/AgentsSearchInput/AgentsSearchInput.tsx';
+import { TestAgent } from '@/widgets/agents/ui/TestAgent/TestAgent.tsx';
 
 import s from './AgentsPage.module.scss';
 
@@ -15,6 +16,8 @@ export const AgentsPage = memo(() => (
     <Text w="semi" s={36} c="primary">
       Find & use the best agents
     </Text>
+
+    <TestAgent />
 
     <AgentsSearchInput className={s.input} />
 

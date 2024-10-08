@@ -2,8 +2,6 @@ import { ChatMsg } from '@/db/chat';
 import { modelManager } from '@/entities/model';
 import { loge } from '@/shared/lib/Logger.ts';
 
-import { urlToBase64 } from '../lib/utils/urlToBase64.ts';
-
 export async function stream(
   config: {
     messages: ChatMsg[];
@@ -24,9 +22,8 @@ export async function stream(
 
   try {
     const context = await modelManager.model.createContext(
-      [],
+      []
       //      messages.slice(0, -1).map((msg) => ({ message: msg.text, is_user: !!msg.isUser })),
-      ctx.stopTokens
     );
 
     context.onToken = (p) => {

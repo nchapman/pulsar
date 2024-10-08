@@ -60,7 +60,7 @@ export class NebulaContext {
     if (cctx.length > 0) {
       const dialog = cctx.map((val) => ({
         content: val.message,
-        role: val.isUser ? 'user' : 'assistant',
+        role: val.is_user ? 'user' : 'assistant',
       }));
       await invoke('plugin:nebula|model_context_eval', {
         modelPath: ccc.model.model,
@@ -122,7 +122,11 @@ export class NebulaContext {
       }
     });
 
-    const PredictOptions = {
+    const PredictOptions: {
+      max_len: number;
+      temp: number;
+      top_p?: number;
+    } = {
       max_len: maxLength,
       temp,
     };

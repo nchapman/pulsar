@@ -10,6 +10,7 @@ import CubeIcon from '@/shared/assets/icons/cube.svg';
 import { classNames } from '@/shared/lib/func';
 import { useToggle } from '@/shared/lib/hooks';
 import { Button, Icon, Text } from '@/shared/ui';
+import { switchModelWithNewChat } from '@/widgets/chat/model/chat.ts';
 
 import s from './SwitchModelInsideChat.module.scss';
 
@@ -24,7 +25,7 @@ export const SwitchModelInsideChat = memo((props: Props) => {
   const { off: hidePopover, toggle: togglePopover, isOn: isPopoverShown } = useToggle();
 
   const handleModelClick = (modelId: string) => () => {
-    modelManager.switchModel(modelId);
+    switchModelWithNewChat(modelId);
     hidePopover();
   };
 

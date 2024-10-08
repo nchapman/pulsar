@@ -1,7 +1,7 @@
 import { useUnit } from 'effector-react';
 import { memo, useLayoutEffect } from 'preact/compat';
 
-import { $currRoute, goToStoreModel, Route } from '@/app/routes';
+import { $currRoute, goToStoreModel, goToStoreSearch, Route } from '@/app/routes';
 import ListIcon from '@/shared/assets/icons/list.svg';
 import { classNames } from '@/shared/lib/func';
 import { Text } from '@/shared/ui';
@@ -14,7 +14,7 @@ import { ModelsList } from '../ModelsList/ModelsList.tsx';
 import s from './ModelsSearchPage.module.scss';
 
 $currRoute.watch((r) => {
-  if (r === Route.Store) fetchHFModels('');
+  if (r === Route.Store) fetchHFModels($modelStoreState.searchValue.getState());
 });
 
 export const ModelsSearchPage = memo(() => {
@@ -25,6 +25,11 @@ export const ModelsSearchPage = memo(() => {
   useLayoutEffect(() => {
     if ($modelStoreState.currModel.getState()) {
       goToStoreModel();
+      return;
+    }
+
+    if ($modelStoreState.searchValue.getState()) {
+      goToStoreSearch();
     }
   }, []);
 

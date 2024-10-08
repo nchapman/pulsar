@@ -5,6 +5,7 @@ import { chatsRepository } from '@/db';
 import type { Chat, ChatMsg } from '@/db/chat';
 import { ModelSettings } from '@/db/chat/chat.repository.ts';
 import { modelManager } from '@/entities/model';
+import { $defaultModel } from '@/entities/settings/managers/user-settings-manager.ts';
 import { FileData } from '@/features/upload-file';
 import { suid } from '@/shared/lib/func';
 
@@ -291,18 +292,37 @@ export const isArchivedChat = $chat.data.map((i) => i?.isArchived, { skipVoid: f
 
 export const { askQuestion, startNew: startNewChat, switch: switchChat } = chatEvt;
 
-// start new chat on model change
-sample({
-  clock: modelManager.state.$currentModel,
-  target: startNewChat,
+// // start new chat on model change
+// sample({
+//   clock: modelManager.state.$currentModel,
+//   target: startNewChat,
+// });
+
+export const switchModelWithNewChat = createEffect(async (modelId: Id) => {
+  startNewChat();
+  await modelManager.switchModel(modelId);
 });
+
+const $currChatModel = $chat.data.map((chat) => chat?.model || null);
 
 // switch model on chat switch
 sample({
-  clock: $chat.id,
-  source: $chat.data,
-  fn: (chat) => modelManager.switchModel(chat!.model),
-  filter: (chat) => chat !== null,
+  clock: $currChatModel,
+  source: { ready: modelManager.state.$ready, currModel: modelManager.state.$currentModel },
+  fn: ({ currModel }, modelId) => ({
+    modelId,
+    currModel,
+  }),
+  target: createEffect(
+    async ({ modelId, currModel }: { modelId: string | null; currModel: string | null }) => {
+      // eslint-disable-next-line no-param-reassign
+      if (!modelId) modelId = $defaultModel.getState()!;
+      if (modelId === currModel) return;
+
+      await modelManager.switchModel(modelId);
+    }
+  ),
+  filter: ({ ready, currModel }, modelId) => ready && currModel !== modelId,
 });
 
 switchChat.watch(goToChat);

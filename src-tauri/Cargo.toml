@@ -17,9 +17,7 @@ log = { version = "^0.4" }
 tauri-plugin-log = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1", features = [
   "colored",
 ] }
-nebula = { path = "nebula", default-features = false, features = [
-  "llama", "llama-build"
-] }
+
 uuid = "1.8.0"
 base64 = "0.22.0"
 thiserror = "1"
@@ -42,6 +40,22 @@ sha2 = "0.10.8"
 # When the time comes to enable sqlite-vec, uncomment the following lines
 # sqlite-vss = { version = "0.1.2", features = ["download-libs"] }
 # libsqlite3-sys = { version = "=0.27.0", features = ["bundled"] }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+nebula = { path = "nebula", default-features = false, features = [
+  "llama", "llama-build"
+] }
+
+
+[target.'cfg(target_os = "linux")'.dependencies]
+nebula = { path = "nebula", default-features = false, features = [
+  "llama", "llama-build"
+] }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+nebula = { path = "nebula", default-features = false, features = [
+  "llama"
+] }
 
 #[profile.dev.package.nebula]
 #opt-level = 3

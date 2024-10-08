@@ -690,7 +690,7 @@ mod tests {
                 invoke_key: Some(tauri::test::INVOKE_KEY.into()),
                 callback: tauri::api::ipc::CallbackFn(0),
                 error: tauri::api::ipc::CallbackFn(1),
-                inner: inner,
+                inner,
             },
         );
 

@@ -1,0 +1,12 @@
+{
+  "manifest_version": 1,
+  "name": "SampleAgent",
+  "description": "An AI-powered assistant that helps automate tasks.",
+  "version": "1.0",
+  "author": "Hiro Team",
+  "icons": {
+    "16": "icons/agentbot-16.png",
+    "48": "icons/agentbot-48.png",
+    "128": "icons/agentbot-128.png"
+  }
+}

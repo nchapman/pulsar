@@ -62,6 +62,7 @@ export class NebulaContext {
         content: val.message,
         role: val.is_user ? 'user' : 'assistant',
       }));
+
       await invoke('plugin:nebula|model_context_eval', {
         modelPath: ccc.model.model,
         contextId: ccc.contextId,
@@ -122,7 +123,7 @@ export class NebulaContext {
       }
     });
 
-    const PredictOptions: {
+    const predictOptions: {
       max_len: number;
       temp: number;
       top_p?: number;
@@ -131,13 +132,13 @@ export class NebulaContext {
       temp,
     };
     if (topP) {
-      PredictOptions.top_p = topP;
+      predictOptions.top_p = topP;
     }
 
     await invoke('plugin:nebula|model_context_predict', {
       modelPath: this.model.model,
       contextId: this.contextId,
-      predictOptions: PredictOptions,
+      predictOptions,
     });
 
     unsubscribe();

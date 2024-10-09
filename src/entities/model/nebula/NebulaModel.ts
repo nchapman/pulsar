@@ -48,17 +48,17 @@ export class NebulaModel {
     return new NebulaModel(model);
   }
 
-  public async drop() {
+  public async drop(modelPath: string): Promise<void> {
     await invoke('plugin:nebula|drop_model', {
       model: this.model,
+      modelPath,
     });
   }
 
   public async createContext(
-    cctx: { message: string; is_user: boolean }[] = [],
-    stopTokens: string[] = []
+    cctx: { message: string; is_user: boolean }[] = []
   ): Promise<NebulaContext> {
-    const ctx = await NebulaContext.initContext({ model: this, cctx, stopTokens });
+    const ctx = await NebulaContext.initContext({ model: this, cctx });
     return ctx;
   }
 }

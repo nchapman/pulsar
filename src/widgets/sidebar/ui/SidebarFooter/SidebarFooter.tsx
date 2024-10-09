@@ -26,7 +26,7 @@ export const SidebarFooter = memo((props: Props) => {
         className={s.btn}
         onClick={goToStore}
         variant="clear"
-        active={[Route.Store, Route.StoreModel].includes(currRoute)}
+        active={[Route.Store, Route.StoreModel, Route.StoreSearch].includes(currRoute)}
         withInactive
       >
         <Icon svg={StoreIcon} className={s.icon} />

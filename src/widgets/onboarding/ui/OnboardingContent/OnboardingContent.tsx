@@ -44,7 +44,7 @@ export const OnboardingContent = memo((props: Props) => {
       <Logo size="xl" />
 
       <Text className={s.title} c="primary" w="medium" s={48}>
-        Welcome to Pulsar
+        Welcome to Hiro
       </Text>
 
       {/* <Button variant="primary" onClick={loadFirstModel}> */}

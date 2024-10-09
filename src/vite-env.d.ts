@@ -2,7 +2,7 @@
 /// <reference types="vite-plugin-svgr/client" />
 
 interface ImportMetaEnv {
-  readonly VITE_PULSAR_SHOW_DEV_MENU: string;
+  readonly VITE_HIRO_SHOW_DEV_MENU: string;
 }
 
 interface ImportMeta {

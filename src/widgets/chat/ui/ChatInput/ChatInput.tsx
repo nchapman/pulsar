@@ -72,7 +72,7 @@ export const ChatInput = (props: Props) => {
       <div className={s.inputRow}>
         <textarea
           ref={inputRef}
-          placeholder={isModelReady ? 'Message Pulsar…' : 'Loading…'}
+          placeholder={isModelReady ? 'Message Hiro…' : 'Loading…'}
           value={input}
           onChange={handleInputChange}
           className={s.chatInput}

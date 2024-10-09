@@ -2158,6 +2158,34 @@ dependencies = [
 ]
 
 [[package]]
+name = "hiro"
+version = "0.0.0"
+dependencies = [
+ "base64 0.22.1",
+ "futures-core",
+ "futures-util",
+ "log",
+ "nebula",
+ "once_cell",
+ "read-progress-stream",
+ "reqwest 0.12.5",
+ "serde",
+ "serde_json",
+ "sha2",
+ "sqlx",
+ "sysinfo",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-log",
+ "tauri-plugin-window-state",
+ "thiserror",
+ "time",
+ "tokio",
+ "tokio-util",
+ "uuid",
+]
+
+[[package]]
 name = "hkdf"
 version = "0.12.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3919,34 +3947,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 1.0.109",
-]
-
-[[package]]
-name = "pulsar"
-version = "0.0.0"
-dependencies = [
- "base64 0.22.1",
- "futures-core",
- "futures-util",
- "log",
- "nebula",
- "once_cell",
- "read-progress-stream",
- "reqwest 0.12.5",
- "serde",
- "serde_json",
- "sha2",
- "sqlx",
- "sysinfo",
- "tauri",
- "tauri-build",
- "tauri-plugin-log",
- "tauri-plugin-window-state",
- "thiserror",
- "time",
- "tokio",
- "tokio-util",
- "uuid",
 ]
 
 [[package]]

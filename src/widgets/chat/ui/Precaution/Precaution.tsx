@@ -13,7 +13,7 @@ export const Precaution = memo((props: Props) => {
 
   return (
     <div className={classNames(s.precaution, [className])}>
-      Pulsar can make mistakes. Consider checking important information.
+      Hiro can make mistakes. Consider checking important information.
     </div>
   );
 });

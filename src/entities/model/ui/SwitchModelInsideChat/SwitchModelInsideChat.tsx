@@ -30,6 +30,7 @@ export const SwitchModelInsideChat = memo((props: Props) => {
   };
 
   if (!currentModel) return null;
+
   const modelData = modelManager.getModelData(currentModel);
 
   const popover = (

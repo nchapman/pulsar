@@ -124,7 +124,9 @@ export const ChatHistoryActions = memo((props: Props) => {
     const bottom = popoverRef.current?.getBoundingClientRect().bottom;
     if (!bottom) return;
     if (bottom > window.innerHeight) {
-      popoverRef.current.style.transform = `translateY(${window.innerHeight - bottom - 10}px)`;
+      if (popoverRef.current) {
+        popoverRef.current.style.transform = `translateY(${window.innerHeight - bottom - 10}px)`;
+      }
     }
   }, [isOpen]);
 

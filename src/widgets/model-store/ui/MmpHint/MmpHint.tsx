@@ -41,7 +41,7 @@ export const MmpHint = memo((props: Props) => {
           ,which allows the primary model to handle image inputs.
         </Text>
         <Text s={12} c="primary">
-          Once both files are downloaded, Pulsar will automatically link them together, and you will
+          Once both files are downloaded, Hiro will automatically link them together, and you will
           notice a corresponding badge in the model loader indicating their association.
         </Text>
 

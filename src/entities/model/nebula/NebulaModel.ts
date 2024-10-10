@@ -56,10 +56,9 @@ export class NebulaModel {
   }
 
   public async createContext(
-    cctx: { message: string; is_user: boolean }[] = [],
-    stopTokens: string[] = []
+    cctx: { message: string; is_user: boolean }[] = []
   ): Promise<NebulaContext> {
-    const ctx = await NebulaContext.initContext({ model: this, cctx, stopTokens });
+    const ctx = await NebulaContext.initContext({ model: this, cctx });
     return ctx;
   }
 }

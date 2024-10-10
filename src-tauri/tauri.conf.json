@@ -7,7 +7,7 @@
   },
   "package": {
     "productName": "Hiro",
-    "version": "0.0.59"
+    "version": "0.0.60"
   },
   "tauri": {
     "allowlist": {
@@ -15,7 +15,11 @@
       "fs": {
         "all": true,
         "scope": {
-          "allow": ["**", "$RESOURCE/*", "**/.*"]
+          "allow": [
+            "**",
+            "$RESOURCE/*",
+            "**/.*"
+          ]
         }
       },
       "path": {
@@ -26,7 +30,9 @@
       },
       "protocol": {
         "asset": true,
-        "assetScope": ["**"]
+        "assetScope": [
+          "**"
+        ]
       }
     },
     "bundle": {
@@ -40,7 +46,9 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "resources": ["nebula/backends/llama_cpp/llama-cpp-sys/dist/*"],
+      "resources": [
+        "nebula/backends/llama_cpp/llama-cpp-sys/dist/*"
+      ],
       "macOS": {
         "entitlements": "../entitlements.plist",
         "signingIdentity": "-"
@@ -64,10 +72,11 @@
     ],
     "updater": {
       "active": true,
-      "endpoints": ["https://updates.hellohiro.ai/latest.json"],
+      "endpoints": [
+        "https://updates.hellohiro.ai/latest.json"
+      ],
       "dialog": false,
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDIzOUFENEQ3NDY4MjM2MzAKUldRd05vSkcxOVNhSS9NeWlSRDlTTG8veGVPbkk4VERCc0EwWk5zTXRESU9ORjRMb1pMM2gwUTUK"
     }
   }
 }
-

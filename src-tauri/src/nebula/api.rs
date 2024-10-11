@@ -4,6 +4,7 @@ use nebula::options::Message;
 use nebula::options::PredictOptions;
 use nebula::options::{ContextOptions, ModelOptions};
 use serde::Serialize;
+use std::net::IpAddr;
 use std::{
     collections::HashMap,
     sync::{atomic::AtomicBool, Arc},
@@ -19,9 +20,20 @@ struct NebulaModelState {
     contexts: HashMap<String, (Arc<Mutex<nebula::Context>>, Arc<AtomicBool>)>,
 }
 
-#[derive(Default)]
 struct NebulaState {
     models: Arc<Mutex<HashMap<String, NebulaModelState>>>,
+    servers: Arc<Mutex<HashMap<String, nebula::Server>>>,
+    current_http_port: Arc<Mutex<i32>>,
+}
+
+impl Default for NebulaState {
+    fn default() -> Self {
+        Self {
+            models: Arc::new(Mutex::new(HashMap::new())),
+            servers: Arc::new(Mutex::new(HashMap::new())),
+            current_http_port: Arc::new(Mutex::new(8333)), // Custom default value for `i32`
+        }
+    }
 }
 
 #[derive(Clone, Serialize)]
@@ -52,6 +64,8 @@ async fn init_model<R: Runtime>(
     state: State<'_, NebulaState>,
 ) -> NebulaResult<String> {
     let mut models = state.models.lock().await;
+    let mut servers = state.servers.lock().await;
+    let mut current_http_port = state.current_http_port.lock().await;
 
     if models.contains_key(&model_path) {
         return Ok(model_path.clone());
@@ -59,26 +73,50 @@ async fn init_model<R: Runtime>(
 
     let cloned_path = model_path.clone();
 
+    let mut last_emitted_value = 0.0;
+
+    let model =
+        nebula::Model::new_with_progress_callback(model_path.clone(), model_options, move |a| {
+            if a - last_emitted_value < 0.1 {
+                return true;
+            }
+
+            last_emitted_value = a;
+
+            let _ = window.emit(
+                "nebula://load-progress",
+                LoadProgressPayload {
+                    model: cloned_path.clone(),
+                    progress: a,
+                },
+            );
+            true
+        })?;
+
     models.insert(
         model_path.clone(),
         NebulaModelState {
-            model: Arc::new(Mutex::new(nebula::Model::new_with_progress_callback(
-                model_path.clone(),
-                model_options,
-                move |a| {
-                    let _ = window.emit(
-                        "nebula://load-progress",
-                        LoadProgressPayload {
-                            model: cloned_path.clone(),
-                            progress: a,
-                        },
-                    );
-                    true
-                },
-            )?)),
+            model: Arc::new(Mutex::new(model.clone())),
             contexts: HashMap::new(),
         },
     );
+
+    let ctx_options = ContextOptions::default();
+
+    let server = nebula::Server::new(
+        "0.0.0.0".parse::<IpAddr>().expect("parse failed"),
+        current_http_port.clone().try_into().unwrap(),
+        model,
+        ctx_options,
+    );
+
+    servers.insert(model_path.clone(), server);
+
+    servers.get(&model_path).unwrap().run()?;
+
+    log::info!("Server started on port: {}", current_http_port);
+
+    *current_http_port += 1;
 
     Ok(model_path.clone())
 }
@@ -99,6 +137,8 @@ async fn init_model_with_mmproj<R: Runtime>(
     state: State<'_, NebulaState>,
 ) -> NebulaResult<String> {
     let mut models = state.models.lock().await;
+    let mut servers = state.servers.lock().await;
+    let mut current_http_port = state.current_http_port.lock().await;
 
     if models.contains_key(&model_path) {
         return Ok(model_path.clone());
@@ -120,12 +160,30 @@ async fn init_model_with_mmproj<R: Runtime>(
             true
         },
     )?;
+
     let model_state = NebulaModelState {
-        model: Arc::new(Mutex::new(model)),
+        model: Arc::new(Mutex::new(model.clone())),
         contexts: HashMap::new(),
     };
 
     models.insert(model_path.clone(), model_state);
+
+    let ctx_options = ContextOptions::default();
+
+    let server = nebula::Server::new(
+        "0.0.0.0".parse::<IpAddr>().expect("parse failed"),
+        current_http_port.clone().try_into().unwrap(),
+        model,
+        ctx_options,
+    );
+
+    servers.insert(model_path.clone(), server);
+
+    servers.get(&model_path).unwrap().run()?;
+
+    log::info!("Server started on port: {}", current_http_port);
+
+    *current_http_port += 1;
 
     Ok(model_path.clone() + &mmproj_path)
 }
@@ -141,8 +199,13 @@ async fn drop_model<R: Runtime>(
     state: State<'_, NebulaState>,
 ) -> NebulaResult<()> {
     let mut models = state.models.lock().await;
+    let mut servers = state.servers.lock().await;
 
     models
+        .remove(&model_path)
+        .ok_or(NebulaError::ModelNotLoaded(model_path.clone()))?;
+
+    servers
         .remove(&model_path)
         .ok_or(NebulaError::ModelNotLoaded(model_path.clone()))?;
 
@@ -339,8 +402,9 @@ pub fn init_plugin<R: Runtime>() -> TauriPlugin<R> {
                 .path_resolver()
                 .resolve_resource("nebula/backends/llama_cpp/llama-cpp-sys/dist")
                 .unwrap();
-            eprintln!("{:?}", resource_path);
+
             nebula::init(resource_path).unwrap();
+
             app_handle.manage(NebulaState::default());
             Ok(())
         })

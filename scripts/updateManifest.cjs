@@ -54,12 +54,12 @@ const updateManifestVersion = (manifest) => {
     manifest.platforms['darwin-aarch64'] = {
       signature,
       // eslint-disable-next-line max-len
-      url: `https://github.com/nchapman/pulsar/releases/download/app-v${APP_VERSION}/Pulsar_universal.app.tar.gz`,
+      url: `https://github.com/nchapman/pulsar/releases/download/app-v${APP_VERSION}/Hiro_universal.app.tar.gz`,
     };
     manifest.platforms['darwin-x86_64'] = {
       signature,
       // eslint-disable-next-line max-len
-      url: `https://github.com/nchapman/pulsar/releases/download/app-v${APP_VERSION}/Pulsar_universal.app.tar.gz`,
+      url: `https://github.com/nchapman/pulsar/releases/download/app-v${APP_VERSION}/Hiro_universal.app.tar.gz`,
     };
   } else if (OS === 'ubuntu-20.04') {
     const signatureFile = JSON.parse(NON_MACOS_ARTIFACT_PATHS).find((file) =>
@@ -70,7 +70,7 @@ const updateManifestVersion = (manifest) => {
     manifest.platforms['linux-x86_64'] = {
       signature,
       // eslint-disable-next-line max-len
-      url: `https://github.com/nchapman/pulsar/releases/download/app-v${APP_VERSION}/pulsar_${APP_VERSION}_amd64.AppImage.tar.gz`,
+      url: `https://github.com/nchapman/pulsar/releases/download/app-v${APP_VERSION}/hiro_${APP_VERSION}_amd64.AppImage.tar.gz`,
     };
   } else {
     const signatureFile = JSON.parse(NON_MACOS_ARTIFACT_PATHS).find((file) =>
@@ -81,7 +81,7 @@ const updateManifestVersion = (manifest) => {
     manifest.platforms['windows-x86_64'] = {
       signature,
       // eslint-disable-next-line max-len
-      url: `https://github.com/nchapman/pulsar/releases/download/app-v${APP_VERSION}/Pulsar_${APP_VERSION}_x64_en-US.msi.zip`,
+      url: `https://github.com/nchapman/pulsar/releases/download/app-v${APP_VERSION}/Hiro_${APP_VERSION}_x64_en-US.msi.zip`,
     };
   }
 
@@ -142,3 +142,4 @@ main().catch((error) => {
   console.error('An error occurred:', error);
   process.exit(1);
 });
+

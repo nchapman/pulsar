@@ -10,7 +10,7 @@ const getAdapter = () => {
 
   return new SQLiteAdapter({
     schema,
-    dbName: 'pulsar',
+    dbName: 'hiro',
     migrations,
     onSetUpError: (e) => console.error(e),
   });

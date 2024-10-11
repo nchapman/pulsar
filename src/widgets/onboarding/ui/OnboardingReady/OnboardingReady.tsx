@@ -20,7 +20,7 @@ export const OnboardingReady = memo((props: Props) => {
     <div className={classNames(s.onboardingReady, [className])}>
       <Logo size="xl" />
       <Text className={s.title} c="primary" w="medium" s={48}>
-        Pulsar is ready
+        Hiro is ready
       </Text>
 
       <Button className={s.startBtn} variant="primary" onClick={handleStart}>

@@ -13,6 +13,7 @@ import { classNames } from '@/shared/lib/func';
 import { useToggle } from '@/shared/lib/hooks';
 import { Button, Icon, ProgressRounded, Text } from '@/shared/ui';
 import { startNewChat } from '@/widgets/chat';
+import { switchModelWithNewChat } from '@/widgets/chat/model/chat.ts';
 import { $modelStoreState } from '@/widgets/model-store/model/model-store.model.ts';
 
 import { startFileDownload } from '../../lib/startFileDownload.ts';
@@ -88,7 +89,7 @@ export const ModelStoreFile = memo((props: Props) => {
       startNewChat();
       return;
     }
-    modelManager.switchModel(downloadItem.modelFileId);
+    switchModelWithNewChat(downloadItem.modelFileId);
   };
 
   function getWidget() {

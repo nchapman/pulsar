@@ -1,6 +1,7 @@
 use crate::nebula::error::NebulaError;
 use crate::nebula::error::NebulaResult;
-use base64::prelude::*;
+use nebula::options::Message;
+use nebula::options::PredictOptions;
 use nebula::options::{ContextOptions, ModelOptions};
 use serde::Serialize;
 use std::{
@@ -204,80 +205,6 @@ async fn model_drop_context<R: Runtime>(
     Ok(())
 }
 
-/// evaluate string to context.
-///
-/// * - `model_path` - model created by `init_model` or
-/// `init_model_with_mmproj`
-/// * - `context` - context created with `model_init_context`
-/// * - `data` - string for evaluating
-/// * - `use_bos` - Use BOS token for `data` evaluation
-///
-#[tauri::command]
-async fn model_context_eval_string<R: Runtime>(
-    model_path: String,
-    context_id: String,
-    data: String,
-    use_bos: bool,
-    _app: AppHandle<R>,
-    state: State<'_, NebulaState>,
-) -> NebulaResult<()> {
-    let mut models = state.models.lock().await;
-
-    let model = models
-        .get_mut(&model_path)
-        .ok_or(NebulaError::ModelNotLoaded(model_path.clone()))?;
-
-    let (cc, ss) = model
-        .contexts
-        .get_mut(&context_id)
-        .ok_or(NebulaError::ModelContextNotExist(context_id.clone()))?;
-
-    ss.store(true, std::sync::atomic::Ordering::Relaxed);
-    cc.lock().await.eval_str(&data, use_bos)?;
-    Ok(())
-}
-
-/// evaluate image to context.
-///
-/// * - `model` - model creted by `init_model_with_mmproj`
-/// * - `context` - context created with `model_init_context`
-/// * - `base64_encoded_image` - base64 encoded image content
-/// * - `prompt` - Prompt evaluate for image
-///
-#[tauri::command]
-async fn model_context_eval_image<R: Runtime>(
-    model_path: String,
-    context_id: String,
-    base64_encoded_image: String,
-    prompt: String,
-    _app: AppHandle<R>,
-    state: State<'_, NebulaState>,
-) -> NebulaResult<()> {
-    let mut models = state.models.lock().await;
-
-    let decoded_image = if base64_encoded_image.starts_with("data:") {
-        let data_start = base64_encoded_image.find(',').unwrap();
-        let encoded_data = &base64_encoded_image[data_start + 1..];
-        BASE64_STANDARD.decode(encoded_data.as_bytes())?
-    } else {
-        BASE64_STANDARD.decode(base64_encoded_image.as_bytes())?
-    };
-
-    let model = models
-        .get_mut(&model_path)
-        .ok_or(NebulaError::ModelNotLoaded(model_path.clone()))?;
-
-    let (cc, ss) = model
-        .contexts
-        .get_mut(&context_id)
-        .ok_or(NebulaError::ModelContextNotExist(context_id.clone()))?;
-
-    ss.store(true, std::sync::atomic::Ordering::Relaxed);
-    cc.lock().await.eval_image(decoded_image, &prompt)?;
-
-    Ok(())
-}
-
 /// The event payload for the `nebula-predict` event that gets sent to the JS frontend.
 /// Do not change this struct without also changing the corresponding JS code.
 /// Do not create multiple with variations as things will get out of sync and everything will need to be updated at the same time
@@ -289,15 +216,43 @@ struct PredictPayload {
     finished: bool,
 }
 
+/// evaluate dialog to context.
+///
+/// * - `model_path` - model created by `init_model` or
+/// `init_model_with_mmproj`
+/// * - `context` - context created with `model_init_context`
+/// * - `dialog` - dialog for evaluating
+#[tauri::command]
+async fn model_context_eval<R: Runtime>(
+    model_path: String,
+    context_id: String,
+    dialog: Vec<Message>,
+    _app: AppHandle<R>,
+    state: State<'_, NebulaState>,
+) -> NebulaResult<()> {
+    let mut models = state.models.lock().await;
+
+    let model = models
+        .get_mut(&model_path)
+        .ok_or(NebulaError::ModelNotLoaded(model_path.clone()))?;
+
+    let (cc, ss) = model
+        .contexts
+        .get_mut(&context_id)
+        .ok_or(NebulaError::ModelContextNotExist(context_id.clone()))?;
+
+    ss.store(true, std::sync::atomic::Ordering::Relaxed);
+    cc.lock().await.eval(dialog)?;
+    Ok(())
+}
+
 /// Triggers the LLM to predict the next token in the current context.
 /// Sends a stream of events to the JS side with the tokens. A final event is sent with the finished flag set to true to signal the end of the stream.
 #[tauri::command]
 async fn model_context_predict<R: Runtime>(
     model_path: String,
     context_id: String,
-    max_len: Option<usize>,
-    temp: Option<f32>,
-    top_p: Option<f32>,
+    predict_options: PredictOptions,
     app: AppHandle<R>,
     state: State<'_, NebulaState>,
 ) -> NebulaResult<()> {
@@ -319,7 +274,8 @@ async fn model_context_predict<R: Runtime>(
     ss.store(false, std::sync::atomic::Ordering::Relaxed);
 
     let mut ctx = cc.lock().await;
-    let mut p = ctx.predict().with_token_callback(Box::new(move |token| {
+    let mut po = predict_options.clone();
+    po.token_callback = Some(Arc::new(Box::new(move |token| {
         app_clone
             .emit_all(
                 "nebula-predict",
@@ -333,19 +289,9 @@ async fn model_context_predict<R: Runtime>(
             .expect("Could not emit llm predict payload event");
 
         !ccc.load(std::sync::atomic::Ordering::Relaxed)
-    }));
-    if let Some(max_len) = max_len {
-        p = p.with_max_len(max_len);
-    }
-    if let Some(temp) = temp {
-        p = p.with_temp(temp);
-    }
-    if let Some(top_p) = top_p {
-        p = p.with_top_p(top_p);
-    }
-
+    })));
+    let mut p = ctx.predict(po);
     p.predict()?;
-
     app.emit_all(
         "nebula-predict",
         PredictPayload {
@@ -356,7 +302,6 @@ async fn model_context_predict<R: Runtime>(
         },
     )
     .expect("Could not emit llm predict payload event");
-
     Ok(())
 }
 
@@ -380,17 +325,20 @@ pub fn init_plugin<R: Runtime>() -> TauriPlugin<R> {
             drop_model,
             model_init_context,
             model_drop_context,
-            model_context_eval_string,
-            model_context_eval_image,
+            model_context_eval,
             model_context_predict,
             drop_all,
             get_loaded_models
         ])
         .setup(|app_handle| {
             #[cfg(test)]
-            let resource_path = std::path::PathBuf::from("nebula/backends/llama_cpp/llama-cpp-sys/dist");
+            let resource_path =
+                std::path::PathBuf::from("nebula/backends/llama_cpp/llama-cpp-sys/dist");
             #[cfg(not(test))]
-            let resource_path = app_handle.path_resolver().resolve_resource("nebula/backends/llama_cpp/llama-cpp-sys/dist").unwrap();
+            let resource_path = app_handle
+                .path_resolver()
+                .resolve_resource("nebula/backends/llama_cpp/llama-cpp-sys/dist")
+                .unwrap();
             eprintln!("{:?}", resource_path);
             nebula::init(resource_path).unwrap();
             app_handle.manage(NebulaState::default());
@@ -716,9 +664,9 @@ mod tests {
                 callback: tauri::api::ipc::CallbackFn(0),
                 error: tauri::api::ipc::CallbackFn(1),
                 inner: serde_json::json!({
-                    "modelPath": model_path,
+                    "modelPath": model_path.clone(),
                     "contextOptions": {
-                        "ctx": [{"message": "Hello, world!", "is_user": true}, {"message": "How are you doing?", "is_user": false}]
+                        "n_ctx": 20000
                     }
                 }),
             },
@@ -727,6 +675,26 @@ mod tests {
         assert!(context_init_res.is_ok());
 
         let context_id = context_init_res.unwrap();
+
+        let inner = serde_json::json!({
+            "modelPath": model_path.clone(),
+            "contextId": context_id.clone(),
+            "dialog": [{"content": "Hello, world!", "role": "user"}, {"content": "How are you doing?", "role": "assistant"}]
+        });
+
+        let context_eval_res = tauri::test::get_ipc_response::<()>(
+            &window,
+            tauri::InvokePayload {
+                cmd: "plugin:nebula|model_context_eval".into(),
+                tauri_module: None,
+                invoke_key: Some(tauri::test::INVOKE_KEY.into()),
+                callback: tauri::api::ipc::CallbackFn(0),
+                error: tauri::api::ipc::CallbackFn(1),
+                inner,
+            },
+        );
+
+        assert!(context_eval_res.is_ok());
 
         // let _id = app.listen_global("nebula-predict", |event| {
         //     // println!("Received event: {:?}", event.payload().unwrap());
@@ -745,7 +713,10 @@ mod tests {
                 inner: serde_json::json!({
                     "modelPath": model_path,
                     "contextId": context_id,
-                    "maxLen": 10
+                    "predictOptions": {
+                        "max_len": 10,
+                        "temp": 0.5
+                    },
                 }),
             },
         );

@@ -7,7 +7,7 @@ async function removeChatsWithNoModel() {
   const chats = [...regular, ...archived];
 
   chats.forEach((chat) => {
-    if (chat.model === 'pulsar') {
+    if (chat.model === 'hiro') {
       console.log('Removing chat with no model', chat.title);
       chatsRepository.remove(chat.id);
     }

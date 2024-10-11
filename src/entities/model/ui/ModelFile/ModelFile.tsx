@@ -54,7 +54,7 @@ export const ModelFile = memo((props: Props) => {
                     , which allows the primary model to handle image inputs.
                   </Text>
                   <Text s={12}>
-                    Once both files are downloaded, Pulsar will automatically link them together and
+                    Once both files are downloaded, Hiro will automatically link them together and
                     you can start to interact with the chat.
                   </Text>
                 </div>

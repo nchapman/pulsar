@@ -63,7 +63,8 @@ export const ChatInput = (props: Props) => {
   useEffect(() => {
     setInput('');
     inputRef.current?.focus();
-  }, [chatId]);
+    resetFileData();
+  }, [chatId, resetFileData]);
 
   useKeyboardListener(() => handleSubmit(), 'Enter', undefined, ['shiftKey']);
   useKeyboardListener(() => startNewLine(), 'Enter', ['shiftKey']);
@@ -75,7 +76,7 @@ export const ChatInput = (props: Props) => {
       <div className={s.inputRow}>
         <textarea
           ref={inputRef}
-          placeholder={isModelReady ? 'Message Pulsar…' : 'Loading…'}
+          placeholder={isModelReady ? 'Message Hiro…' : 'Loading…'}
           value={input}
           onChange={handleInputChange}
           className={s.chatInput}

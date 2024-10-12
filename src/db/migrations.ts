@@ -1,5 +1,6 @@
-import { addColumns, schemaMigrations } from '@nozbe/watermelondb/Schema/migrations';
+import { addColumns, createTable, schemaMigrations } from '@nozbe/watermelondb/Schema/migrations';
 
+import { agentsTable } from '@/db/agent/agent.schema.ts';
 import { chatsTable } from '@/db/chat/chat.schema.ts';
 
 export default schemaMigrations({
@@ -10,6 +11,20 @@ export default schemaMigrations({
         addColumns({
           table: chatsTable.name,
           columns: [{ name: chatsTable.cols.modelSettings, type: 'string', isOptional: true }],
+        }),
+      ],
+    },
+    {
+      toVersion: 28,
+      steps: [
+        createTable({
+          name: agentsTable.name,
+          columns: [
+            { name: agentsTable.cols.name, type: 'string' },
+            { name: agentsTable.cols.data, type: 'string' },
+            { name: agentsTable.cols.createdAt, type: 'number' },
+            { name: agentsTable.cols.updatedAt, type: 'number' },
+          ],
         }),
       ],
     },

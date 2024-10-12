@@ -2,9 +2,9 @@ import { appDataDir, resolve } from '@tauri-apps/api/path';
 
 import { APP_DIRS } from '@/app/consts/app.const.ts';
 
-export async function getAgentPath(fileName: string) {
+export async function getAgentPath(agentName: string) {
   const dataDir = await appDataDir();
   const folder = APP_DIRS.AGENTS;
 
-  return resolve(dataDir, folder, fileName);
+  return resolve(dataDir, folder, agentName);
 }

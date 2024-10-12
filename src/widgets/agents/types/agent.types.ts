@@ -1,4 +1,4 @@
-export interface Agent {
+export interface StoreAgent {
   id: Id;
   name: string;
   description: string;
@@ -13,4 +13,25 @@ export interface Agent {
 export enum AgentsView {
   MyAgents = 'My agents',
   AllAgents = 'All agents',
+}
+
+export interface Agent {
+  id: Id;
+  name: string;
+  data: {};
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface AgentManifest {
+  manifest_version: number;
+  name: string;
+  description: string;
+  version: string;
+  author: string;
+  icons: {
+    '128': string;
+    '48': string;
+    '16': string;
+  };
 }

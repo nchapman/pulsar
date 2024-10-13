@@ -1,20 +1,32 @@
 import { readTextFile } from '@tauri-apps/api/fs';
 
-import { AgentFsName } from '@/widgets/agents/consts/agentFsName.ts';
-import { getAgentPath } from '@/widgets/agents/lib/getAgentPath.ts';
-import { AgentManifest } from '@/widgets/agents/types/agent.types.ts';
+import { AgentFsName } from '../consts/agentFsName.ts';
+import { AgentManifest } from '../types/agent.types.ts';
+import { getAgentPath } from './getAgentPath.ts';
 
-export async function readLocalAgent(agentName: string) {
+export async function readLocalAgent(
+  agentName: string,
+  include: {
+    script?: boolean;
+    manifest?: boolean;
+  }
+) {
   try {
     const agentDir = await getAgentPath(agentName);
 
-    const workerScript = await readTextFile(`${agentDir}/${AgentFsName.AGENT_FILE}`);
-    const manifest: AgentManifest = JSON.parse(
-      await readTextFile(`${agentDir}/${AgentFsName.MANIFEST_FILE}`)
-    );
-    Object.keys(manifest.icons).forEach((i) => {
-      manifest.icons[i as '16'] = `${agentDir}/${i}`;
-    });
+    let workerScript = '';
+    let manifest: AgentManifest = {} as AgentManifest;
+
+    if (include?.script) {
+      workerScript = await readTextFile(`${agentDir}/${AgentFsName.AGENT_FILE}`);
+    }
+
+    if (include?.manifest) {
+      manifest = JSON.parse(await readTextFile(`${agentDir}/${AgentFsName.MANIFEST_FILE}`));
+      Object.keys(manifest.icons).forEach((i) => {
+        manifest.icons[i as '16'] = `${agentDir}/${i}`;
+      });
+    }
 
     return { workerScript, manifest };
   } catch (e) {

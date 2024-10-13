@@ -15,6 +15,8 @@ export class ChatModel extends Model {
 
   @json(chatsTable.cols.modelSettings, (json) => json) modelSettings;
 
+  @json(chatsTable.cols.agents, (json) => json) agents;
+
   @json(chatsTable.cols.isPinned, (json) => json) isPinned;
 
   @json(chatsTable.cols.isArchived, (json) => json) isArchived;

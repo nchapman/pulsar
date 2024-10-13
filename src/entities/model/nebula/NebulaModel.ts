@@ -1,7 +1,7 @@
 import { invoke } from '@tauri-apps/api';
 import { appWindow } from '@tauri-apps/api/window';
 
-import { loge } from '@/shared/lib/Logger';
+import { loge } from '@/shared/lib/func';
 
 import { NebulaContext } from './NebulaContext.ts';
 

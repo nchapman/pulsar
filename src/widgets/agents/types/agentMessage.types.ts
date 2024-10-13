@@ -1,22 +1,33 @@
-export interface AgentCallMsg {
-  type: 'message';
+export enum AgentMsgType {
+  Message = 'message',
+  CallLLM = 'callLLM',
+  LLMResponse = 'LLMResponse',
+  AgentResponse = 'agentResponse',
+}
+
+interface BaseAgentMsg {
+  type: AgentMsgType;
+}
+
+export interface AgentCallMsg extends BaseAgentMsg {
+  type: AgentMsgType.Message;
   messageHistory: string[];
   input: string;
 }
 
-export interface CallLLMMsg {
-  type: 'callLLM';
+export interface CallLLMMsg extends BaseAgentMsg {
+  type: AgentMsgType.CallLLM;
   prompt: string;
-  temperature: string;
+  temperature: number;
 }
 
-export interface LLMResponseMsg {
-  type: 'LLMResponse';
+export interface LLMResponseMsg extends BaseAgentMsg {
+  type: AgentMsgType.LLMResponse;
   text: string;
 }
 
-export interface AgentResponseMsg {
-  type: 'agentResponse';
+export interface AgentResponseMsg extends BaseAgentMsg {
+  type: AgentMsgType.AgentResponse;
   messageType: 'text' | 'error';
   agentResponse: string;
 }

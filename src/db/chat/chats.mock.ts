@@ -12,6 +12,8 @@ function minusDaysTS(days: number): number {
   return today.setDate(today.getDate() - days);
 }
 
+const agents = { active: [], selected: [] };
+
 export const chatsMock: Chat[] = [
   {
     id: '1',
@@ -59,6 +61,7 @@ export const chatsMock: Chat[] = [
     updatedAt: minusDaysTS(0),
     isArchived: false,
     isPinned: true,
+    agents,
   },
   {
     id: '2',
@@ -70,6 +73,7 @@ export const chatsMock: Chat[] = [
     updatedAt: minusDaysTS(0),
     isArchived: false,
     isPinned: false,
+    agents,
   },
   {
     id: '3',
@@ -81,6 +85,7 @@ export const chatsMock: Chat[] = [
     updatedAt: minusDaysTS(1),
     isArchived: false,
     isPinned: false,
+    agents,
   },
   {
     id: '4',
@@ -92,6 +97,7 @@ export const chatsMock: Chat[] = [
     updatedAt: minusDaysTS(40),
     isArchived: false,
     isPinned: false,
+    agents,
   },
   {
     id: '5',
@@ -103,5 +109,6 @@ export const chatsMock: Chat[] = [
     updatedAt: minusDaysTS(600),
     isArchived: false,
     isPinned: false,
+    agents,
   },
 ];

@@ -2,17 +2,22 @@ import { resolve } from '@tauri-apps/api/path';
 import { createEvent, createStore } from 'effector';
 
 import { APP_DIRS } from '@/app/consts/app.const.ts';
+import { UserSettingsManager, userSettingsManager } from '@/app/managers/user-settings.manager';
 import { downloadsRepository } from '@/db';
 import { DownloadItem, DownloadsRepository } from '@/db/download';
-import { ModelDto } from '@/entities/model';
-import { deleteModel } from '@/entities/model/lib/deleteModel.ts';
-import { getModelPath } from '@/entities/model/lib/getModelPath.ts';
-import { UserSettingsManager, userSettingsManager } from '@/entities/settings';
-import { download, getRandomInt, interruptFileTransfer } from '@/shared/lib/file-transfer.ts';
-import { getPercent, promiseAll } from '@/shared/lib/func';
-import { logi } from '@/shared/lib/Logger.ts';
+import {
+  download,
+  getPercent,
+  getRandomInt,
+  interruptFileTransfer,
+  logi,
+  promiseAll,
+} from '@/shared/lib/func';
 
+import { deleteModel } from '../lib/deleteModel.ts';
 import { getAvailableModels } from '../lib/getAvailableModels.ts';
+import { getModelPath } from '../lib/getModelPath.ts';
+import { ModelDto } from '../types/model.types.ts';
 import { ModelManager, modelManager } from './model-manager.ts';
 
 export type DownloadsData = Record<Id, DownloadItem>;

@@ -1,15 +1,15 @@
 import { removeFile } from '@tauri-apps/api/fs';
 
 import { chatsRepository } from '@/db';
+import { loge } from '@/shared/lib/func';
 import { confirm, Text } from '@/shared/ui';
 import { updateChatHistory } from '@/widgets/sidebar';
 
 import { $chat, startNewChat } from '../model/chat.ts';
-import { loge } from '@/shared/lib/Logger.ts';
 
 async function clearChatFiles(id: Id) {
   const chat = await chatsRepository.getById(id);
-  for (let m of chat.messages) {
+  for await (const m of chat.messages) {
     if (m.file) {
       try {
         await removeFile(m.file.src);

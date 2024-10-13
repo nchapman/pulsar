@@ -37,3 +37,8 @@ export interface Agent {
   createdAt: number;
   updatedAt: number;
 }
+
+export interface AgentLLM {
+  call: (prompt: string, temp: number) => Promise<string>;
+  onAgentResponse: (res: string) => void;
+}

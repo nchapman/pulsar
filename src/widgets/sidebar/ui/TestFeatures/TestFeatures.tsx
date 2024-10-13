@@ -7,10 +7,16 @@ import { downloadModel } from '@/entities/model';
 import { Nebula } from '@/entities/model/nebula/Nebula.ts';
 import { getSystemInfo } from '@/features/system/system.ts';
 import { __IS_STORYBOOK__ } from '@/shared/consts';
-import { getFileSha256, getFileSizeBytes } from '@/shared/lib/file-system.ts';
-import { download, getRandomInt, interruptFileTransfer } from '@/shared/lib/file-transfer.ts';
-import { classNames } from '@/shared/lib/func';
-import { loge, logi } from '@/shared/lib/Logger.ts';
+import {
+  classNames,
+  download,
+  getFileSha256,
+  getFileSizeBytes,
+  getRandomInt,
+  interruptFileTransfer,
+  loge,
+  logi,
+} from '@/shared/lib/func';
 import { Button } from '@/shared/ui';
 import { getCuratedModels } from '@/widgets/model-store/api/curated-hugging-face-models.ts';
 import {

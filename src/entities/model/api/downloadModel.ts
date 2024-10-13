@@ -1,5 +1,4 @@
-import { download } from '@/shared/lib/file-transfer.ts';
-import { loge, logi } from '@/shared/lib/Logger.ts';
+import { download, loge, logi } from '@/shared/lib/func';
 
 import { getModelPath } from '../lib/getModelPath.ts';
 

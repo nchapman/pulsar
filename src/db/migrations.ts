@@ -28,5 +28,14 @@ export default schemaMigrations({
         }),
       ],
     },
+    {
+      toVersion: 29,
+      steps: [
+        addColumns({
+          table: chatsTable.name,
+          columns: [{ name: chatsTable.cols.agents, type: 'string', isOptional: true }],
+        }),
+      ],
+    },
   ],
 });

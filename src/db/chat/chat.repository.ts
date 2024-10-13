@@ -37,6 +37,10 @@ export interface Chat {
   modelSettings?: ModelSettings;
   createdAt: number;
   updatedAt: number;
+  agents: {
+    selected: Id[];
+    active: Id[];
+  };
 }
 
 interface ListParams {
@@ -76,7 +80,7 @@ export class ChatsRepository {
 
   async create(data: Dto<Chat>): Promise<Chat> {
     const newChat = await this.db.write(() =>
-      this.chatsCollection.create((post) => assignValues(post, data))
+      this.chatsCollection.create((d) => assignValues(d, data))
     );
 
     return this.serialize(newChat);
@@ -121,6 +125,7 @@ export class ChatsRepository {
       'title',
       'messages',
       'model',
+      'agents',
       'modelSettings',
       'createdAt',
       'updatedAt',

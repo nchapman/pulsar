@@ -1,11 +1,10 @@
 import { combine, createEffect, createEvent, createStore, sample } from 'effector';
 
+import { $defaultModel } from '@/app/managers/user-settings.manager.ts';
 import { goToChat } from '@/app/routes';
 import { chatsRepository } from '@/db';
-import type { Chat, ChatMsg } from '@/db/chat';
-import { ModelSettings } from '@/db/chat/chat.repository.ts';
+import type { Chat, ChatMsg, ModelSettings } from '@/db/chat';
 import { modelManager } from '@/entities/model';
-import { $defaultModel } from '@/entities/settings/managers/user-settings-manager.ts';
 import { FileData } from '@/features/upload-file';
 import { suid } from '@/shared/lib/func';
 
@@ -67,6 +66,7 @@ async function createDBChat() {
     isArchived: false,
     isPinned: false,
     modelSettings: $chat.tempModelSettings.getState(),
+    agents: { selected: [], active: [] },
   });
 
   chatEvt.setChatId(newChat.id);
@@ -106,6 +106,8 @@ const createAssistantMsg = createEffect<ChatMsg, ChatMsg>((userMessage) => ({
 const streamMsg = createEffect<{ chatId: Id; msgId: Id; messages: ChatMsg[] }, void>(
   async ({ msgId, chatId, messages }) => {
     const chatSettings = $chat.data.getState()?.modelSettings || defaultModelSettings;
+
+    // const chatData = $chat.data.getState();
 
     stream(
       {
@@ -291,12 +293,6 @@ export const $streamedText = combine($streamedMsgId, $messages.data, (msgId, dat
 export const isArchivedChat = $chat.data.map((i) => i?.isArchived, { skipVoid: false });
 
 export const { askQuestion, startNew: startNewChat, switch: switchChat } = chatEvt;
-
-// // start new chat on model change
-// sample({
-//   clock: modelManager.state.$currentModel,
-//   target: startNewChat,
-// });
 
 export const switchModelWithNewChat = createEffect(async (modelId: Id) => {
   startNewChat();

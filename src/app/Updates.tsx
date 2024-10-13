@@ -1,7 +1,7 @@
+import { relaunch } from '@tauri-apps/api/process';
 import { checkUpdate, installUpdate } from '@tauri-apps/api/updater';
 
-import { loge, logi } from '@/shared/lib/Logger';
-import { relaunch } from '@tauri-apps/api/process';
+import { loge, logi } from '@/shared/lib/func';
 
 export async function updateApp() {
   // Install the update. This will also restart the app on Windows!
@@ -17,7 +17,7 @@ export async function shouldUpdateApp() {
     // @ts-ignore
     if (import.meta.env.DEV) {
       logi('Updates', 'Development mode, skipping updates check');
-      return;
+      return false;
     }
 
     const { shouldUpdate } = await checkUpdate();
@@ -25,5 +25,6 @@ export async function shouldUpdateApp() {
     return shouldUpdate;
   } catch (error: any) {
     loge('Updates', error.toString());
+    return false;
   }
 }

@@ -1,6 +1,6 @@
 import { ChatMsg } from '@/db/chat';
 import { modelManager } from '@/entities/model';
-import { loge } from '@/shared/lib/Logger.ts';
+import { loge } from '@/shared/lib/func';
 
 export async function stream(
   config: {

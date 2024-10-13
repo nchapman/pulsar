@@ -1,15 +1,14 @@
 import { createEvent, createStore } from 'effector';
 
 import { initAppFolders } from '@/app/lib/initAppFolders.ts';
+import { UserSettingsManager, userSettingsManager } from '@/app/managers/user-settings.manager';
 import { downloadsRepository, modelFilesRepository, modelsRepository } from '@/db';
 import { Model, ModelsRepository } from '@/db/model';
 import { ModelFile, ModelFilesRepository, ModelFileType } from '@/db/model-file';
 import { ModelDto } from '@/entities/model';
-import { createModelFolder } from '@/entities/model/lib/createModelFolder.ts';
-import { UserSettingsManager, userSettingsManager } from '@/entities/settings';
-import { promiseAll } from '@/shared/lib/func';
-import { loge, logi } from '@/shared/lib/Logger.ts';
+import { loge, logi, promiseAll } from '@/shared/lib/func';
 
+import { createModelFolder } from '../lib/createModelFolder.ts';
 import { deleteModel } from '../lib/deleteModel.ts';
 import { getAvailableModels } from '../lib/getAvailableModels.ts';
 import { getModelPath } from '../lib/getModelPath.ts';

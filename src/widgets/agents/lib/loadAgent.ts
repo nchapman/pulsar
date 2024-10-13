@@ -7,7 +7,7 @@ import {
 } from '@/widgets/agents/types/agentMessage.types.ts';
 
 export async function loadAgent(name: string) {
-  const { workerScript } = await readLocalAgent(name);
+  const { workerScript } = await readLocalAgent(name, { script: true });
 
   const blob = new Blob([workerScript], { type: 'application/javascript' });
 

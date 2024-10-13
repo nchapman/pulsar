@@ -13,15 +13,24 @@ interface Props {
 export const TestAgent = memo((props: Props) => {
   const { className } = props;
 
-  const handeLoadTestAgent = () => {
-    // loadAgent('sample-agent');
-    agentsManager.addAgent({ src: '/Users/demetrxx/projects/pulsar/scripts/sample-agent' });
+  const handleAdd = () => {
+    agentsManager.add({
+      src: '/Users/demetrxx/projects/pulsar/scripts/sample-agent',
+      name: 'sample-agent',
+    });
+  };
+
+  const handleRemove = () => {
+    agentsManager.remove('PgDCeoqO7w0TsweH');
   };
 
   return (
     <div className={classNames(s.testAgent, [className])}>
-      <Button onClick={handeLoadTestAgent} variant="primary">
-        Test Agent
+      <Button onClick={handleAdd} variant="primary">
+        Add Agent
+      </Button>
+      <Button onClick={handleRemove} variant="primary">
+        Remove Agent
       </Button>
     </div>
   );

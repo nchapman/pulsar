@@ -9,12 +9,12 @@ import { PopoverCustom } from '@/shared/ui/PopoverCustom/PopoverCustom.tsx';
 import { Toggle } from '@/shared/ui/Toggle/Toggle.tsx';
 import { agentsNavbarModel } from '@/widgets/agents/model/agents-navbar.model.ts';
 
-import { Agent, AgentsView } from '../../types/agent.types.ts';
+import { AgentsView, StoreAgent } from '../../types/agent.types.ts';
 import s from './AgentsListItem.module.scss';
 
 interface Props {
   className?: string;
-  agent: Agent;
+  agent: StoreAgent;
   view: AgentsView;
 }
 

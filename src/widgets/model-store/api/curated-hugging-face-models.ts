@@ -24,7 +24,6 @@ type curatedModelsKeys = keyof typeof curatedModels;
 export async function getCuratedModels(key: curatedModelsKeys): Promise<ModelEntry[]> {
   const baseModels = curatedModels[key];
   let res = [];
-  // eslint-disable-next-line no-restricted-syntax
   for await (const baseModel of baseModels) {
     const huggingFaceModel = (await searchHuggingFaceModels({ query: baseModel.name }))[0];
     res.push(huggingFaceModel);

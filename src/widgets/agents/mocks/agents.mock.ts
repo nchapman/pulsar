@@ -1,6 +1,6 @@
-import { Agent } from '../types/agent.types.ts';
+import { StoreAgent } from '../types/agent.types.ts';
 
-export const agentsMock: Agent[] = [
+export const agentsMock: StoreAgent[] = [
   {
     id: '1',
     name: 'Agent A',

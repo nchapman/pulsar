@@ -7,12 +7,12 @@ import { Icon, Text } from '@/shared/ui';
 
 import { AGENT_CATEGORIES_MAP } from '../../consts/categories.const.ts';
 import { agentsLibModel } from '../../model/agents-lib.model.ts';
-import { Agent } from '../../types/agent.types.ts';
+import { StoreAgent } from '../../types/agent.types.ts';
 import s from './AgentCard.module.scss';
 
 interface Props {
   className?: string;
-  agent: Agent;
+  agent: StoreAgent;
 }
 
 function sliceCategories(categories: Id[]) {

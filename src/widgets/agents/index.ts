@@ -1,4 +1,4 @@
-export { type Agent } from './types/agent.types';
+export type { Agent, StoreAgent } from './types/agent.types';
 export { AgentAddModal } from './ui/AgentAddModal/AgentAddModal';
 export { AgentDetailsPage } from './ui/AgentDetailsPage/AgentDetailsPage';
 export { AgentsChatInput } from './ui/AgentsChatInput/AgentsChatInput';

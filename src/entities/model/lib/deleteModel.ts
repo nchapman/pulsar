@@ -4,7 +4,6 @@ import { getModelPath } from './getModelPath.ts';
 
 async function deleteEmptyFoldersRecursively(folderPath: string) {
   if (await exists(folderPath)) {
-    // eslint-disable-next-line no-restricted-syntax
     for await (const i of await readDir(folderPath)) {
       if (i.children) {
         await deleteEmptyFoldersRecursively(i.path);

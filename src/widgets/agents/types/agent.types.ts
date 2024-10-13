@@ -15,14 +15,6 @@ export enum AgentsView {
   AllAgents = 'All agents',
 }
 
-export interface Agent {
-  id: Id;
-  name: string;
-  data: {};
-  createdAt: number;
-  updatedAt: number;
-}
-
 export interface AgentManifest {
   manifest_version: number;
   name: string;
@@ -34,4 +26,14 @@ export interface AgentManifest {
     '48': string;
     '16': string;
   };
+}
+
+export interface Agent {
+  id: Id;
+  name: string;
+  data: {
+    manifest: AgentManifest;
+  };
+  createdAt: number;
+  updatedAt: number;
 }

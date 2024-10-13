@@ -51,7 +51,7 @@ class DownloadsManager {
     this.initManager();
   }
 
-  // public API methods
+  // public API
 
   async addDownload(
     d: Pick<DownloadItem, 'dto' | 'name' | 'type' | 'remoteUrl' | 'modelName'>,
@@ -107,8 +107,6 @@ class DownloadsManager {
       throw new Error(`Download "${id}" not found`);
     }
 
-    // console.log('Deleting model file:', download.modelFileId);
-
     if (download.modelFileId) {
       await this.modelManager.deleteModel(download.modelFileId).catch(console.log);
     }
@@ -124,7 +122,7 @@ class DownloadsManager {
 
     this.downloadsData = newData;
 
-    // delete file from the disk
+    // delete file from disk
     await deleteModel({ model: download.modelName, fileName: download.name }, true);
 
     if (this.current === id) {
@@ -271,7 +269,6 @@ class DownloadsManager {
       });
     });
 
-    // delete missing in db
     await Promise.all(modelsToDelete);
 
     // update state

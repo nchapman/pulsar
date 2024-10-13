@@ -4,12 +4,12 @@ import { classNames } from '@/shared/lib/func';
 import { ScrollArea } from '@/shared/ui/ScrollArea/ScrollArea.tsx';
 import { AgentsListItem } from '@/widgets/agents/ui/AgentsListItem/AgentsListItem.tsx';
 
-import { Agent, AgentsView } from '../../types/agent.types.ts';
+import { AgentsView, StoreAgent } from '../../types/agent.types.ts';
 import s from './AgentsList.module.scss';
 
 interface Props {
   className?: string;
-  agents: Agent[];
+  agents: StoreAgent[];
   view: AgentsView;
 }
 

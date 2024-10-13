@@ -23,6 +23,7 @@ module.exports = {
         ignoreStrings: true,
       },
     ],
+    'no-restricted-syntax': 'off',
     'no-shadow': 'off',
     'no-unused-vars': 'off',
     'no-underscore-dangle': 'off',

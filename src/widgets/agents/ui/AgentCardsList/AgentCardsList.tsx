@@ -8,14 +8,14 @@ import { Badge, Icon, ScrollArea, Select, Text } from '@/shared/ui';
 
 import { AGENT_CATEGORIES_MAP } from '../../consts/categories.const.ts';
 import { agentsLibModel } from '../../model/agents-lib.model.ts';
-import { Agent } from '../../types/agent.types.ts';
+import { StoreAgent } from '../../types/agent.types.ts';
 import { AgentsSorting, AgentsSortingData } from '../../types/agents-sorting.types.ts';
 import { AgentCard } from '../AgentCard/AgentCard.tsx';
 import s from './AgentCardsList.module.scss';
 
 interface Props {
   className?: string;
-  agents: Agent[];
+  agents: StoreAgent[];
   loading: boolean;
   categories: Id[];
 }

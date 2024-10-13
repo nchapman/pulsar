@@ -42,7 +42,6 @@ export const searchHuggingFaceModels = async ({
   });
 
   const models = [];
-  // eslint-disable-next-line no-restricted-syntax
   for await (const model of modelGenerator) {
     models.push(model);
   }
@@ -58,7 +57,6 @@ export const fetchHuggingFaceFiles = async (modelId: string): Promise<ModelFileD
 
   const files: ModelFileData[] = [];
 
-  // eslint-disable-next-line no-restricted-syntax
   for await (const file of filesGenerator) {
     const data: ModelFileData = {
       name: file.path,

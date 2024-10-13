@@ -4,7 +4,7 @@ import { useEffect } from 'preact/hooks';
 import ArrowDownIcon from '@/shared/assets/icons/arrow-down.svg';
 import { classNames } from '@/shared/lib/func';
 import { Button } from '@/shared/ui';
-import { Agent } from '@/widgets/agents/types/agent.types.ts';
+import { StoreAgent } from '@/widgets/agents';
 import { useListScroll } from '@/widgets/chat/hooks/useListScroll.ts';
 import { ChatFirstScreen } from '@/widgets/chat/ui/ChatFirstScreen/ChatFirstScreen.tsx';
 
@@ -15,7 +15,7 @@ import s from './ChatMsgList.module.scss';
 interface Props {
   className?: string;
   demo?: boolean;
-  agent?: Agent;
+  agent?: StoreAgent;
 }
 
 export const ChatMsgList = (props: Props) => {

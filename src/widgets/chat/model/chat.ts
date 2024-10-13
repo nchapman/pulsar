@@ -7,6 +7,7 @@ import type { Chat, ChatMsg, ModelSettings } from '@/db/chat';
 import { modelManager } from '@/entities/model';
 import { FileData } from '@/features/upload-file';
 import { suid } from '@/shared/lib/func';
+import { agentsManager } from '@/widgets/agents/managers/agents.manager.ts';
 
 import { stream } from '../api/chatApi.ts';
 import { defaultModelSettings } from '../consts/defaultModelSettings';
@@ -107,8 +108,6 @@ const streamMsg = createEffect<{ chatId: Id; msgId: Id; messages: ChatMsg[] }, v
   async ({ msgId, chatId, messages }) => {
     const chatSettings = $chat.data.getState()?.modelSettings || defaultModelSettings;
 
-    // const chatData = $chat.data.getState();
-
     stream(
       {
         messages: messages.slice(0, -1).map((msg) => msg),
@@ -124,6 +123,13 @@ const streamMsg = createEffect<{ chatId: Id; msgId: Id; messages: ChatMsg[] }, v
         stopTokens: chatSettings.stopTokens,
       }
     );
+  }
+);
+
+const askAgent = createEffect<{ chatId: Id; msgId: Id; messages: ChatMsg[] }, void>(
+  ({ messages }) => {
+    const messageHistory = messages.slice(0, -1).map((msg) => msg.text);
+    agentsManager.call(messageHistory[messages.length - 1], messageHistory);
   }
 );
 
@@ -232,12 +238,13 @@ sample({
   target: createAssistantMsg,
 });
 
-// start stream on assistant message creation
+// start stream on assistant message creation, but no active agents
 sample({
   source: {
     chatId: $chat.id,
     msgIds: $messages.idsList,
     msgsData: $messages.data,
+    chatData: $chat.data,
   },
   clock: createAssistantMsg.doneData,
   fn: ({ chatId, msgIds, msgsData }, msg) => ({
@@ -246,6 +253,25 @@ sample({
     messages: msgIds.map((id) => msgsData[id]),
   }),
   target: streamMsg,
+  filter: ({ chatData }) => !chatData?.agents?.active.length,
+});
+
+// start stream on assistant message creation, with active agents
+sample({
+  source: {
+    chatId: $chat.id,
+    msgIds: $messages.idsList,
+    msgsData: $messages.data,
+    chatData: $chat.data,
+  },
+  clock: createAssistantMsg.doneData,
+  fn: ({ chatId, msgIds, msgsData }, msg) => ({
+    msgId: msg.id,
+    chatId: chatId!,
+    messages: msgIds.map((id) => msgsData[id]),
+  }),
+  target: askAgent,
+  filter: ({ chatData }) => !!chatData?.agents?.active.length,
 });
 
 // Regenerate massage

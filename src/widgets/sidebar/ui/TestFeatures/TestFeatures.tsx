@@ -3,9 +3,9 @@ import { appDataDir } from '@tauri-apps/api/path';
 import { open as openPath } from '@tauri-apps/api/shell';
 import { memo } from 'preact/compat';
 
+import { getSystemInfo } from '@/app/lib/system.ts';
 import { downloadModel } from '@/entities/model';
 import { Nebula } from '@/entities/model/nebula/Nebula.ts';
-import { getSystemInfo } from '@/features/system/system.ts';
 import { __IS_STORYBOOK__ } from '@/shared/consts';
 import {
   classNames,

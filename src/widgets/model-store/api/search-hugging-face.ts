@@ -1,8 +1,8 @@
 import { listFiles } from '@huggingface/hub';
 
+import { getSystemInfo } from '@/app/lib/system.ts';
 import { ModelFileData } from '@/entities/model';
 import { HuggingFaceModel } from '@/entities/model/types/hugging-face-model.ts';
-import { getSystemInfo } from '@/features/system/system.ts';
 import { listModels } from '@/widgets/model-store/api/listModels.ts';
 import { ModelSorting, ModelSortingData } from '@/widgets/model-store/types/model-sorting.ts';
 

@@ -21,10 +21,7 @@ export async function stream(
   const { onStreamStart, onTextChunkReceived, onTitleUpdate, onStreamEnd } = config;
 
   try {
-    const context = await modelManager.model.createContext(
-      []
-      //      messages.slice(0, -1).map((msg) => ({ message: msg.text, is_user: !!msg.isUser })),
-    );
+    const context = await modelManager.model.createContext([]);
 
     context.onToken = (p) => {
       if (p.token !== null) onTextChunkReceived(p.token);

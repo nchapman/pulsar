@@ -14,6 +14,8 @@ type AgentsMap = Record<Id, Agent>;
 class AgentsManager {
   #agents: AgentsMap = {};
 
+  #currentAgents: Id[] = [];
+
   state = {
     agents: createStore<AgentsMap>({}),
   };

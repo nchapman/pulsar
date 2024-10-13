@@ -7,7 +7,7 @@ import { modelSchema } from './model';
 import { modelFileSchema } from './model-file';
 
 export const schema = appSchema({
-  version: 28,
+  version: 29,
 
   tables: [chatSchema, modelFileSchema, downloadSchema, modelSchema, agentSchema],
 });

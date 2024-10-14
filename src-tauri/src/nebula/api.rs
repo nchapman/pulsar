@@ -22,7 +22,7 @@ struct NebulaModelState {
 
 struct NebulaState {
     models: Arc<Mutex<HashMap<String, NebulaModelState>>>,
-    servers: Arc<Mutex<HashMap<String, nebula::Server>>>,
+    server: Arc<Mutex<Option<nebula::Server>>>,
     current_http_port: Arc<Mutex<i32>>,
 }
 
@@ -30,7 +30,7 @@ impl Default for NebulaState {
     fn default() -> Self {
         Self {
             models: Arc::new(Mutex::new(HashMap::new())),
-            servers: Arc::new(Mutex::new(HashMap::new())),
+            server: Arc::new(Mutex::new(None)),
             current_http_port: Arc::new(Mutex::new(8333)), // Custom default value for `i32`
         }
     }
@@ -64,7 +64,7 @@ async fn init_model<R: Runtime>(
     state: State<'_, NebulaState>,
 ) -> NebulaResult<String> {
     let mut models = state.models.lock().await;
-    let mut servers = state.servers.lock().await;
+    let mut server = state.server.lock().await;
     let mut current_http_port = state.current_http_port.lock().await;
 
     if models.contains_key(&model_path) {
@@ -103,16 +103,16 @@ async fn init_model<R: Runtime>(
 
     let ctx_options = ContextOptions::default();
 
-    let server = nebula::Server::new(
+    let server_instance = nebula::Server::new(
         "0.0.0.0".parse::<IpAddr>().expect("parse failed"),
         current_http_port.clone().try_into().unwrap(),
         model,
         ctx_options,
     );
 
-    servers.insert(model_path.clone(), server);
+    *server = Some(server_instance);
 
-    servers.get(&model_path).unwrap().run()?;
+    server_instance.run().await?;
 
     log::info!("Server started on port: {}", current_http_port);
 

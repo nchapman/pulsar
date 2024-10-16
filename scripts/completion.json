@@ -1,0 +1,18 @@
+{
+  "_model": "llava",
+  "stream": false,
+  "messages": [
+    {
+      "role": "user",
+      "content": "write me simple rust program"
+    },
+    {
+      "content": "Sure! Here is a simple Rust program that prints \"Hello, world!\" to the console:\n```\nfn main() {\n    println!(\"Hello, world!\");\n}\n```\nTo compile and run this program, you can use the `rustc` compiler and the `rust` command. For example, to compile and run the program, you can use the following commands:\n```\nrustc main.rs\nrust main.rs\n```\nThis will compile the program and then run it, printing \"Hello, world!\" to the console.\n\nI hope this helps! Let me know if you have any other questions.",
+      "role": "assistant"
+    },
+    {
+      "role": "user",
+      "content": "rewrite it to output to stderr"
+    }
+  ]
+}

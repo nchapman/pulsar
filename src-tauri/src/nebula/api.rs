@@ -7,7 +7,7 @@ use nebula::options::Message;
 use nebula::options::PredictOptions;
 use nebula::options::{ContextOptions, ModelOptions};
 use serde::Serialize;
-// use std::net::IpAddr;
+use std::net::IpAddr;
 use std::{
     collections::HashMap,
     sync::{atomic::AtomicBool, Arc},
@@ -25,14 +25,14 @@ struct NebulaModelState {
 
 struct NebulaState {
     models: HashMap<String, NebulaModelState>,
-    // server: Option<nebula::Server>,
+    server: Option<nebula::Server>,
 }
 
 impl Default for NebulaState {
     fn default() -> Self {
         Self {
             models: HashMap::new(),
-            // server: None,
+            server: None,
         }
     }
 }
@@ -106,22 +106,18 @@ async fn init_model<R: Runtime>(
         },
     );
 
-    // let ctx_options = ContextOptions::default();
+    let ctx_options = ContextOptions::default();
 
-    // let server_instance = nebula::Server::new(
-    //     "0.0.0.0".parse::<IpAddr>().expect("parse failed"),
-    //     current_http_port.clone().try_into().unwrap(),
-    //     model,
-    //     ctx_options,
-    // );
+    let mut server = nebula::Server::new(
+        "0.0.0.0".parse::<IpAddr>().expect("parse failed"),
+        8083,
+        model,
+        ctx_options,
+    );
 
-    // *server = Some(server_instance);
+    server.run().await?;
 
-    // server_instance.run().await?;
-
-    // log::info!("Server started on port: {}", current_http_port);
-
-    // *current_http_port += 1;
+    state.server = Some(server);
 
     Ok(model_path.clone())
 }
@@ -180,22 +176,18 @@ async fn init_model_with_mmproj<R: Runtime>(
 
     state.models.insert(model_path.clone(), model_state);
 
-    // let ctx_options = ContextOptions::default();
+    let ctx_options = ContextOptions::default();
 
-    // let server = nebula::Server::new(
-    //     "0.0.0.0".parse::<IpAddr>().expect("parse failed"),
-    //     current_http_port.clone().try_into().unwrap(),
-    //     model,
-    //     ctx_options,
-    // );
+    let mut server = nebula::Server::new(
+        "0.0.0.0".parse::<IpAddr>().expect("parse failed"),
+        8083,
+        model,
+        ctx_options,
+    );
 
-    // servers.insert(model_path.clone(), server);
+    server.run().await?;
 
-    // servers.get(&model_path).unwrap().run()?;
-
-    // log::info!("Server started on port: {}", current_http_port);
-
-    // *current_http_port += 1;
+    state.server = Some(server);
 
     Ok(model_path.clone() + &mmproj_path)
 }
@@ -217,9 +209,10 @@ async fn drop_model<R: Runtime>(
         .remove(&model_path)
         .ok_or(NebulaError::ModelNotLoaded(model_path.clone()))?;
 
-    // servers
-    //     .remove(&model_path)
-    //     .ok_or(NebulaError::ModelNotLoaded(model_path.clone()))?;
+    if let Some(server) = &mut state.server {
+        server.stop().await?;
+        state.server = None;
+    }
 
     Ok(())
 }

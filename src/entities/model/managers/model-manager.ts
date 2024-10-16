@@ -233,7 +233,7 @@ class ModelManager {
       this.currentMmp = mmp || null;
       this.isReady = true;
 
-      logi(LOG_TAG, 'Model ready!');
+      logi(LOG_TAG, `Model: ${modelName} loaded`);
     } catch (e) {
       loge(LOG_TAG, `Failed to load model file: ${e}`);
     }
@@ -353,7 +353,6 @@ class ModelManager {
         : undefined;
 
       this.#model = await NebulaModel.initModel(llmPath, mmpPath, (progress) => {
-        logi('Model manager', `Model loading progress: ${progress}`);
         this.loadingProgress = progress;
       });
     } catch (e) {

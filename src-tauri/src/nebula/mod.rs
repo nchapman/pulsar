@@ -1,4 +1,4 @@
-mod api;
+pub mod api;
 mod error;
 
-pub use api::init_plugin;
+pub use api::*;
